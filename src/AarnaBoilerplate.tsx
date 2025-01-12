@@ -1,23 +1,41 @@
 import React, { FC, ReactNode } from "react";
 import { Provider } from "./components/ui/provider";
-import { Button } from "@chakra-ui/react";
+import { Button } from "./components/ui/button";
 
-interface AarnaBoilerplate {
-  message: string;
+enum ChainType {
+  EVM = "EVM",
+  SOLANA = "SOLANA",
 }
 
-const AarnaBoilerplate: FC<AarnaBoilerplate> = ({ message }): ReactNode => {
+interface Token {
+  address: string;
+  chainId: number;
+  chainType: ChainType;
+}
+
+interface AarnaBoilerplateProps {
+  logo: string;
+  walletConnector: any;
+  inputToken: Token;
+}
+
+const AarnaBoilerplate: FC<AarnaBoilerplateProps> = ({ 
+  logo, 
+  walletConnector, 
+  inputToken,
+}) => {
   return (
     <Provider>
       <Button
-        colorPalette="blue"
-        colorScheme="blue"
-        variant="outline"
+        bgColor="teal.500"
+        variant="solid"
         size="lg"
-        borderRadius="full"
+        borderRadius="10px"
         fontWeight="bold"
+        color="white"
+        padding="10px 20px"
       >
-        {message}
+        Aarna Boilerplate
       </Button>
     </Provider>
   );
