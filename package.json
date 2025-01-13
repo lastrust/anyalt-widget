@@ -1,15 +1,15 @@
 {
-  "name": "aarna-boilerplate",
+  "name": "anyalt-widget",
   "version": "1.0.0",
-  "description": "Aarna Boilerplate",
-  "main": "dist/AarnaBoilerplate.js",
-  "module": "dist/AarnaBoilerplate.mjs",
-  "types": "dist/AarnaBoilerplate.d.ts",
+  "description": "Anyalt Widget",
+  "main": "dist/AnyaltWidget.js",
+  "module": "dist/AnyaltWidget.mjs",
+  "types": "dist/AnyaltWidget.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/AarnaBoilerplate.tsx --format esm,cjs --dts",
+    "build": "tsup src/AnyaltWidget.tsx --format esm,cjs --dts",
     "eslint": "eslint --ext .js,.jsx,.ts,.tsx src --fix",
     "test": "jest"
   },

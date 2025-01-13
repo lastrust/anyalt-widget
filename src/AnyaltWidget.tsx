@@ -15,13 +15,13 @@ export interface Token {
   chainType: ChainType;
 }
 
-interface AarnaBoilerplateProps {
+interface AnyaltWidgetProps {
   logo: string;
   walletConnector: any;
   inputToken: Token;
 }
 
-const AarnaBoilerplate: FC<AarnaBoilerplateProps> = ({ 
+const AnyaltWidget: FC<AnyaltWidgetProps> = ({ 
   logo,
   walletConnector,
   inputToken,
@@ -43,4 +43,4 @@ const AarnaBoilerplate: FC<AarnaBoilerplateProps> = ({
   );
 };
 
-export default AarnaBoilerplate;
+export default AnyaltWidget;
