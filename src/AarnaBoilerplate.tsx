@@ -1,13 +1,15 @@
-import React, { FC, ReactNode } from "react";
-import { Provider } from "./components/ui/provider";
-import { Button } from "./components/ui/button";
+import React, { FC } from "react";
+import { Header } from "./components/organisms/Header";
+import { Container } from "./components/organisms/Container";
+import { Footer } from "./components/organisms/Footer";
+import { Box, ChakraProvider } from '@chakra-ui/react'
 
-enum ChainType {
+export enum ChainType {
   EVM = "EVM",
   SOLANA = "SOLANA",
 }
 
-interface Token {
+export interface Token {
   address: string;
   chainId: number;
   chainType: ChainType;
@@ -20,24 +22,24 @@ interface AarnaBoilerplateProps {
 }
 
 const AarnaBoilerplate: FC<AarnaBoilerplateProps> = ({ 
-  logo, 
-  walletConnector, 
+  logo,
+  walletConnector,
   inputToken,
 }) => {
   return (
-    <Provider>
-      <Button
-        bgColor="teal.500"
-        variant="solid"
-        size="lg"
-        borderRadius="10px"
-        fontWeight="bold"
-        color="white"
-        padding="10px 20px"
+    <ChakraProvider>
+      <Box
+        padding="40px"
+        border="1px solid #919eab1f"
+        borderRadius="12px"
+        minWidth="528px"
+        bgColor="#121212"
       >
-        Aarna Boilerplate
-      </Button>
-    </Provider>
+        <Header />
+        <Container />
+        <Footer />
+      </Box>
+    </ChakraProvider>
   );
 };
 
