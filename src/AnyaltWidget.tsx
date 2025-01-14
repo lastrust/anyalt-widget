@@ -1,13 +1,13 @@
-import React, { FC } from "react";
-import { Header } from "./components/organisms/Header";
-import { Container } from "./components/organisms/Container";
-import { Footer } from "./components/organisms/Footer";
-import { Box, ChakraProvider, ThemeConfig, Theme } from "@chakra-ui/react";
-import { defaultTheme } from "./theme/defaultTheme";
+import React, { FC } from 'react';
+import { Header } from './components/organisms/Header';
+import { Container } from './components/organisms/Container';
+import { Footer } from './components/organisms/Footer';
+import { Box, ChakraProvider, Theme } from '@chakra-ui/react';
+import { defaultTheme } from './theme/defaultTheme';
 
 export enum ChainType {
-  EVM = "EVM",
-  SOLANA = "SOLANA",
+  EVM = 'EVM',
+  SOLANA = 'SOLANA',
 }
 
 export interface Token {
@@ -23,12 +23,7 @@ interface AnyaltWidgetProps {
   theme?: Partial<Theme>;
 }
 
-const AnyaltWidget: FC<AnyaltWidgetProps> = ({
-  logo,
-  walletConnector,
-  inputToken,
-  theme = defaultTheme,
-}) => {
+const AnyaltWidget: FC<AnyaltWidgetProps> = ({ theme = defaultTheme }) => {
   return (
     <ChakraProvider theme={theme}>
       <Box
