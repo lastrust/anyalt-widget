@@ -3,14 +3,13 @@
   "version": "1.0.0",
   "description": "Anyalt Widget",
   "private": false,
-  "publishConfig": {
-    "access": "public"
-  },
   "main": "dist/anyalt-widget.umd.js",
   "module": "dist/anyalt-widget.es.js",
   "types": "dist/AnyaltWidget.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "package.json"
+
   ],
   "sideEffects": false,
   "exports": {
