@@ -3,7 +3,12 @@ import { AnyaltLogo } from '../../atoms/icon/AnyaltLogo';
 
 export const Footer = () => {
   return (
-    <Box display="flex" flexDirection="row" justifyContent="center" alignItems="center">
+    <Box
+      display="flex"
+      flexDirection="row"
+      justifyContent="center"
+      alignItems="center"
+    >
       <Text fontSize="12px" color="#fff6" mr="8px">
         Powered by
       </Text>
