@@ -1,19 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import AnyaltWidget, { ChainType } from '../src/AnyaltWidget';
-import { Box, Button, Center, ChakraProvider } from '@chakra-ui/react';
+import { Box, Center, ChakraProvider } from '@chakra-ui/react';
+import OpenModalButton from '../src/components/atoms/OpenModalButton';
+import useModal from '../src/hooks/useModal';
 
 const App = () => {
-  const [isOpen, setIsOpen] = React.useState(false);
-
-  const handleOpen = () => setIsOpen(true);
-  const handleClose = () => setIsOpen(false);
+  const { isOpen, handleOpen, handleClose } = useModal();
 
   return (
     <ChakraProvider>
       <Center h={'100vh'}>
         <Box maxW={'600px'}>
-          <Button onClick={handleOpen}>Open Anyalt Widget</Button>
+          <OpenModalButton onOpen={handleOpen} />
           <AnyaltWidget
             logo="test"
             walletConnector={{}}

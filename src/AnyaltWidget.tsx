@@ -2,16 +2,9 @@ import React, { FC } from 'react';
 import { Header } from './components/organisms/Header';
 import { Container } from './components/organisms/Container';
 import { Footer } from './components/organisms/Footer';
-import {
-  Box,
-  ChakraProvider,
-  Theme,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalCloseButton,
-} from '@chakra-ui/react';
+import { ChakraProvider, Theme } from '@chakra-ui/react';
 import { defaultTheme } from './theme/defaultTheme';
+import ModalWrapper from './components/standalones/ModalWrapper';
 
 export enum ChainType {
   EVM = 'EVM',
@@ -40,17 +33,11 @@ const AnyaltWidget: FC<AnyaltWidgetProps> = ({
 }) => {
   return (
     <ChakraProvider theme={theme}>
-      <Modal isOpen={isOpen} onClose={onClose} isCentered size="xl">
-        <ModalOverlay backdropFilter="blur(4px)" />
-        <ModalContent bg="brand.primary" maxW="528px">
-          <ModalCloseButton color="white" />
-          <Box padding="40px">
-            <Header />
-            <Container />
-            <Footer />
-          </Box>
-        </ModalContent>
-      </Modal>
+      <ModalWrapper isOpen={isOpen} onClose={onClose}>
+        <Header />
+        <Container />
+        <Footer />
+      </ModalWrapper>
     </ChakraProvider>
   );
 };
