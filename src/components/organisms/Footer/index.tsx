@@ -1,5 +1,5 @@
-import { Box, Text } from "@chakra-ui/react";
-import { AnyaltLogo } from "../../atoms/icon/AnyaltLogo";
+import { Box, Text } from '@chakra-ui/react';
+import { AnyaltLogo } from '../../atoms/icon/AnyaltLogo';
 
 export const Footer = () => {
   return (
@@ -9,17 +9,10 @@ export const Footer = () => {
       justifyContent="center"
       alignItems="center"
     >
-      <Text
-        fontSize="12px"
-        color="#fff6"
-        mr="8px"
-      >
+      <Text fontSize="12px" color="#fff6" mr="8px">
         Powered by
       </Text>
-      <AnyaltLogo
-        width="84px"
-        height="24px"
-      />
+      <AnyaltLogo width="84px" height="24px" />
     </Box>
   );
 };

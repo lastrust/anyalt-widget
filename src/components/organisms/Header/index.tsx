@@ -1,12 +1,8 @@
-import { Box } from "@chakra-ui/react";
+import { Box } from '@chakra-ui/react';
 
 export const Header = () => {
   return (
-    <Box
-      color="white"
-      fontSize="24px"
-      fontWeight="semiBold"
-    >
+    <Box color="white" fontSize="24px" fontWeight="semiBold">
       Start Transaction
     </Box>
   );

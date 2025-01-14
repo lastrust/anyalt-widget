@@ -1,12 +1,14 @@
-import React, { FC } from "react";
-import { Header } from "./components/organisms/Header";
-import { Container } from "./components/organisms/Container";
-import { Footer } from "./components/organisms/Footer";
-import { Box, ChakraProvider } from '@chakra-ui/react'
+import React, { FC } from 'react';
+import { Header } from './components/organisms/Header';
+import { Container } from './components/organisms/Container';
+import { Footer } from './components/organisms/Footer';
+import { ChakraProvider, Theme } from '@chakra-ui/react';
+import { defaultTheme } from './theme/defaultTheme';
+import ModalWrapper from './components/standalones/ModalWrapper';
 
 export enum ChainType {
-  EVM = "EVM",
-  SOLANA = "SOLANA",
+  EVM = 'EVM',
+  SOLANA = 'SOLANA',
 }
 
 export interface Token {
@@ -17,28 +19,25 @@ export interface Token {
 
 interface AnyaltWidgetProps {
   logo: string;
-  walletConnector: any;
+  walletConnector: unknown;
   inputToken: Token;
+  theme?: Partial<Theme>;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-const AnyaltWidget: FC<AnyaltWidgetProps> = ({ 
-  logo,
-  walletConnector,
-  inputToken,
+const AnyaltWidget: FC<AnyaltWidgetProps> = ({
+  theme = defaultTheme,
+  isOpen,
+  onClose,
 }) => {
   return (
-    <ChakraProvider>
-      <Box
-        padding="40px"
-        border="1px solid #919eab1f"
-        borderRadius="12px"
-        minWidth="528px"
-        bgColor="#121212"
-      >
+    <ChakraProvider theme={theme}>
+      <ModalWrapper isOpen={isOpen} onClose={onClose}>
         <Header />
         <Container />
         <Footer />
-      </Box>
+      </ModalWrapper>
     </ChakraProvider>
   );
 };
