@@ -8,8 +8,10 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "outDir": "./dist",
-    "declaration": true
+    "declaration": true,
+    "baseUrl": ".",
+    "resolveJsonModule": true
   },
-  "include": ["src", "src/types" ],
+  "include": ["src", "src/types", "package.json"],
   "exclude": ["node_modules", "dist", "dev"]
 }

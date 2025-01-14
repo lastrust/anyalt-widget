@@ -2,12 +2,28 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import dts from 'vite-plugin-dts';
 import { resolve } from 'path';
+import fs from 'fs';
+
+
+// Custom plugin to copy package.json to dist folder
+const copyPackageJson = () => {
+  return {
+    name: 'copy-package-json',
+    closeBundle: () => {
+      const srcPackageJson = resolve(__dirname, 'package.json');
+      const distPackageJson = resolve(__dirname, 'dist/package.json');
+      fs.copyFileSync(srcPackageJson, distPackageJson);
+      console.log('package.json copied to dist folder');
+    }
+  };
+};
 
 // Vite configuration
 export default defineConfig({
   plugins: [
     // React plugin for handling React-specific features
     react(),
+    copyPackageJson(),
     // DTS plugin for generating TypeScript declaration files
     dts({
       include: ['src'], // Ensure TypeScript definitions are generated for all source files

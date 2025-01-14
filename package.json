@@ -9,7 +9,6 @@
   "files": [
     "dist",
     "package.json"
-
   ],
   "sideEffects": false,
   "exports": {
