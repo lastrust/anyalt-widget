@@ -2,7 +2,8 @@ import React, { FC } from "react";
 import { Header } from "./components/organisms/Header";
 import { Container } from "./components/organisms/Container";
 import { Footer } from "./components/organisms/Footer";
-import { Box, ChakraProvider } from '@chakra-ui/react'
+import { Box, ChakraProvider, ThemeConfig, Theme } from "@chakra-ui/react";
+import { defaultTheme } from "./theme/defaultTheme";
 
 export enum ChainType {
   EVM = "EVM",
@@ -19,21 +20,23 @@ interface AnyaltWidgetProps {
   logo: string;
   walletConnector: any;
   inputToken: Token;
+  theme?: Partial<Theme>;
 }
 
-const AnyaltWidget: FC<AnyaltWidgetProps> = ({ 
+const AnyaltWidget: FC<AnyaltWidgetProps> = ({
   logo,
   walletConnector,
   inputToken,
+  theme = defaultTheme,
 }) => {
   return (
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
       <Box
         padding="40px"
-        border="1px solid #919eab1f"
+        border="1px solid"
         borderRadius="12px"
         minWidth="528px"
-        bgColor="#121212"
+        bgColor="brand.primary"
       >
         <Header />
         <Container />
