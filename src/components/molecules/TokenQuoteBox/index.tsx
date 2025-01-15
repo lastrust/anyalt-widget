@@ -1,5 +1,5 @@
+import { Box, BoxProps, Text } from '@chakra-ui/react';
 import { FC } from 'react';
-import { Box, Text, BoxProps } from '@chakra-ui/react';
 import { TokenIconBox } from '../../atoms/TokenIconBox';
 import { TokenInfoBox } from '../../atoms/TokenInfoBox';
 

@@ -1,5 +1,5 @@
-import { type FC } from 'react';
 import { Image } from '@chakra-ui/react';
+import { type FC } from 'react';
 import AnyaltLogoPng from '../../../../assets/imgs/anyalt-logo.png';
 
 type Props = {

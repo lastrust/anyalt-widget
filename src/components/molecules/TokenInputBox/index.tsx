@@ -1,8 +1,8 @@
 import { Box, BoxProps, Button, Image, Input, Text } from '@chakra-ui/react';
+import { FC } from 'react';
+import chevronRight from '../../../assets/imgs/chevron-right.svg';
 import popcatIcon from '../../../assets/imgs/popcat.png';
 import solanaIcon from '../../../assets/imgs/solana.svg';
-import chevronRight from '../../../assets/imgs/chevron-right.svg';
-import { FC } from 'react';
 import { TokenIconBox } from '../../atoms/TokenIconBox';
 import { TokenInfoBox } from '../../atoms/TokenInfoBox';
 

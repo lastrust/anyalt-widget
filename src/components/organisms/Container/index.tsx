@@ -1,10 +1,10 @@
 import { Box, Button, Image, Text } from '@chakra-ui/react';
-import configIcon from '../../../assets/imgs/config-icon.svg';
-import usdcIcon from '../../../assets/imgs/usdc.png';
-import ethereumIcon from '../../../assets/imgs/ethereum.svg';
 import aarnaIcon from '../../../assets/imgs/aarna.png';
-import { TokenQuoteBox } from '../../molecules/TokenQuoteBox';
+import configIcon from '../../../assets/imgs/config-icon.svg';
+import ethereumIcon from '../../../assets/imgs/ethereum.svg';
+import usdcIcon from '../../../assets/imgs/usdc.png';
 import { TokenInputBox } from '../../molecules/TokenInputBox';
+import { TokenQuoteBox } from '../../molecules/TokenQuoteBox';
 
 export const Container = () => {
   return (
