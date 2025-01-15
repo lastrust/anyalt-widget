@@ -1,5 +1,5 @@
-import { ReactNode } from 'react';
 import { ChakraProvider, Theme } from '@chakra-ui/react';
+import { ReactNode } from 'react';
 import { defaultTheme } from '../theme/defaultTheme';
 
 type Props = {

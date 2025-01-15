@@ -6,9 +6,11 @@ import { Token } from './types/types';
 
 export { OpenModalButton } from './components/atoms/OpenModalButton';
 export { useModal } from './hooks/useModal';
-export { defaultTheme } from './theme/defaultTheme';
 export { WidgetProvider } from './providers/WidgetProvider';
-export { defaultTheme as standardTheme } from './theme/defaultTheme';
+export {
+  defaultTheme,
+  defaultTheme as standardTheme,
+} from './theme/defaultTheme';
 
 type Props = {
   logo: string;
