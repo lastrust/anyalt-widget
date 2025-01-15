@@ -1,11 +1,11 @@
-import React, { FC, ReactNode } from 'react';
 import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalCloseButton,
   Box,
+  Modal,
+  ModalCloseButton,
+  ModalContent,
+  ModalOverlay,
 } from '@chakra-ui/react';
+import { FC, ReactNode } from 'react';
 
 interface ModalWrapperProps {
   isOpen: boolean;

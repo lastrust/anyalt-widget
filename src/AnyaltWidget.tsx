@@ -1,14 +1,12 @@
-import React, { FC } from 'react';
-import { Header } from './components/organisms/Header';
+import { FC } from 'react';
 import { Container } from './components/organisms/Container';
 import { Footer } from './components/organisms/Footer';
-import { ChakraProvider, Theme } from '@chakra-ui/react';
-import { defaultTheme } from './theme/defaultTheme';
+import { Header } from './components/organisms/Header';
 import ModalWrapper from './components/standalones/ModalWrapper';
 
+export { ChakraProvider as UIProvider } from '@chakra-ui/react';
 export { OpenModalButton } from './components/atoms/OpenModalButton';
 export { useModal } from './hooks/useModal';
-export { ChakraProvider as UIProvider } from '@chakra-ui/react';
 export { defaultTheme } from './theme/defaultTheme';
 
 export enum ChainType {
@@ -26,17 +24,11 @@ interface AnyaltWidgetProps {
   logo: string;
   walletConnector: unknown;
   inputToken: Token;
-  theme?: Partial<Theme>;
   isOpen: boolean;
   onClose: () => void;
 }
 
-
-const AnyaltWidget: FC<AnyaltWidgetProps> = ({
-  theme = defaultTheme,
-  isOpen,
-  onClose,
-}) => {
+const AnyaltWidget: FC<AnyaltWidgetProps> = ({ isOpen, onClose }) => {
   return (
     <ModalWrapper isOpen={isOpen} onClose={onClose}>
       <Header />

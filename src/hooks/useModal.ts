@@ -8,4 +8,3 @@ export const useModal = () => {
 
   return { isOpen, handleOpen, handleClose };
 };
-

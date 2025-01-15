@@ -9,4 +9,5 @@ module.exports = {
   endOfLine: "lf",
   bracketSameLine: false,
   jsxSingleQuote: false,
+  "plugins": ["prettier-plugin-organize-imports"]
 }; 
