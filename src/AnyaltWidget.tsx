@@ -1,45 +1,31 @@
-import React, { FC } from 'react';
-import { Header } from './components/organisms/Header';
 import { Container } from './components/organisms/Container';
 import { Footer } from './components/organisms/Footer';
-import { ChakraProvider, Theme } from '@chakra-ui/react';
-import { defaultTheme } from './theme/defaultTheme';
+import { Header } from './components/organisms/Header';
 import ModalWrapper from './components/standalones/ModalWrapper';
+import { Token } from './types/types';
 
-export enum ChainType {
-  EVM = 'EVM',
-  SOLANA = 'SOLANA',
-}
+export { OpenModalButton } from './components/atoms/OpenModalButton';
+export { useModal } from './hooks/useModal';
+export { WidgetProvider } from './providers/WidgetProvider';
+export {
+  defaultTheme,
+  defaultTheme as standardTheme,
+} from './theme/defaultTheme';
 
-export interface Token {
-  address: string;
-  chainId: number;
-  chainType: ChainType;
-}
-
-interface AnyaltWidgetProps {
+type Props = {
   logo: string;
-  walletConnector: unknown;
-  inputToken: Token;
-  theme?: Partial<Theme>;
   isOpen: boolean;
+  inputToken: Token;
+  walletConnector: unknown;
   onClose: () => void;
-}
-
-const AnyaltWidget: FC<AnyaltWidgetProps> = ({
-  theme = defaultTheme,
-  isOpen,
-  onClose,
-}) => {
-  return (
-    <ChakraProvider theme={theme}>
-      <ModalWrapper isOpen={isOpen} onClose={onClose}>
-        <Header />
-        <Container />
-        <Footer />
-      </ModalWrapper>
-    </ChakraProvider>
-  );
 };
 
-export default AnyaltWidget;
+export const AnyaltWidget = ({ isOpen, onClose }: Props) => {
+  return (
+    <ModalWrapper isOpen={isOpen} onClose={onClose}>
+      <Header />
+      <Container />
+      <Footer />
+    </ModalWrapper>
+  );
+};
