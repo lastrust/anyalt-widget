@@ -31,7 +31,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "lint": "eslint src --ext .ts,.tsx --no-cache",
+    "lint": "eslint src --ext .ts,.tsx --no-cache --fix",
     "lint:prettier": "prettier --write 'src/**/*.{ts,tsx}'",
     "lint:tsc": "tsc --noEmit",
     "lint:all": "npm-run-all lint lint:prettier lint:tsc",
