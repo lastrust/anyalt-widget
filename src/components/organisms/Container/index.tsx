@@ -3,8 +3,8 @@ import aarnaIcon from '../../../assets/imgs/aarna.png';
 import configIcon from '../../../assets/imgs/config-icon.svg';
 import ethereumIcon from '../../../assets/imgs/ethereum.svg';
 import usdcIcon from '../../../assets/imgs/usdc.png';
-import { TokenInputBox } from '../../molecules/TokenInputBox';
-import { TokenQuoteBox } from '../../molecules/TokenQuoteBox';
+import { TokenInputBox } from '../../standalones/TokenInputBox';
+import { TokenQuoteBox } from '../../standalones/TokenQuoteBox';
 
 export const Container = () => {
   return (

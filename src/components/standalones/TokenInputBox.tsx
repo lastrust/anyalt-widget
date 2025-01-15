@@ -1,10 +1,10 @@
 import { Box, BoxProps, Button, Image, Input, Text } from '@chakra-ui/react';
 import { FC } from 'react';
-import chevronRight from '../../../assets/imgs/chevron-right.svg';
-import popcatIcon from '../../../assets/imgs/popcat.png';
-import solanaIcon from '../../../assets/imgs/solana.svg';
-import { TokenIconBox } from '../../atoms/TokenIconBox';
-import { TokenInfoBox } from '../../atoms/TokenInfoBox';
+import chevronRight from '../../assets/imgs/chevron-right.svg';
+import popcatIcon from '../../assets/imgs/popcat.png';
+import solanaIcon from '../../assets/imgs/solana.svg';
+import { TokenIconBox } from '../molecules/TokenIconBox';
+import { TokenInfoBox } from '../molecules/TokenInfoBox';
 
 type Props = BoxProps;
 

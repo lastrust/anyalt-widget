@@ -1,7 +1,7 @@
 import { Box, BoxProps, Text } from '@chakra-ui/react';
 import { FC } from 'react';
-import { TokenIconBox } from '../../atoms/TokenIconBox';
-import { TokenInfoBox } from '../../atoms/TokenInfoBox';
+import { TokenIconBox } from '../molecules/TokenIconBox';
+import { TokenInfoBox } from '../molecules/TokenInfoBox';
 
 type Props = {
   headerText: string;
