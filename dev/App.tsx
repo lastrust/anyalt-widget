@@ -6,13 +6,13 @@ import { OpenModalButton } from '../src/components/atoms/OpenModalButton';
 import { useModal } from '../src/hooks/useModal';
 
 const App = () => {
-  const { isOpen, handleOpen, handleClose } = useModal();
+  const { isOpen, onOpen, onClose } = useModal();
 
   return (
     <ChakraProvider>
       <Center h={'100vh'}>
         <Box maxW={'600px'}>
-          <OpenModalButton onOpen={handleOpen} />
+          <OpenModalButton onOpen={onOpen} />
           <AnyaltWidget
             logo="test"
             walletConnector={{}}
@@ -22,7 +22,7 @@ const App = () => {
               chainType: ChainType.EVM,
             }}
             isOpen={isOpen}
-            onClose={handleClose}
+            onClose={onClose}
           />
         </Box>
       </Center>
