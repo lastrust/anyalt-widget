@@ -6,6 +6,11 @@ import { ChakraProvider, Theme } from '@chakra-ui/react';
 import { defaultTheme } from './theme/defaultTheme';
 import ModalWrapper from './components/standalones/ModalWrapper';
 
+export { OpenModalButton } from './components/atoms/OpenModalButton';
+export { useModal } from './hooks/useModal';
+export { ChakraProvider as UIProvider } from '@chakra-ui/react';
+export { defaultTheme } from './theme/defaultTheme';
+
 export enum ChainType {
   EVM = 'EVM',
   SOLANA = 'SOLANA',
@@ -26,19 +31,18 @@ interface AnyaltWidgetProps {
   onClose: () => void;
 }
 
+
 const AnyaltWidget: FC<AnyaltWidgetProps> = ({
   theme = defaultTheme,
   isOpen,
   onClose,
 }) => {
   return (
-    <ChakraProvider theme={theme}>
-      <ModalWrapper isOpen={isOpen} onClose={onClose}>
-        <Header />
-        <Container />
-        <Footer />
-      </ModalWrapper>
-    </ChakraProvider>
+    <ModalWrapper isOpen={isOpen} onClose={onClose}>
+      <Header />
+      <Container />
+      <Footer />
+    </ModalWrapper>
   );
 };
 

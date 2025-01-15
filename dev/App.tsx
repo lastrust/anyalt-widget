@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import AnyaltWidget, { ChainType } from '../src/AnyaltWidget';
 import { Box, Center, ChakraProvider } from '@chakra-ui/react';
-import OpenModalButton from '../src/components/atoms/OpenModalButton';
-import useModal from '../src/hooks/useModal';
+import { OpenModalButton } from '../src/components/atoms/OpenModalButton';
+import { useModal } from '../src/hooks/useModal';
 
 const App = () => {
   const { isOpen, handleOpen, handleClose } = useModal();

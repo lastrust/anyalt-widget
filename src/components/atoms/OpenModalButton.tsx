@@ -5,7 +5,7 @@ interface OpenModalButtonProps {
   onOpen: () => void;
 }
 
-const OpenModalButton: FC<OpenModalButtonProps> = ({ onOpen }) => {
+export const OpenModalButton: FC<OpenModalButtonProps> = ({ onOpen }) => {
   return (
     <Button onClick={onOpen} colorScheme="teal">
       Open Anyalt Widget
@@ -13,4 +13,3 @@ const OpenModalButton: FC<OpenModalButtonProps> = ({ onOpen }) => {
   );
 };
 
-export default OpenModalButton;

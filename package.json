@@ -1,6 +1,6 @@
 {
-  "name": "anyalt-widget",
-  "version": "1.0.0",
+  "name": "@anyalt/widget",
+  "version": "1.0.0-canary.9",
   "description": "Anyalt Widget",
   "private": false,
   "main": "dist/anyalt-widget.umd.js",
@@ -19,12 +19,12 @@
     }
   },
   "peerDependencies": {
-    "@chakra-ui/react": ">=2",
-    "@emotion/react": ">=11",
-    "@emotion/styled": ">=11",
-    "framer-motion": ">=11",
-    "react": ">=18",
-    "react-dom": ">=18"
+    "@chakra-ui/react": "^2.10.4",
+    "@emotion/react": "^11.0.0",
+    "@emotion/styled": "^11.0.0",
+    "framer-motion": "^11.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
   },
   "scripts": {
     "dev": "vite",
@@ -43,7 +43,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@chakra-ui/react": "2",
+    "@chakra-ui/react": "2.10.4",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@fontsource/rethink-sans": "^5.0.1",
