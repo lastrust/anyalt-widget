@@ -6,46 +6,13 @@ import {
   AccordionPanel,
   Box,
   Flex,
-  Icon,
-  Text,
 } from '@chakra-ui/react';
-import { ElementType } from 'react';
+import { RouteTag } from 'src/components/molecules/Tag/RouteTag';
 import aarnaIcon from '../../../assets/imgs/aarna.png';
 import { GasIcon } from '../../atoms/icons/GasIcon';
 import { StepsIcon } from '../../atoms/icons/StepsIcon';
 import { TimeIcon } from '../../atoms/icons/TimeIcon';
 import { TokenRouteInfo } from '../../molecules/TokenRouteInfo';
-
-type RouteTagProps = {
-  text: string;
-  textColor?: string;
-  bgColor?: string;
-  icon?: ElementType;
-};
-
-const RouteTag = ({ text, icon, textColor, bgColor }: RouteTagProps) => {
-  return (
-    <Box
-      display="flex"
-      alignItems="center"
-      gap="4px"
-      p="7px 12px"
-      borderRadius={'32px'}
-      bgColor={bgColor}
-      border="1px solid #008080"
-    >
-      {icon && <Icon as={icon} w={'14px'} h={'14px'} />}
-      <Text
-        fontSize="14px"
-        fontWeight="bold"
-        color={textColor}
-        lineHeight={'16px'}
-      >
-        {text}
-      </Text>
-    </Box>
-  );
-};
 
 export const RouteAccordion = () => {
   return (
