@@ -8,10 +8,10 @@ import {
   Flex,
 } from '@chakra-ui/react';
 import aarnaIcon from '../../../assets/imgs/aarna.png';
-import { RouteTag } from '../../molecules/Tag/RouteTag';
 import { GasIcon } from '../../atoms/icons/GasIcon';
 import { StepsIcon } from '../../atoms/icons/StepsIcon';
 import { TimeIcon } from '../../atoms/icons/TimeIcon';
+import { RouteTag } from '../../molecules/Tag/RouteTag';
 import { TokenRouteInfo } from '../../molecules/TokenRouteInfo';
 
 export const RouteAccordion = () => {
