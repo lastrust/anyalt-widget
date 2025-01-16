@@ -4,22 +4,27 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalOverlay,
+  ModalProps,
 } from '@chakra-ui/react';
 import { FC, ReactNode } from 'react';
 
-interface ModalWrapperProps {
+type ModalWrapperProps = {
   isOpen: boolean;
   onClose: () => void;
   children: ReactNode;
-}
+} & ModalProps;
 
-const ModalWrapper: FC<ModalWrapperProps> = ({ isOpen, onClose, children }) => {
+const ModalWrapper: FC<ModalWrapperProps> = ({
+  isOpen,
+  onClose,
+  children,
+  ...props
+}) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCentered size="lg">
+    <Modal isOpen={isOpen} onClose={onClose} isCentered size="2xl" {...props}>
       <ModalOverlay backdropFilter="blur(4px)" />
       <ModalContent
         bg="brand.primary"
-        maxW="528px"
         borderRadius="12px"
         border="1px solid"
         borderColor="brand.secondary.12"

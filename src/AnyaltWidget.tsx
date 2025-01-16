@@ -3,6 +3,7 @@ import { Footer } from './components/organisms/Footer';
 import { Header } from './components/organisms/Header';
 import { SwappingWrapper } from './components/organisms/SwappingWrapper';
 import ModalWrapper from './components/standalones/ModalWrapper';
+import { useSteps } from './components/standalones/stepper/useSteps';
 import { Token } from './types/types';
 
 export { OpenModalButton } from './components/atoms/OpenModalButton';
@@ -25,15 +26,21 @@ type Props = {
 
 export const AnyaltWidget = ({ isOpen, onClose }: Props) => {
   const [loading, setLoading] = useState(false);
+  const { activeStep, nextStep } = useSteps({ stepsAmount: 1 });
+
   return (
-    <ModalWrapper isOpen={isOpen} onClose={onClose}>
+    <ModalWrapper isOpen={isOpen} onClose={onClose} size={activeStep === 1 ? '4xl' : 'lg'}>
       <Header />
       <SwappingWrapper
+        activeStep={activeStep}
         loading={loading}
         title={loading ? 'Calculation' : 'Select Deposit Token'}
-        buttonText="Connect Wallet/s To Start Transaction"
+        buttonText={
+          loading ? 'Connect Wallet/s To Start Transaction' : 'Get Quote'
+        }
         onButtonClick={() => {
           setLoading(true);
+          nextStep();
           console.log('clicking');
         }}
       />

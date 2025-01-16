@@ -3,10 +3,10 @@ import React, { ReactNode } from 'react';
 
 type Props = {
   children: ReactNode;
-  currentScenario: number;
+  activeStep: number;
 } & BoxProps;
 
-const Stepper = ({ children, currentScenario, ...props }: Props) => {
+const CustomStepper = ({ children, activeStep, ...props }: Props) => {
   return (
     <Box {...props}>
       {children &&
@@ -15,7 +15,7 @@ const Stepper = ({ children, currentScenario, ...props }: Props) => {
             return React.Children.count(child);
           })
           .map((child, index) => {
-            if (index === currentScenario) {
+            if (index === activeStep) {
               return child;
             }
           })}
@@ -23,4 +23,4 @@ const Stepper = ({ children, currentScenario, ...props }: Props) => {
   );
 };
 
-export default Stepper;
+export default CustomStepper;

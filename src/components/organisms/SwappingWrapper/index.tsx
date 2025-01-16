@@ -1,16 +1,15 @@
-import { Box, Button, Image, Text } from '@chakra-ui/react';
-import aarnaIcon from '../../../assets/imgs/aarna.png';
+import { Box, Button, Grid, Image, Text } from '@chakra-ui/react';
 import configIcon from '../../../assets/imgs/config-icon.svg';
-import ethereumIcon from '../../../assets/imgs/ethereum.svg';
-import usdcIcon from '../../../assets/imgs/usdc.png';
-import { TokenInputBox } from '../../standalones/TokenInputBox';
-import { TokenQuoteBox } from '../../standalones/TokenQuoteBox';
+import { RoutesWrapper } from '../../standalones/Routes/RoutesWrapper';
+import { SelectSwap } from '../../standalones/SelectSwap/SelectSwap';
+import CustomStepper from '../../standalones/stepper/Stepper';
 
 type Props = {
   title: string;
   loading: boolean;
   buttonText: string;
   onButtonClick: () => void;
+  activeStep: number;
 };
 
 export const SwappingWrapper = ({
@@ -18,6 +17,7 @@ export const SwappingWrapper = ({
   loading,
   buttonText,
   onButtonClick,
+  activeStep,
 }: Props) => {
   return (
     <Box
@@ -41,33 +41,14 @@ export const SwappingWrapper = ({
         </Box>
       </Box>
 
-      <TokenInputBox mb="16px" />
+      <CustomStepper activeStep={activeStep}>
+        <SelectSwap loading={loading} />
+        <Grid gridTemplateColumns="1fr 1fr" gap="24px">
+          <SelectSwap loading={loading} />
+          <RoutesWrapper />
+        </Grid>
+      </CustomStepper>
 
-      <TokenQuoteBox
-        loading={loading}
-        headerText="Vault Is Expecting"
-        tokenName="USDC"
-        tokenLogo={usdcIcon}
-        chainName="Ethereum"
-        chainLogo={ethereumIcon}
-        amount={2420.9}
-        price={2423.53}
-        mb="16px"
-      />
-
-      <Box width="100%" height="1px" bgColor="brand.secondary.12" mb="16px" />
-
-      <TokenQuoteBox
-        loading={loading}
-        headerText="What You Are Getting"
-        tokenName="Aarnâ Afi802"
-        tokenLogo={aarnaIcon}
-        chainName="Ethereum"
-        chainLogo={ethereumIcon}
-        amount={10.19}
-        price={2423.53}
-        mb="16px"
-      />
       <Button
         width="100%"
         bg="brand.tertiary.100"
