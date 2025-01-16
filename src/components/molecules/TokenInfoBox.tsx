@@ -3,10 +3,10 @@ import { FC } from 'react';
 
 type Props = BoxProps & {
   tokenName: string;
-  chainName: string;
+  subText: string;
 };
 
-export const TokenInfoBox: FC<Props> = ({ tokenName, chainName, ...props }) => {
+export const TokenInfoBox: FC<Props> = ({ tokenName, subText, ...props }) => {
   return (
     <Box
       display="flex"
@@ -20,7 +20,7 @@ export const TokenInfoBox: FC<Props> = ({ tokenName, chainName, ...props }) => {
         {tokenName}
       </Text>
       <Text color="white" fontSize="12px" fontWeight="regular" opacity={0.4}>
-        On {chainName}
+        {subText}
       </Text>
     </Box>
   );

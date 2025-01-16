@@ -6,9 +6,14 @@ import solanaIcon from '../../assets/imgs/solana.svg';
 import { TokenIconBox } from '../molecules/TokenIconBox';
 import { TokenInfoBox } from '../molecules/TokenInfoBox';
 
-type Props = BoxProps;
+type Props = BoxProps & {
+  openTokenSelectModal: () => void;
+};
 
-export const TokenInputBox: FC<Props> = ({ ...props }) => {
+export const TokenInputBox: FC<Props> = ({
+  openTokenSelectModal,
+  ...props
+}) => {
   return (
     <Box {...props}>
       <Box
@@ -62,8 +67,8 @@ export const TokenInputBox: FC<Props> = ({ ...props }) => {
               chainIcon={solanaIcon}
               mr="8px"
             />
-            <TokenInfoBox tokenName="POPCAT" chainName="Solana" mr="12px" />
-            <Box>
+            <TokenInfoBox tokenName="POPCAT" subText="On Solana" mr="12px" />
+            <Box cursor="pointer" onClick={() => openTokenSelectModal()}>
               <Image
                 src={chevronRight}
                 alt="Chevron Right"
@@ -85,6 +90,7 @@ export const TokenInputBox: FC<Props> = ({ ...props }) => {
               placeholder="1000.00"
               textAlign="right"
               maxWidth="150px"
+              padding="0px"
             />
           </Box>
         </Box>

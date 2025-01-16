@@ -1,12 +1,16 @@
 import { Box, Button, Image, Text } from '@chakra-ui/react';
+import { useState } from 'react';
 import aarnaIcon from '../../../assets/imgs/aarna.png';
 import configIcon from '../../../assets/imgs/config-icon.svg';
 import ethereumIcon from '../../../assets/imgs/ethereum.svg';
 import usdcIcon from '../../../assets/imgs/usdc.png';
 import { TokenInputBox } from '../../standalones/TokenInputBox';
 import { TokenQuoteBox } from '../../standalones/TokenQuoteBox';
+import { TokenSelectBox } from '../../standalones/TokenSelectBox';
 
 export const Container = () => {
+  const [openTokenSelect, setOpenTokenSelect] = useState<boolean>(false);
+
   return (
     <Box
       margin="24px 0px"
@@ -29,7 +33,12 @@ export const Container = () => {
         </Box>
       </Box>
 
-      <TokenInputBox mb="16px" />
+      <TokenInputBox
+        mb="16px"
+        openTokenSelectModal={() => {
+          setOpenTokenSelect(true);
+        }}
+      />
 
       <TokenQuoteBox
         headerText="Vault Is Expecting"
@@ -64,6 +73,10 @@ export const Container = () => {
       >
         Connect Wallet/s To Start Transaction
       </Button>
+
+      {openTokenSelect && (
+        <TokenSelectBox onClose={() => setOpenTokenSelect(false)} />
+      )}
     </Box>
   );
 };

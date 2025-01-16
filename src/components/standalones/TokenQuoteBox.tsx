@@ -45,7 +45,11 @@ export const TokenQuoteBox: FC<Props> = ({
             chainIcon={chainLogo}
             mr="8px"
           />
-          <TokenInfoBox tokenName={tokenName} chainName={chainName} mr="12px" />
+          <TokenInfoBox
+            tokenName={tokenName}
+            subText={`On ${chainName}`}
+            mr="12px"
+          />
         </Box>
         <Box display="flex" flexDirection="column" alignItems="flex-end">
           <Text fontSize="24px" fontWeight="bold">

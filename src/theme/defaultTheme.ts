@@ -27,6 +27,7 @@ export const defaultTheme = extendTheme({
     brand: {
       primary: '#121212',
       secondary: {
+        100: '#919eab',
         12: '#919eab1f',
         4: '#919eab0a',
       },
@@ -34,6 +35,7 @@ export const defaultTheme = extendTheme({
         100: '#008080',
         20: '#00808033',
       },
+      quaternary: '#0C0600',
     },
   },
   components: {

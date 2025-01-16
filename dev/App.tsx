@@ -5,6 +5,9 @@ import { Box, Center, ChakraProvider } from '@chakra-ui/react';
 import { OpenModalButton } from '../src/components/atoms/OpenModalButton';
 import { useModal } from '../src/hooks/useModal';
 import { ChainType } from '../src/types/types';
+import { AnyAlt } from '@anyalt/sdk';
+
+export const anyaltInstance = new AnyAlt('pk_0xCYxjM8dFF0Vii7syrgpR6U4');
 
 const App = () => {
   const { isOpen, onOpen, onClose } = useModal();
@@ -24,6 +27,7 @@ const App = () => {
             }}
             isOpen={isOpen}
             onClose={onClose}
+            anyaltInstance={anyaltInstance}
           />
         </Box>
       </Center>
