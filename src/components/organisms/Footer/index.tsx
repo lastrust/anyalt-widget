@@ -1,5 +1,5 @@
 import { Box, Text } from '@chakra-ui/react';
-import { AnyaltLogo } from '../../atoms/icon/AnyaltLogo';
+import { AnyaltLogo } from '../../atoms/icons/AnyAltLogo';
 
 export const Footer = () => {
   return (

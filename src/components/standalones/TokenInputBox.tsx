@@ -15,7 +15,7 @@ export const TokenInputBox: FC<Props> = ({ ...props }) => {
         display="flex"
         justifyContent="space-between"
         alignItems="center"
-        mb="16px"
+        mb="12px"
       >
         <Text color="white" fontSize="14px" fontWeight="bold" opacity={0.32}>
           Choose Your Deposit

@@ -21,8 +21,8 @@ export const TokenIconBox: FC<Props> = ({
         src={tokenIcon}
         alt={`${tokenName} Icon`}
         marginRight={'8px'}
-        width="40px"
-        height="40px"
+        width="32px"
+        height="32px"
       />
       <Box position="absolute" bottom="0px" left="26px">
         <Image src={chainIcon} alt={`${chainName} Icon`} />
