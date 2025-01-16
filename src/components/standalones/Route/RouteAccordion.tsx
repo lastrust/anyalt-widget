@@ -6,11 +6,13 @@ import {
   AccordionPanel,
   Box,
   Flex,
+  VStack,
 } from '@chakra-ui/react';
 import aarnaIcon from '../../../assets/imgs/aarna.png';
 import { GasIcon } from '../../atoms/icons/GasIcon';
 import { StepsIcon } from '../../atoms/icons/StepsIcon';
 import { TimeIcon } from '../../atoms/icons/TimeIcon';
+import { RouteStep } from '../../molecules/RouteStep/RouteStep';
 import { RouteTag } from '../../molecules/Tag/RouteTag';
 import { TokenRouteInfo } from '../../molecules/TokenRouteInfo';
 
@@ -82,11 +84,23 @@ export const RouteAccordion = () => {
             />
           </AccordionButton>
         </h2>
-        <AccordionPanel p={'0px'}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat.
+        <AccordionPanel p={'0px'} mt="12px">
+          <VStack gap={'12px'}>
+            <RouteStep
+              stepNumber={1}
+              exchangeIcon={aarnaIcon}
+              exchangeName="aarna"
+              fromToken={{ name: 'aarna', amount: '10.19' }}
+              toToken={{ name: 'aarna', amount: '10.19' }}
+            />
+            <RouteStep
+              stepNumber={2}
+              exchangeIcon={aarnaIcon}
+              exchangeName="aarna"
+              fromToken={{ name: 'aarna', amount: '10.19' }}
+              toToken={{ name: 'aarna', amount: '10.19' }}
+            />
+          </VStack>
         </AccordionPanel>
       </AccordionItem>
     </Accordion>
