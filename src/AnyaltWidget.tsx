@@ -29,7 +29,11 @@ export const AnyaltWidget = ({ isOpen, onClose }: Props) => {
   const { activeStep, nextStep } = useSteps({ stepsAmount: 1 });
 
   return (
-    <ModalWrapper isOpen={isOpen} onClose={onClose} size={activeStep === 1 ? '4xl' : 'lg'}>
+    <ModalWrapper
+      isOpen={isOpen}
+      onClose={onClose}
+      size={activeStep === 1 ? '4xl' : 'lg'}
+    >
       <Header />
       <SwappingWrapper
         activeStep={activeStep}
