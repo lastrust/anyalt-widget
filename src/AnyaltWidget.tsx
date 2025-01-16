@@ -1,4 +1,4 @@
-import { Container } from './components/organisms/Container';
+import { Container } from './components/organisms/SelectDepositToken';
 import { Footer } from './components/organisms/Footer';
 import { Header } from './components/organisms/Header';
 import ModalWrapper from './components/standalones/ModalWrapper';
@@ -12,6 +12,8 @@ export {
   defaultTheme as standardTheme,
 } from './theme/defaultTheme';
 
+// TODO: As it's going to be mutliple steps widget with deposit it must accept all needed data to show for the last mile tx.
+// TODO: check and prepare all needed data for the last mile tx.
 type Props = {
   logo: string;
   isOpen: boolean;

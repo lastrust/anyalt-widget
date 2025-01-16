@@ -15,7 +15,7 @@ interface ModalWrapperProps {
 
 const ModalWrapper: FC<ModalWrapperProps> = ({ isOpen, onClose, children }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCentered size="xl">
+    <Modal isOpen={isOpen} onClose={onClose} isCentered size="lg">
       <ModalOverlay backdropFilter="blur(4px)" />
       <ModalContent
         bg="brand.primary"

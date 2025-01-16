@@ -25,7 +25,7 @@ export const TokenQuoteBox: FC<Props> = ({
 }) => {
   return (
     <Box padding="4px 16px" {...props}>
-      <Box mb="16px">
+      <Box mb="12px">
         <Text color="white" fontSize="14px" fontWeight="bold" opacity={0.32}>
           {headerText}
         </Text>
@@ -37,7 +37,7 @@ export const TokenQuoteBox: FC<Props> = ({
         alignItems="center"
         width="100%"
       >
-        <Box display="flex" flexDirection="row" alignItems="center">
+        <Box display="flex" flexDirection="row" alignItems="center" >
           <TokenIconBox
             tokenName={tokenName}
             tokenIcon={tokenLogo}

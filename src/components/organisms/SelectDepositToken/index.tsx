@@ -21,7 +21,7 @@ export const Container = () => {
         alignItems="center"
         mb="16px"
       >
-        <Text color="white" fontSize="24px" fontWeight="semiBold">
+        <Text color="white" fontSize="24px" fontWeight="bold">
           Select Deposit Token
         </Text>
         <Box cursor="pointer">
