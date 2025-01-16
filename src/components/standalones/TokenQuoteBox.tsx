@@ -37,7 +37,7 @@ export const TokenQuoteBox: FC<Props> = ({
         alignItems="center"
         width="100%"
       >
-        <Box display="flex" flexDirection="row" alignItems="center" >
+        <Box display="flex" flexDirection="row" alignItems="center">
           <TokenIconBox
             tokenName={tokenName}
             tokenIcon={tokenLogo}

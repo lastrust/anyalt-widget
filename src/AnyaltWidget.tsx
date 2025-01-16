@@ -1,6 +1,6 @@
-import { Container } from './components/organisms/SelectDepositToken';
 import { Footer } from './components/organisms/Footer';
 import { Header } from './components/organisms/Header';
+import { Container } from './components/organisms/SelectDepositToken';
 import ModalWrapper from './components/standalones/ModalWrapper';
 import { Token } from './types/types';
 
