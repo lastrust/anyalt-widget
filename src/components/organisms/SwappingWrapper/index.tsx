@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Image, Text } from '@chakra-ui/react';
+import { Box, Button, Image, Text } from '@chakra-ui/react';
 import configIcon from '../../../assets/imgs/config-icon.svg';
 import { RoutesWrapper } from '../../standalones/Routes/RoutesWrapper';
 import { SelectSwap } from '../../standalones/SelectSwap/SelectSwap';
@@ -43,10 +43,7 @@ export const SwappingWrapper = ({
 
       <CustomStepper activeStep={activeStep}>
         <SelectSwap loading={loading} />
-        <Grid gridTemplateColumns="1fr 1fr" gap="24px">
-          <SelectSwap loading={loading} />
-          <RoutesWrapper />
-        </Grid>
+        <RoutesWrapper loading={loading} />
       </CustomStepper>
 
       <Button
