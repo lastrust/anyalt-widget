@@ -13,10 +13,10 @@ export const TokenInfoBox: FC<Props> = ({ tokenName, subText, ...props }) => {
       flexDirection="column"
       justifyContent="space-between"
       alignItems="flex-start"
-      gap="7px"
+      gap="4px"
       {...props}
     >
-      <Text color="white" fontSize="16px" fontWeight="bold">
+      <Text color="white" fontSize="16px" fontWeight="extrabold">
         {tokenName}
       </Text>
       <Text color="white" fontSize="12px" fontWeight="regular" opacity={0.4}>

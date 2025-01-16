@@ -28,6 +28,8 @@ export const defaultTheme = extendTheme({
       primary: '#121212',
       secondary: {
         100: '#919eab',
+        1: '#000000',
+        2: 'rgba(255, 255, 255, 0.80)',
         12: '#919eab1f',
         4: '#919eab0a',
       },

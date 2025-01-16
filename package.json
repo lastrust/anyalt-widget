@@ -1,6 +1,6 @@
 {
   "name": "@anyalt/widget",
-  "version": "1.0.0-canary.12",
+  "version": "1.0.0-canary.14",
   "description": "Anyalt Widget",
   "private": false,
   "main": "dist/anyalt-widget.umd.js",

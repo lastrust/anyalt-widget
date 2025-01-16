@@ -46,6 +46,7 @@ export const TokenSelectBox: FC<Props> = ({ onClose }) => {
         border="1px solid"
         borderColor="brand.secondary.12"
         borderBottom="none"
+        zIndex="100"
       >
         <Box
           cursor="pointer"
