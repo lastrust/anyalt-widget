@@ -1,23 +1,22 @@
-import { Box, Button, Image, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Grid, Image, Text } from '@chakra-ui/react';
 import configIcon from '../../../assets/imgs/config-icon.svg';
-import { RoutesWrapper } from '../../standalones/Routes/RoutesWrapper';
-import { SelectSwap } from '../../standalones/SelectSwap/SelectSwap';
-import CustomStepper from '../../standalones/stepper/Stepper';
 
 type Props = {
   title: string;
-  loading: boolean;
+  secondTitle?: string;
+  secondSubtitle?: string;
   buttonText: string;
   onButtonClick: () => void;
-  activeStep: number;
+  children: React.ReactNode;
 };
 
 export const SwappingWrapper = ({
   title,
-  loading,
+  secondTitle,
+  secondSubtitle,
   buttonText,
   onButtonClick,
-  activeStep,
+  children,
 }: Props) => {
   return (
     <Box
@@ -27,27 +26,39 @@ export const SwappingWrapper = ({
       borderColor="brand.secondary.12"
       borderRadius="12px"
     >
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        mb="16px"
-      >
-        <Text color="white" fontSize="24px" fontWeight="bold">
-          {title}
-        </Text>
-        <Box cursor="pointer">
-          <Image src={configIcon} alt="config" />
-        </Box>
-      </Box>
+      <Grid gridTemplateColumns="1fr 1fr" gap="16px">
+        <Flex justifyContent="space-between" alignItems="center" mb="16px">
+          <Text color="white" fontSize="24px" fontWeight="bold">
+            {title}
+          </Text>
+          <Box cursor="pointer">
+            <Image src={configIcon} alt="config" />
+          </Box>
+        </Flex>
+        {secondTitle && (
+          <Flex
+            justifyContent="space-between"
+            flexDir={'column'}
+            alignItems="left"
+            mb="16px"
+          >
+            <Text color="white" fontSize="24px" fontWeight="bold">
+              {secondTitle}
+            </Text>
+            <Text
+              fontSize={'14px'}
+              fontWeight={'normal'}
+              color="brand.secondary.2"
+            >
+              {secondSubtitle}
+            </Text>
+          </Flex>
+        )}
+      </Grid>
 
-      <CustomStepper activeStep={activeStep}>
-        <SelectSwap loading={loading} />
-        <RoutesWrapper loading={loading} />
-      </CustomStepper>
-
+      {children}
       <Button
-        width="100%"
+        width={secondTitle ? '50%' : '100%'}
         bg="brand.tertiary.100"
         color="white"
         fontSize="16px"

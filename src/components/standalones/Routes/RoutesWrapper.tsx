@@ -1,4 +1,5 @@
 import { Grid } from '@chakra-ui/react';
+import { RouteAccordion } from '../Route/RouteAccordion';
 import { SelectSwap } from '../SelectSwap/SelectSwap';
 
 type Props = {
@@ -9,7 +10,7 @@ export const RoutesWrapper = ({ loading }: Props) => {
   return (
     <Grid gridTemplateColumns="1fr 1fr" gap="24px">
       <SelectSwap loading={loading} />
-      <div>RoutesWrapper</div>;
+      <RouteAccordion />
     </Grid>
   );
 };

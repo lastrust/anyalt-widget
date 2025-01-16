@@ -3,6 +3,9 @@ import { Footer } from './components/organisms/Footer';
 import { Header } from './components/organisms/Header';
 import { SwappingWrapper } from './components/organisms/SwappingWrapper';
 import ModalWrapper from './components/standalones/ModalWrapper';
+import { RoutesWrapper } from './components/standalones/Routes/RoutesWrapper';
+import { SelectSwap } from './components/standalones/SelectSwap/SelectSwap';
+import CustomStepper from './components/standalones/stepper/Stepper';
 import { useSteps } from './components/standalones/stepper/useSteps';
 import { Token } from './types/types';
 
@@ -35,19 +38,36 @@ export const AnyaltWidget = ({ isOpen, onClose }: Props) => {
       size={activeStep === 1 ? '4xl' : 'lg'}
     >
       <Header />
-      <SwappingWrapper
-        activeStep={activeStep}
-        loading={loading}
-        title={loading ? 'Calculation' : 'Select Deposit Token'}
-        buttonText={
-          loading ? 'Connect Wallet/s To Start Transaction' : 'Get Quote'
-        }
-        onButtonClick={() => {
-          setLoading(true);
-          nextStep();
-          console.log('clicking');
-        }}
-      />
+      <CustomStepper activeStep={activeStep}>
+        <SwappingWrapper
+          title={loading ? 'Calculation' : 'Select Deposit Token'}
+          buttonText={
+            loading ? 'Connect Wallet/s To Start Transaction' : 'Get Quote'
+          }
+          onButtonClick={() => {
+            setLoading(true);
+            nextStep();
+            console.log('clicking');
+          }}
+        >
+          <SelectSwap loading={loading} />
+        </SwappingWrapper>
+        <SwappingWrapper
+          title={loading ? 'Calculation' : 'Select Deposit Token'}
+          secondTitle="Routes"
+          secondSubtitle="Please select preferred route"
+          buttonText={
+            loading ? 'Connect Wallet/s To Start Transaction' : 'Get Quote'
+          }
+          onButtonClick={() => {
+            setLoading(true);
+            nextStep();
+            console.log('clicking');
+          }}
+        >
+          <RoutesWrapper loading={loading} />
+        </SwappingWrapper>
+      </CustomStepper>
       <Footer />
     </ModalWrapper>
   );
