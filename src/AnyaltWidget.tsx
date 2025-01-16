@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Footer } from './components/organisms/Footer';
 import { Header } from './components/organisms/Header';
-import { SwappingWrapper } from './components/organisms/SelectDepositToken';
+import { SwappingWrapper } from './components/organisms/SwappingWrapper';
 import ModalWrapper from './components/standalones/ModalWrapper';
 import { Token } from './types/types';
 
