@@ -1,9 +1,10 @@
-import { Box, BoxProps, Text } from '@chakra-ui/react';
+import { Box, BoxProps, Skeleton, Text } from '@chakra-ui/react';
 import { FC } from 'react';
 import { TokenIconBox } from '../molecules/TokenIconBox';
 import { TokenInfoBox } from '../molecules/TokenInfoBox';
 
 type Props = {
+  loading: boolean;
   headerText: string;
   tokenName: string;
   tokenLogo: string;
@@ -14,6 +15,7 @@ type Props = {
 } & BoxProps;
 
 export const TokenQuoteBox: FC<Props> = ({
+  loading,
   headerText,
   tokenName,
   tokenLogo,
@@ -47,13 +49,26 @@ export const TokenQuoteBox: FC<Props> = ({
           />
           <TokenInfoBox tokenName={tokenName} chainName={chainName} mr="12px" />
         </Box>
-        <Box display="flex" flexDirection="column" alignItems="flex-end">
-          <Text fontSize="24px" fontWeight="bold">
-            {amount}
-          </Text>
-          <Text fontSize="12px" fontWeight="regular" opacity={0.4}>
-            ~${price}
-          </Text>
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignItems="flex-end"
+          gap={'2px'}
+        >
+          {loading ? (
+            <Skeleton width="70px" height="19px" borderRadius="32px" />
+          ) : (
+            <Text fontSize="24px" fontWeight="bold">
+              {amount}
+            </Text>
+          )}
+          {loading ? (
+            <Skeleton width="34px" height="14px" borderRadius="32px" />
+          ) : (
+            <Text fontSize="12px" fontWeight="regular" opacity={0.4}>
+              ~${price}
+            </Text>
+          )}
         </Box>
       </Box>
     </Box>

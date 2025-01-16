@@ -1,7 +1,7 @@
+import { Box, Center, ChakraProvider } from '@chakra-ui/react';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { AnyaltWidget, defaultTheme } from '../src/AnyaltWidget';
-import { Box, Center, ChakraProvider } from '@chakra-ui/react';
 import { OpenModalButton } from '../src/components/atoms/OpenModalButton';
 import { useModal } from '../src/hooks/useModal';
 import { ChainType } from '../src/types/types';

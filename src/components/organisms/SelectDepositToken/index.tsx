@@ -6,7 +6,19 @@ import usdcIcon from '../../../assets/imgs/usdc.png';
 import { TokenInputBox } from '../../standalones/TokenInputBox';
 import { TokenQuoteBox } from '../../standalones/TokenQuoteBox';
 
-export const Container = () => {
+type Props = {
+  title: string;
+  loading: boolean;
+  buttonText: string;
+  onButtonClick: () => void;
+};
+
+export const SwappingWrapper = ({
+  title,
+  loading,
+  buttonText,
+  onButtonClick,
+}: Props) => {
   return (
     <Box
       margin="24px 0px"
@@ -22,7 +34,7 @@ export const Container = () => {
         mb="16px"
       >
         <Text color="white" fontSize="24px" fontWeight="bold">
-          Select Deposit Token
+          {title}
         </Text>
         <Box cursor="pointer">
           <Image src={configIcon} alt="config" />
@@ -32,6 +44,7 @@ export const Container = () => {
       <TokenInputBox mb="16px" />
 
       <TokenQuoteBox
+        loading={loading}
         headerText="Vault Is Expecting"
         tokenName="USDC"
         tokenLogo={usdcIcon}
@@ -43,7 +56,9 @@ export const Container = () => {
       />
 
       <Box width="100%" height="1px" bgColor="brand.secondary.12" mb="16px" />
+
       <TokenQuoteBox
+        loading={loading}
         headerText="What You Are Getting"
         tokenName="Aarnâ Afi802"
         tokenLogo={aarnaIcon}
@@ -61,8 +76,9 @@ export const Container = () => {
         fontWeight="bold"
         borderRadius="8px"
         h="64px"
+        onClick={onButtonClick}
       >
-        Connect Wallet/s To Start Transaction
+        {buttonText}
       </Button>
     </Box>
   );

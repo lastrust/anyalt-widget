@@ -1,6 +1,7 @@
+import { useState } from 'react';
 import { Footer } from './components/organisms/Footer';
 import { Header } from './components/organisms/Header';
-import { Container } from './components/organisms/SelectDepositToken';
+import { SwappingWrapper } from './components/organisms/SelectDepositToken';
 import ModalWrapper from './components/standalones/ModalWrapper';
 import { Token } from './types/types';
 
@@ -23,10 +24,19 @@ type Props = {
 };
 
 export const AnyaltWidget = ({ isOpen, onClose }: Props) => {
+  const [loading, setLoading] = useState(false);
   return (
     <ModalWrapper isOpen={isOpen} onClose={onClose}>
       <Header />
-      <Container />
+      <SwappingWrapper
+        loading={loading}
+        title={loading ? 'Calculation' : 'Select Deposit Token'}
+        buttonText="Connect Wallet/s To Start Transaction"
+        onButtonClick={() => {
+          setLoading(true);
+          console.log('clicking');
+        }}
+      />
       <Footer />
     </ModalWrapper>
   );
