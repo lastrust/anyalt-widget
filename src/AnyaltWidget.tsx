@@ -22,7 +22,7 @@ export {
 type Props = {
   logo: string;
   isOpen: boolean;
-  inputToken: Token;
+  inputToken?: Token;
   walletConnector: unknown;
   onClose: () => void;
 };
