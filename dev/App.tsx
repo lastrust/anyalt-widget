@@ -1,15 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import AnyaltWidget, { ChainType } from '../src/AnyaltWidget';
+import { AnyaltWidget, defaultTheme } from '../src/AnyaltWidget';
 import { Box, Center, ChakraProvider } from '@chakra-ui/react';
 import { OpenModalButton } from '../src/components/atoms/OpenModalButton';
 import { useModal } from '../src/hooks/useModal';
+import { ChainType } from '../src/types/types';
 
 const App = () => {
   const { isOpen, onOpen, onClose } = useModal();
 
   return (
-    <ChakraProvider>
+    <ChakraProvider theme={defaultTheme}>
       <Center h={'100vh'}>
         <Box maxW={'600px'}>
           <OpenModalButton onOpen={onOpen} />

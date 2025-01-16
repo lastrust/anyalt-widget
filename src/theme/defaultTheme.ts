@@ -26,7 +26,14 @@ export const defaultTheme = extendTheme({
   colors: {
     brand: {
       primary: '#121212',
-      secondary: '#919eab1f',
+      secondary: {
+        12: '#919eab1f',
+        4: '#919eab0a',
+      },
+      tertiary: {
+        100: '#008080',
+        20: '#00808033',
+      },
     },
   },
   components: {
