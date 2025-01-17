@@ -5,13 +5,13 @@ import { Header } from './components/organisms/Header';
 import { SwappingWrapper } from './components/organisms/SwappingWrapper';
 import { ConnectWalletsModal } from './components/standalones/modals/ConnectWalletsModal';
 import ModalWrapper from './components/standalones/modals/ModalWrapper';
+import { RoutesWrapper } from './components/standalones/routesWrap/RoutesWrapper';
 import { SelectSwap } from './components/standalones/selectSwap/SelectSwap';
 import CustomStepper from './components/standalones/stepper/Stepper';
 import { useSteps } from './components/standalones/stepper/useSteps';
 import { AppKitProvider } from './providers/RainbowKitProvider';
 import { SolanaProvider } from './providers/SolanaProvider';
 import { Token } from './types/types';
-import { RoutesWrapper } from './components/standalones/routesWrap/RoutesWrapper';
 
 export { OpenModalButton } from './components/atoms/buttons/OpenModalButton';
 export { useModal } from './hooks/useModal';
