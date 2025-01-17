@@ -51,6 +51,19 @@ export const defaultTheme = extendTheme({
     border: {
       primary: 'rgba(145, 158, 171, 0.12)',
     },
+    bg: {
+      primary: '#121212',
+      secondary: {
+        1: 'rgba(145, 158, 171, 0.12)',
+      },
+      tertiary: {
+        100: '#008080',
+        20: '#00808033',
+      },
+    },
+    border: {
+      primary: 'rgba(145, 158, 171, 0.12)',
+    },
   },
   components: {
     Box: {

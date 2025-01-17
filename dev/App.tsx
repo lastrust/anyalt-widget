@@ -1,4 +1,5 @@
 import { Box, Center, ChakraProvider } from '@chakra-ui/react';
+import { Box, Center, ChakraProvider } from '@chakra-ui/react';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { AnyaltWidget, defaultTheme } from '../src/AnyaltWidget';
