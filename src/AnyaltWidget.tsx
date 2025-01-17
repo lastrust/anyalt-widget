@@ -81,8 +81,7 @@ export const AnyaltWidget = ({ isOpen, onClose }: Props) => {
         isOpen={isConfirmationOpen}
         onClose={onConfirmationClose}
         onConfirm={handleConfirm}
-        title="Confirm Action"
-        message="Are you sure you want to proceed with this transaction?"
+        title="Connect Wallet's"
       />
     </ModalWrapper>
   );
