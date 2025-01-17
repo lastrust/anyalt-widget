@@ -9,6 +9,8 @@ import { RoutesWrapper } from './components/standalones/routes/RoutesWrapper';
 import { SelectSwap } from './components/standalones/selectSwap/SelectSwap';
 import CustomStepper from './components/standalones/stepper/Stepper';
 import { useSteps } from './components/standalones/stepper/useSteps';
+import { AppKitProvider } from './providers/RainbowKitProvider';
+import { SolanaProvider } from './providers/SolanaProvider';
 import { Token } from './types/types';
 
 export { OpenModalButton } from './components/atoms/buttons/OpenModalButton';
@@ -44,45 +46,49 @@ export const AnyaltWidget = ({ isOpen, onClose }: Props) => {
   };
 
   return (
-    <ModalWrapper
-      isOpen={isOpen}
-      onClose={onClose}
-      size={activeStep === 1 ? '4xl' : 'lg'}
-    >
-      <Header />
-      <CustomStepper activeStep={activeStep}>
-        <SwappingWrapper
-          title={loading ? 'Calculation' : 'Select Deposit Token'}
-          buttonText={
-            loading ? 'Connect Wallet/s To Start Transaction' : 'Get Quote'
-          }
-          onButtonClick={onConfirmationOpen}
+    <AppKitProvider>
+      <SolanaProvider>
+        <ModalWrapper
+          isOpen={isOpen}
+          onClose={onClose}
+          size={activeStep === 1 ? '4xl' : 'lg'}
         >
-          <SelectSwap loading={loading} />
-        </SwappingWrapper>
-        <SwappingWrapper
-          title={loading ? 'Calculation' : 'Select Deposit Token'}
-          secondTitle="Routes"
-          secondSubtitle="Please select preferred route"
-          buttonText={
-            loading ? 'Connect Wallet/s To Start Transaction' : 'Get Quote'
-          }
-          onButtonClick={() => {
-            setLoading(true);
-            nextStep();
-            console.log('clicking');
-          }}
-        >
-          <RoutesWrapper loading={loading} />
-        </SwappingWrapper>
-      </CustomStepper>
-      <Footer />
-      <ConnectWalletsModal
-        isOpen={isConfirmationOpen}
-        onClose={onConfirmationClose}
-        onConfirm={handleConfirm}
-        title="Connect Wallet's"
-      />
-    </ModalWrapper>
+          <Header />
+          <CustomStepper activeStep={activeStep}>
+            <SwappingWrapper
+              title={loading ? 'Calculation' : 'Select Deposit Token'}
+              buttonText={
+                loading ? 'Connect Wallet/s To Start Transaction' : 'Get Quote'
+              }
+              onButtonClick={onConfirmationOpen}
+            >
+              <SelectSwap loading={loading} />
+            </SwappingWrapper>
+            <SwappingWrapper
+              title={loading ? 'Calculation' : 'Select Deposit Token'}
+              secondTitle="Routes"
+              secondSubtitle="Please select preferred route"
+              buttonText={
+                loading ? 'Connect Wallet/s To Start Transaction' : 'Get Quote'
+              }
+              onButtonClick={() => {
+                setLoading(true);
+                nextStep();
+                console.log('clicking');
+              }}
+            >
+              <RoutesWrapper loading={loading} />
+            </SwappingWrapper>
+          </CustomStepper>
+          <Footer />
+          <ConnectWalletsModal
+            isOpen={isConfirmationOpen}
+            onClose={onConfirmationClose}
+            onConfirm={handleConfirm}
+            title="Connect Wallet's"
+          />
+        </ModalWrapper>
+      </SolanaProvider>
+    </AppKitProvider>
   );
 };

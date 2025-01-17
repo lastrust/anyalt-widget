@@ -8,8 +8,10 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { useWallet } from '@solana/wallet-adapter-react';
 import { FC } from 'react';
-import { WalletCard } from '../../molecules/card/WalletCard';
+import { WalletButton } from '../../molecules/buttons/WalletButton';
 
 interface Props {
   isOpen: boolean;
@@ -37,6 +39,23 @@ export const ConnectWalletsModal: FC<Props> = ({
   onConfirm,
   title,
 }) => {
+  const { openConnectModal } = useConnectModal();
+  const { connect, connected } = useWallet();
+
+  const handleWalletClick = async (walletType: string) => {
+    if (walletType === 'EVM wallets') {
+      openConnectModal?.();
+    } else if (walletType === 'Solana wallets' && !connected) {
+      try {
+        await connect();
+      } catch (error) {
+        console.error(error);
+        throw new Error('Failed to connect Solana wallet');
+      }
+    }
+    onConfirm();
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered size="sm">
       <ModalOverlay backdropFilter="blur(4px)" />
@@ -59,15 +78,12 @@ export const ConnectWalletsModal: FC<Props> = ({
           </Text>
           <VStack spacing="12px" align="stretch">
             {WALLETS.map((wallet) => (
-              <WalletCard
+              <WalletButton
                 key={wallet.walletType}
                 walletType={wallet.walletType}
                 network={wallet.network}
                 icon={wallet.icon}
-                onClick={() => {
-                  onConfirm();
-                  onClose();
-                }}
+                onConnect={() => handleWalletClick(wallet.walletType)}
               />
             ))}
           </VStack>
