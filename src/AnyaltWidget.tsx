@@ -9,7 +9,7 @@ import CustomStepper from './components/standalones/stepper/Stepper';
 import { useSteps } from './components/standalones/stepper/useSteps';
 import { Token } from './types/types';
 
-export { OpenModalButton } from './components/atoms/OpenModalButton';
+export { OpenModalButton } from './components/atoms/buttons/OpenModalButton';
 export { useModal } from './hooks/useModal';
 export { WidgetProvider } from './providers/WidgetProvider';
 export {
