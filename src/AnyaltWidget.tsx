@@ -1,10 +1,12 @@
+import { useDisclosure } from '@chakra-ui/react';
 import { useState } from 'react';
 import { Footer } from './components/organisms/Footer';
 import { Header } from './components/organisms/Header';
 import { SwappingWrapper } from './components/organisms/SwappingWrapper';
-import ModalWrapper from './components/standalones/ModalWrapper';
-import { RoutesWrapper } from './components/standalones/Routes/RoutesWrapper';
-import { SelectSwap } from './components/standalones/SelectSwap/SelectSwap';
+import { ConnectWalletsModal } from './components/standalones/modals/ConnectWalletsModal';
+import ModalWrapper from './components/standalones/modals/ModalWrapper';
+import { RoutesWrapper } from './components/standalones/routes/RoutesWrapper';
+import { SelectSwap } from './components/standalones/selectSwap/SelectSwap';
 import CustomStepper from './components/standalones/stepper/Stepper';
 import { useSteps } from './components/standalones/stepper/useSteps';
 import { Token } from './types/types';
@@ -30,6 +32,16 @@ type Props = {
 export const AnyaltWidget = ({ isOpen, onClose }: Props) => {
   const [loading, setLoading] = useState(false);
   const { activeStep, nextStep } = useSteps({ stepsAmount: 1 });
+  const {
+    isOpen: isConfirmationOpen,
+    onOpen: onConfirmationOpen,
+    onClose: onConfirmationClose,
+  } = useDisclosure();
+
+  const handleConfirm = () => {
+    setLoading(true);
+    nextStep();
+  };
 
   return (
     <ModalWrapper
@@ -44,11 +56,7 @@ export const AnyaltWidget = ({ isOpen, onClose }: Props) => {
           buttonText={
             loading ? 'Connect Wallet/s To Start Transaction' : 'Get Quote'
           }
-          onButtonClick={() => {
-            setLoading(true);
-            nextStep();
-            console.log('clicking');
-          }}
+          onButtonClick={onConfirmationOpen}
         >
           <SelectSwap loading={loading} />
         </SwappingWrapper>
@@ -69,6 +77,13 @@ export const AnyaltWidget = ({ isOpen, onClose }: Props) => {
         </SwappingWrapper>
       </CustomStepper>
       <Footer />
+      <ConnectWalletsModal
+        isOpen={isConfirmationOpen}
+        onClose={onConfirmationClose}
+        onConfirm={handleConfirm}
+        title="Confirm Action"
+        message="Are you sure you want to proceed with this transaction?"
+      />
     </ModalWrapper>
   );
 };
