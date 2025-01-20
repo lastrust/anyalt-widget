@@ -5,7 +5,7 @@ import { Header } from './components/organisms/Header';
 import { SwappingWrapper } from './components/organisms/SwappingWrapper';
 import { ConnectWalletsModal } from './components/standalones/modals/ConnectWalletsModal';
 import ModalWrapper from './components/standalones/modals/ModalWrapper';
-import { RoutesWrapper } from './components/standalones/routesWrap/RoutesWrapper';
+import { RoutesWrapper } from './components/standalones/routeWrap/RoutesWrapper';
 import CustomStepper from './components/standalones/stepper/Stepper';
 import { useSteps } from './components/standalones/stepper/useSteps';
 import { SelectSwap } from './components/standalones/swap/SelectSwap';
