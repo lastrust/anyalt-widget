@@ -1,4 +1,4 @@
-import { Button, Circle, Flex, Image, Text } from '@chakra-ui/react';
+import { Button, Circle, Flex, Text } from '@chakra-ui/react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { FC } from 'react';
 import { useAccount, useDisconnect } from 'wagmi';
@@ -6,14 +6,12 @@ import { useAccount, useDisconnect } from 'wagmi';
 interface WalletButtonProps {
   walletType: string;
   network: string;
-  icon: string;
   onConnect: () => void;
 }
 
 export const WalletButton: FC<WalletButtonProps> = ({
   walletType,
   network,
-  icon,
   onConnect,
 }) => {
   const { isConnected: isEvmConnected, address: evmAddress } = useAccount();
@@ -77,7 +75,6 @@ export const WalletButton: FC<WalletButtonProps> = ({
             {getDisplayAddress()}
           </Text>
         </Flex>
-        <Image src={icon} alt={`${walletType} icon`} w="24px" h="24px" />
       </Flex>
     </Button>
   );

@@ -21,6 +21,8 @@ export {
   defaultTheme as standardTheme,
 } from './theme/defaultTheme';
 
+import './style.css';
+
 // TODO: As it's going to be mutliple steps widget with deposit it must accept all needed data to show for the last mile tx.
 // TODO: check and prepare all needed data for the last mile tx.
 type Props = {

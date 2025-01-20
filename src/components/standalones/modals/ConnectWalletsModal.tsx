@@ -10,6 +10,7 @@ import {
 } from '@chakra-ui/react';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { useWalletModal } from '@solana/wallet-adapter-react-ui'; // Import the wallet modal hook
 import { FC } from 'react';
 import { WalletButton } from '../../molecules/buttons/WalletButton';
 
@@ -24,36 +25,25 @@ const WALLETS = [
   {
     walletType: 'EVM wallets',
     network: 'Ethereum',
-    icon: '/ethereum-icon.svg', // You'll need to add these icons to your assets
   },
   {
     walletType: 'Solana wallets',
     network: 'solana',
-    icon: '/metamask-icon.svg',
   },
 ];
 
-export const ConnectWalletsModal: FC<Props> = ({
-  isOpen,
-  onClose,
-  onConfirm,
-  title,
-}) => {
+export const ConnectWalletsModal: FC<Props> = ({ isOpen, onClose, title }) => {
   const { openConnectModal } = useConnectModal();
-  const { connect, connected } = useWallet();
+  const { setVisible } = useWalletModal(); // Hook to control the Solana wallet modal
+  const { connected, publicKey } = useWallet();
 
-  const handleWalletClick = async (walletType: string) => {
+  // Function to handle wallet type click
+  const handleWalletClick = (walletType: string) => {
     if (walletType === 'EVM wallets') {
       openConnectModal?.();
-    } else if (walletType === 'Solana wallets' && !connected) {
-      try {
-        await connect();
-      } catch (error) {
-        console.error(error);
-        throw new Error('Failed to connect Solana wallet');
-      }
+    } else if (walletType === 'Solana wallets') {
+      setVisible(true); // Open Solana wallet modal
     }
-    onConfirm();
   };
 
   return (
@@ -76,13 +66,17 @@ export const ConnectWalletsModal: FC<Props> = ({
             Connect with one of the available wallet providers or create a new
             wallet
           </Text>
+          {connected && publicKey && (
+            <Text color="white" mb="8px">
+              Wallet Address: {publicKey.toString()}
+            </Text>
+          )}
           <VStack spacing="12px" align="stretch">
             {WALLETS.map((wallet) => (
               <WalletButton
                 key={wallet.walletType}
                 walletType={wallet.walletType}
                 network={wallet.network}
-                icon={wallet.icon}
                 onConnect={() => handleWalletClick(wallet.walletType)}
               />
             ))}
