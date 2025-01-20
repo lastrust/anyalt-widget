@@ -1,5 +1,5 @@
 import { Grid } from '@chakra-ui/react';
-import { SelectSwap } from '../selectSwap/SelectSwap';
+import { SelectSwap } from '../swap/SelectSwap';
 import { RouteAccordion } from './route/RouteAccordion';
 
 type Props = {
