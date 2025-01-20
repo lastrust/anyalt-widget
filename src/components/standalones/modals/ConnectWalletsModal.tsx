@@ -1,5 +1,7 @@
 import {
+  Button,
   CloseButton,
+  Flex,
   Modal,
   ModalBody,
   ModalContent,
@@ -32,7 +34,12 @@ const WALLETS = [
   },
 ];
 
-export const ConnectWalletsModal: FC<Props> = ({ isOpen, onClose, title }) => {
+export const ConnectWalletsModal: FC<Props> = ({
+  isOpen,
+  onClose,
+  title,
+  onConfirm,
+}) => {
   const { openConnectModal } = useConnectModal();
   const { setVisible } = useWalletModal(); // Hook to control the Solana wallet modal
   const { connected, publicKey } = useWallet();
@@ -81,6 +88,18 @@ export const ConnectWalletsModal: FC<Props> = ({ isOpen, onClose, title }) => {
               />
             ))}
           </VStack>
+          <Flex justify="flex-end" mt="24px">
+            <Button
+              bgColor="brand.tertiary.100"
+              _hover={{ bgColor: 'brand.tertiary.20' }}
+              onClick={() => {
+                onConfirm();
+                onClose();
+              }}
+            >
+              Next Step
+            </Button>
+          </Flex>
         </ModalBody>
       </ModalContent>
     </Modal>
