@@ -8,13 +8,13 @@ import {
   Flex,
   VStack,
 } from '@chakra-ui/react';
-import aarnaIcon from '../../../assets/imgs/aarna.png';
-import { GasIcon } from '../../atoms/icons/GasIcon';
-import { StepsIcon } from '../../atoms/icons/StepsIcon';
-import { TimeIcon } from '../../atoms/icons/TimeIcon';
-import { RouteStep } from '../../molecules/RouteStep/RouteStep';
-import { RouteTag } from '../../molecules/Tag/RouteTag';
-import { TokenRouteInfo } from '../../molecules/TokenRouteInfo';
+import aarnaIcon from '../../../../assets/imgs/aarna.png';
+import { GasIcon } from '../../../atoms/icons/GasIcon';
+import { StepsIcon } from '../../../atoms/icons/StepsIcon';
+import { TimeIcon } from '../../../atoms/icons/TimeIcon';
+import { RouteStep } from '../../../molecules/route/RouteStep';
+import { RouteTag } from '../../../molecules/routeTag/RouteTag';
+import { TokenRouteInfo } from '../../../molecules/TokenRouteInfo';
 
 export const RouteAccordion = () => {
   return (
