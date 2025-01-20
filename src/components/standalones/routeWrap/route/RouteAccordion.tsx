@@ -12,7 +12,7 @@ import aarnaIcon from '../../../../assets/imgs/aarna.png';
 import { GasIcon } from '../../../atoms/icons/GasIcon';
 import { StepsIcon } from '../../../atoms/icons/StepsIcon';
 import { TimeIcon } from '../../../atoms/icons/TimeIcon';
-import { RouteStep } from '../../../molecules/routeStep/RouteStep';
+import { RouteStep } from '../../../molecules/route/RouteStep';
 import { RouteTag } from '../../../molecules/tag/RouteTag';
 import { TokenRouteInfo } from '../../../molecules/TokenRouteInfo';
 
