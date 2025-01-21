@@ -38,6 +38,8 @@ export const defaultTheme = extendTheme({
         20: '#00808033',
       },
       quaternary: '#0C0600',
+      quinary: '#E53030',
+      white: '#FFFFFF',
     },
   },
   components: {

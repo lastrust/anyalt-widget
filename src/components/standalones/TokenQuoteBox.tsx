@@ -10,8 +10,8 @@ type Props = {
   tokenLogo: string;
   chainName: string;
   chainLogo: string;
-  amount: number;
-  price: number;
+  amount: string;
+  price: string;
 } & BoxProps;
 
 export const TokenQuoteBox: FC<Props> = ({

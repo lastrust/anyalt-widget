@@ -1,26 +1,31 @@
+import { SupportedToken } from '@anyalt/sdk';
 import { Box, Image, Input, Text } from '@chakra-ui/react';
-import { useAtomValue } from 'jotai';
-import { FC, useEffect, useState } from 'react';
-import { CHAIN_LIST, ChainModel } from '../../constants/chains';
-import { anyaltInstanceAtom } from '../../store/stateStore';
-import { getImageURL } from '../../utils';
+import { FC } from 'react';
+import { getImageURL } from '../../../utils';
+import { TokenAccept } from '../../molecules/TokenAccept';
+import { TokenItem } from '../../molecules/TokenItem';
+import { useTokenSelectBox } from './useTokenSelectBox';
 
 type Props = {
   onClose: () => void;
+  onTokenSelect: (token: SupportedToken) => void;
 };
 
-export const TokenSelectBox: FC<Props> = ({ onClose }) => {
-  const [showAllChains, setShowAllChains] = useState<boolean>(false);
-  const [chains, setChains] = useState<ChainModel[]>(CHAIN_LIST.slice(0, 8));
-  useAtomValue(anyaltInstanceAtom);
-
-  useEffect(() => {
-    if (showAllChains) {
-      setChains(CHAIN_LIST);
-    } else {
-      setChains(CHAIN_LIST.slice(0, 8));
-    }
-  }, [showAllChains]);
+export const TokenSelectBox: FC<Props> = ({ onClose, onTokenSelect }) => {
+  const {
+    showAccept,
+    setShowAccept,
+    isValidAddress,
+    setSearchInputValue,
+    customToken,
+    chains,
+    allTokens,
+    activeChain,
+    setActiveChain,
+    showAllChains,
+    setShowAllChains,
+    searchInputValue,
+  } = useTokenSelectBox();
 
   return (
     <Box
@@ -36,7 +41,7 @@ export const TokenSelectBox: FC<Props> = ({ onClose }) => {
     >
       <Box
         width="100%"
-        minH="504px"
+        maxH="504px"
         padding="24px"
         borderRadius="16px 16px 12px 12px"
         bgColor="brand.quaternary"
@@ -64,7 +69,7 @@ export const TokenSelectBox: FC<Props> = ({ onClose }) => {
           <Box display="flex" flexWrap="wrap" gap="6px" mb="12px">
             {chains.map((chain) => (
               <Box
-                key={chain.name}
+                key={chain.id}
                 display="flex"
                 flexDir="row"
                 alignItems="center"
@@ -73,18 +78,23 @@ export const TokenSelectBox: FC<Props> = ({ onClose }) => {
                 padding="4px"
                 borderRadius="32px"
                 border="1px solid"
-                borderColor="brand.tertiary.100"
+                borderColor={
+                  activeChain?.id === chain.id
+                    ? 'brand.tertiary.100'
+                    : 'brand.secondary.12'
+                }
                 bgColor="brand.primary"
                 width="fit-content"
+                onClick={() => setActiveChain(chain)}
               >
                 <Image
-                  src={chain.icon}
-                  alt={chain.name}
+                  src={chain.logoUrl ?? ''}
+                  alt={chain.displayName ?? ''}
                   width="24px"
                   height="24px"
                 />
                 <Text fontSize="16px" color="white" opacity="0.6">
-                  {chain.name}
+                  {chain.displayName}
                 </Text>
               </Box>
             ))}
@@ -125,7 +135,9 @@ export const TokenSelectBox: FC<Props> = ({ onClose }) => {
               height="20px"
             />
             <Input
-              placeholder="Type a token"
+              value={searchInputValue}
+              onChange={(e) => setSearchInputValue(e.target.value)}
+              placeholder="Type a token or enter the contract address"
               outline="none"
               border="none"
               bgColor="transparent"
@@ -139,43 +151,40 @@ export const TokenSelectBox: FC<Props> = ({ onClose }) => {
               }}
             />
           </Box>
-          <Box>
-            <Box
-              display="flex"
-              flexDir="row"
-              alignItems="center"
-              borderBottom="1px solid"
-              borderColor="brand.secondary.12"
-              pb="8px"
-              mb="8px"
-              gap="16px"
-            >
-              <Image
-                src={getImageURL('usdc.png')}
-                alt="usdc"
-                width="32px"
-                height="32px"
-              />
-              <Box
-                display="flex"
-                flexDirection="column"
-                justifyContent="space-between"
-                alignItems="flex-start"
-                gap="6px"
-              >
-                <Text color="white" fontSize="20px" fontWeight="bold">
-                  USDC
-                </Text>
-                <Text
-                  color="white"
-                  fontSize="16px"
-                  fontWeight="regular"
-                  opacity={0.4}
-                >
-                  Ethereum
-                </Text>
-              </Box>
-            </Box>
+          <Box overflow="auto" maxH="210px" scrollBehavior="smooth">
+            {isValidAddress && customToken ? (
+              <>
+                {showAccept ? (
+                  <TokenAccept
+                    onClick={() => {
+                      setShowAccept(false);
+                      onTokenSelect(customToken);
+                    }}
+                  />
+                ) : (
+                  <TokenItem
+                    tokenSymbol={customToken.symbol}
+                    tokenIcon={customToken.logoUrl}
+                    chainName={customToken.chain?.displayName ?? ''}
+                    onClick={() => {
+                      setShowAccept(true);
+                    }}
+                  />
+                )}
+              </>
+            ) : (
+              allTokens.map((token) => (
+                <TokenItem
+                  key={token.id}
+                  tokenSymbol={token.symbol}
+                  tokenIcon={token.logoUrl}
+                  chainName={token.chain?.displayName ?? ''}
+                  onClick={() => {
+                    onTokenSelect(token);
+                  }}
+                />
+              ))
+            )}
           </Box>
         </Box>
       </Box>
