@@ -5,7 +5,7 @@ import { Header } from './components/organisms/Header';
 import { SwappingWrapper } from './components/organisms/SwappingWrapper';
 import { ConnectWalletsModal } from './components/standalones/modals/ConnectWalletsModal';
 import ModalWrapper from './components/standalones/modals/ModalWrapper';
-import { RoutesWrapper } from './components/standalones/routeWrap/RoutesWrapper';
+import { BestRoutesWrapper } from './components/standalones/routeWrap/RoutesWrapper';
 import CustomStepper from './components/standalones/stepper/Stepper';
 import { useSteps } from './components/standalones/stepper/useSteps';
 import { SelectSwap } from './components/standalones/swap/SelectSwap';
@@ -37,13 +37,12 @@ export const AnyaltWidget = ({ isOpen, onClose }: Props) => {
   const [loading, setLoading] = useState(false);
   const { activeStep, nextStep } = useSteps({ stepsAmount: 1 });
   const {
-    isOpen: isConfirmationOpen,
-    onOpen: onConfirmationOpen,
-    onClose: onConfirmationClose,
+    isOpen: handleWalletModalOpen,
+    onOpen: onWalletModalOpen,
+    onClose: onWalletModalClose,
   } = useDisclosure();
 
-  const handleConfirm = () => {
-    setLoading(true);
+  const handleNextStep = () => {
     nextStep();
   };
 
@@ -62,7 +61,7 @@ export const AnyaltWidget = ({ isOpen, onClose }: Props) => {
               buttonText={
                 loading ? 'Connect Wallet/s To Start Transaction' : 'Get Quote'
               }
-              onButtonClick={onConfirmationOpen}
+              onButtonClick={handleNextStep}
             >
               <SelectSwap loading={loading} />
             </SwappingWrapper>
@@ -74,19 +73,20 @@ export const AnyaltWidget = ({ isOpen, onClose }: Props) => {
                 loading ? 'Connect Wallet/s To Start Transaction' : 'Get Quote'
               }
               onButtonClick={() => {
+                onWalletModalOpen();
                 setLoading(true);
-                nextStep();
+                // nextStep();
                 console.log('clicking');
               }}
             >
-              <RoutesWrapper loading={loading} />
+              <BestRoutesWrapper loading={loading} />
             </SwappingWrapper>
           </CustomStepper>
           <Footer />
           <ConnectWalletsModal
-            isOpen={isConfirmationOpen}
-            onClose={onConfirmationClose}
-            onConfirm={handleConfirm}
+            isOpen={handleWalletModalOpen}
+            onClose={onWalletModalClose}
+            onConfirm={nextStep}
             title="Connect Wallet's"
           />
         </ModalWrapper>

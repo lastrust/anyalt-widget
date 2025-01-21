@@ -45,7 +45,7 @@ export const RouteAccordion = () => {
               <Flex alignItems="center" gap="8px">
                 <RouteTag
                   text="Fastest"
-                  textColor="brand.secondary.1"
+                  textColor="brand.secondary.5"
                   bgColor="bg.tertiary.100"
                 />
                 <RouteTag

@@ -6,7 +6,7 @@ type Props = {
   loading: boolean;
 };
 
-export const RoutesWrapper = ({ loading }: Props) => {
+export const BestRoutesWrapper = ({ loading }: Props) => {
   return (
     <Grid gridTemplateColumns="1fr 1fr" gap="24px">
       <SelectSwap loading={loading} />
