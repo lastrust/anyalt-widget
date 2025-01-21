@@ -5,9 +5,6 @@ import { AnyaltWidget, defaultTheme } from '../src/AnyaltWidget';
 import { OpenModalButton } from '../src/components/atoms/buttons/OpenModalButton';
 import { useModal } from '../src/hooks/useModal';
 import { ChainType, EstimateResponse } from '../src/types/types';
-import { AnyAlt } from '@anyalt/sdk';
-
-export const anyaltInstance = new AnyAlt('pk_0xCYxjM8dFF0Vii7syrgpR6U4');
 
 const App = () => {
   const { isOpen, onOpen, onClose } = useModal();
@@ -39,9 +36,9 @@ const App = () => {
               chainType: ChainType.EVM,
               logoUrl: 'https://engine.aarna.ai/static/logo-only.svg',
             }}
+            apiKey={'pk_0xCYxjM8dFF0Vii7syrgpR6U4'}
             isOpen={isOpen}
             onClose={onClose}
-            anyaltInstance={anyaltInstance}
             estimateCallback={estimateCallback}
           />
         </Box>

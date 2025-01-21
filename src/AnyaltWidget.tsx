@@ -1,7 +1,3 @@
-import { AnyAlt } from '@anyalt/sdk';
-import { useDisclosure } from '@chakra-ui/react';
-import { useAtom, useAtomValue } from 'jotai';
-import { useEffect, useState } from 'react';
 import { Footer } from './components/organisms/Footer';
 import { Header } from './components/organisms/Header';
 import { SwappingWrapper } from './components/organisms/SwappingWrapper';
@@ -9,31 +5,19 @@ import { ConnectWalletsModal } from './components/standalones/modals/ConnectWall
 import ModalWrapper from './components/standalones/modals/ModalWrapper';
 import { RoutesWrapper } from './components/standalones/routeWrap/RoutesWrapper';
 import CustomStepper from './components/standalones/stepper/Stepper';
-import { useSteps } from './components/standalones/stepper/useSteps';
 import { SelectSwap } from './components/standalones/swap/SelectSwap';
 import { AppKitProvider } from './providers/RainbowKitProvider';
 import { SolanaProvider } from './providers/SolanaProvider';
-import {
-  activeRouteAtom,
-  allChainsAtom,
-  anyaltInstanceAtom,
-  finalTokenEstimateAtom,
-  inTokenAmountAtom,
-  inTokenAtom,
-  protocolFinalTokenAtom,
-  protocolInputTokenAtom,
-  slippageAtom,
-} from './store/stateStore';
 import { EstimateResponse, Token } from './types/types';
 
 export { OpenModalButton } from './components/atoms/buttons/OpenModalButton';
 export { useModal } from './hooks/useModal';
-export { WidgetProvider } from './providers/WidgetProvider';
 export {
   defaultTheme,
   defaultTheme as standardTheme,
 } from './theme/defaultTheme';
 
+import { useAnyaltWidget } from './hooks/useAnyaltWidget';
 import './style.css';
 
 // TODO: As it's going to be mutliple steps widget with deposit it must accept all needed data to show for the last mile tx.
@@ -43,90 +27,36 @@ type Props = {
   inputToken: Token;
   finalToken: Token;
   walletConnector: unknown;
+  apiKey: string;
   onClose: () => void;
-  anyaltInstance: AnyAlt;
   estimateCallback: (amountIn: number) => Promise<EstimateResponse>;
 };
 
 export const AnyaltWidget = ({
   isOpen,
   onClose,
-  anyaltInstance,
+  apiKey,
   inputToken,
   finalToken,
   estimateCallback,
 }: Props) => {
-  const [loading, setLoading] = useState(true);
-  const { activeStep, nextStep } = useSteps({ stepsAmount: 1 });
-  const [, setAnyaltInstance] = useAtom(anyaltInstanceAtom);
-  const [allChains, setAllChains] = useAtom(allChainsAtom);
-  const [protocolInputToken, setProtocolInputToken] = useAtom(
-    protocolInputTokenAtom,
-  );
-  const [, setProtocolFinalToken] = useAtom(protocolFinalTokenAtom);
-  const [openSlippageModal, setOpenSlippageModal] = useState(false);
-  const inToken = useAtomValue(inTokenAtom);
-  const slippage = useAtomValue(slippageAtom);
-  const inTokenAmount = useAtomValue(inTokenAmountAtom);
-  const [activeRoute, setActiveRoute] = useAtom(activeRouteAtom);
-  const [, setFinalTokenEstimate] = useAtom(finalTokenEstimateAtom);
-
-  useEffect(() => {
-    if (activeRoute) {
-      estimateCallback(parseFloat(activeRoute.outputAmount)).then((res) => {
-        setFinalTokenEstimate(res);
-      });
-    }
-  }, [activeRoute]);
-
-  useEffect(() => {
-    setAnyaltInstance(anyaltInstance);
-    if (anyaltInstance) {
-      anyaltInstance.getChains().then((res) => {
-        setAllChains(res.chains);
-      });
-    }
-    setProtocolFinalToken(finalToken);
-  }, []);
-
-  useEffect(() => {
-    const inputTokenChain = allChains.find(
-      (chain) =>
-        chain.chainId === inputToken.chainId &&
-        chain.chainType === inputToken.chainType,
-    );
-
-    if (inputTokenChain) {
-      anyaltInstance
-        ?.getToken(inputTokenChain.id, inputToken.address)
-        .then((res) => {
-          setProtocolInputToken(res);
-        });
-    }
-  }, [allChains]);
-
-  const onButtonClick = async () => {
-    if (!inToken || !protocolInputToken || !inTokenAmount) return;
-
-    const route = await anyaltInstance?.getBestRoute({
-      from: inToken.id,
-      to: protocolInputToken?.id,
-      amount: inTokenAmount,
-      slippage,
-    });
-
-    setActiveRoute(route);
-    setLoading(false);
-    nextStep();
-  };
-
-  const { isOpen: isConfirmationOpen, onClose: onConfirmationClose } =
-    useDisclosure();
-
-  const handleConfirm = () => {
-    setLoading(true);
-    nextStep();
-  };
+  const {
+    activeStep,
+    onButtonClick,
+    handleConfirm,
+    isConfirmationOpen,
+    onConfirmationClose,
+    loading,
+    setLoading,
+    openSlippageModal,
+    setOpenSlippageModal,
+    goToNext,
+  } = useAnyaltWidget({
+    estimateCallback,
+    inputToken,
+    finalToken,
+    apiKey,
+  });
 
   return (
     <AppKitProvider>
@@ -161,7 +91,7 @@ export const AnyaltWidget = ({
               }
               onButtonClick={() => {
                 setLoading(true);
-                nextStep();
+                goToNext();
                 console.log('clicking');
               }}
               onConfigClick={() => {
