@@ -2,7 +2,7 @@ import { Box, Center, ChakraProvider } from '@chakra-ui/react';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { AnyaltWidget, defaultTheme } from '../src/AnyaltWidget';
-import { OpenModalButton } from '../src/components/atoms/OpenModalButton';
+import { OpenModalButton } from '../src/components/atoms/buttons/OpenModalButton';
 import { useModal } from '../src/hooks/useModal';
 import { ChainType, EstimateResponse } from '../src/types/types';
 import { AnyAlt } from '@anyalt/sdk';
