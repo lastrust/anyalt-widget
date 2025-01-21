@@ -3,10 +3,10 @@ import { FC } from 'react';
 
 type Props = BoxProps & {
   tokenName: string;
-  chainName: string;
+  subText: string;
 };
 
-export const TokenInfoBox: FC<Props> = ({ tokenName, chainName, ...props }) => {
+export const TokenInfoBox: FC<Props> = ({ tokenName, subText, ...props }) => {
   return (
     <Box
       display="flex"
@@ -14,13 +14,14 @@ export const TokenInfoBox: FC<Props> = ({ tokenName, chainName, ...props }) => {
       justifyContent="space-between"
       alignItems="flex-start"
       gap="4px"
+      maxW="100px"
       {...props}
     >
       <Text color="white" fontSize="16px" fontWeight="extrabold">
         {tokenName}
       </Text>
       <Text color="white" fontSize="12px" fontWeight="regular" opacity={0.4}>
-        On {chainName}
+        {subText}
       </Text>
     </Box>
   );
