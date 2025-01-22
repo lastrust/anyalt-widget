@@ -1,21 +1,41 @@
-import { Box, BoxProps, Button, Image, Input, Text } from '@chakra-ui/react';
+import {
+  Box,
+  BoxProps,
+  Button,
+  Image,
+  Input,
+  Skeleton,
+  Text,
+} from '@chakra-ui/react';
+import { useAtom, useAtomValue } from 'jotai';
 import { FC } from 'react';
 import chevronRight from '../../assets/imgs/chevron-right.svg';
-import popcatIcon from '../../assets/imgs/popcat.png';
-import solanaIcon from '../../assets/imgs/solana.svg';
+import { inTokenAmountAtom, inTokenAtom } from '../../store/stateStore';
 import { TokenIconBox } from '../molecules/TokenIconBox';
 import { TokenInfoBox } from '../molecules/TokenInfoBox';
 
-type Props = BoxProps;
+type Props = BoxProps & {
+  openTokenSelectModal: () => void;
+  loading: boolean;
+  price: string;
+};
 
-export const TokenInputBox: FC<Props> = ({ ...props }) => {
+export const TokenInputBox: FC<Props> = ({
+  openTokenSelectModal,
+  loading,
+  price,
+  ...props
+}) => {
+  const inToken = useAtomValue(inTokenAtom);
+  const [inTokenAmount, setInTokenAmount] = useAtom(inTokenAmountAtom);
+
   return (
     <Box {...props}>
       <Box
         display="flex"
         justifyContent="space-between"
         alignItems="center"
-        mb="12px"
+        mb="16px"
       >
         <Text color="white" fontSize="14px" fontWeight="bold" opacity={0.32}>
           Choose Your Deposit
@@ -56,14 +76,22 @@ export const TokenInputBox: FC<Props> = ({ ...props }) => {
         >
           <Box display="flex" flexDirection="row" alignItems="center">
             <TokenIconBox
-              tokenName="POPCAT"
-              tokenIcon={popcatIcon}
-              chainName="Solana"
-              chainIcon={solanaIcon}
+              tokenName={inToken?.symbol ?? ''}
+              tokenIcon={inToken?.logoUrl ?? ''}
+              chainName={inToken?.chain?.displayName ?? ''}
+              chainIcon={inToken?.chain?.logoUrl ?? ''}
               mr="8px"
             />
-            <TokenInfoBox tokenName="POPCAT" chainName="Solana" mr="12px" />
-            <Box>
+            <TokenInfoBox
+              tokenName={inToken?.symbol ?? 'Select Token'}
+              subText={
+                inToken?.chain?.displayName
+                  ? `On ${inToken?.chain?.displayName}`
+                  : 'Select Chain'
+              }
+              mr="12px"
+            />
+            <Box cursor="pointer" onClick={() => openTokenSelectModal()}>
               <Image
                 src={chevronRight}
                 alt="Chevron Right"
@@ -85,6 +113,9 @@ export const TokenInputBox: FC<Props> = ({ ...props }) => {
               placeholder="1000.00"
               textAlign="right"
               maxWidth="150px"
+              padding="0px"
+              value={inTokenAmount}
+              onChange={(e) => setInTokenAmount(e.target.value)}
             />
           </Box>
         </Box>
@@ -96,11 +127,15 @@ export const TokenInputBox: FC<Props> = ({ ...props }) => {
           width="100%"
         >
           <Text color="white" fontSize="12px" opacity={0.4}>
-            Popcat Token
+            {inToken?.name ?? 'Token'}
           </Text>
-          <Text color="white" fontSize="12px" opacity={0.4}>
-            ~$2,423.53
-          </Text>
+          {loading ? (
+            <Skeleton width="34px" height="14px" borderRadius="32px" />
+          ) : (
+            <Text color="white" fontSize="12px" opacity={0.4}>
+              ~${price}
+            </Text>
+          )}
         </Box>
       </Box>
     </Box>

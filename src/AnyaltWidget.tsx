@@ -1,50 +1,62 @@
-import { useDisclosure } from '@chakra-ui/react';
-import { useState } from 'react';
 import { Footer } from './components/organisms/Footer';
 import { Header } from './components/organisms/Header';
 import { SwappingWrapper } from './components/organisms/SwappingWrapper';
 import { ConnectWalletsModal } from './components/standalones/modals/ConnectWalletsModal';
 import ModalWrapper from './components/standalones/modals/ModalWrapper';
-import { BestRoutesWrapper } from './components/standalones/routeWrap/RoutesWrapper';
 import CustomStepper from './components/standalones/stepper/Stepper';
-import { useSteps } from './components/standalones/stepper/useSteps';
 import { SelectSwap } from './components/standalones/swap/SelectSwap';
 import { AppKitProvider } from './providers/RainbowKitProvider';
 import { SolanaProvider } from './providers/SolanaProvider';
-import { Token } from './types/types';
+import { EstimateResponse, Token } from './types/types';
 
 export { OpenModalButton } from './components/atoms/buttons/OpenModalButton';
 export { useModal } from './hooks/useModal';
-export { WidgetProvider } from './providers/WidgetProvider';
 export {
   defaultTheme,
   defaultTheme as standardTheme,
 } from './theme/defaultTheme';
 
+import { RoutesWrapper } from './components/standalones/routeWrap/RoutesWrapper';
+import { useAnyaltWidget } from './hooks/useAnyaltWidget';
 import './style.css';
 
 // TODO: As it's going to be mutliple steps widget with deposit it must accept all needed data to show for the last mile tx.
 // TODO: check and prepare all needed data for the last mile tx.
 type Props = {
-  logo: string;
   isOpen: boolean;
-  inputToken?: Token;
+  inputToken: Token;
+  finalToken: Token;
   walletConnector: unknown;
+  apiKey: string;
   onClose: () => void;
+  estimateCallback: (amountIn: number) => Promise<EstimateResponse>;
 };
 
-export const AnyaltWidget = ({ isOpen, onClose }: Props) => {
-  const [loading, setLoading] = useState(false);
-  const { activeStep, nextStep } = useSteps({ stepsAmount: 1 });
+export const AnyaltWidget = ({
+  isOpen,
+  onClose,
+  apiKey,
+  inputToken,
+  finalToken,
+  estimateCallback,
+}: Props) => {
   const {
-    isOpen: handleWalletModalOpen,
-    onOpen: onWalletModalOpen,
-    onClose: onWalletModalClose,
-  } = useDisclosure();
-
-  const handleNextStep = () => {
-    nextStep();
-  };
+    activeStep,
+    onButtonClick,
+    handleConfirm,
+    isConfirmationOpen,
+    onConfirmationClose,
+    loading,
+    setLoading,
+    openSlippageModal,
+    setOpenSlippageModal,
+    goToNext,
+  } = useAnyaltWidget({
+    estimateCallback,
+    inputToken,
+    finalToken,
+    apiKey,
+  });
 
   return (
     <AppKitProvider>
@@ -58,12 +70,17 @@ export const AnyaltWidget = ({ isOpen, onClose }: Props) => {
           <CustomStepper activeStep={activeStep}>
             <SwappingWrapper
               title={loading ? 'Calculation' : 'Select Deposit Token'}
-              buttonText={
-                loading ? 'Connect Wallet/s To Start Transaction' : 'Get Quote'
-              }
-              onButtonClick={handleNextStep}
+              buttonText={'Get Quote'}
+              onButtonClick={onButtonClick}
+              onConfigClick={() => {
+                setOpenSlippageModal(true);
+              }}
             >
-              <SelectSwap loading={loading} />
+              <SelectSwap
+                loading={loading}
+                openSlippageModal={openSlippageModal}
+                setOpenSlippageModal={setOpenSlippageModal}
+              />
             </SwappingWrapper>
             <SwappingWrapper
               title={loading ? 'Calculation' : 'Select Deposit Token'}
@@ -73,20 +90,27 @@ export const AnyaltWidget = ({ isOpen, onClose }: Props) => {
                 loading ? 'Connect Wallet/s To Start Transaction' : 'Get Quote'
               }
               onButtonClick={() => {
-                onWalletModalOpen();
+                handleConfirm();
                 setLoading(true);
-                // nextStep();
+                goToNext();
                 console.log('clicking');
               }}
+              onConfigClick={() => {
+                setOpenSlippageModal(true);
+              }}
             >
-              <BestRoutesWrapper loading={loading} />
+              <RoutesWrapper
+                loading={loading}
+                openSlippageModal={openSlippageModal}
+                setOpenSlippageModal={setOpenSlippageModal}
+              />
             </SwappingWrapper>
           </CustomStepper>
           <Footer />
           <ConnectWalletsModal
-            isOpen={handleWalletModalOpen}
-            onClose={onWalletModalClose}
-            onConfirm={nextStep}
+            isOpen={isConfirmationOpen}
+            onClose={onConfirmationClose}
+            onConfirm={handleConfirm}
             title="Connect Wallet's"
           />
         </ModalWrapper>

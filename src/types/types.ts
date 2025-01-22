@@ -4,7 +4,14 @@ export enum ChainType {
 }
 
 export interface Token {
+  symbol: string;
   address: string;
-  chainId: number;
+  chainId?: number;
   chainType: ChainType;
+  logoUrl?: string;
+}
+
+export interface EstimateResponse {
+  amountOut: string;
+  priceInUSD: string;
 }

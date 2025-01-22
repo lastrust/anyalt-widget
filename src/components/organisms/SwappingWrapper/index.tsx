@@ -6,6 +6,7 @@ type Props = {
   secondTitle?: string;
   secondSubtitle?: string;
   buttonText: string;
+  onConfigClick: () => void;
   onButtonClick: () => void;
   children: React.ReactNode;
 };
@@ -16,6 +17,7 @@ export const SwappingWrapper = ({
   secondSubtitle,
   buttonText,
   onButtonClick,
+  onConfigClick,
   children,
 }: Props) => {
   return (
@@ -26,13 +28,13 @@ export const SwappingWrapper = ({
       borderColor="brand.secondary.12"
       borderRadius="12px"
     >
-      <Grid gridTemplateColumns="1fr 1fr" gap="16px">
+      <Grid gridTemplateColumns={secondTitle ? '1fr 1fr' : '1fr'} gap="16px">
         <Flex justifyContent="space-between" alignItems="center" mb="16px">
           <Text color="white" fontSize="24px" fontWeight="bold">
             {title}
           </Text>
           <Box cursor="pointer">
-            <Image src={configIcon} alt="config" />
+            <Image src={configIcon} alt="config" onClick={onConfigClick} />
           </Box>
         </Flex>
         {secondTitle && (

@@ -10,8 +10,8 @@ type Props = {
   tokenLogo: string;
   chainName: string;
   chainLogo: string;
-  amount: number;
-  price: number;
+  amount: string;
+  price: string;
 } & BoxProps;
 
 export const TokenQuoteBox: FC<Props> = ({
@@ -27,7 +27,7 @@ export const TokenQuoteBox: FC<Props> = ({
 }) => {
   return (
     <Box padding="4px 16px" {...props}>
-      <Box mb="12px">
+      <Box mb="16px">
         <Text color="white" fontSize="14px" fontWeight="bold" opacity={0.32}>
           {headerText}
         </Text>
@@ -47,7 +47,11 @@ export const TokenQuoteBox: FC<Props> = ({
             chainIcon={chainLogo}
             mr="8px"
           />
-          <TokenInfoBox tokenName={tokenName} chainName={chainName} mr="12px" />
+          <TokenInfoBox
+            tokenName={tokenName}
+            subText={`On ${chainName}`}
+            mr="12px"
+          />
         </Box>
         <Box
           display="flex"

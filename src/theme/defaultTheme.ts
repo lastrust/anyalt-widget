@@ -27,6 +27,7 @@ export const defaultTheme = extendTheme({
     brand: {
       primary: '#121212',
       secondary: {
+        100: '#919eab',
         1: '#000000',
         2: 'rgba(255, 255, 255, 0.80)',
         3: 'rgba(255, 255, 255, 0.40)',
@@ -38,19 +39,9 @@ export const defaultTheme = extendTheme({
         100: '#008080',
         20: '#00808033',
       },
-    },
-    bg: {
-      primary: '#121212',
-      secondary: {
-        1: 'rgba(145, 158, 171, 0.12)',
-      },
-      tertiary: {
-        100: '#008080',
-        20: '#00808033',
-      },
-    },
-    border: {
-      primary: 'rgba(145, 158, 171, 0.12)',
+      quaternary: '#0C0600',
+      quinary: '#E53030',
+      white: '#FFFFFF',
     },
   },
   components: {
