@@ -51,7 +51,9 @@ export const useAnyaltWidget = ({
 
   useEffect(() => {
     const anyaltInstance = new AnyAlt(apiKey);
+
     setAnyaltInstance(anyaltInstance);
+
     if (anyaltInstance) {
       anyaltInstance.getChains().then((res) => {
         setAllChains(res.chains);
@@ -67,6 +69,7 @@ export const useAnyaltWidget = ({
         chain.chainType === inputToken.chainType,
     );
 
+    console.log(inToken);
     if (inputTokenChain) {
       anyaltInstance
         ?.getToken(inputTokenChain.id, inputToken.address)
@@ -77,18 +80,23 @@ export const useAnyaltWidget = ({
   }, [allChains, anyaltInstance]);
 
   const onButtonClick = async () => {
-    if (!inToken || !protocolInputToken || !inTokenAmount) return;
+    try {
+      console.log(inToken);
+      if (!inToken || !protocolInputToken || !inTokenAmount) return;
 
-    const route = await anyaltInstance?.getBestRoute({
-      from: inToken.id,
-      to: protocolInputToken?.id,
-      amount: inTokenAmount,
-      slippage,
-    });
+      const route = await anyaltInstance?.getBestRoute({
+        from: inToken.id,
+        to: protocolInputToken?.id,
+        amount: inTokenAmount,
+        slippage,
+      });
 
-    setActiveRoute(route);
-    setLoading(false);
-    goToNext();
+      setActiveRoute(route);
+      setLoading(false);
+      goToNext();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const { isOpen: isConfirmationOpen, onClose: onConfirmationClose } =

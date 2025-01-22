@@ -42,6 +42,9 @@ export const defaultTheme = extendTheme({
       quaternary: '#0C0600',
       quinary: '#E53030',
       white: '#FFFFFF',
+      border: {
+        primary: 'rgba(145, 158, 171, 0.12)',
+      },
     },
   },
   components: {
