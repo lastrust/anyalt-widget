@@ -23,11 +23,13 @@ export const useAnyaltWidget = ({
   inputToken,
   finalToken,
   apiKey,
+  minAmountIn,
 }: {
   estimateCallback: (amountIn: number) => Promise<EstimateResponse>;
   inputToken: Token;
   finalToken: Token;
   apiKey: string;
+  minAmountIn: number;
 }) => {
   const { connected: isSolanaConnected } = useWallet();
   const { isConnected: isEvmConnected } = useAccount();
@@ -51,6 +53,7 @@ export const useAnyaltWidget = ({
     protocolInputTokenAtom,
   );
   const [routeFailed, setRouteFailed] = useState(false);
+  const [isValidAmountIn, setIsValidAmountIn] = useState(true);
 
   const {
     isOpen: isConnectWalletsOpen,
@@ -92,7 +95,6 @@ export const useAnyaltWidget = ({
         chain.chainType === inputToken.chainType,
     );
 
-    console.log(inToken);
     if (inputTokenChain) {
       anyaltInstance
         ?.getToken(inputTokenChain.id, inputToken.address)
@@ -117,11 +119,18 @@ export const useAnyaltWidget = ({
 
       setActiveRoute(route);
       setLoading(false);
-      setRouteFailed(false);
-      goToNext();
+
+      if (route && parseFloat(route.outputAmount) < minAmountIn) {
+        setIsValidAmountIn(false);
+      } else {
+        setIsValidAmountIn(true);
+        setRouteFailed(false);
+        goToNext();
+      }
     } catch (error) {
       console.error(error);
       setRouteFailed(true);
+      setLoading(false);
     }
   };
 
@@ -148,5 +157,6 @@ export const useAnyaltWidget = ({
     isConnectWalletsOpen,
     connectWalletsClose,
     routeFailed,
+    isValidAmountIn,
   };
 };

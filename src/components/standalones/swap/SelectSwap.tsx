@@ -9,14 +9,14 @@ type Props = {
   loading: boolean;
   openSlippageModal: boolean;
   setOpenSlippageModal: (open: boolean) => void;
-  minAmountIn: number;
+  isValidAmountIn?: boolean;
 };
 
 export const SelectSwap = ({
   loading,
   openSlippageModal,
   setOpenSlippageModal,
-  minAmountIn,
+  isValidAmountIn = true,
 }: Props) => {
   const {
     finalTokenEstimate,
@@ -28,8 +28,7 @@ export const SelectSwap = ({
     protocolInputToken,
     protocolFinalToken,
     activeRoute,
-    isValidAmountIn,
-  } = useSelectSwap(minAmountIn);
+  } = useSelectSwap();
 
   return (
     <Flex flexDirection="column" gap="16px" mb="16px">

@@ -40,11 +40,13 @@ export const AnyaltWidgetWrapper = ({
     isConnectWalletsOpen,
     connectWalletsClose,
     routeFailed,
+    isValidAmountIn,
   } = useAnyaltWidget({
     estimateCallback,
     inputToken,
     finalToken,
     apiKey,
+    minAmountIn,
   });
 
   return (
@@ -57,7 +59,7 @@ export const AnyaltWidgetWrapper = ({
       <CustomStepper activeStep={activeStep}>
         <SwappingWrapper
           loading={loading}
-          title={loading ? 'Calculation' : 'Select Deposit Token'}
+          title={'Select Deposit Token'}
           buttonText={'Get Quote'}
           onButtonClick={onGetQuote}
           onConfigClick={onConfigClick}
@@ -67,7 +69,7 @@ export const AnyaltWidgetWrapper = ({
             loading={loading}
             openSlippageModal={openSlippageModal}
             setOpenSlippageModal={setOpenSlippageModal}
-            minAmountIn={minAmountIn}
+            isValidAmountIn={isValidAmountIn}
           />
         </SwappingWrapper>
         <SwappingWrapper
@@ -90,7 +92,6 @@ export const AnyaltWidgetWrapper = ({
             loading={loading}
             openSlippageModal={openSlippageModal}
             setOpenSlippageModal={setOpenSlippageModal}
-            minAmountIn={minAmountIn}
           />
         </SwappingWrapper>
       </CustomStepper>
