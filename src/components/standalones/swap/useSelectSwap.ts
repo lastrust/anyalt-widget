@@ -10,7 +10,7 @@ import {
   protocolInputTokenAtom,
 } from '../../../store/stateStore';
 
-export const useSelectSwap = () => {
+export const useSelectSwap = (minAmountIn: number) => {
   const [openTokenSelect, setOpenTokenSelect] = useState<boolean>(false);
   const [, setInToken] = useAtom(inTokenAtom);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
@@ -38,6 +38,11 @@ export const useSelectSwap = () => {
     return (tokenPrice * parseFloat(activeRoute.outputAmount)).toFixed(2);
   }, [activeRoute]);
 
+  const isValidAmountIn = useMemo(() => {
+    if (!activeRoute) return true;
+    return parseFloat(activeRoute.outputAmount) >= minAmountIn;
+  }, [activeRoute]);
+
   const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
 
   return {
@@ -51,5 +56,6 @@ export const useSelectSwap = () => {
     protocolFinalToken,
     activeRoute,
     inTokenAmount,
+    isValidAmountIn,
   };
 };

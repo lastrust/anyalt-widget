@@ -40,6 +40,7 @@ const App = () => {
             isOpen={isOpen}
             onClose={onClose}
             estimateCallback={estimateCallback}
+            minAmountIn={100}
           />
         </Box>
       </Center>

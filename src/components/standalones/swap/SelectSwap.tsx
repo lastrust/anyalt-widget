@@ -9,12 +9,14 @@ type Props = {
   loading: boolean;
   openSlippageModal: boolean;
   setOpenSlippageModal: (open: boolean) => void;
+  minAmountIn: number;
 };
 
 export const SelectSwap = ({
   loading,
   openSlippageModal,
   setOpenSlippageModal,
+  minAmountIn,
 }: Props) => {
   const {
     finalTokenEstimate,
@@ -26,7 +28,8 @@ export const SelectSwap = ({
     protocolInputToken,
     protocolFinalToken,
     activeRoute,
-  } = useSelectSwap();
+    isValidAmountIn,
+  } = useSelectSwap(minAmountIn);
 
   return (
     <Flex flexDirection="column" gap="16px" mb="16px">
@@ -34,6 +37,7 @@ export const SelectSwap = ({
         openTokenSelectModal={() => setOpenTokenSelect(true)}
         loading={loading}
         price={inTokenPrice}
+        isValidAmountIn={isValidAmountIn}
       />
       <TokenQuoteBox
         loading={loading}

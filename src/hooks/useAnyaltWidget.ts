@@ -40,6 +40,7 @@ export const useAnyaltWidget = ({
   const inTokenAmount = useAtomValue(inTokenAmountAtom);
   const [activeRoute, setActiveRoute] = useAtom(activeRouteAtom);
   const [, setFinalTokenEstimate] = useAtom(finalTokenEstimateAtom);
+  const [routeFailed, setRouteFailed] = useState(false);
 
   useEffect(() => {
     if (activeRoute) {
@@ -76,19 +77,25 @@ export const useAnyaltWidget = ({
     }
   }, [allChains, anyaltInstance]);
 
-  const onButtonClick = async () => {
+  const onGetQuote = async () => {
     if (!inToken || !protocolInputToken || !inTokenAmount) return;
 
-    const route = await anyaltInstance?.getBestRoute({
-      from: inToken.id,
-      to: protocolInputToken?.id,
-      amount: inTokenAmount,
-      slippage,
-    });
+    try {
+      const route = await anyaltInstance?.getBestRoute({
+        from: inToken.id,
+        to: protocolInputToken?.id,
+        amount: inTokenAmount,
+        slippage,
+      });
 
-    setActiveRoute(route);
-    setLoading(false);
-    goToNext();
+      setActiveRoute(route);
+      setLoading(false);
+      setRouteFailed(false);
+      goToNext();
+    } catch (error) {
+      console.error(error);
+      setRouteFailed(true);
+    }
   };
 
   const { isOpen: isConfirmationOpen, onClose: onConfirmationClose } =
@@ -101,7 +108,7 @@ export const useAnyaltWidget = ({
 
   return {
     activeStep,
-    onButtonClick,
+    onGetQuote,
     handleConfirm,
     isConfirmationOpen,
     onConfirmationClose,
@@ -110,5 +117,6 @@ export const useAnyaltWidget = ({
     openSlippageModal,
     setOpenSlippageModal,
     goToNext,
+    routeFailed,
   };
 };

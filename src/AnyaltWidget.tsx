@@ -30,6 +30,7 @@ type Props = {
   apiKey: string;
   onClose: () => void;
   estimateCallback: (amountIn: number) => Promise<EstimateResponse>;
+  minAmountIn?: number;
 };
 
 export const AnyaltWidget = ({
@@ -39,10 +40,11 @@ export const AnyaltWidget = ({
   inputToken,
   finalToken,
   estimateCallback,
+  minAmountIn = 0,
 }: Props) => {
   const {
     activeStep,
-    onButtonClick,
+    onGetQuote,
     handleConfirm,
     isConfirmationOpen,
     onConfirmationClose,
@@ -51,6 +53,7 @@ export const AnyaltWidget = ({
     openSlippageModal,
     setOpenSlippageModal,
     goToNext,
+    routeFailed,
   } = useAnyaltWidget({
     estimateCallback,
     inputToken,
@@ -71,15 +74,17 @@ export const AnyaltWidget = ({
             <SwappingWrapper
               title={loading ? 'Calculation' : 'Select Deposit Token'}
               buttonText={'Get Quote'}
-              onButtonClick={onButtonClick}
+              onButtonClick={onGetQuote}
               onConfigClick={() => {
                 setOpenSlippageModal(true);
               }}
+              routeFailed={routeFailed}
             >
               <SelectSwap
                 loading={loading}
                 openSlippageModal={openSlippageModal}
                 setOpenSlippageModal={setOpenSlippageModal}
+                minAmountIn={minAmountIn}
               />
             </SwappingWrapper>
             <SwappingWrapper
@@ -97,11 +102,13 @@ export const AnyaltWidget = ({
               onConfigClick={() => {
                 setOpenSlippageModal(true);
               }}
+              routeFailed={routeFailed}
             >
               <RoutesWrapper
                 loading={loading}
                 openSlippageModal={openSlippageModal}
                 setOpenSlippageModal={setOpenSlippageModal}
+                minAmountIn={minAmountIn}
               />
             </SwappingWrapper>
           </CustomStepper>
