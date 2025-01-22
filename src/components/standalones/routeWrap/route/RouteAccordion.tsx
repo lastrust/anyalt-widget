@@ -10,7 +10,10 @@ import {
 } from '@chakra-ui/react';
 import { useAtom } from 'jotai';
 import aarnaIcon from '../../../../assets/imgs/aarna.png';
-import { activeRouteAtom } from '../../../../store/stateStore';
+import {
+  activeRouteAtom,
+  selectedRouteAtom,
+} from '../../../../store/stateStore';
 import { GasIcon } from '../../../atoms/icons/GasIcon';
 import { StepsIcon } from '../../../atoms/icons/StepsIcon';
 import { TimeIcon } from '../../../atoms/icons/TimeIcon';
@@ -20,6 +23,11 @@ import { TokenRouteInfo } from '../../../molecules/TokenRouteInfo';
 
 export const RouteAccordion = () => {
   const [activeRoute] = useAtom(activeRouteAtom);
+  const [selectedRoute, setSelectedRoute] = useAtom(selectedRouteAtom);
+
+  const handleRouteSelect = () => {
+    setSelectedRoute(activeRoute);
+  };
 
   return (
     <Accordion defaultIndex={[0]} allowMultiple>
@@ -29,6 +37,12 @@ export const RouteAccordion = () => {
         borderRadius={'10px'}
         p={'16px'}
         cursor={'pointer'}
+        onClick={handleRouteSelect}
+        bg={
+          selectedRoute?.swaps[0].swapperId === activeRoute?.swaps[0].swapperId
+            ? 'brand.secondary.12'
+            : 'transparent'
+        }
         _hover={{
           bgColor: 'bg.secondary.1',
         }}

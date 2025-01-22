@@ -41,16 +41,17 @@ export const AnyaltWidget = ({
   estimateCallback,
 }: Props) => {
   const {
-    activeStep,
-    onButtonClick,
-    handleConfirm,
-    isConfirmationOpen,
-    onConfirmationClose,
     loading,
-    setLoading,
+    activeRoute,
+    activeStep,
+    onCalculateButtonClick,
+    onChooseRouteButtonClick,
+    onConfigClick,
+    goToNext,
     openSlippageModal,
     setOpenSlippageModal,
-    goToNext,
+    isConnectWalletsOpen,
+    connectWalletsClose,
   } = useAnyaltWidget({
     estimateCallback,
     inputToken,
@@ -69,12 +70,11 @@ export const AnyaltWidget = ({
           <Header />
           <CustomStepper activeStep={activeStep}>
             <SwappingWrapper
+              loading={loading}
               title={loading ? 'Calculation' : 'Select Deposit Token'}
               buttonText={'Get Quote'}
-              onButtonClick={onButtonClick}
-              onConfigClick={() => {
-                setOpenSlippageModal(true);
-              }}
+              onButtonClick={onCalculateButtonClick}
+              onConfigClick={onConfigClick}
             >
               <SelectSwap
                 loading={loading}
@@ -83,21 +83,17 @@ export const AnyaltWidget = ({
               />
             </SwappingWrapper>
             <SwappingWrapper
-              title={loading ? 'Calculation' : 'Select Deposit Token'}
+              loading={loading}
+              title={'Calculation'}
               secondTitle="Routes"
               secondSubtitle="Please select preferred route"
               buttonText={
-                loading ? 'Connect Wallet/s To Start Transaction' : 'Get Quote'
+                activeRoute
+                  ? 'Connect Wallet/s To Start Transaction'
+                  : 'Get Quote'
               }
-              onButtonClick={() => {
-                handleConfirm();
-                setLoading(true);
-                goToNext();
-                console.log('clicking');
-              }}
-              onConfigClick={() => {
-                setOpenSlippageModal(true);
-              }}
+              onButtonClick={onChooseRouteButtonClick}
+              onConfigClick={onConfigClick}
             >
               <RoutesWrapper
                 loading={loading}
@@ -108,9 +104,12 @@ export const AnyaltWidget = ({
           </CustomStepper>
           <Footer />
           <ConnectWalletsModal
-            isOpen={isConfirmationOpen}
-            onClose={onConfirmationClose}
-            onConfirm={handleConfirm}
+            isOpen={isConnectWalletsOpen}
+            onClose={() => {
+              connectWalletsClose();
+              goToNext();
+            }}
+            onConfirm={connectWalletsClose}
             title="Connect Wallet's"
           />
         </ModalWrapper>

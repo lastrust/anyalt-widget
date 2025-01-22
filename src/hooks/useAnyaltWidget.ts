@@ -11,6 +11,7 @@ import {
   inTokenAtom,
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
+  selectedRouteAtom,
   slippageAtom,
 } from '../store/stateStore';
 import { EstimateResponse, Token } from '../types/types';
@@ -26,20 +27,30 @@ export const useAnyaltWidget = ({
   finalToken: Token;
   apiKey: string;
 }) => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const { activeStep, goToNext } = useSteps({ index: 0 });
+
+  const inToken = useAtomValue(inTokenAtom);
+  const slippage = useAtomValue(slippageAtom);
+  const inTokenAmount = useAtomValue(inTokenAmountAtom);
+
+  const [openSlippageModal, setOpenSlippageModal] = useState(false);
+
+  const [activeRoute, setActiveRoute] = useAtom(activeRouteAtom);
+  const [, setFinalTokenEstimate] = useAtom(finalTokenEstimateAtom);
+  const [selectedRoute] = useAtom(selectedRouteAtom);
+  const [, setProtocolFinalToken] = useAtom(protocolFinalTokenAtom);
   const [anyaltInstance, setAnyaltInstance] = useAtom(anyaltInstanceAtom);
   const [allChains, setAllChains] = useAtom(allChainsAtom);
   const [protocolInputToken, setProtocolInputToken] = useAtom(
     protocolInputTokenAtom,
   );
-  const [, setProtocolFinalToken] = useAtom(protocolFinalTokenAtom);
-  const [openSlippageModal, setOpenSlippageModal] = useState(false);
-  const inToken = useAtomValue(inTokenAtom);
-  const slippage = useAtomValue(slippageAtom);
-  const inTokenAmount = useAtomValue(inTokenAmountAtom);
-  const [activeRoute, setActiveRoute] = useAtom(activeRouteAtom);
-  const [, setFinalTokenEstimate] = useAtom(finalTokenEstimateAtom);
+
+  const {
+    isOpen: isConnectWalletsOpen,
+    onClose: connectWalletsClose,
+    onOpen: connectWalletsOpen,
+  } = useDisclosure();
 
   useEffect(() => {
     if (activeRoute) {
@@ -63,6 +74,12 @@ export const useAnyaltWidget = ({
   }, []);
 
   useEffect(() => {
+    if (selectedRoute) {
+      setActiveRoute(selectedRoute);
+    }
+  }, [selectedRoute]);
+
+  useEffect(() => {
     const inputTokenChain = allChains.find(
       (chain) =>
         chain.chainId === inputToken.chainId &&
@@ -79,9 +96,9 @@ export const useAnyaltWidget = ({
     }
   }, [allChains, anyaltInstance]);
 
-  const onButtonClick = async () => {
+  const onCalculateButtonClick = async () => {
     try {
-      console.log(inToken);
+      setLoading(true);
       if (!inToken || !protocolInputToken || !inTokenAmount) return;
 
       const route = await anyaltInstance?.getBestRoute({
@@ -92,31 +109,45 @@ export const useAnyaltWidget = ({
       });
 
       setActiveRoute(route);
-      setLoading(false);
       goToNext();
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const onChooseRouteButtonClick = () => {
+    connectWalletsOpen();
+  };
+
+  const onConfigClick = () => {
+    setOpenSlippageModal(true);
   };
 
   const { isOpen: isConfirmationOpen, onClose: onConfirmationClose } =
     useDisclosure();
 
   const handleConfirm = () => {
-    setLoading(true);
     goToNext();
   };
 
   return {
-    activeStep,
-    onButtonClick,
-    handleConfirm,
-    isConfirmationOpen,
-    onConfirmationClose,
     loading,
-    setLoading,
-    openSlippageModal,
-    setOpenSlippageModal,
     goToNext,
+    setLoading,
+    activeStep,
+    activeRoute,
+    onConfigClick,
+    onCalculateButtonClick,
+    onChooseRouteButtonClick,
+    handleConfirm,
+    openSlippageModal,
+    isConfirmationOpen,
+    connectWalletsOpen,
+    onConfirmationClose,
+    connectWalletsClose,
+    isConnectWalletsOpen,
+    setOpenSlippageModal,
   };
 };
