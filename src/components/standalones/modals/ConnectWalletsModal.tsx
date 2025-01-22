@@ -11,10 +11,8 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { useWallet } from '@solana/wallet-adapter-react';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui'; // Import the wallet modal hook
 import { FC } from 'react';
-import { useAccount } from 'wagmi';
 import { WalletButton } from '../../molecules/buttons/WalletButton';
 
 interface Props {
@@ -22,6 +20,8 @@ interface Props {
   onClose: () => void;
   onConfirm: () => void;
   title: string;
+  isSolanaConnected: boolean;
+  isEvmConnected: boolean;
 }
 
 const WALLETS = [
@@ -40,11 +40,11 @@ export const ConnectWalletsModal: FC<Props> = ({
   onClose,
   title,
   onConfirm,
+  isSolanaConnected,
+  isEvmConnected,
 }) => {
   const { openConnectModal } = useConnectModal();
   const { setVisible } = useWalletModal(); // Hook to control the Solana wallet modal
-  const { connected: isSolanaConnected } = useWallet();
-  const { isConnected: isEvmConnected } = useAccount();
 
   const areWalletsConnected = isSolanaConnected && isEvmConnected;
 

@@ -1,7 +1,9 @@
 import { AnyAlt } from '@anyalt/sdk';
 import { useDisclosure, useSteps } from '@chakra-ui/react';
+import { useWallet } from '@solana/wallet-adapter-react';
 import { useAtom, useAtomValue } from 'jotai';
 import { useEffect, useState } from 'react';
+import { useAccount } from 'wagmi';
 import {
   activeRouteAtom,
   allChainsAtom,
@@ -27,6 +29,9 @@ export const useAnyaltWidget = ({
   finalToken: Token;
   apiKey: string;
 }) => {
+  const { connected: isSolanaConnected } = useWallet();
+  const { isConnected: isEvmConnected } = useAccount();
+
   const [loading, setLoading] = useState(false);
   const { activeStep, goToNext } = useSteps({ index: 0 });
 
@@ -118,7 +123,8 @@ export const useAnyaltWidget = ({
   };
 
   const onChooseRouteButtonClick = () => {
-    connectWalletsOpen();
+    if (isSolanaConnected && isEvmConnected) goToNext();
+    else connectWalletsOpen();
   };
 
   const onConfigClick = () => {
@@ -139,6 +145,8 @@ export const useAnyaltWidget = ({
     activeStep,
     activeRoute,
     onConfigClick,
+    isSolanaConnected,
+    isEvmConnected,
     onCalculateButtonClick,
     onChooseRouteButtonClick,
     handleConfirm,

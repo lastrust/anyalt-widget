@@ -2,7 +2,6 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import dts from 'vite-plugin-dts';
 import { resolve } from 'path';
-import fs from 'fs';
 
 // Vite configuration
 export default defineConfig({
@@ -14,7 +13,7 @@ export default defineConfig({
   ],
   build: {
     lib: {
-      entry: resolve(__dirname, 'src/AnyaltWidget.tsx'),
+      entry: resolve(__dirname, 'src/index.tsx'),
       name: 'AnyaltWidget',
       formats: ['es', 'umd'],
       fileName: (format) => `anyalt-widget.${format}.js`,
