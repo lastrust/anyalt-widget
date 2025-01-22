@@ -32,7 +32,6 @@ export const AnyaltWidgetWrapper = ({
     onCalculateButtonClick,
     onChooseRouteButtonClick,
     onConfigClick,
-    goToNext,
     isSolanaConnected,
     isEvmConnected,
     openSlippageModal,
