@@ -1,5 +1,5 @@
 import { Divider, Flex } from '@chakra-ui/react';
-import { SlippageModal } from '../SlippageModal';
+import { SlippageModal } from '../modals/SlippageModal';
 import { TokenInputBox } from '../TokenInputBox';
 import { TokenQuoteBox } from '../TokenQuoteBox';
 import { TokenSelectBox } from '../TokenSelectBox';

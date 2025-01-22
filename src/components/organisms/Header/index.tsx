@@ -1,9 +1,14 @@
 import { Box } from '@chakra-ui/react';
+import { ReactNode } from 'react';
 
-export const Header = () => {
+type Props = {
+  children: ReactNode;
+};
+
+export const Header = ({ children }: Props) => {
   return (
     <Box color="white" fontSize="24px" fontWeight="bold">
-      Start Transaction
+      {children}
     </Box>
   );
 };

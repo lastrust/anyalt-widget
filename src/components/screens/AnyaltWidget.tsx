@@ -16,6 +16,7 @@ import { AnyaltWidgetProps } from '../..';
 import { useAnyaltWidget } from '../../hooks/useAnyaltWidget';
 import { SwappingWrapper } from '../organisms/SwappingWrapper/index';
 import { RoutesWrapper } from '../standalones/routeWrap/RoutesWrapper';
+import { SwapProgress } from '../standalones/swap/SwapProgress';
 
 export const AnyaltWidgetWrapper = ({
   isOpen,
@@ -49,9 +50,9 @@ export const AnyaltWidgetWrapper = ({
     <ModalWrapper
       isOpen={isOpen}
       onClose={onClose}
-      size={activeStep === 1 ? '4xl' : 'lg'}
+      size={activeStep === 0 ? 'lg' : '4xl'}
     >
-      <Header />
+      <Header>{activeStep === 2 ? 'Transaction' : 'Start Transaction'}</Header>
       <CustomStepper activeStep={activeStep}>
         <SwappingWrapper
           loading={loading}
@@ -85,6 +86,45 @@ export const AnyaltWidgetWrapper = ({
             loading={loading}
             openSlippageModal={openSlippageModal}
             setOpenSlippageModal={setOpenSlippageModal}
+          />
+        </SwappingWrapper>
+        <SwappingWrapper
+          loading={loading}
+          title="Step 1"
+          buttonText="Approve"
+          secondTitle="Transaction Overview"
+          onButtonClick={() => {
+            console.log('Approve');
+          }}
+          onConfigClick={onConfigClick}
+        >
+          <SwapProgress
+            exchangeName="Anyalt"
+            transactionDetails={{
+              requestId: 'j48n3b294nk39abfcaknvkjdsnvnlsnak',
+              gasPrice: '1.5',
+              time: '50',
+              profit: '-0.05%',
+              from: {
+                name: 'ETH',
+                icon: 'https://assets.coingecko.com/coins/images/279/large/ethereum.png?1696501628',
+                amount: '1.000',
+                usdAmount: '2430',
+                chainName: 'Ethereum',
+                chainIcon:
+                  'https://assets.coingecko.com/coins/images/279/large/ethereum.png?1696501628',
+              },
+              to: {
+                name: 'ETH',
+                icon: 'https://assets.coingecko.com/coins/images/279/large/ethereum.png?1696501628',
+                amount: '1.000',
+                usdAmount: '2430',
+                chainName: 'Ethereum',
+                chainIcon:
+                  'https://assets.coingecko.com/coins/images/279/large/ethereum.png?1696501628',
+              },
+              status: 'pending',
+            }}
           />
         </SwappingWrapper>
       </CustomStepper>
