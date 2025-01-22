@@ -3,9 +3,9 @@
   "version": "1.0.0-canary.14",
   "description": "Anyalt Widget",
   "private": false,
-  "main": "dist/anyalt-widget.umd.js",
-  "module": "dist/anyalt-widget.es.js",
-  "types": "dist/AnyaltWidget.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist",
     "package.json"
@@ -13,9 +13,9 @@
   "sideEffects": false,
   "exports": {
     ".": {
-      "import": "./dist/anyalt-widget.es.js",
-      "require": "./dist/anyalt-widget.umd.js",
-      "types": "./dist/AnyaltWidget.d.ts"
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
     }
   },
   "peerDependencies": {

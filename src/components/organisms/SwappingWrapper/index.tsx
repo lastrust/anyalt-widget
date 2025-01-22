@@ -2,6 +2,7 @@ import { Box, Button, Flex, Grid, Image, Text } from '@chakra-ui/react';
 import configIcon from '../../../assets/imgs/config-icon.svg';
 
 type Props = {
+  loading: boolean;
   title: string;
   secondTitle?: string;
   secondSubtitle?: string;
@@ -12,6 +13,7 @@ type Props = {
 };
 
 export const SwappingWrapper = ({
+  loading,
   title,
   secondTitle,
   secondSubtitle,
@@ -68,6 +70,7 @@ export const SwappingWrapper = ({
         borderRadius="8px"
         h="64px"
         onClick={onButtonClick}
+        isLoading={loading}
       >
         {buttonText}
       </Button>

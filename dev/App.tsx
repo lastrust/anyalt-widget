@@ -1,15 +1,18 @@
 import { Box, Center, ChakraProvider } from '@chakra-ui/react';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { AnyaltWidget, defaultTheme } from '../src/AnyaltWidget';
 import { OpenModalButton } from '../src/components/atoms/buttons/OpenModalButton';
+import { defaultTheme } from '../src/components/screens/AnyaltWidget';
 import { useModal } from '../src/hooks/useModal';
+import { AnyaltWidget } from '../src/index';
 import { ChainType, EstimateResponse } from '../src/types/types';
 
 const App = () => {
   const { isOpen, onOpen, onClose } = useModal();
 
-  const estimateCallback = async (amountIn: number): Promise<EstimateResponse> => {
+  const estimateCallback = async (
+    amountIn: number,
+  ): Promise<EstimateResponse> => {
     return {
       amountOut: '10.19',
       priceInUSD: '2423.53',
