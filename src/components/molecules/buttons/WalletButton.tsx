@@ -54,6 +54,19 @@ export const WalletButton: FC<WalletButtonProps> = ({
     return network;
   };
 
+  const getButtonStatus = () => {
+    if (isWalletConnected) {
+      return 'Disconnect';
+    }
+    if (isEvmWallet) {
+      return 'Connect EVM Wallet';
+    }
+    if (isSolanaWallet) {
+      return 'Connect Solana Wallet';
+    }
+    return 'Connect';
+  };
+
   return (
     <Button
       w="100%"
@@ -67,7 +80,7 @@ export const WalletButton: FC<WalletButtonProps> = ({
         <Flex direction="column" align="flex-start" gap="4px">
           <Flex align="center" gap="8px">
             <Text color="brand.secondary.2" fontSize="16px">
-              {walletType}
+              {getButtonStatus()}
             </Text>
             {isWalletConnected && <Circle size="8px" bg="brand.tertiary.100" />}
           </Flex>

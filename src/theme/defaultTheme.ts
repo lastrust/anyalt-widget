@@ -45,6 +45,9 @@ export const defaultTheme = extendTheme({
         10: '#E530301a',
       },
       white: '#FFFFFF',
+      border: {
+        primary: 'rgba(145, 158, 171, 0.12)',
+      },
     },
   },
   components: {
