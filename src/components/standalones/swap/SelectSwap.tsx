@@ -1,8 +1,8 @@
 import { Divider, Flex } from '@chakra-ui/react';
-import { SlippageModal } from '../SlippageModal';
-import { TokenInputBox } from '../TokenInputBox';
-import { TokenQuoteBox } from '../TokenQuoteBox';
-import { TokenSelectBox } from '../TokenSelectBox';
+import { SlippageModal } from '../modals/SlippageModal';
+import { TokenInputBox } from '../token/input/TokenInputBox';
+import { TokenQuoteBox } from '../token/quote/TokenQuoteBox';
+import { TokenSelectBox } from '../token/select/TokenSelectBox';
 import { useSelectSwap } from './useSelectSwap';
 
 type Props = {

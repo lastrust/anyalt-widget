@@ -1,21 +1,22 @@
-import { Footer } from '../organisms/Footer';
-import { Header } from '../organisms/Header';
-import { ConnectWalletsModal } from '../standalones/modals/ConnectWalletsModal';
-import ModalWrapper from '../standalones/modals/ModalWrapper';
-import CustomStepper from '../standalones/stepper/Stepper';
-import { SelectSwap } from '../standalones/swap/SelectSwap';
+import { ConnectWalletsModal } from '../../standalones/modals/ConnectWalletsModal';
+import ModalWrapper from '../../standalones/modals/ModalWrapper';
+import CustomStepper from '../../standalones/stepper/Stepper';
+import { SelectSwap } from '../../standalones/swap/SelectSwap';
+import { Footer } from '../../standalones/widget/Footer';
+import { Header } from '../../standalones/widget/Header';
 
-export { useModal } from '../../hooks/useModal';
+export { useModal } from '../../../hooks/useModal';
 export {
   defaultTheme,
   defaultTheme as standardTheme,
-} from '../../theme/defaultTheme';
-export { OpenModalButton } from '../atoms/buttons/OpenModalButton';
+} from '../../../theme/defaultTheme';
+export { OpenModalButton } from '../../atoms/buttons/OpenModalButton';
 
-import { AnyaltWidgetProps } from '../..';
-import { useAnyaltWidget } from '../../hooks/useAnyaltWidget';
-import { SwappingWrapper } from '../organisms/SwappingWrapper/index';
-import { RoutesWrapper } from '../standalones/routeWrap/RoutesWrapper';
+import { AnyaltWidgetProps } from '../../..';
+import { useAnyaltWidget } from '../../../hooks/useAnyaltWidget';
+import { RoutesWrapper } from '../../standalones/wrappers/RoutesWrapper';
+import { SwappingWrapper } from '../../standalones/wrappers/SwappingWrapper';
+import { TransactionSwap } from '../../standalones/wrappers/TransactionSwap';
 
 export const AnyaltWidgetWrapper = ({
   isOpen,
@@ -53,9 +54,9 @@ export const AnyaltWidgetWrapper = ({
     <ModalWrapper
       isOpen={isOpen}
       onClose={onClose}
-      size={activeStep === 1 ? '4xl' : 'lg'}
+      size={activeStep === 0 ? 'lg' : '5xl'}
     >
-      <Header />
+      <Header>{activeStep === 2 ? 'Transaction' : 'Start Transaction'}</Header>
       <CustomStepper activeStep={activeStep}>
         <SwappingWrapper
           loading={loading}
@@ -93,6 +94,18 @@ export const AnyaltWidgetWrapper = ({
             openSlippageModal={openSlippageModal}
             setOpenSlippageModal={setOpenSlippageModal}
           />
+        </SwappingWrapper>
+        <SwappingWrapper
+          hideButton
+          failedToFetchRoute={false}
+          loading={loading}
+          buttonText="Approve"
+          onButtonClick={() => {
+            console.log('Approve');
+          }}
+          onConfigClick={onConfigClick}
+        >
+          <TransactionSwap />
         </SwappingWrapper>
       </CustomStepper>
       <Footer />

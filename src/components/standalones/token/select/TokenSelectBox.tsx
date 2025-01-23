@@ -1,9 +1,9 @@
 import { SupportedToken } from '@anyalt/sdk';
 import { Box, Image, Input, Text } from '@chakra-ui/react';
 import { FC } from 'react';
-import { getImageURL } from '../../../utils';
-import { TokenAccept } from '../../molecules/TokenAccept';
-import { TokenItem } from '../../molecules/TokenItem';
+import { getImageURL } from '../../../../utils';
+import { TokenAccept } from '../../../molecules/TokenAccept';
+import { TokenItem } from '../../../molecules/TokenItem';
 import { useTokenSelectBox } from './useTokenSelectBox';
 
 type Props = {

@@ -9,17 +9,14 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { useAtom } from 'jotai';
-import aarnaIcon from '../../../../assets/imgs/aarna.png';
-import {
-  activeRouteAtom,
-  selectedRouteAtom,
-} from '../../../../store/stateStore';
-import { GasIcon } from '../../../atoms/icons/GasIcon';
-import { StepsIcon } from '../../../atoms/icons/StepsIcon';
-import { TimeIcon } from '../../../atoms/icons/TimeIcon';
-import { RouteStep } from '../../../molecules/route/RouteStep';
-import { RouteTag } from '../../../molecules/routeTag/RouteTag';
-import { TokenRouteInfo } from '../../../molecules/TokenRouteInfo';
+import aarnaIcon from '../../../assets/imgs/aarna.png';
+import { activeRouteAtom, selectedRouteAtom } from '../../../store/stateStore';
+import { GasIcon } from '../../atoms/icons/GasIcon';
+import { StepsIcon } from '../../atoms/icons/StepsIcon';
+import { TimeIcon } from '../../atoms/icons/TimeIcon';
+import { RouteTag } from '../../molecules/routeTag/RouteTag';
+import { RouteStep } from '../../molecules/steps/RouteStep';
+import { TokenRouteInfo } from '../../molecules/TokenRouteInfo';
 
 export const RouteAccordion = () => {
   const [activeRoute] = useAtom(activeRouteAtom);
@@ -32,6 +29,7 @@ export const RouteAccordion = () => {
   return (
     <Accordion defaultIndex={[0]} allowMultiple>
       <AccordionItem
+        key={activeRoute?.swaps[0].swapperId}
         border="1px solid"
         borderColor="brand.border.primary"
         borderRadius={'10px'}
@@ -110,6 +108,7 @@ export const RouteAccordion = () => {
             {activeRoute?.swaps[0].internalSwaps?.map((step, index) => {
               return (
                 <RouteStep
+                  key={`${activeRoute?.swaps[0].swapperId}-${index}`}
                   stepNumber={index + 1}
                   exchangeIcon={activeRoute?.swaps[0].swapperLogo}
                   exchangeName={activeRoute?.swaps[0].swapperId}

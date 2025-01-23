@@ -1,4 +1,4 @@
-import { AnyaltWidgetWrapper } from './components/screens/AnyaltWidget';
+import { AnyaltWidgetWrapper } from './components/screens/widget/AnyaltWidget';
 import { AppKitProvider } from './providers/RainbowKitProvider';
 import { SolanaProvider } from './providers/SolanaProvider';
 import { EstimateResponse, Token } from './types/types';

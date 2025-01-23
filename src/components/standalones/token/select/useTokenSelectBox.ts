@@ -1,8 +1,14 @@
 import { SupportedChain, SupportedToken } from '@anyalt/sdk';
 import { useAtomValue } from 'jotai';
 import { useEffect, useMemo, useState } from 'react';
-import { allChainsAtom, anyaltInstanceAtom } from '../../../store/stateStore';
-import { isValidEthereumAddress, isValidSolanaAddress } from '../../../utils';
+import {
+  allChainsAtom,
+  anyaltInstanceAtom,
+} from '../../../../store/stateStore';
+import {
+  isValidEthereumAddress,
+  isValidSolanaAddress,
+} from '../../../../utils';
 
 export const useTokenSelectBox = () => {
   const allChains = useAtomValue(allChainsAtom);

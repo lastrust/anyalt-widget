@@ -3,10 +3,11 @@ import configIcon from '../../../assets/imgs/config-icon.svg';
 
 type Props = {
   loading: boolean;
-  title: string;
+  title?: string;
   secondTitle?: string;
   secondSubtitle?: string;
   buttonText: string;
+  hideButton?: boolean;
   onConfigClick: () => void;
   onButtonClick: () => void;
   children: React.ReactNode;
@@ -19,6 +20,7 @@ export const SwappingWrapper = ({
   secondTitle,
   secondSubtitle,
   buttonText,
+  hideButton,
   onButtonClick,
   onConfigClick,
   children,
@@ -35,14 +37,16 @@ export const SwappingWrapper = ({
       borderRadius="12px"
     >
       <Grid gridTemplateColumns={secondTitle ? '1fr 1fr' : '1fr'} gap="16px">
-        <Flex justifyContent="space-between" alignItems="center" mb="16px">
-          <Text color="white" fontSize="24px" fontWeight="bold">
-            {title}
-          </Text>
-          <Box cursor="pointer">
-            <Image src={configIcon} alt="config" onClick={onConfigClick} />
-          </Box>
-        </Flex>
+        {title && (
+          <Flex justifyContent="space-between" alignItems="center" mb="16px">
+            <Text color="white" fontSize="24px" fontWeight="bold">
+              {title}
+            </Text>
+            <Box cursor="pointer">
+              <Image src={configIcon} alt="config" onClick={onConfigClick} />
+            </Box>
+          </Flex>
+        )}
         {secondTitle && (
           <Flex
             justifyContent="space-between"
@@ -65,19 +69,21 @@ export const SwappingWrapper = ({
       </Grid>
 
       {children}
-      <Button
-        width={secondTitle ? '50%' : '100%'}
-        bg="brand.tertiary.100"
-        color="white"
-        fontSize="16px"
-        fontWeight="bold"
-        borderRadius="8px"
-        h="64px"
-        onClick={onButtonClick}
-        isLoading={loading}
-      >
-        {buttonText}
-      </Button>
+      {!hideButton && (
+        <Button
+          width={secondTitle ? '50%' : '100%'}
+          bg="brand.tertiary.100"
+          color="white"
+          fontSize="16px"
+          fontWeight="bold"
+          borderRadius="8px"
+          h="64px"
+          onClick={onButtonClick}
+          isLoading={loading}
+        >
+          {buttonText}
+        </Button>
+      )}
 
       {failedToFetchRoute && (
         <Box
