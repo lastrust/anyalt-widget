@@ -14,9 +14,9 @@ export { OpenModalButton } from '../../atoms/buttons/OpenModalButton';
 
 import { AnyaltWidgetProps } from '../../..';
 import { useAnyaltWidget } from '../../../hooks/useAnyaltWidget';
-import { TransactionSwap } from '../../standalones/transaction/TransactionSwap';
 import { RoutesWrapper } from '../../standalones/wrappers/RoutesWrapper';
 import { SwappingWrapper } from '../../standalones/wrappers/SwappingWrapper';
+import { TransactionSwap } from '../../standalones/wrappers/TransactionSwap';
 
 export const AnyaltWidgetWrapper = ({
   isOpen,
@@ -97,34 +97,7 @@ export const AnyaltWidgetWrapper = ({
           }}
           onConfigClick={onConfigClick}
         >
-          <TransactionSwap
-            exchangeName="Anyalt"
-            transactionDetails={{
-              requestId: 'j48n3b',
-              gasPrice: '1.5',
-              time: '50',
-              profit: '-0.05%',
-              from: {
-                name: 'ETH',
-                icon: 'https://assets.coingecko.com/coins/images/279/large/ethereum.png?1696501628',
-                amount: '1.000',
-                usdAmount: '2430',
-                chainName: 'Ethereum',
-                chainIcon:
-                  'https://assets.coingecko.com/coins/images/279/large/ethereum.png?1696501628',
-              },
-              to: {
-                name: 'ETH',
-                icon: 'https://assets.coingecko.com/coins/images/279/large/ethereum.png?1696501628',
-                amount: '1.000',
-                usdAmount: '2430',
-                chainName: 'Ethereum',
-                chainIcon:
-                  'https://assets.coingecko.com/coins/images/279/large/ethereum.png?1696501628',
-              },
-              status: 'pending',
-            }}
-          />
+          <TransactionSwap />
         </SwappingWrapper>
       </CustomStepper>
       <Footer />

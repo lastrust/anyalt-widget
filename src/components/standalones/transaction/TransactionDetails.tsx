@@ -1,18 +1,37 @@
 import { Button, Divider, Flex, HStack, Text, VStack } from '@chakra-ui/react';
+import { useAtomValue } from 'jotai';
+import { activeRouteAtom } from '../../../store/stateStore';
 import { DividerIcon } from '../../atoms/icons/transaction/DividerIcon';
 import { GasIcon } from '../../atoms/icons/transaction/GasIcon';
 import { TimeIcon } from '../../atoms/icons/transaction/TimeIcon';
 import { TokenQuoteBox } from '../token/quote/TokenQuoteBox';
-import { TransactionDetailsType } from './TransactionSwap';
 
-type Props = {
-  exchangeName: string;
-} & TransactionDetailsType;
-
-export const TransactionDetails = ({
-  exchangeName,
-  transactionDetails,
-}: Props) => {
+export const TransactionDetails = () => {
+  const activeRoute = useAtomValue(activeRouteAtom);
+  const transactionDetails =
+    activeRoute?.swaps[0].internalSwaps?.map((swap) => ({
+      requestId: activeRoute?.requestId || '',
+      gasPrice: activeRoute?.swaps[0].fee[0]?.price?.toString() || '0',
+      time: activeRoute?.swaps[0].estimatedTimeInSeconds?.toString() || '0',
+      profit: '0.00',
+      from: {
+        name: swap.from.symbol,
+        icon: swap.from.logo,
+        amount: activeRoute?.swaps[0].fromAmount || '0',
+        usdAmount: swap.from.usdPrice?.toString() || '0',
+        chainName: swap.from.blockchain,
+        chainIcon: swap.from.blockchainLogo,
+      },
+      to: {
+        name: swap.to.symbol,
+        icon: swap.to.logo,
+        amount: activeRoute?.swaps[0].toAmount || '0',
+        usdAmount: swap.to.usdPrice?.toString() || '0',
+        chainName: swap.to.blockchain,
+        chainIcon: swap.to.blockchainLogo,
+      },
+      status: 'Pending',
+    })) || [];
   return (
     <VStack
       w={'100%'}
@@ -28,7 +47,9 @@ export const TransactionDetails = ({
           Step 1
         </Text>
       </Flex>
-      <Text color={'brand.secondary.3'}>Swap Tokens Using {exchangeName}</Text>
+      <Text color={'brand.secondary.3'}>
+        Swap Tokens Using {activeRoute?.swaps[0].swapperId}
+      </Text>
       <HStack
         w={'100%'}
         p={'16px 24px'}
@@ -43,7 +64,7 @@ export const TransactionDetails = ({
             lineHeight={'120%'}
             fontSize={'16px'}
           >
-            {transactionDetails.time}s
+            {activeRoute?.swaps[0].estimatedTimeInSeconds}s
           </Text>
         </HStack>
         <DividerIcon />
@@ -54,17 +75,17 @@ export const TransactionDetails = ({
             lineHeight={'120%'}
             fontSize={'16px'}
           >
-            $ {transactionDetails.gasPrice}
+            $ {Number(activeRoute?.swaps[0].fee[0]?.price || '0').toFixed(2)}
           </Text>
         </HStack>
         <DividerIcon />
         <Text color={'brand.secondary.3'} lineHeight={'120%'} fontSize={'16px'}>
-          {transactionDetails.profit}
+          {'0'}
         </Text>
       </HStack>
       <VStack
         w={'100%'}
-        p={'24px'}
+        p={'16px'}
         borderRadius={'16px'}
         borderWidth={'1px'}
         borderColor={'brand.border.primary'}
@@ -72,12 +93,12 @@ export const TransactionDetails = ({
         <TokenQuoteBox
           loading={false}
           headerText=""
-          tokenName={transactionDetails.from.name}
-          tokenLogo={transactionDetails.from.icon}
-          chainName={transactionDetails.from.chainName}
-          chainLogo={transactionDetails.from.chainIcon}
-          amount={transactionDetails.from.amount}
-          price={transactionDetails.from.usdAmount}
+          tokenName={transactionDetails[0].from.name}
+          tokenLogo={transactionDetails[0].from.icon}
+          chainName={transactionDetails[0].from.chainName}
+          chainLogo={transactionDetails[0].from.chainIcon}
+          amount={Number(transactionDetails[0].from.amount).toFixed(2)}
+          price={transactionDetails[0].from.usdAmount}
           w={'100%'}
           p={'0'}
           m={'0'}
@@ -86,12 +107,12 @@ export const TransactionDetails = ({
         <TokenQuoteBox
           loading={false}
           headerText=""
-          tokenName={transactionDetails.to.name}
-          tokenLogo={transactionDetails.to.icon}
-          chainName={transactionDetails.to.chainName}
-          chainLogo={transactionDetails.to.chainIcon}
-          amount={transactionDetails.to.amount}
-          price={transactionDetails.to.usdAmount}
+          tokenName={transactionDetails[0].to.name}
+          tokenLogo={transactionDetails[0].to.icon}
+          chainName={transactionDetails[0].to.chainName}
+          chainLogo={transactionDetails[0].to.chainIcon}
+          amount={Number(transactionDetails[0].to.amount).toFixed(2)}
+          price={transactionDetails[0].to.usdAmount}
           w={'100%'}
           p={'0'}
           m={'0'}
