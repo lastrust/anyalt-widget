@@ -9,7 +9,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { useAtom } from 'jotai';
-import aarnaIcon from '../../../../assets/imgs/aarna.png';
+import aarnaIcon from '../../../assets/imgs/aarna.png';
 import { activeRouteAtom, selectedRouteAtom } from '../../../store/stateStore';
 import { GasIcon } from '../../atoms/icons/GasIcon';
 import { StepsIcon } from '../../atoms/icons/StepsIcon';

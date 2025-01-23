@@ -12,7 +12,7 @@ import { FC } from 'react';
 import { inTokenAmountAtom, inTokenAtom } from '../../../../store/stateStore';
 import { TokenIconBox } from '../../../molecules/TokenIconBox';
 import { TokenInfoBox } from '../../../molecules/TokenInfoBox';
-import chevronRight from '../../assets/imgs/chevron-right.svg';
+import chevronRight from '../../../../assets/imgs/chevron-right.svg';
 
 type Props = BoxProps & {
   openTokenSelectModal: () => void;
