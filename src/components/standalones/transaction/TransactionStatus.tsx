@@ -3,6 +3,7 @@ import { useAtomValue } from 'jotai';
 import { activeRouteAtom } from '../../../store/stateStore';
 import { CopyIcon } from '../../atoms/icons/transaction/CopyIcon';
 import { TokenIconBox } from '../../molecules/TokenIconBox';
+import { TransactionAccordion } from '../accordions/TransactionAccordion';
 
 type SwapTokenProps = {
   tokenName: string;
@@ -129,6 +130,9 @@ export const TransactionStatus = () => {
             </Flex>
           </Flex>
         </VStack>
+      </VStack>
+      <VStack w={'full'} gap={'12px'}>
+        <TransactionAccordion />
       </VStack>
     </VStack>
   );

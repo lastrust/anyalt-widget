@@ -98,7 +98,10 @@ export const TransactionDetails = () => {
           chainName={transactionDetails[0].from.chainName}
           chainLogo={transactionDetails[0].from.chainIcon}
           amount={Number(transactionDetails[0].from.amount).toFixed(2)}
-          price={transactionDetails[0].from.usdAmount}
+          price={(
+            Number(transactionDetails[0].from.usdAmount) *
+            Number(transactionDetails[0].from.amount)
+          ).toFixed(2)}
           w={'100%'}
           p={'0'}
           m={'0'}
@@ -112,7 +115,10 @@ export const TransactionDetails = () => {
           chainName={transactionDetails[0].to.chainName}
           chainLogo={transactionDetails[0].to.chainIcon}
           amount={Number(transactionDetails[0].to.amount).toFixed(2)}
-          price={transactionDetails[0].to.usdAmount}
+          price={(
+            Number(transactionDetails[0].to.usdAmount) *
+            Number(transactionDetails[0].to.amount)
+          ).toFixed(2)}
           w={'100%'}
           p={'0'}
           m={'0'}
@@ -121,6 +127,9 @@ export const TransactionDetails = () => {
       <Button
         width={'100%'}
         bg="brand.tertiary.100"
+        _hover={{
+          bg: 'brand.tertiary.20',
+        }}
         color="white"
         fontSize="16px"
         fontWeight="bold"

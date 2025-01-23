@@ -29,6 +29,11 @@ export const textStyles = {
     },
   },
   bold: {
+    0: {
+      fontSize: '20px',
+      fontWeight: '600', // bold
+      lineHeight: '24px',
+    },
     1: {
       fontSize: '16px',
       fontWeight: '600', // bold
