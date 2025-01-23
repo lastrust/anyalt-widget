@@ -9,7 +9,7 @@ import {
 } from '@chakra-ui/react';
 import { useAtom } from 'jotai';
 import { activeRouteAtom, selectedRouteAtom } from '../../../store/stateStore';
-import { RouteStep } from '../../molecules/route/RouteStep';
+import { TransactionStep } from '../../molecules/steps/TransactionStep';
 
 export const TransactionAccordion = () => {
   const [activeRoute] = useAtom(activeRouteAtom);
@@ -61,7 +61,7 @@ export const TransactionAccordion = () => {
             </AccordionButton>
             <AccordionPanel p={'0px'} mt="12px">
               <VStack gap={'12px'}>
-                <RouteStep
+                <TransactionStep
                   key={`${activeRoute?.swaps[0].swapperId}-${index}`}
                   stepNumber={index + 1}
                   exchangeIcon={activeRoute?.swaps[0].swapperLogo}

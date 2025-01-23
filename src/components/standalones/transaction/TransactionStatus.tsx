@@ -131,7 +131,10 @@ export const TransactionStatus = () => {
           </Flex>
         </VStack>
       </VStack>
-      <VStack w={'full'} gap={'12px'}>
+      <VStack w={'full'} gap={'16px'} alignItems={'flex-start'}>
+        <Text color="white" textStyle={'heading.2'}>
+          Swap Steps
+        </Text>
         <TransactionAccordion />
       </VStack>
     </VStack>
