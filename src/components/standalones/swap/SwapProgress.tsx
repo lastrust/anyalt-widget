@@ -10,8 +10,8 @@ import {
 import { DividerIcon } from '../../atoms/icons/transaction/DividerIcon';
 import { GasIcon } from '../../atoms/icons/transaction/GasIcon';
 import { TimeIcon } from '../../atoms/icons/transaction/TimeIcon';
-import { TransactionStatus } from '../transaction/TransactionStatus';
 import { TokenQuoteBox } from '../token/quote/TokenQuoteBox';
+import { TransactionStatus } from '../transaction/TransactionStatus';
 
 export type TransactionDetailsType = {
   transactionDetails: {
