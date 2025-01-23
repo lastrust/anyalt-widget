@@ -1,4 +1,12 @@
-import { Box, Flex, Text, VStack } from '@chakra-ui/react';
+import {
+  Box,
+  Divider,
+  Flex,
+  HStack,
+  Image,
+  Text,
+  VStack,
+} from '@chakra-ui/react';
 import { FC } from 'react';
 import { CopyIcon } from '../../atoms/icons/transaction/CopyIcon';
 interface TransactionStatusProps {
@@ -6,9 +14,44 @@ interface TransactionStatusProps {
   status: string;
 }
 
+type SwapTokenProps = {
+  tokenName: string;
+  tokenIcon: string;
+  tokenAmount: string;
+  networkName: string;
+  networkIcon: string;
+};
+
+const SwapToken = ({
+  tokenName,
+  tokenIcon,
+  tokenAmount,
+  networkName,
+}: SwapTokenProps) => {
+  return (
+    <HStack>
+      <Image
+        src={tokenIcon}
+        alt={tokenName}
+        width="32px"
+        height="32px"
+        bg={'gray'}
+        borderRadius={'50%'}
+      />
+      <VStack alignItems="flex-start" justifyContent={'space-between'}>
+        <Text color="white" textStyle={'extraBold.3'}>
+          {tokenAmount}
+        </Text>
+        <Text color="brand.secondary.3" textStyle={'regular.3'}>
+          {tokenName} on {networkName}
+        </Text>
+      </VStack>
+    </HStack>
+  );
+};
+
 export const TransactionStatus: FC<TransactionStatusProps> = ({
   requestId,
-  status,
 }) => {
   const handleCopyClick = () => {
     navigator.clipboard.writeText(requestId);
@@ -24,15 +67,36 @@ export const TransactionStatus: FC<TransactionStatusProps> = ({
       borderColor={'brand.border.primary'}
       borderWidth={'1px'}
     >
-      <Text color="brand.secondary.3">Transaction Status</Text>
-      <Box
+      <VStack
         w="100%"
         p="24px"
         borderRadius="16px"
         borderWidth="1px"
         borderColor="brand.border.primary"
+        alignItems="flex-start"
+        gap={'16px'}
       >
-        <VStack alignItems="flex-start" spacing="16px">
+        <Text color="white" textStyle={'heading.2'}>
+          Transaction Status
+        </Text>
+        <HStack justifyContent={'space-between'} w={'100%'}>
+          <SwapToken
+            tokenName="ETH"
+            tokenIcon="https://assets.coingecko.com/coins/images/279/large/ethereum.png?1696501628"
+            tokenAmount="1.000"
+            networkName="Ethereum"
+            networkIcon="https://assets.coingecko.com/coins/images/279/large/ethereum.png?1696501628"
+          />
+          <SwapToken
+            tokenName="ETH"
+            tokenIcon="https://assets.coingecko.com/coins/images/279/large/ethereum.png?1696501628"
+            tokenAmount="1.000"
+            networkName="Ethereum"
+            networkIcon="https://assets.coingecko.com/coins/images/279/large/ethereum.png?1696501628"
+          />
+        </HStack>
+        <Divider />
+        <VStack alignItems="flex-start" spacing="16px" w={'100%'}>
           <Flex w="100%" justifyContent="space-between" alignItems="center">
             <Text color="brand.secondary.3" fontSize="14px">
               Request ID:
@@ -51,20 +115,8 @@ export const TransactionStatus: FC<TransactionStatusProps> = ({
               </Box>
             </Flex>
           </Flex>
-          <Flex w="100%" justifyContent="space-between" alignItems="center">
-            <Text color="brand.secondary.3" fontSize="14px">
-              Status:
-            </Text>
-            <Text
-              color={status === 'Completed' ? 'green.500' : 'yellow.500'}
-              fontSize="14px"
-              fontWeight="medium"
-            >
-              {status}
-            </Text>
-          </Flex>
         </VStack>
-      </Box>
+      </VStack>
     </VStack>
   );
 };

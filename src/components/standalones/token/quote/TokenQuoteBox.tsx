@@ -27,11 +27,13 @@ export const TokenQuoteBox: FC<Props> = ({
 }) => {
   return (
     <Box padding="4px 16px" {...props}>
-      <Box mb="16px">
-        <Text color="white" fontSize="14px" fontWeight="bold" opacity={0.32}>
-          {headerText}
-        </Text>
-      </Box>
+      {headerText && (
+        <Box mb="16px">
+          <Text color="white" fontSize="14px" fontWeight="bold" opacity={0.32}>
+            {headerText}
+          </Text>
+        </Box>
+      )}
       <Box
         display="flex"
         flexDirection="row"

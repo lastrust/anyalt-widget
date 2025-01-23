@@ -23,7 +23,7 @@ export const TransactionDetails = ({
       borderWidth={'1px'}
       borderRadius={'16px'}
     >
-      <Flex justifyContent="space-between" alignItems="center" mb="16px">
+      <Flex justifyContent="space-between" alignItems="center">
         <Text color="white" fontSize="24px" fontWeight="bold">
           Step 1
         </Text>
@@ -38,17 +38,29 @@ export const TransactionDetails = ({
       >
         <HStack>
           <TimeIcon />
-          <Text color={'brand.secondary.3'}>{transactionDetails.time}s</Text>
+          <Text
+            color={'brand.secondary.3'}
+            lineHeight={'120%'}
+            fontSize={'16px'}
+          >
+            {transactionDetails.time}s
+          </Text>
         </HStack>
         <DividerIcon />
         <HStack>
           <GasIcon />
-          <Text color={'brand.secondary.3'}>
+          <Text
+            color={'brand.secondary.3'}
+            lineHeight={'120%'}
+            fontSize={'16px'}
+          >
             $ {transactionDetails.gasPrice}
           </Text>
         </HStack>
         <DividerIcon />
-        <Text color={'brand.secondary.3'}>{transactionDetails.profit}</Text>
+        <Text color={'brand.secondary.3'} lineHeight={'120%'} fontSize={'16px'}>
+          {transactionDetails.profit}
+        </Text>
       </HStack>
       <VStack
         w={'100%'}
@@ -67,6 +79,8 @@ export const TransactionDetails = ({
           amount={transactionDetails.from.amount}
           price={transactionDetails.from.usdAmount}
           w={'100%'}
+          p={'0'}
+          m={'0'}
         />
         <Divider w="100%" h="1px" bgColor="brand.secondary.12" />
         <TokenQuoteBox
@@ -79,6 +93,8 @@ export const TransactionDetails = ({
           amount={transactionDetails.to.amount}
           price={transactionDetails.to.usdAmount}
           w={'100%'}
+          p={'0'}
+          m={'0'}
         />
       </VStack>
       <Button
