@@ -13,7 +13,7 @@ export type AnyaltWidgetProps = {
   apiKey: string;
   onClose: () => void;
   estimateCallback: (amountIn: number) => Promise<EstimateResponse>;
-  minAmountIn?: number;
+  minDepositAmount?: number;
 };
 
 export const AnyaltWidget = (props: AnyaltWidgetProps) => {

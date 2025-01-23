@@ -24,7 +24,7 @@ export const AnyaltWidgetWrapper = ({
   inputToken,
   finalToken,
   estimateCallback,
-  minAmountIn = 0,
+  minDepositAmount = 0,
 }: AnyaltWidgetProps) => {
   const {
     loading,
@@ -39,14 +39,14 @@ export const AnyaltWidgetWrapper = ({
     setOpenSlippageModal,
     isConnectWalletsOpen,
     connectWalletsClose,
-    routeFailed,
+    failedToFetchRoute,
     isValidAmountIn,
   } = useAnyaltWidget({
     estimateCallback,
     inputToken,
     finalToken,
     apiKey,
-    minAmountIn,
+    minDepositAmount,
   });
 
   return (
@@ -63,7 +63,7 @@ export const AnyaltWidgetWrapper = ({
           buttonText={'Get Quote'}
           onButtonClick={onGetQuote}
           onConfigClick={onConfigClick}
-          routeFailed={routeFailed}
+          failedToFetchRoute={failedToFetchRoute}
         >
           <SelectSwap
             loading={loading}
@@ -86,7 +86,7 @@ export const AnyaltWidgetWrapper = ({
           }
           onButtonClick={onChooseRouteButtonClick}
           onConfigClick={onConfigClick}
-          routeFailed={routeFailed}
+          failedToFetchRoute={failedToFetchRoute}
         >
           <RoutesWrapper
             loading={loading}

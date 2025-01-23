@@ -23,13 +23,13 @@ export const useAnyaltWidget = ({
   inputToken,
   finalToken,
   apiKey,
-  minAmountIn,
+  minDepositAmount,
 }: {
   estimateCallback: (amountIn: number) => Promise<EstimateResponse>;
   inputToken: Token;
   finalToken: Token;
   apiKey: string;
-  minAmountIn: number;
+  minDepositAmount: number;
 }) => {
   const { connected: isSolanaConnected } = useWallet();
   const { isConnected: isEvmConnected } = useAccount();
@@ -52,7 +52,7 @@ export const useAnyaltWidget = ({
   const [protocolInputToken, setProtocolInputToken] = useAtom(
     protocolInputTokenAtom,
   );
-  const [routeFailed, setRouteFailed] = useState(false);
+  const [failedToFetchRoute, setFailedToFetchRoute] = useState(false);
   const [isValidAmountIn, setIsValidAmountIn] = useState(true);
 
   const {
@@ -120,16 +120,16 @@ export const useAnyaltWidget = ({
       setActiveRoute(route);
       setLoading(false);
 
-      if (route && parseFloat(route.outputAmount) < minAmountIn) {
+      if (route && parseFloat(route.outputAmount) < minDepositAmount) {
         setIsValidAmountIn(false);
       } else {
         setIsValidAmountIn(true);
-        setRouteFailed(false);
+        setFailedToFetchRoute(false);
         goToNext();
       }
     } catch (error) {
       console.error(error);
-      setRouteFailed(true);
+      setFailedToFetchRoute(true);
       setLoading(false);
     }
   };
@@ -156,7 +156,7 @@ export const useAnyaltWidget = ({
     setOpenSlippageModal,
     isConnectWalletsOpen,
     connectWalletsClose,
-    routeFailed,
+    failedToFetchRoute,
     isValidAmountIn,
   };
 };
