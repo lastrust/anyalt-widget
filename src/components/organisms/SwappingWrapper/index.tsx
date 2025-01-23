@@ -10,6 +10,7 @@ type Props = {
   onConfigClick: () => void;
   onButtonClick: () => void;
   children: React.ReactNode;
+  failedToFetchRoute: boolean;
 };
 
 export const SwappingWrapper = ({
@@ -21,13 +22,16 @@ export const SwappingWrapper = ({
   onButtonClick,
   onConfigClick,
   children,
+  failedToFetchRoute,
 }: Props) => {
   return (
     <Box
       margin="24px 0px"
       padding="24px"
       border="1px solid"
-      borderColor="brand.secondary.12"
+      borderColor={
+        failedToFetchRoute ? 'brand.quinary.100' : 'brand.secondary.12'
+      }
       borderRadius="12px"
     >
       <Grid gridTemplateColumns={secondTitle ? '1fr 1fr' : '1fr'} gap="16px">
@@ -74,6 +78,20 @@ export const SwappingWrapper = ({
       >
         {buttonText}
       </Button>
+
+      {failedToFetchRoute && (
+        <Box
+          mt="16px"
+          padding="4px"
+          bgColor="brand.quinary.10"
+          borderRadius="8px"
+          width="100%"
+        >
+          <Text color="brand.quinary.100" fontSize="14px" fontWeight="bold">
+            Route failed, please try again
+          </Text>
+        </Box>
+      )}
     </Box>
   );
 };

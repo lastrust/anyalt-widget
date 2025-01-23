@@ -18,12 +18,14 @@ type Props = BoxProps & {
   openTokenSelectModal: () => void;
   loading: boolean;
   price: string;
+  isValidAmountIn: boolean;
 };
 
 export const TokenInputBox: FC<Props> = ({
   openTokenSelectModal,
   loading,
   price,
+  isValidAmountIn,
   ...props
 }) => {
   const inToken = useAtomValue(inTokenAtom);
@@ -66,6 +68,9 @@ export const TokenInputBox: FC<Props> = ({
         bgColor="brand.secondary.4"
         padding="16px"
         borderRadius="8px"
+        border={isValidAmountIn ? 'none' : '1px solid'}
+        borderColor={isValidAmountIn ? 'transparent' : 'brand.quinary.100'}
+        mb="8px"
       >
         <Box
           display="flex"
@@ -138,6 +143,18 @@ export const TokenInputBox: FC<Props> = ({
           )}
         </Box>
       </Box>
+      {!isValidAmountIn && (
+        <Box
+          padding="4px"
+          bgColor="brand.quinary.10"
+          borderRadius="8px"
+          width="100%"
+        >
+          <Text color="brand.quinary.100" fontSize="14px" fontWeight="bold">
+            Amount not supported. Please try different amount.
+          </Text>
+        </Box>
+      )}
     </Box>
   );
 };

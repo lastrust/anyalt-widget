@@ -40,7 +40,10 @@ export const defaultTheme = extendTheme({
         20: '#00808033',
       },
       quaternary: '#0C0600',
-      quinary: '#E53030',
+      quinary: {
+        100: '#E53030',
+        10: '#E530301a',
+      },
       white: '#FFFFFF',
       border: {
         primary: 'rgba(145, 158, 171, 0.12)',

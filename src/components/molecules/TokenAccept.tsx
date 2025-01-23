@@ -12,7 +12,7 @@ export const TokenAccept: FC<Props> = ({ onClick, ...props }) => {
       borderRadius="8px"
       bgColor="brand.primary"
       border="1px solid"
-      borderColor="brand.quinary"
+      borderColor="brand.quinary.100"
       padding="12px"
       {...props}
     >
