@@ -19,7 +19,6 @@ export const TransactionDetails = ({
       p="24px"
       alignItems={'flex-start'}
       gap={'16px'}
-      mb="16px"
       borderColor={'brand.border.primary'}
       borderWidth={'1px'}
       borderRadius={'16px'}
@@ -30,7 +29,13 @@ export const TransactionDetails = ({
         </Text>
       </Flex>
       <Text color={'brand.secondary.3'}>Swap Tokens Using {exchangeName}</Text>
-      <HStack w={'100%'} p={'16px 24px'}>
+      <HStack
+        w={'100%'}
+        p={'16px 24px'}
+        border={'1px solid'}
+        borderColor={'brand.border.primary'}
+        borderRadius={'16px'}
+      >
         <HStack>
           <TimeIcon />
           <Text color={'brand.secondary.3'}>{transactionDetails.time}s</Text>
@@ -89,6 +94,15 @@ export const TransactionDetails = ({
       >
         Approve
       </Button>
+      <Text
+        color="#999"
+        fontSize="16px"
+        textDecoration={'underline'}
+        m={'0 auto'}
+        cursor={'pointer'}
+      >
+        Cancel Transaction
+      </Text>
     </VStack>
   );
 };
