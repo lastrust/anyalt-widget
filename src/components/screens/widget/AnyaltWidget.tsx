@@ -14,7 +14,7 @@ export { OpenModalButton } from '../../atoms/buttons/OpenModalButton';
 
 import { AnyaltWidgetProps } from '../../..';
 import { useAnyaltWidget } from '../../../hooks/useAnyaltWidget';
-import { SwapProgress } from '../../standalones/swap/SwapProgress';
+import { TransactionSwap } from '../../standalones/transaction/TransactionSwap';
 import { RoutesWrapper } from '../../standalones/wrappers/RoutesWrapper';
 import { SwappingWrapper } from '../../standalones/wrappers/SwappingWrapper';
 
@@ -97,7 +97,7 @@ export const AnyaltWidgetWrapper = ({
           }}
           onConfigClick={onConfigClick}
         >
-          <SwapProgress
+          <TransactionSwap
             exchangeName="Anyalt"
             transactionDetails={{
               requestId: 'j48n3b',

@@ -2,8 +2,8 @@ import { Button, Divider, Flex, HStack, Text, VStack } from '@chakra-ui/react';
 import { DividerIcon } from '../../atoms/icons/transaction/DividerIcon';
 import { GasIcon } from '../../atoms/icons/transaction/GasIcon';
 import { TimeIcon } from '../../atoms/icons/transaction/TimeIcon';
-import { TransactionDetailsType } from '../swap/SwapProgress';
 import { TokenQuoteBox } from '../token/quote/TokenQuoteBox';
+import { TransactionDetailsType } from './TransactionSwap';
 
 type Props = {
   exchangeName: string;

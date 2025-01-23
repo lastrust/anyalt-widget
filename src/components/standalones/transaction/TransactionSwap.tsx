@@ -1,6 +1,6 @@
 import { Grid } from '@chakra-ui/react';
-import { TransactionDetails } from '../transaction/TransactionDetails';
-import { TransactionStatus } from '../transaction/TransactionStatus';
+import { TransactionDetails } from './TransactionDetails';
+import { TransactionStatus } from './TransactionStatus';
 
 export type TransactionDetailsType = {
   transactionDetails: {
@@ -32,7 +32,10 @@ type Props = {
   exchangeName: string;
 } & TransactionDetailsType;
 
-export const SwapProgress = ({ exchangeName, transactionDetails }: Props) => {
+export const TransactionSwap = ({
+  exchangeName,
+  transactionDetails,
+}: Props) => {
   return (
     <Grid templateColumns="1fr 1fr" gap="16px">
       <TransactionDetails
