@@ -78,7 +78,7 @@ export const RouteAccordion = () => {
                   textColor="brand.tertiary.100"
                 />
                 <RouteTag
-                  text={`${activeRoute?.swaps[0].internalSwaps?.length}`}
+                  text={`${activeRoute?.swaps[0].internalSwaps?.length ?? 1}`}
                   icon={StepsIcon}
                   textColor="brand.tertiary.100"
                 />

@@ -25,12 +25,13 @@ export const AnyaltWidgetWrapper = ({
   inputToken,
   finalToken,
   estimateCallback,
+  minDepositAmount = 0,
 }: AnyaltWidgetProps) => {
   const {
     loading,
     activeRoute,
     activeStep,
-    onCalculateButtonClick,
+    onGetQuote,
     onChooseRouteButtonClick,
     onConfigClick,
     isSolanaConnected,
@@ -39,11 +40,14 @@ export const AnyaltWidgetWrapper = ({
     setOpenSlippageModal,
     isConnectWalletsOpen,
     connectWalletsClose,
+    failedToFetchRoute,
+    isValidAmountIn,
   } = useAnyaltWidget({
     estimateCallback,
     inputToken,
     finalToken,
     apiKey,
+    minDepositAmount,
   });
 
   return (
@@ -56,15 +60,17 @@ export const AnyaltWidgetWrapper = ({
       <CustomStepper activeStep={activeStep}>
         <SwappingWrapper
           loading={loading}
-          title={loading ? 'Calculation' : 'Select Deposit Token'}
+          title={'Select Deposit Token'}
           buttonText={'Get Quote'}
-          onButtonClick={onCalculateButtonClick}
+          onButtonClick={onGetQuote}
           onConfigClick={onConfigClick}
+          failedToFetchRoute={failedToFetchRoute}
         >
           <SelectSwap
             loading={loading}
             openSlippageModal={openSlippageModal}
             setOpenSlippageModal={setOpenSlippageModal}
+            isValidAmountIn={isValidAmountIn}
           />
         </SwappingWrapper>
         <SwappingWrapper
@@ -81,6 +87,7 @@ export const AnyaltWidgetWrapper = ({
           }
           onButtonClick={onChooseRouteButtonClick}
           onConfigClick={onConfigClick}
+          failedToFetchRoute={failedToFetchRoute}
         >
           <RoutesWrapper
             loading={loading}
@@ -90,6 +97,7 @@ export const AnyaltWidgetWrapper = ({
         </SwappingWrapper>
         <SwappingWrapper
           hideButton
+          failedToFetchRoute={false}
           loading={loading}
           buttonText="Approve"
           onButtonClick={() => {

@@ -23,11 +23,13 @@ export const useAnyaltWidget = ({
   inputToken,
   finalToken,
   apiKey,
+  minDepositAmount,
 }: {
   estimateCallback: (amountIn: number) => Promise<EstimateResponse>;
   inputToken: Token;
   finalToken: Token;
   apiKey: string;
+  minDepositAmount: number;
 }) => {
   const { connected: isSolanaConnected } = useWallet();
   const { isConnected: isEvmConnected } = useAccount();
@@ -50,6 +52,8 @@ export const useAnyaltWidget = ({
   const [protocolInputToken, setProtocolInputToken] = useAtom(
     protocolInputTokenAtom,
   );
+  const [failedToFetchRoute, setFailedToFetchRoute] = useState(false);
+  const [isValidAmountIn, setIsValidAmountIn] = useState(true);
 
   const {
     isOpen: isConnectWalletsOpen,
@@ -91,7 +95,6 @@ export const useAnyaltWidget = ({
         chain.chainType === inputToken.chainType,
     );
 
-    console.log(inToken);
     if (inputTokenChain) {
       anyaltInstance
         ?.getToken(inputTokenChain.id, inputToken.address)
@@ -101,10 +104,11 @@ export const useAnyaltWidget = ({
     }
   }, [allChains, anyaltInstance]);
 
-  const onCalculateButtonClick = async () => {
+  const onGetQuote = async () => {
+    if (!inToken || !protocolInputToken || !inTokenAmount) return;
+
     try {
       setLoading(true);
-      if (!inToken || !protocolInputToken || !inTokenAmount) return;
 
       const route = await anyaltInstance?.getBestRoute({
         from: inToken.id,
@@ -114,12 +118,24 @@ export const useAnyaltWidget = ({
       });
 
       setActiveRoute(route);
-      goToNext();
+      setLoading(false);
+
+      if (route && parseFloat(route.outputAmount) < minDepositAmount) {
+        setIsValidAmountIn(false);
+      } else {
+        setIsValidAmountIn(true);
+        setFailedToFetchRoute(false);
+        goToNext();
+      }
     } catch (error) {
       console.error(error);
-    } finally {
+      setFailedToFetchRoute(true);
       setLoading(false);
     }
+  };
+
+  const onConfigClick = () => {
+    setOpenSlippageModal(true);
   };
 
   const onChooseRouteButtonClick = () => {
@@ -127,35 +143,20 @@ export const useAnyaltWidget = ({
     else connectWalletsOpen();
   };
 
-  const onConfigClick = () => {
-    setOpenSlippageModal(true);
-  };
-
-  const { isOpen: isConfirmationOpen, onClose: onConfirmationClose } =
-    useDisclosure();
-
-  const handleConfirm = () => {
-    goToNext();
-  };
-
   return {
     loading,
-    goToNext,
-    setLoading,
-    activeStep,
     activeRoute,
+    activeStep,
+    onGetQuote,
+    onChooseRouteButtonClick,
     onConfigClick,
     isSolanaConnected,
     isEvmConnected,
-    onCalculateButtonClick,
-    onChooseRouteButtonClick,
-    handleConfirm,
     openSlippageModal,
-    isConfirmationOpen,
-    connectWalletsOpen,
-    onConfirmationClose,
-    connectWalletsClose,
-    isConnectWalletsOpen,
     setOpenSlippageModal,
+    isConnectWalletsOpen,
+    connectWalletsClose,
+    failedToFetchRoute,
+    isValidAmountIn,
   };
 };

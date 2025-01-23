@@ -9,12 +9,14 @@ type Props = {
   loading: boolean;
   openSlippageModal: boolean;
   setOpenSlippageModal: (open: boolean) => void;
+  isValidAmountIn?: boolean;
 };
 
 export const SelectSwap = ({
   loading,
   openSlippageModal,
   setOpenSlippageModal,
+  isValidAmountIn = true,
 }: Props) => {
   const {
     finalTokenEstimate,
@@ -34,6 +36,7 @@ export const SelectSwap = ({
         openTokenSelectModal={() => setOpenTokenSelect(true)}
         loading={loading}
         price={inTokenPrice}
+        isValidAmountIn={isValidAmountIn}
       />
       <TokenQuoteBox
         loading={loading}
