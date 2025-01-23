@@ -1,12 +1,19 @@
-import { Divider, Grid, HStack, Text, VStack } from '@chakra-ui/react';
+import {
+  Button,
+  Divider,
+  Flex,
+  Grid,
+  HStack,
+  Text,
+  VStack,
+} from '@chakra-ui/react';
 import { DividerIcon } from '../../atoms/icons/transaction/DividerIcon';
 import { GasIcon } from '../../atoms/icons/transaction/GasIcon';
 import { TimeIcon } from '../../atoms/icons/transaction/TimeIcon';
-import { TransactionStatus } from '../../molecules/transaction/TransactionStatus';
-import { TokenQuoteBox } from '../TokenQuoteBox';
+import { TransactionStatus } from '../transaction/TransactionStatus';
+import { TokenQuoteBox } from '../token/quote/TokenQuoteBox';
 
-type Props = {
-  exchangeName: string;
+export type TransactionDetailsType = {
   transactionDetails: {
     requestId: string;
     gasPrice: string;
@@ -32,20 +39,32 @@ type Props = {
   };
 };
 
+type Props = {
+  exchangeName: string;
+} & TransactionDetailsType;
+
 export const SwapProgress = ({ exchangeName, transactionDetails }: Props) => {
   return (
     <Grid templateColumns="1fr 1fr" gap="16px">
-      <VStack w={'100%'} alignItems={'flex-start'} gap={'16px'} mb="16px">
+      <VStack
+        w={'100%'}
+        p="24px"
+        alignItems={'flex-start'}
+        gap={'16px'}
+        mb="16px"
+        borderColor={'brand.border.primary'}
+        borderWidth={'1px'}
+        borderRadius={'16px'}
+      >
+        <Flex justifyContent="space-between" alignItems="center" mb="16px">
+          <Text color="white" fontSize="24px" fontWeight="bold">
+            Step 1
+          </Text>
+        </Flex>
         <Text color={'brand.secondary.3'}>
           Swap Tokens Using {exchangeName}
         </Text>
-        <HStack
-          w={'100%'}
-          borderWidth={'1px'}
-          borderColor={'brand.border.primary'}
-          p={'16px 24px'}
-          borderRadius={'16px'}
-        >
+        <HStack w={'100%'} p={'16px 24px'}>
           <HStack>
             <TimeIcon />
             <Text color={'brand.secondary.3'}>{transactionDetails.time}s</Text>
@@ -90,6 +109,19 @@ export const SwapProgress = ({ exchangeName, transactionDetails }: Props) => {
             price={transactionDetails.to.usdAmount}
             w={'100%'}
           />
+          <Button
+            width={'100%'}
+            bg="brand.tertiary.100"
+            color="white"
+            fontSize="16px"
+            fontWeight="bold"
+            borderRadius="8px"
+            h="64px"
+            onClick={() => {}}
+            isLoading={false}
+          >
+            Approve
+          </Button>
         </VStack>
       </VStack>
       <TransactionStatus

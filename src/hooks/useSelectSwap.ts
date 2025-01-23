@@ -8,7 +8,7 @@ import {
   inTokenAtom,
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
-} from '../../../store/stateStore';
+} from '../store/stateStore';
 
 export const useSelectSwap = () => {
   const [openTokenSelect, setOpenTokenSelect] = useState<boolean>(false);

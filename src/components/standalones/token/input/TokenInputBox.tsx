@@ -9,10 +9,10 @@ import {
 } from '@chakra-ui/react';
 import { useAtom, useAtomValue } from 'jotai';
 import { FC } from 'react';
+import { inTokenAmountAtom, inTokenAtom } from '../../../../store/stateStore';
+import { TokenIconBox } from '../../../molecules/TokenIconBox';
+import { TokenInfoBox } from '../../../molecules/TokenInfoBox';
 import chevronRight from '../../assets/imgs/chevron-right.svg';
-import { inTokenAmountAtom, inTokenAtom } from '../../store/stateStore';
-import { TokenIconBox } from '../molecules/TokenIconBox';
-import { TokenInfoBox } from '../molecules/TokenInfoBox';
 
 type Props = BoxProps & {
   openTokenSelectModal: () => void;

@@ -1,6 +1,6 @@
 import { Grid } from '@chakra-ui/react';
+import { RouteAccordion } from '../accordions/RouteAccordion';
 import { SelectSwap } from '../swap/SelectSwap';
-import { RouteAccordion } from './route/RouteAccordion';
 
 type Props = {
   loading: boolean;

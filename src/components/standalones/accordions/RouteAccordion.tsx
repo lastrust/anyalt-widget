@@ -10,16 +10,13 @@ import {
 } from '@chakra-ui/react';
 import { useAtom } from 'jotai';
 import aarnaIcon from '../../../../assets/imgs/aarna.png';
-import {
-  activeRouteAtom,
-  selectedRouteAtom,
-} from '../../../../store/stateStore';
-import { GasIcon } from '../../../atoms/icons/GasIcon';
-import { StepsIcon } from '../../../atoms/icons/StepsIcon';
-import { TimeIcon } from '../../../atoms/icons/TimeIcon';
-import { RouteStep } from '../../../molecules/route/RouteStep';
-import { RouteTag } from '../../../molecules/routeTag/RouteTag';
-import { TokenRouteInfo } from '../../../molecules/TokenRouteInfo';
+import { activeRouteAtom, selectedRouteAtom } from '../../../store/stateStore';
+import { GasIcon } from '../../atoms/icons/GasIcon';
+import { StepsIcon } from '../../atoms/icons/StepsIcon';
+import { TimeIcon } from '../../atoms/icons/TimeIcon';
+import { RouteStep } from '../../molecules/route/RouteStep';
+import { RouteTag } from '../../molecules/routeTag/RouteTag';
+import { TokenRouteInfo } from '../../molecules/TokenRouteInfo';
 
 export const RouteAccordion = () => {
   const [activeRoute] = useAtom(activeRouteAtom);

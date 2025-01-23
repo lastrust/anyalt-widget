@@ -1,22 +1,22 @@
-import { Footer } from '../organisms/Footer';
-import { Header } from '../organisms/Header';
-import { ConnectWalletsModal } from '../standalones/modals/ConnectWalletsModal';
-import ModalWrapper from '../standalones/modals/ModalWrapper';
-import CustomStepper from '../standalones/stepper/Stepper';
-import { SelectSwap } from '../standalones/swap/SelectSwap';
+import { Footer } from '../../standalones/widget/Footer';
+import { Header } from '../../standalones/widget/Header';
+import { ConnectWalletsModal } from '../../standalones/modals/ConnectWalletsModal';
+import ModalWrapper from '../../standalones/modals/ModalWrapper';
+import CustomStepper from '../../standalones/stepper/Stepper';
+import { SelectSwap } from '../../standalones/swap/SelectSwap';
 
-export { useModal } from '../../hooks/useModal';
+export { useModal } from '../../../hooks/useModal';
 export {
   defaultTheme,
   defaultTheme as standardTheme,
-} from '../../theme/defaultTheme';
-export { OpenModalButton } from '../atoms/buttons/OpenModalButton';
+} from '../../../theme/defaultTheme';
+export { OpenModalButton } from '../../atoms/buttons/OpenModalButton';
 
-import { AnyaltWidgetProps } from '../..';
-import { useAnyaltWidget } from '../../hooks/useAnyaltWidget';
-import { SwappingWrapper } from '../organisms/SwappingWrapper/index';
-import { RoutesWrapper } from '../standalones/routeWrap/RoutesWrapper';
-import { SwapProgress } from '../standalones/swap/SwapProgress';
+import { AnyaltWidgetProps } from '../../..';
+import { useAnyaltWidget } from '../../../hooks/useAnyaltWidget';
+import { SwapProgress } from '../../standalones/swap/SwapProgress';
+import { RoutesWrapper } from '../../standalones/wrappers/RoutesWrapper';
+import { SwappingWrapper } from '../../standalones/wrappers/SwappingWrapper';
 
 export const AnyaltWidgetWrapper = ({
   isOpen,
@@ -89,10 +89,9 @@ export const AnyaltWidgetWrapper = ({
           />
         </SwappingWrapper>
         <SwappingWrapper
+          hideButton
           loading={loading}
-          title="Step 1"
           buttonText="Approve"
-          secondTitle="Transaction Overview"
           onButtonClick={() => {
             console.log('Approve');
           }}
@@ -101,7 +100,7 @@ export const AnyaltWidgetWrapper = ({
           <SwapProgress
             exchangeName="Anyalt"
             transactionDetails={{
-              requestId: 'j48n3b294nk39abfcaknvkjdsnvnlsnak',
+              requestId: 'j48n3b',
               gasPrice: '1.5',
               time: '50',
               profit: '-0.05%',

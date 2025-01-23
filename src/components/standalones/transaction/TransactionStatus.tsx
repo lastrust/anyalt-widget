@@ -15,7 +15,15 @@ export const TransactionStatus: FC<TransactionStatusProps> = ({
   };
 
   return (
-    <VStack w="100%" alignItems="flex-start" spacing="16px">
+    <VStack
+      p="24px"
+      w="100%"
+      borderRadius={'16px'}
+      alignItems="flex-start"
+      spacing="16px"
+      borderColor={'brand.border.primary'}
+      borderWidth={'1px'}
+    >
       <Text color="brand.secondary.3">Transaction Status</Text>
       <Box
         w="100%"
