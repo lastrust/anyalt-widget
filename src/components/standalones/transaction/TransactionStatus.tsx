@@ -1,15 +1,8 @@
-import {
-  Box,
-  Divider,
-  Flex,
-  HStack,
-  Image,
-  Text,
-  VStack,
-} from '@chakra-ui/react';
+import { Box, Divider, Flex, HStack, Text, VStack } from '@chakra-ui/react';
 import { useAtomValue } from 'jotai';
 import { activeRouteAtom } from '../../../store/stateStore';
 import { CopyIcon } from '../../atoms/icons/transaction/CopyIcon';
+import { TokenIconBox } from '../../molecules/TokenIconBox';
 
 type SwapTokenProps = {
   tokenName: string;
@@ -24,16 +17,15 @@ const SwapToken = ({
   tokenIcon,
   tokenAmount,
   networkName,
+  networkIcon,
 }: SwapTokenProps) => {
   return (
     <HStack>
-      <Image
-        src={tokenIcon}
-        alt={tokenName}
-        width="32px"
-        height="32px"
-        bg={'gray'}
-        borderRadius={'50%'}
+      <TokenIconBox
+        tokenName={tokenName}
+        tokenIcon={tokenIcon}
+        chainName={networkName}
+        chainIcon={networkIcon}
       />
       <VStack alignItems="flex-start" justifyContent={'space-between'}>
         <Text color="white" textStyle={'extraBold.3'}>
@@ -123,7 +115,7 @@ export const TransactionStatus = () => {
               Request ID:
             </Text>
             <Flex alignItems="center" gap="8px">
-              <Text color="brand.secondary.2" fontSize="14px">
+              <Text color="brand.secondary.3" textStyle="regular.3">
                 {transactionDetails[0].requestId}
               </Text>
               <Box

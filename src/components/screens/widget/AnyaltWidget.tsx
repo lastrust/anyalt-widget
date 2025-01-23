@@ -50,7 +50,7 @@ export const AnyaltWidgetWrapper = ({
     <ModalWrapper
       isOpen={isOpen}
       onClose={onClose}
-      size={activeStep === 0 ? 'lg' : '4xl'}
+      size={activeStep === 0 ? 'lg' : '5xl'}
     >
       <Header>{activeStep === 2 ? 'Transaction' : 'Start Transaction'}</Header>
       <CustomStepper activeStep={activeStep}>
