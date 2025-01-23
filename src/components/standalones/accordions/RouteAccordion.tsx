@@ -29,6 +29,7 @@ export const RouteAccordion = () => {
   return (
     <Accordion defaultIndex={[0]} allowMultiple>
       <AccordionItem
+        key={activeRoute?.swaps[0].swapperId}
         border="1px solid"
         borderColor="brand.border.primary"
         borderRadius={'10px'}
@@ -107,6 +108,7 @@ export const RouteAccordion = () => {
             {activeRoute?.swaps[0].internalSwaps?.map((step, index) => {
               return (
                 <RouteStep
+                  key={`${activeRoute?.swaps[0].swapperId}-${index}`}
                   stepNumber={index + 1}
                   exchangeIcon={activeRoute?.swaps[0].swapperLogo}
                   exchangeName={activeRoute?.swaps[0].swapperId}

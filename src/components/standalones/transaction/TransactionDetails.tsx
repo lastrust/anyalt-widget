@@ -75,20 +75,20 @@ export const TransactionDetails = ({
           price={transactionDetails.to.usdAmount}
           w={'100%'}
         />
-        <Button
-          width={'100%'}
-          bg="brand.tertiary.100"
-          color="white"
-          fontSize="16px"
-          fontWeight="bold"
-          borderRadius="8px"
-          h="64px"
-          onClick={() => {}}
-          isLoading={false}
-        >
-          Approve
-        </Button>
       </VStack>
+      <Button
+        width={'100%'}
+        bg="brand.tertiary.100"
+        color="white"
+        fontSize="16px"
+        fontWeight="bold"
+        borderRadius="8px"
+        h="64px"
+        onClick={() => {}}
+        isLoading={false}
+      >
+        Approve
+      </Button>
     </VStack>
   );
 };
