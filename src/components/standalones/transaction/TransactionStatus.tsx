@@ -1,5 +1,6 @@
 import { Box, Divider, Flex, HStack, Text, VStack } from '@chakra-ui/react';
 import { useAtomValue } from 'jotai';
+import { useEffect } from 'react';
 import {
   activeRouteAtom,
   finalTokenEstimateAtom,
@@ -27,6 +28,10 @@ export const TransactionStatus = ({ swapIndex }: Props) => {
   const handleCopyClick = () => {
     navigator.clipboard.writeText(swaps[swapIndex].requestId);
   };
+
+  useEffect(() => {
+    console.log(swaps);
+  }, [swaps]);
 
   return (
     <VStack

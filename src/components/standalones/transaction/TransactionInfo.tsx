@@ -19,9 +19,10 @@ import {
 
 type Props = {
   swapIndex: number;
+  setSwapIndex: React.Dispatch<React.SetStateAction<number>>;
 };
 
-export const TransactionInfo: FC<Props> = ({ swapIndex }) => {
+export const TransactionInfo: FC<Props> = ({ swapIndex, setSwapIndex }) => {
   const activeRoute = useAtomValue(activeRouteAtom);
   const activeSwap = activeRoute?.swaps[swapIndex];
 
@@ -39,15 +40,16 @@ export const TransactionInfo: FC<Props> = ({ swapIndex }) => {
   };
 
   const runTx = async () => {
+    setSwapIndex(swapIndex + 1);
     if (!anyaltInstance || !activeOperationId) return;
 
-    await executeSwap(
-      anyaltInstance,
-      activeOperationId,
-      slippage,
-      activeRoute?.swaps || [],
-      handleTransactionProgress,
-    );
+    // await executeSwap(
+    //   anyaltInstance,
+    //   activeOperationId,
+    //   slippage,
+    //   activeRoute?.swaps || [],
+    //   handleTransactionProgress,
+    // );
   };
 
   return (
