@@ -1,23 +1,38 @@
 import { Button, Divider, Flex, HStack, Text, VStack } from '@chakra-ui/react';
 import { useAtomValue } from 'jotai';
-import { activeRouteAtom } from '../../../store/stateStore';
+import { FC, useState } from 'react';
+import {
+  activeOperationIdAtom,
+  activeRouteAtom,
+  anyaltInstanceAtom,
+  slippageAtom,
+} from '../../../store/stateStore';
 import { DividerIcon } from '../../atoms/icons/transaction/DividerIcon';
 import { GasIcon } from '../../atoms/icons/transaction/GasIcon';
 import { TimeIcon } from '../../atoms/icons/transaction/TimeIcon';
 import { TokenQuoteBox } from '../token/quote/TokenQuoteBox';
+import {
+  TransactionProgress,
+  useHandleTransaction,
+} from './useHandleTransaction';
 
-export const TransactionDetails = () => {
+type Props = {
+  swapIndex: number;
+};
+
+export const TransactionDetails: FC<Props> = ({ swapIndex }) => {
   const activeRoute = useAtomValue(activeRouteAtom);
+  const activeSwap = activeRoute?.swaps[swapIndex];
   const transactionDetails =
-    activeRoute?.swaps[0].internalSwaps?.map((swap) => ({
+    activeSwap?.internalSwaps?.map((swap) => ({
       requestId: activeRoute?.requestId || '',
-      gasPrice: activeRoute?.swaps[0].fee[0]?.price?.toString() || '0',
-      time: activeRoute?.swaps[0].estimatedTimeInSeconds?.toString() || '0',
+      gasPrice: activeSwap?.fee[0]?.price?.toString() || '0',
+      time: activeSwap?.estimatedTimeInSeconds?.toString() || '0',
       profit: '0.00',
       from: {
         name: swap.from.symbol,
         icon: swap.from.logo,
-        amount: activeRoute?.swaps[0].fromAmount || '0',
+        amount: activeSwap?.fromAmount || '0',
         usdAmount: swap.from.usdPrice?.toString() || '0',
         chainName: swap.from.blockchain,
         chainIcon: swap.from.blockchainLogo,
@@ -25,13 +40,36 @@ export const TransactionDetails = () => {
       to: {
         name: swap.to.symbol,
         icon: swap.to.logo,
-        amount: activeRoute?.swaps[0].toAmount || '0',
+        amount: activeSwap?.toAmount || '0',
         usdAmount: swap.to.usdPrice?.toString() || '0',
         chainName: swap.to.blockchain,
         chainIcon: swap.to.blockchainLogo,
       },
       status: 'Pending',
     })) || [];
+
+  const [internalSwapIndex] = useState(0);
+  const anyaltInstance = useAtomValue(anyaltInstanceAtom);
+  const { executeSwap } = useHandleTransaction();
+  const activeOperationId = useAtomValue(activeOperationIdAtom);
+  const slippage = useAtomValue(slippageAtom);
+
+  const handleTransactionProgress = (progress: TransactionProgress) => {
+    console.log(progress);
+  };
+
+  const runTx = async () => {
+    if (!anyaltInstance || !activeOperationId) return;
+
+    await executeSwap(
+      anyaltInstance,
+      activeOperationId,
+      slippage,
+      activeRoute?.swaps || [],
+      handleTransactionProgress,
+    );
+  };
+
   return (
     <VStack
       w={'100%'}
@@ -44,7 +82,7 @@ export const TransactionDetails = () => {
     >
       <Flex justifyContent="space-between" alignItems="center">
         <Text color="white" fontSize="24px" fontWeight="bold">
-          Step 1
+          Step {swapIndex + 1}
         </Text>
       </Flex>
       <Text color={'brand.secondary.3'}>
@@ -64,7 +102,11 @@ export const TransactionDetails = () => {
             lineHeight={'120%'}
             fontSize={'16px'}
           >
-            {activeRoute?.swaps[0].estimatedTimeInSeconds}s
+            {
+              activeSwap?.internalSwaps?.[internalSwapIndex]
+                ?.estimatedTimeInSeconds
+            }
+            s
           </Text>
         </HStack>
         <DividerIcon />
@@ -75,7 +117,7 @@ export const TransactionDetails = () => {
             lineHeight={'120%'}
             fontSize={'16px'}
           >
-            $ {Number(activeRoute?.swaps[0].fee[0]?.price || '0').toFixed(2)}
+            $ {Number(activeSwap?.fee[0]?.price || '0').toFixed(2)}
           </Text>
         </HStack>
         <DividerIcon />
@@ -135,10 +177,10 @@ export const TransactionDetails = () => {
         fontWeight="bold"
         borderRadius="8px"
         h="64px"
-        onClick={() => {}}
+        onClick={runTx}
         isLoading={false}
       >
-        Approve
+        Run Transaction
       </Button>
       <Text
         color="#999"

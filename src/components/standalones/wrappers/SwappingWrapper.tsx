@@ -94,7 +94,7 @@ export const SwappingWrapper = ({
           width="100%"
         >
           <Text color="brand.quinary.100" fontSize="14px" fontWeight="bold">
-            Route failed, please try again
+            No Available Route
           </Text>
         </Box>
       )}

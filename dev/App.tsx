@@ -28,8 +28,8 @@ const App = () => {
             walletConnector={{}}
             inputToken={{
               symbol: 'USDC',
-              address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-              chainId: 1,
+              address: '0xaf88d065e77c8cc2239327c5edb3a432268e5831',
+              chainId: 42161,
               chainType: ChainType.EVM,
             }}
             finalToken={{
@@ -43,7 +43,7 @@ const App = () => {
             isOpen={isOpen}
             onClose={onClose}
             estimateCallback={estimateCallback}
-            minDepositAmount={100}
+            minDepositAmount={0}
           />
         </Box>
       </Center>

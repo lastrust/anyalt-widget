@@ -21,7 +21,7 @@ const metadata = {
 
 const networks = [mainnet, arbitrum];
 
-const wagmiAdapter = new WagmiAdapter({
+export const wagmiAdapter = new WagmiAdapter({
   networks,
   projectId,
   ssr: true,

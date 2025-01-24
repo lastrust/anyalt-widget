@@ -30,3 +30,5 @@ export const finalTokenEstimateAtom = atom<EstimateResponse | undefined>(
 );
 
 export const selectedRouteAtom = atom<BestRouteResponse | undefined>(undefined);
+
+export const activeOperationIdAtom = atom<string | undefined>(undefined);

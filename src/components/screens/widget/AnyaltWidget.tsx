@@ -42,6 +42,7 @@ export const AnyaltWidgetWrapper = ({
     connectWalletsClose,
     failedToFetchRoute,
     isValidAmountIn,
+    connectWalletsConfirm,
   } = useAnyaltWidget({
     estimateCallback,
     inputToken,
@@ -116,7 +117,7 @@ export const AnyaltWidgetWrapper = ({
         onClose={() => {
           connectWalletsClose();
         }}
-        onConfirm={connectWalletsClose}
+        onConfirm={connectWalletsConfirm}
         title="Connect Wallet's"
       />
     </ModalWrapper>

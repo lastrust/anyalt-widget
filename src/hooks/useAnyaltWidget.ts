@@ -5,6 +5,7 @@ import { useAtom, useAtomValue } from 'jotai';
 import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 import {
+  activeOperationIdAtom,
   activeRouteAtom,
   allChainsAtom,
   anyaltInstanceAtom,
@@ -16,7 +17,7 @@ import {
   selectedRouteAtom,
   slippageAtom,
 } from '../store/stateStore';
-import { EstimateResponse, Token } from '../types/types';
+import { ChainType, EstimateResponse, Token } from '../types/types';
 
 export const useAnyaltWidget = ({
   estimateCallback,
@@ -31,8 +32,9 @@ export const useAnyaltWidget = ({
   apiKey: string;
   minDepositAmount: number;
 }) => {
-  const { connected: isSolanaConnected } = useWallet();
-  const { isConnected: isEvmConnected } = useAccount();
+  const { publicKey: solanaAddress, connected: isSolanaConnected } =
+    useWallet();
+  const { address: evmAddress, isConnected: isEvmConnected } = useAccount();
 
   const [loading, setLoading] = useState(false);
   const { activeStep, goToNext } = useSteps({ index: 0 });
@@ -52,6 +54,7 @@ export const useAnyaltWidget = ({
   const [protocolInputToken, setProtocolInputToken] = useAtom(
     protocolInputTokenAtom,
   );
+  const [, setActiveOperationId] = useAtom(activeOperationIdAtom);
   const [failedToFetchRoute, setFailedToFetchRoute] = useState(false);
   const [isValidAmountIn, setIsValidAmountIn] = useState(true);
 
@@ -143,6 +146,56 @@ export const useAnyaltWidget = ({
     else connectWalletsOpen();
   };
 
+  const connectWalletsConfirm = async () => {
+    try {
+      if (!activeRoute?.requestId) return;
+
+      const selectedWallets: Record<string, string> = {};
+      activeRoute.swaps.forEach((swap) => {
+        if (
+          swap.from.blockchain === 'SOLANA' ||
+          swap.to.blockchain === 'SOLANA'
+        ) {
+          selectedWallets['SOLANA'] = solanaAddress?.toString() || '';
+        }
+        const fromChain = allChains.find(
+          (chain) => chain.name === swap.from.blockchain,
+        );
+        const toChain = allChains.find(
+          (chain) => chain.name === swap.to.blockchain,
+        );
+        if (fromChain?.chainType === ChainType.EVM) {
+          selectedWallets[swap.from.blockchain] = evmAddress || '';
+        }
+        if (toChain?.chainType === ChainType.EVM) {
+          selectedWallets[swap.to.blockchain] = evmAddress || '';
+        }
+      });
+
+      console.log(selectedWallets);
+
+      const res = await anyaltInstance?.confirmRoute({
+        selectedRoute: {
+          requestId: activeRoute.requestId,
+        },
+        selectedWallets,
+        destination: evmAddress || '',
+      });
+      console.log(res);
+
+      if (!res?.operationId || !res?.result)
+        throw new Error('Failed to confirm route');
+
+      setActiveOperationId(res?.operationId);
+      setActiveRoute(res?.result);
+
+      connectWalletsClose();
+      goToNext();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return {
     loading,
     activeRoute,
@@ -158,5 +211,6 @@ export const useAnyaltWidget = ({
     connectWalletsClose,
     failedToFetchRoute,
     isValidAmountIn,
+    connectWalletsConfirm,
   };
 };
