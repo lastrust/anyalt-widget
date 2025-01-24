@@ -7,6 +7,7 @@ import {
   anyaltInstanceAtom,
   slippageAtom,
 } from '../../../store/stateStore';
+import { getTransactionGroupData } from '../../../utils/getTransactionGroupData';
 import { DividerIcon } from '../../atoms/icons/transaction/DividerIcon';
 import { GasIcon } from '../../atoms/icons/transaction/GasIcon';
 import { TimeIcon } from '../../atoms/icons/transaction/TimeIcon';
@@ -23,32 +24,9 @@ type Props = {
 export const TransactionDetails: FC<Props> = ({ swapIndex }) => {
   const activeRoute = useAtomValue(activeRouteAtom);
   const activeSwap = activeRoute?.swaps[swapIndex];
-  console.log(activeRoute, swapIndex);
-  const transactionDetails = {
-    requestId: activeRoute?.requestId || '',
-    gasPrice: activeSwap?.fee[0]?.price?.toString() || '0',
-    time: activeSwap?.estimatedTimeInSeconds?.toString() || '0',
-    profit: '0.00',
-    from: {
-      name: activeSwap?.from.symbol || '',
-      icon: activeSwap?.from.logo,
-      amount: activeSwap?.fromAmount || '0',
-      usdAmount: activeSwap?.from.usdPrice?.toString() || '0',
-      chainName: activeSwap?.from.blockchain,
-      chainIcon: activeSwap?.from.blockchainLogo,
-    },
-    to: {
-      name: activeSwap?.to.symbol,
-      icon: activeSwap?.to.logo,
-      amount: activeSwap?.toAmount || '0',
-      usdAmount: activeSwap?.to.usdPrice?.toString() || '0',
-      chainName: activeSwap?.to.blockchain,
-      chainIcon: activeSwap?.to.blockchainLogo,
-    },
-    status: 'Pending',
-  };
 
-  console.log(transactionDetails);
+  if (!activeRoute) return null;
+  const transactionDetails = getTransactionGroupData(activeRoute);
 
   const [internalSwapIndex] = useState(0);
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
@@ -137,14 +115,14 @@ export const TransactionDetails: FC<Props> = ({ swapIndex }) => {
         <TokenQuoteBox
           loading={false}
           headerText=""
-          tokenName={transactionDetails.from.name}
-          tokenLogo={transactionDetails.from.icon || ''}
-          chainName={transactionDetails.from.chainName || ''}
-          chainLogo={transactionDetails.from.chainIcon || ''}
-          amount={Number(transactionDetails.from.amount).toFixed(2)}
+          tokenName={transactionDetails[swapIndex].from.name}
+          tokenLogo={transactionDetails[swapIndex].from.icon || ''}
+          chainName={transactionDetails[swapIndex].from.chainName || ''}
+          chainLogo={transactionDetails[swapIndex].from.chainIcon || ''}
+          amount={Number(transactionDetails[swapIndex].fromAmount).toFixed(2)}
           price={(
-            Number(transactionDetails.from.usdAmount) *
-            Number(transactionDetails.from.amount)
+            Number(transactionDetails[swapIndex].from.usdAmount) *
+            Number(transactionDetails[swapIndex].fromAmount)
           ).toFixed(2)}
           w={'100%'}
           p={'0'}
@@ -154,14 +132,14 @@ export const TransactionDetails: FC<Props> = ({ swapIndex }) => {
         <TokenQuoteBox
           loading={false}
           headerText=""
-          tokenName={transactionDetails.to.name || ''}
-          tokenLogo={transactionDetails.to.icon || ''}
-          chainName={transactionDetails.to.chainName || ''}
-          chainLogo={transactionDetails.to.chainIcon || ''}
-          amount={Number(transactionDetails.to.amount).toFixed(2)}
+          tokenName={transactionDetails[swapIndex].to.name || ''}
+          tokenLogo={transactionDetails[swapIndex].to.icon || ''}
+          chainName={transactionDetails[swapIndex].to.chainName || ''}
+          chainLogo={transactionDetails[swapIndex].to.chainIcon || ''}
+          amount={Number(transactionDetails[swapIndex].toAmount).toFixed(2)}
           price={(
-            Number(transactionDetails.to.usdAmount) *
-            Number(transactionDetails.to.amount)
+            Number(transactionDetails[swapIndex].to.usdAmount) *
+            Number(transactionDetails[swapIndex].toAmount)
           ).toFixed(2)}
           w={'100%'}
           p={'0'}

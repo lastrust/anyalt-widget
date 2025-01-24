@@ -1,6 +1,7 @@
 import { Box, Divider, Flex, HStack, Text, VStack } from '@chakra-ui/react';
 import { useAtomValue } from 'jotai';
 import { activeRouteAtom } from '../../../store/stateStore';
+import { getTransactionGroupData } from '../../../utils/getTransactionGroupData';
 import { CopyIcon } from '../../atoms/icons/transaction/CopyIcon';
 import { TokenIconBox } from '../../molecules/TokenIconBox';
 import { TransactionAccordion } from '../accordions/TransactionAccordion';
@@ -46,33 +47,11 @@ type Props = {
 
 export const TransactionStatus = ({ swapIndex }: Props) => {
   const activeRoute = useAtomValue(activeRouteAtom);
-  const activeSwap = activeRoute?.swaps[swapIndex];
-  const transactionDetails = {
-    requestId: activeRoute?.requestId || '',
-    gasPrice: activeSwap?.fee[0]?.price?.toString() || '0',
-    time: activeSwap?.estimatedTimeInSeconds?.toString() || '0',
-    profit: '0.00',
-    from: {
-      name: activeSwap?.from.symbol || '',
-      icon: activeSwap?.from.logo,
-      amount: activeSwap?.fromAmount || '0',
-      usdAmount: activeSwap?.from.usdPrice?.toString() || '0',
-      chainName: activeSwap?.from.blockchain,
-      chainIcon: activeSwap?.from.blockchainLogo,
-    },
-    to: {
-      name: activeSwap?.to.symbol,
-      icon: activeSwap?.to.logo,
-      amount: activeSwap?.toAmount || '0',
-      usdAmount: activeSwap?.to.usdPrice?.toString() || '0',
-      chainName: activeSwap?.to.blockchain,
-      chainIcon: activeSwap?.to.blockchainLogo,
-    },
-    status: 'Pending',
-  };
+  if (!activeRoute) return null;
+  const transactionDetails = getTransactionGroupData(activeRoute);
 
   const handleCopyClick = () => {
-    navigator.clipboard.writeText(transactionDetails.requestId);
+    navigator.clipboard.writeText(transactionDetails[swapIndex].requestId);
   };
 
   return (
@@ -99,18 +78,22 @@ export const TransactionStatus = ({ swapIndex }: Props) => {
         </Text>
         <HStack justifyContent={'space-between'} w={'100%'}>
           <SwapToken
-            tokenName={transactionDetails.from.name}
-            tokenIcon={transactionDetails.from.icon || ''}
-            tokenAmount={Number(transactionDetails.from.amount).toFixed(2)}
-            networkName={transactionDetails.from.chainName || ''}
-            networkIcon={transactionDetails.from.chainIcon || ''}
+            tokenName={transactionDetails[swapIndex].from.name}
+            tokenIcon={transactionDetails[swapIndex].from.icon || ''}
+            tokenAmount={Number(
+              transactionDetails[swapIndex].from.amount,
+            ).toFixed(2)}
+            networkName={transactionDetails[swapIndex].from.chainName || ''}
+            networkIcon={transactionDetails[swapIndex].from.chainIcon || ''}
           />
           <SwapToken
-            tokenName={transactionDetails.to.name || ''}
-            tokenIcon={transactionDetails.to.icon || ''}
-            tokenAmount={Number(transactionDetails.to.amount).toFixed(2)}
-            networkName={transactionDetails.to.chainName || ''}
-            networkIcon={transactionDetails.to.chainIcon || ''}
+            tokenName={transactionDetails[swapIndex].to.name || ''}
+            tokenIcon={transactionDetails[swapIndex].to.icon || ''}
+            tokenAmount={Number(
+              transactionDetails[swapIndex].to.amount,
+            ).toFixed(2)}
+            networkName={transactionDetails[swapIndex].to.chainName || ''}
+            networkIcon={transactionDetails[swapIndex].to.chainIcon || ''}
           />
         </HStack>
         <Divider />
@@ -121,7 +104,7 @@ export const TransactionStatus = ({ swapIndex }: Props) => {
             </Text>
             <Flex alignItems="center" gap="8px">
               <Text color="brand.secondary.3" textStyle="regular.3">
-                {transactionDetails.requestId}
+                {transactionDetails[swapIndex].requestId}
               </Text>
               <Box
                 as="button"
@@ -139,7 +122,10 @@ export const TransactionStatus = ({ swapIndex }: Props) => {
         <Text color="white" textStyle={'heading.2'}>
           Swap Steps
         </Text>
-        <TransactionAccordion swapIndex={swapIndex} />
+        <TransactionAccordion
+          swapIndex={swapIndex}
+          transactionDetails={transactionDetails}
+        />
       </VStack>
     </VStack>
   );
