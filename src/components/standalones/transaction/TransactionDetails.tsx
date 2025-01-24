@@ -23,30 +23,32 @@ type Props = {
 export const TransactionDetails: FC<Props> = ({ swapIndex }) => {
   const activeRoute = useAtomValue(activeRouteAtom);
   const activeSwap = activeRoute?.swaps[swapIndex];
-  const transactionDetails =
-    activeSwap?.internalSwaps?.map((swap) => ({
-      requestId: activeRoute?.requestId || '',
-      gasPrice: activeSwap?.fee[0]?.price?.toString() || '0',
-      time: activeSwap?.estimatedTimeInSeconds?.toString() || '0',
-      profit: '0.00',
-      from: {
-        name: swap.from.symbol,
-        icon: swap.from.logo,
-        amount: activeSwap?.fromAmount || '0',
-        usdAmount: swap.from.usdPrice?.toString() || '0',
-        chainName: swap.from.blockchain,
-        chainIcon: swap.from.blockchainLogo,
-      },
-      to: {
-        name: swap.to.symbol,
-        icon: swap.to.logo,
-        amount: activeSwap?.toAmount || '0',
-        usdAmount: swap.to.usdPrice?.toString() || '0',
-        chainName: swap.to.blockchain,
-        chainIcon: swap.to.blockchainLogo,
-      },
-      status: 'Pending',
-    })) || [];
+  console.log(activeRoute, swapIndex);
+  const transactionDetails = {
+    requestId: activeRoute?.requestId || '',
+    gasPrice: activeSwap?.fee[0]?.price?.toString() || '0',
+    time: activeSwap?.estimatedTimeInSeconds?.toString() || '0',
+    profit: '0.00',
+    from: {
+      name: activeSwap?.from.symbol || '',
+      icon: activeSwap?.from.logo,
+      amount: activeSwap?.fromAmount || '0',
+      usdAmount: activeSwap?.from.usdPrice?.toString() || '0',
+      chainName: activeSwap?.from.blockchain,
+      chainIcon: activeSwap?.from.blockchainLogo,
+    },
+    to: {
+      name: activeSwap?.to.symbol,
+      icon: activeSwap?.to.logo,
+      amount: activeSwap?.toAmount || '0',
+      usdAmount: activeSwap?.to.usdPrice?.toString() || '0',
+      chainName: activeSwap?.to.blockchain,
+      chainIcon: activeSwap?.to.blockchainLogo,
+    },
+    status: 'Pending',
+  };
+
+  console.log(transactionDetails);
 
   const [internalSwapIndex] = useState(0);
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
@@ -135,14 +137,14 @@ export const TransactionDetails: FC<Props> = ({ swapIndex }) => {
         <TokenQuoteBox
           loading={false}
           headerText=""
-          tokenName={transactionDetails[0].from.name}
-          tokenLogo={transactionDetails[0].from.icon}
-          chainName={transactionDetails[0].from.chainName}
-          chainLogo={transactionDetails[0].from.chainIcon}
-          amount={Number(transactionDetails[0].from.amount).toFixed(2)}
+          tokenName={transactionDetails.from.name}
+          tokenLogo={transactionDetails.from.icon || ''}
+          chainName={transactionDetails.from.chainName || ''}
+          chainLogo={transactionDetails.from.chainIcon || ''}
+          amount={Number(transactionDetails.from.amount).toFixed(2)}
           price={(
-            Number(transactionDetails[0].from.usdAmount) *
-            Number(transactionDetails[0].from.amount)
+            Number(transactionDetails.from.usdAmount) *
+            Number(transactionDetails.from.amount)
           ).toFixed(2)}
           w={'100%'}
           p={'0'}
@@ -152,14 +154,14 @@ export const TransactionDetails: FC<Props> = ({ swapIndex }) => {
         <TokenQuoteBox
           loading={false}
           headerText=""
-          tokenName={transactionDetails[0].to.name}
-          tokenLogo={transactionDetails[0].to.icon}
-          chainName={transactionDetails[0].to.chainName}
-          chainLogo={transactionDetails[0].to.chainIcon}
-          amount={Number(transactionDetails[0].to.amount).toFixed(2)}
+          tokenName={transactionDetails.to.name || ''}
+          tokenLogo={transactionDetails.to.icon || ''}
+          chainName={transactionDetails.to.chainName || ''}
+          chainLogo={transactionDetails.to.chainIcon || ''}
+          amount={Number(transactionDetails.to.amount).toFixed(2)}
           price={(
-            Number(transactionDetails[0].to.usdAmount) *
-            Number(transactionDetails[0].to.amount)
+            Number(transactionDetails.to.usdAmount) *
+            Number(transactionDetails.to.amount)
           ).toFixed(2)}
           w={'100%'}
           p={'0'}

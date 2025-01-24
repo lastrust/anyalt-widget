@@ -8,7 +8,7 @@ export const TransactionSwap = () => {
   return (
     <Grid templateColumns="1fr 1fr" gap="16px">
       <TransactionDetails swapIndex={swapIndex} />
-      <TransactionStatus />
+      <TransactionStatus swapIndex={swapIndex} />
     </Grid>
   );
 };

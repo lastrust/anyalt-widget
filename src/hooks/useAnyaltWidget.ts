@@ -142,12 +142,16 @@ export const useAnyaltWidget = ({
   };
 
   const onChooseRouteButtonClick = () => {
-    if (isSolanaConnected && isEvmConnected) goToNext();
-    else connectWalletsOpen();
+    if (isSolanaConnected && isEvmConnected) {
+      connectWalletsConfirm();
+    } else {
+      connectWalletsOpen();
+    }
   };
 
   const connectWalletsConfirm = async () => {
     try {
+      setLoading(true);
       if (!activeRoute?.requestId) return;
 
       const selectedWallets: Record<string, string> = {};
@@ -172,8 +176,6 @@ export const useAnyaltWidget = ({
         }
       });
 
-      console.log(selectedWallets);
-
       const res = await anyaltInstance?.confirmRoute({
         selectedRoute: {
           requestId: activeRoute.requestId,
@@ -181,6 +183,7 @@ export const useAnyaltWidget = ({
         selectedWallets,
         destination: evmAddress || '',
       });
+
       console.log(res);
 
       if (!res?.operationId || !res?.result)
@@ -193,6 +196,8 @@ export const useAnyaltWidget = ({
       goToNext();
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
