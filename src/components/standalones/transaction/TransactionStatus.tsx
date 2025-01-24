@@ -1,6 +1,11 @@
 import { Box, Divider, Flex, HStack, Text, VStack } from '@chakra-ui/react';
 import { useAtomValue } from 'jotai';
-import { activeRouteAtom } from '../../../store/stateStore';
+import {
+  activeRouteAtom,
+  finalTokenEstimateAtom,
+  protocolFinalTokenAtom,
+  protocolInputTokenAtom,
+} from '../../../store/stateStore';
 import { getTransactionGroupData } from '../../../utils/getTransactionGroupData';
 import { CopyIcon } from '../../atoms/icons/transaction/CopyIcon';
 import { SwapTokenCard } from '../../molecules/card/SwapTokenCard';
@@ -12,11 +17,15 @@ type Props = {
 
 export const TransactionStatus = ({ swapIndex }: Props) => {
   const activeRoute = useAtomValue(activeRouteAtom);
+  const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
+  const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
+  const protocolInputToken = useAtomValue(protocolInputTokenAtom);
+
   if (!activeRoute) return null;
-  const transactionDetails = getTransactionGroupData(activeRoute);
+  const swaps = getTransactionGroupData(activeRoute);
 
   const handleCopyClick = () => {
-    navigator.clipboard.writeText(transactionDetails[swapIndex].requestId);
+    navigator.clipboard.writeText(swaps[swapIndex].requestId);
   };
 
   return (
@@ -43,18 +52,18 @@ export const TransactionStatus = ({ swapIndex }: Props) => {
         </Text>
         <HStack justifyContent={'space-between'} w={'100%'}>
           <SwapTokenCard
-            tokenName={transactionDetails[swapIndex].from.name}
-            tokenIcon={transactionDetails[swapIndex].from.icon || ''}
-            tokenAmount={transactionDetails[swapIndex].fromAmount}
-            networkName={transactionDetails[swapIndex].from.chainName || ''}
-            networkIcon={transactionDetails[swapIndex].from.chainIcon || ''}
+            tokenName={swaps[swapIndex].from.name}
+            tokenIcon={swaps[swapIndex].from.icon || ''}
+            tokenAmount={swaps[swapIndex].fromAmount}
+            networkName={swaps[swapIndex].from.chainName || ''}
+            networkIcon={swaps[swapIndex].from.chainIcon || ''}
           />
           <SwapTokenCard
-            tokenName={transactionDetails[swapIndex].to.name || ''}
-            tokenIcon={transactionDetails[swapIndex].to.icon || ''}
-            tokenAmount={transactionDetails[swapIndex].toAmount}
-            networkName={transactionDetails[swapIndex].to.chainName || ''}
-            networkIcon={transactionDetails[swapIndex].to.chainIcon || ''}
+            tokenIcon={protocolFinalToken?.logoUrl ?? ''}
+            tokenName={protocolFinalToken?.symbol ?? ''}
+            networkIcon={protocolInputToken?.chain?.logoUrl ?? ''}
+            networkName={protocolInputToken?.chain?.displayName ?? ''}
+            tokenAmount={finalTokenEstimate?.amountOut ?? ''}
           />
         </HStack>
         <Divider />
@@ -65,7 +74,7 @@ export const TransactionStatus = ({ swapIndex }: Props) => {
             </Text>
             <Flex alignItems="center" gap="8px">
               <Text color="brand.secondary.3" textStyle="regular.3">
-                {transactionDetails[swapIndex].requestId}
+                {swaps[swapIndex].requestId}
               </Text>
               <Box
                 as="button"
@@ -85,7 +94,7 @@ export const TransactionStatus = ({ swapIndex }: Props) => {
         </Text>
         <TransactionAccordion
           swapIndex={swapIndex}
-          transactionDetails={transactionDetails}
+          transactionDetails={swaps}
         />
       </VStack>
     </VStack>
