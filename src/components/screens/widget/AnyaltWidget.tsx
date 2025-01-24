@@ -44,7 +44,7 @@ export const AnyaltWidgetWrapper = ({
     isValidAmountIn,
     connectWalletsConfirm,
     connectWalletsOpen,
-    goToPrevious
+    goToPrevious,
   } = useAnyaltWidget({
     estimateCallback,
     inputToken,
@@ -102,7 +102,7 @@ export const AnyaltWidgetWrapper = ({
           failedToFetchRoute={false}
           onConfigClick={onConfigClick}
         >
-          <TransactionSwap goToPrevious={goToPrevious}/>
+          <TransactionSwap goToPrevious={goToPrevious} />
         </SwappingWrapper>
       </CustomStepper>
       <Footer />
