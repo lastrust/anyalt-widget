@@ -36,51 +36,51 @@ export const TransactionAccordion = () => {
               border="1px solid"
               borderColor="brand.border.primary"
               borderRadius={'10px'}
-            p={'16px'}
-            cursor={'pointer'}
-            onClick={handleRouteSelect}
-            bg={
-              selectedRoute?.swaps[swapIndex].swapperId ===
-              activeRoute?.swaps[swapIndex].swapperId
-                ? 'brand.secondary.12'
-                : 'transparent'
-            }
-            _hover={{
-              bgColor: 'bg.secondary.1',
-            }}
-            w={'100%'}
-          >
-            <AccordionButton
-              display={'flex'}
-              flexDir={'row'}
-              justifyContent={'space-between'}
-              gap="12px"
-              p={'0px'}
+              p={'16px'}
+              cursor={'pointer'}
+              onClick={handleRouteSelect}
+              bg={
+                selectedRoute?.swaps[swapIndex].swapperId ===
+                activeRoute?.swaps[swapIndex].swapperId
+                  ? 'brand.secondary.12'
+                  : 'transparent'
+              }
+              _hover={{
+                bgColor: 'bg.secondary.1',
+              }}
+              w={'100%'}
             >
-              <Text textStyle={'bold.0'}>Step {index + 1}</Text>
-              <AccordionIcon w={'24px'} h={'24px'} />
-            </AccordionButton>
-            <AccordionPanel p={'0px'} mt="12px">
-              <VStack gap={'12px'}>
-                <TransactionStep
-                  key={`${swap.swapperId}-${index}`}
-                  stepNumber={index + 1}
-                  exchangeIcon={swap.swapperLogo}
-                  exchangeName={swap.swapperId}
-                  fromToken={{
-                    name: step.from.symbol,
-                    amount: String(Number(step.fromAmount).toFixed(4) || '0'),
-                  }}
-                  toToken={{
-                    name: step.to.symbol,
-                    amount: String(Number(step.toAmount).toFixed(4) || '0'),
-                  }}
-                />
-              </VStack>
-            </AccordionPanel>
+              <AccordionButton
+                display={'flex'}
+                flexDir={'row'}
+                justifyContent={'space-between'}
+                gap="12px"
+                p={'0px'}
+              >
+                <Text textStyle={'bold.0'}>Step {index + 1}</Text>
+                <AccordionIcon w={'24px'} h={'24px'} />
+              </AccordionButton>
+              <AccordionPanel p={'0px'} mt="12px">
+                <VStack gap={'12px'}>
+                  <TransactionStep
+                    key={`${swap.swapperId}-${index}`}
+                    stepNumber={index + 1}
+                    exchangeIcon={swap.swapperLogo}
+                    exchangeName={swap.swapperId}
+                    fromToken={{
+                      name: step.from.symbol,
+                      amount: String(Number(step.fromAmount).toFixed(4) || '0'),
+                    }}
+                    toToken={{
+                      name: step.to.symbol,
+                      amount: String(Number(step.toAmount).toFixed(4) || '0'),
+                    }}
+                  />
+                </VStack>
+              </AccordionPanel>
             </AccordionItem>
           );
-        })
+        }),
       )}
     </Accordion>
   );
