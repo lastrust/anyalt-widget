@@ -11,7 +11,11 @@ import { useAtom } from 'jotai';
 import { activeRouteAtom, selectedRouteAtom } from '../../../store/stateStore';
 import { TransactionStep } from '../../molecules/steps/TransactionStep';
 
-export const TransactionAccordion = () => {
+type Props = {
+  swapIndex: number;
+};
+
+export const TransactionAccordion = ({ swapIndex }: Props) => {
   const [activeRoute] = useAtom(activeRouteAtom);
   const [selectedRoute, setSelectedRoute] = useAtom(selectedRouteAtom);
 

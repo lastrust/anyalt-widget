@@ -28,8 +28,8 @@ const App = () => {
             walletConnector={{}}
             inputToken={{
               symbol: 'USDC',
-              address: '0xaf88d065e77c8cc2239327c5edb3a432268e5831',
-              chainId: 42161,
+              address: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
+              chainId: 1,
               chainType: ChainType.EVM,
             }}
             finalToken={{

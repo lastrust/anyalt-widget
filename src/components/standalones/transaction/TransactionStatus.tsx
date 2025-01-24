@@ -139,7 +139,7 @@ export const TransactionStatus = ({ swapIndex }: Props) => {
         <Text color="white" textStyle={'heading.2'}>
           Swap Steps
         </Text>
-        <TransactionAccordion />
+        <TransactionAccordion swapIndex={swapIndex} />
       </VStack>
     </VStack>
   );

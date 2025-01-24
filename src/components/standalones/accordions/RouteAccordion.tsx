@@ -110,10 +110,10 @@ export const RouteAccordion = () => {
               {swap.internalSwaps?.map((step, index) => {
                 return (
                   <RouteStep
-                    key={`${swap.swapperId}-${index}`}
+                    key={`${step.swapperId}-${index}`}
                     stepNumber={index + 1}
-                    exchangeIcon={swap.swapperLogo}
-                    exchangeName={swap.swapperId}
+                    exchangeIcon={step.swapperLogo}
+                    exchangeName={step.swapperId}
                     fromToken={{
                       name: step.from.symbol,
                       amount: String(Number(step.fromAmount).toFixed(4) || '0'),
