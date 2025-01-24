@@ -4,6 +4,7 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
+  HStack,
   Text,
   VStack,
 } from '@chakra-ui/react';
@@ -62,7 +63,12 @@ export const TransactionAccordion = ({
           gap="12px"
           p={'0px'}
         >
-          <Text textStyle={'bold.0'}>Step {swapIndex + 1}</Text>
+          <HStack justifyContent={'flex-start'}>
+            <Text textStyle={'bold.0'}>Step {swapIndex + 1}.</Text>
+            <Text textStyle={'regular.3'}>
+              Required Sings: {transactionDetails[swapIndex].requiredSings}
+            </Text>
+          </HStack>
           <AccordionIcon w={'24px'} h={'24px'} />
         </AccordionButton>
         <AccordionPanel p={'0px'} mt="12px">

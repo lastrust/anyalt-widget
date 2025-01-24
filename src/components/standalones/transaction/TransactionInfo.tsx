@@ -21,7 +21,7 @@ type Props = {
   swapIndex: number;
 };
 
-export const TransactionDetails: FC<Props> = ({ swapIndex }) => {
+export const TransactionInfo: FC<Props> = ({ swapIndex }) => {
   const activeRoute = useAtomValue(activeRouteAtom);
   const activeSwap = activeRoute?.swaps[swapIndex];
 

@@ -21,11 +21,8 @@ export const SwappingWrapper = ({
   return (
     <Box
       margin="24px 0px"
-      padding="24px"
       border="1px solid"
-      borderColor={
-        failedToFetchRoute ? 'brand.quinary.100' : 'brand.secondary.12'
-      }
+      borderColor={failedToFetchRoute ? 'brand.quinary.100' : 'transparent'}
       borderRadius="12px"
     >
       <Grid gridTemplateColumns={secondTitle ? '1fr 1fr' : '1fr'} gap="16px">

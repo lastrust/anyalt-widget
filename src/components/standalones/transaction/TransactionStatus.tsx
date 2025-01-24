@@ -3,43 +3,8 @@ import { useAtomValue } from 'jotai';
 import { activeRouteAtom } from '../../../store/stateStore';
 import { getTransactionGroupData } from '../../../utils/getTransactionGroupData';
 import { CopyIcon } from '../../atoms/icons/transaction/CopyIcon';
-import { TokenIconBox } from '../../molecules/TokenIconBox';
+import { SwapTokenCard } from '../../molecules/card/SwapTokenCard';
 import { TransactionAccordion } from '../accordions/TransactionAccordion';
-
-type SwapTokenProps = {
-  tokenName: string;
-  tokenIcon: string;
-  tokenAmount: string;
-  networkName: string;
-  networkIcon: string;
-};
-
-const SwapToken = ({
-  tokenName,
-  tokenIcon,
-  tokenAmount,
-  networkName,
-  networkIcon,
-}: SwapTokenProps) => {
-  return (
-    <HStack>
-      <TokenIconBox
-        tokenName={tokenName}
-        tokenIcon={tokenIcon}
-        chainName={networkName}
-        chainIcon={networkIcon}
-      />
-      <VStack alignItems="flex-start" justifyContent={'space-between'}>
-        <Text color="white" textStyle={'extraBold.3'}>
-          {tokenAmount}
-        </Text>
-        <Text color="brand.secondary.3" textStyle={'regular.3'}>
-          {tokenName} on {networkName}
-        </Text>
-      </VStack>
-    </HStack>
-  );
-};
 
 type Props = {
   swapIndex: number;
@@ -74,24 +39,20 @@ export const TransactionStatus = ({ swapIndex }: Props) => {
         gap={'16px'}
       >
         <Text color="white" textStyle={'heading.2'}>
-          Transaction Status
+          Transaction Details
         </Text>
         <HStack justifyContent={'space-between'} w={'100%'}>
-          <SwapToken
+          <SwapTokenCard
             tokenName={transactionDetails[swapIndex].from.name}
             tokenIcon={transactionDetails[swapIndex].from.icon || ''}
-            tokenAmount={Number(
-              transactionDetails[swapIndex].from.amount,
-            ).toFixed(2)}
+            tokenAmount={transactionDetails[swapIndex].fromAmount}
             networkName={transactionDetails[swapIndex].from.chainName || ''}
             networkIcon={transactionDetails[swapIndex].from.chainIcon || ''}
           />
-          <SwapToken
+          <SwapTokenCard
             tokenName={transactionDetails[swapIndex].to.name || ''}
             tokenIcon={transactionDetails[swapIndex].to.icon || ''}
-            tokenAmount={Number(
-              transactionDetails[swapIndex].to.amount,
-            ).toFixed(2)}
+            tokenAmount={transactionDetails[swapIndex].toAmount}
             networkName={transactionDetails[swapIndex].to.chainName || ''}
             networkIcon={transactionDetails[swapIndex].to.chainIcon || ''}
           />
