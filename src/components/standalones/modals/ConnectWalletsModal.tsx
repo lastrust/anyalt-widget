@@ -14,7 +14,7 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui'; // Import the wallet modal hook
 import { useAtomValue } from 'jotai';
 import { FC, useMemo } from 'react';
-import { activeRouteAtom, allChainsAtom } from '../../../store/stateStore';
+import { allChainsAtom, bestRouteAtom } from '../../../store/stateStore';
 import { ChainType } from '../../../types/types';
 import { WalletButton } from '../../molecules/buttons/WalletButton';
 
@@ -48,7 +48,7 @@ export const ConnectWalletsModal: FC<Props> = ({
 }) => {
   const { openConnectModal } = useConnectModal();
   const { setVisible } = useWalletModal(); // Hook to control the Solana wallet modal
-  const activeRoute = useAtomValue(activeRouteAtom);
+  const activeRoute = useAtomValue(bestRouteAtom);
   const allChains = useAtomValue(allChainsAtom);
 
   const areWalletsConnected = useMemo(() => {

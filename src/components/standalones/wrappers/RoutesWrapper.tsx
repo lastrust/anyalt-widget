@@ -1,5 +1,5 @@
 import { Grid } from '@chakra-ui/react';
-import { RouteAccordion } from '../accordions/RouteAccordion';
+import { BestRouteAccordion } from '../accordions/BestRouteAccordion';
 import { SelectSwap } from '../swap/SelectSwap';
 
 type Props = {
@@ -35,7 +35,7 @@ export const RoutesWrapper = ({
         showConnectedWallets={showConnectedWallets}
         handleWalletsOpen={connectWalletsOpen}
       />
-      <RouteAccordion />
+      <BestRouteAccordion />
     </Grid>
   );
 };

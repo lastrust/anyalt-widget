@@ -2,7 +2,7 @@ import { Box, Divider, Flex, HStack, Text, VStack } from '@chakra-ui/react';
 import { useAtomValue } from 'jotai';
 import { useEffect } from 'react';
 import {
-  activeRouteAtom,
+  bestRouteAtom,
   finalTokenEstimateAtom,
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
@@ -17,13 +17,13 @@ type Props = {
 };
 
 export const TransactionStatus = ({ swapIndex }: Props) => {
-  const activeRoute = useAtomValue(activeRouteAtom);
+  const bestRoute = useAtomValue(bestRouteAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
   const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
 
-  if (!activeRoute) return null;
-  const swaps = getTransactionGroupData(activeRoute);
+  if (!bestRoute) return null;
+  const swaps = getTransactionGroupData(bestRoute);
 
   const handleCopyClick = () => {
     navigator.clipboard.writeText(swaps[swapIndex].requestId);

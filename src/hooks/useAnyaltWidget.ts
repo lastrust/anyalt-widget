@@ -6,9 +6,9 @@ import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 import {
   activeOperationIdAtom,
-  activeRouteAtom,
   allChainsAtom,
   anyaltInstanceAtom,
+  bestRouteAtom,
   finalTokenEstimateAtom,
   inTokenAmountAtom,
   inTokenAtom,
@@ -45,7 +45,7 @@ export const useAnyaltWidget = ({
 
   const [openSlippageModal, setOpenSlippageModal] = useState(false);
 
-  const [activeRoute, setActiveRoute] = useAtom(activeRouteAtom);
+  const [activeRoute, setActiveRoute] = useAtom(bestRouteAtom);
   const [, setFinalTokenEstimate] = useAtom(finalTokenEstimateAtom);
   const [selectedRoute] = useAtom(selectedRouteAtom);
   const [, setProtocolFinalToken] = useAtom(protocolFinalTokenAtom);

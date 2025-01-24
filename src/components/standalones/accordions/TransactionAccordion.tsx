@@ -9,7 +9,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { useAtom } from 'jotai';
-import { activeRouteAtom, selectedRouteAtom } from '../../../store/stateStore';
+import { bestRouteAtom, selectedRouteAtom } from '../../../store/stateStore';
 import { TransactionDetailsType } from '../../../types/transaction';
 import { TransactionStep } from '../../molecules/steps/TransactionStep';
 
@@ -22,11 +22,11 @@ export const TransactionAccordion = ({
   swapIndex,
   transactionDetails,
 }: Props) => {
-  const [activeRoute] = useAtom(activeRouteAtom);
+  const [bestRoute] = useAtom(bestRouteAtom);
   const [selectedRoute, setSelectedRoute] = useAtom(selectedRouteAtom);
 
   const handleRouteSelect = () => {
-    setSelectedRoute(activeRoute);
+    setSelectedRoute(bestRoute);
   };
 
   return (
@@ -47,7 +47,7 @@ export const TransactionAccordion = ({
         onClick={handleRouteSelect}
         bg={
           selectedRoute?.swaps[swapIndex].swapperId ===
-          activeRoute?.swaps[swapIndex].swapperId
+          bestRoute?.swaps[swapIndex].swapperId
             ? 'brand.secondary.12'
             : 'transparent'
         }

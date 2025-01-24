@@ -3,8 +3,8 @@ import { useAtomValue } from 'jotai';
 import { FC, useState } from 'react';
 import {
   activeOperationIdAtom,
-  activeRouteAtom,
   anyaltInstanceAtom,
+  bestRouteAtom,
   slippageAtom,
 } from '../../../store/stateStore';
 import { getTransactionGroupData } from '../../../utils/getTransactionGroupData';
@@ -23,11 +23,11 @@ type Props = {
 };
 
 export const TransactionInfo: FC<Props> = ({ swapIndex, setSwapIndex }) => {
-  const activeRoute = useAtomValue(activeRouteAtom);
-  const activeSwap = activeRoute?.swaps[swapIndex];
+  const bestRoute = useAtomValue(bestRouteAtom);
+  const activeSwap = bestRoute?.swaps[swapIndex];
 
-  if (!activeRoute) return null;
-  const transactionDetails = getTransactionGroupData(activeRoute);
+  if (!bestRoute) return null;
+  const transactionDetails = getTransactionGroupData(bestRoute);
 
   const [internalSwapIndex] = useState(0);
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
@@ -40,16 +40,16 @@ export const TransactionInfo: FC<Props> = ({ swapIndex, setSwapIndex }) => {
   };
 
   const runTx = async () => {
-    setSwapIndex(swapIndex + 1);
+    // setSwapIndex(swapIndex + 1);
     if (!anyaltInstance || !activeOperationId) return;
 
-    // await executeSwap(
-    //   anyaltInstance,
-    //   activeOperationId,
-    //   slippage,
-    //   activeRoute?.swaps || [],
-    //   handleTransactionProgress,
-    // );
+    await executeSwap(
+      anyaltInstance,
+      activeOperationId,
+      slippage,
+      bestRoute?.swaps || [],
+      handleTransactionProgress,
+    );
   };
 
   return (
@@ -68,7 +68,7 @@ export const TransactionInfo: FC<Props> = ({ swapIndex, setSwapIndex }) => {
         </Text>
       </Flex>
       <Text color={'brand.secondary.3'}>
-        Swap Tokens Using {activeRoute?.swaps[0].swapperId}
+        Swap Tokens Using {bestRoute?.swaps[0].swapperId}
       </Text>
       <HStack
         w={'100%'}

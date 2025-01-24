@@ -23,7 +23,7 @@ export const slippageAtom = atom<string>('0.5');
 
 export const inTokenAmountAtom = atom<string | undefined>('');
 
-export const activeRouteAtom = atom<BestRouteResponse | undefined>(undefined);
+export const bestRouteAtom = atom<BestRouteResponse | undefined>(undefined);
 
 export const finalTokenEstimateAtom = atom<EstimateResponse | undefined>(
   undefined,

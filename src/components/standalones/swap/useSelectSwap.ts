@@ -2,7 +2,7 @@ import { SupportedToken } from '@anyalt/sdk';
 import { useAtom, useAtomValue } from 'jotai';
 import { useMemo, useState } from 'react';
 import {
-  activeRouteAtom,
+  bestRouteAtom,
   finalTokenEstimateAtom,
   inTokenAmountAtom,
   inTokenAtom,
@@ -15,7 +15,7 @@ export const useSelectSwap = () => {
   const [, setInToken] = useAtom(inTokenAtom);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
-  const activeRoute = useAtomValue(activeRouteAtom);
+  const bestRoute = useAtomValue(bestRouteAtom);
   const inTokenAmount = useAtomValue(inTokenAmountAtom);
 
   const onTokenSelect = (token: SupportedToken) => {
@@ -24,19 +24,21 @@ export const useSelectSwap = () => {
   };
 
   const inTokenPrice = useMemo(() => {
-    if (!activeRoute || !inTokenAmount) return '';
-    const tokenPrice = activeRoute.swaps[0].from.usdPrice;
+    if (!bestRoute || !inTokenAmount) return '';
+    const tokenPrice = bestRoute.swaps[0].from.usdPrice;
+
     if (!tokenPrice) return '';
     return (tokenPrice * parseFloat(inTokenAmount)).toFixed(2);
-  }, [activeRoute, inTokenAmount]);
+  }, [bestRoute, inTokenAmount]);
 
   const outTokenPrice = useMemo(() => {
-    if (!activeRoute) return '';
-    const lastSwap = activeRoute.swaps[activeRoute.swaps.length - 1];
+    if (!bestRoute) return '';
+    const lastSwap = bestRoute.swaps[bestRoute.swaps.length - 1];
     const tokenPrice = lastSwap.to.usdPrice;
+
     if (!tokenPrice) return '';
-    return (tokenPrice * parseFloat(activeRoute.outputAmount)).toFixed(2);
-  }, [activeRoute]);
+    return (tokenPrice * parseFloat(bestRoute.outputAmount)).toFixed(2);
+  }, [bestRoute]);
 
   const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
 
@@ -49,7 +51,7 @@ export const useSelectSwap = () => {
     setOpenTokenSelect,
     protocolInputToken,
     protocolFinalToken,
-    activeRoute,
+    activeRoute: bestRoute,
     inTokenAmount,
   };
 };
