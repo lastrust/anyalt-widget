@@ -8,6 +8,7 @@ import {
   slippageAtom,
 } from '../../../store/stateStore';
 import { getTransactionGroupData } from '../../../utils/getTransactionGroupData';
+import { BackIcon } from '../../atoms/icons/transaction/BackIcon';
 import { DividerIcon } from '../../atoms/icons/transaction/DividerIcon';
 import { GasIcon } from '../../atoms/icons/transaction/GasIcon';
 import { TimeIcon } from '../../atoms/icons/transaction/TimeIcon';
@@ -19,10 +20,15 @@ import {
 
 type Props = {
   swapIndex: number;
+  goToPrevious: VoidFunction;
   setSwapIndex: React.Dispatch<React.SetStateAction<number>>;
 };
 
-export const TransactionInfo: FC<Props> = ({ swapIndex, setSwapIndex }) => {
+export const TransactionInfo: FC<Props> = ({
+  swapIndex,
+  goToPrevious,
+  setSwapIndex,
+}) => {
   const bestRoute = useAtomValue(bestRouteAtom);
   const activeSwap = bestRoute?.swaps[swapIndex];
 
@@ -36,11 +42,11 @@ export const TransactionInfo: FC<Props> = ({ swapIndex, setSwapIndex }) => {
   const slippage = useAtomValue(slippageAtom);
 
   const handleTransactionProgress = (progress: TransactionProgress) => {
+    // setSwapIndex(swapIndex + 1);
     console.log(progress);
   };
 
   const runTx = async () => {
-    // setSwapIndex(swapIndex + 1);
     if (!anyaltInstance || !activeOperationId) return;
 
     await executeSwap(
@@ -63,6 +69,9 @@ export const TransactionInfo: FC<Props> = ({ swapIndex, setSwapIndex }) => {
       borderRadius={'16px'}
     >
       <Flex justifyContent="space-between" alignItems="center">
+        <Button variant="ghost" onClick={() => goToPrevious()}>
+          <BackIcon />
+        </Button>
         <Text color="white" fontSize="24px" fontWeight="bold">
           Step {swapIndex + 1}
         </Text>
@@ -84,11 +93,7 @@ export const TransactionInfo: FC<Props> = ({ swapIndex, setSwapIndex }) => {
             lineHeight={'120%'}
             fontSize={'16px'}
           >
-            {
-              activeSwap?.internalSwaps?.[internalSwapIndex]
-                ?.estimatedTimeInSeconds
-            }
-            s
+            {activeSwap?.estimatedTimeInSeconds}s
           </Text>
         </HStack>
         <DividerIcon />

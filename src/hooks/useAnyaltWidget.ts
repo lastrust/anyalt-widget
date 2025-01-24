@@ -37,7 +37,7 @@ export const useAnyaltWidget = ({
   const { address: evmAddress, isConnected: isEvmConnected } = useAccount();
 
   const [loading, setLoading] = useState(false);
-  const { activeStep, goToNext } = useSteps({ index: 0 });
+  const { activeStep, goToNext, goToPrevious } = useSteps({ index: 0 });
 
   const inToken = useAtomValue(inTokenAtom);
   const slippage = useAtomValue(slippageAtom);
@@ -206,6 +206,7 @@ export const useAnyaltWidget = ({
     activeRoute,
     activeStep,
     onGetQuote,
+    goToPrevious,
     onChooseRouteButtonClick,
     onConfigClick,
     isSolanaConnected,
