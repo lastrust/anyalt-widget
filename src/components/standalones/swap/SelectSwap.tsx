@@ -1,4 +1,4 @@
-import { Button, Divider, Flex, Text } from '@chakra-ui/react';
+import { Button, Divider, Flex, Text, VStack } from '@chakra-ui/react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useAccount } from 'wagmi';
 import { SlippageModal } from '../modals/SlippageModal';
@@ -75,12 +75,28 @@ export const SelectSwap = ({
         amount={finalTokenEstimate?.amountOut ?? ''}
         price={finalTokenEstimate?.priceInUSD ?? ''}
       />
-      {showConnectedWallets && isEvmConnected && (
-        <Text onClick={connectWalletsOpen}>{evmAddress}</Text>
-      )}
-      {showConnectedWallets && isSolanaConnected && (
-        <Text onClick={connectWalletsOpen}>{solanaAddress?.toBase58()}</Text>
-      )}
+      <VStack gap={'8px'} alignItems={'flex-start'}>
+        {showConnectedWallets && isEvmConnected && (
+          <Text
+            cursor={'pointer'}
+            textStyle={'regular.2'}
+            color="brand.secondary.3"
+            onClick={connectWalletsOpen}
+          >
+            EVM: {evmAddress}
+          </Text>
+        )}
+        {showConnectedWallets && isSolanaConnected && (
+          <Text
+            cursor={'pointer'}
+            textStyle={'regular.2'}
+            color="brand.secondary.3"
+            onClick={connectWalletsOpen}
+          >
+            SOL: {solanaAddress?.toBase58()}
+          </Text>
+        )}
+      </VStack>
       <Button
         width="100%"
         bg="brand.tertiary.100"

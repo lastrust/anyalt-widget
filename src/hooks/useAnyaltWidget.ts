@@ -212,6 +212,6 @@ export const useAnyaltWidget = ({
     failedToFetchRoute,
     isValidAmountIn,
     connectWalletsConfirm,
-    connectWalletsOpen
+    connectWalletsOpen,
   };
 };
