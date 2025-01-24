@@ -32,7 +32,7 @@ export const RouteStep = ({
       />
       <VStack justifyContent={'start'} alignItems={'start'} gap={'4px'}>
         <Text color="brand.secondary.3" fontSize="12px" fontWeight="extrabold">
-          Step {stepNumber}. Swap token using {exchangeName}
+          Swap token using {exchangeName}
         </Text>
         <HStack>
           <Text color="brand.secondary.3" fontSize="12px" fontWeight="regular">

@@ -4,19 +4,29 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
+  HStack,
   Text,
   VStack,
 } from '@chakra-ui/react';
 import { useAtom } from 'jotai';
-import { activeRouteAtom, selectedRouteAtom } from '../../../store/stateStore';
+import { bestRouteAtom, selectedRouteAtom } from '../../../store/stateStore';
+import { TransactionDetailsType } from '../../../types/transaction';
 import { TransactionStep } from '../../molecules/steps/TransactionStep';
 
-export const TransactionAccordion = () => {
-  const [activeRoute] = useAtom(activeRouteAtom);
+type Props = {
+  swapIndex: number;
+  transactionDetails: TransactionDetailsType[];
+};
+
+export const TransactionAccordion = ({
+  swapIndex,
+  transactionDetails,
+}: Props) => {
+  const [bestRoute] = useAtom(bestRouteAtom);
   const [selectedRoute, setSelectedRoute] = useAtom(selectedRouteAtom);
 
   const handleRouteSelect = () => {
-    setSelectedRoute(activeRoute);
+    setSelectedRoute(bestRoute);
   };
 
   return (
@@ -28,58 +38,78 @@ export const TransactionAccordion = () => {
       display={'flex'}
       flexDir={'column'}
     >
-      {activeRoute?.swaps[0].internalSwaps?.map((step, index) => {
-        return (
-          <AccordionItem
-            key={activeRoute?.swaps[0].swapperId}
-            border="1px solid"
-            borderColor="brand.border.primary"
-            borderRadius={'10px'}
-            p={'16px'}
-            cursor={'pointer'}
-            onClick={handleRouteSelect}
-            bg={
-              selectedRoute?.swaps[0].swapperId ===
-              activeRoute?.swaps[0].swapperId
-                ? 'brand.secondary.12'
-                : 'transparent'
-            }
-            _hover={{
-              bgColor: 'bg.secondary.1',
-            }}
-            w={'100%'}
+      {bestRoute?.swaps.map((swap, index) => (
+        <AccordionItem
+          border="1px solid"
+          borderColor="brand.border.primary"
+          borderRadius={'10px'}
+          p={'16px'}
+          cursor={'pointer'}
+          onClick={handleRouteSelect}
+          bg={
+            selectedRoute?.swaps[swapIndex].swapperId ===
+            bestRoute?.swaps[swapIndex].swapperId
+              ? 'brand.secondary.12'
+              : 'transparent'
+          }
+          _hover={{
+            bgColor: 'bg.secondary.1',
+          }}
+          w={'100%'}
+        >
+          <AccordionButton
+            display={'flex'}
+            flexDir={'row'}
+            justifyContent={'space-between'}
+            gap="12px"
+            p={'0px'}
           >
-            <AccordionButton
-              display={'flex'}
-              flexDir={'row'}
-              justifyContent={'space-between'}
-              gap="12px"
-              p={'0px'}
-            >
-              <Text textStyle={'bold.0'}>Step {index + 1}</Text>
-              <AccordionIcon w={'24px'} h={'24px'} />
-            </AccordionButton>
-            <AccordionPanel p={'0px'} mt="12px">
-              <VStack gap={'12px'}>
+            <HStack justifyContent={'flex-start'}>
+              <Text textStyle={'bold.0'}>Step {index + 1}.</Text>
+              <Text textStyle={'regular.3'}>
+                Required Sings: {swap.maxRequiredSign}
+              </Text>
+            </HStack>
+            <AccordionIcon w={'24px'} h={'24px'} />
+          </AccordionButton>
+          <AccordionPanel p={'0px'} mt="12px">
+            <VStack gap={'12px'}>
+              {swap?.internalSwaps ? (
+                swap?.internalSwaps?.map((step, index) => (
+                  <TransactionStep
+                    key={`${step.estimatedTimeInSeconds}-${index}`}
+                    stepNumber={index + 1}
+                    exchangeIcon={step.from.logo || ''}
+                    exchangeName={step.swapperId}
+                    fromToken={{
+                      name: step.from.symbol,
+                      amount: String(Number(step.fromAmount).toFixed(4) || '0'),
+                    }}
+                    toToken={{
+                      name: step.to.symbol,
+                      amount: String(Number(step.toAmount).toFixed(4) || '0'),
+                    }}
+                  />
+                ))
+              ) : (
                 <TransactionStep
-                  key={`${activeRoute?.swaps[0].swapperId}-${index}`}
                   stepNumber={index + 1}
-                  exchangeIcon={activeRoute?.swaps[0].swapperLogo}
-                  exchangeName={activeRoute?.swaps[0].swapperId}
+                  exchangeIcon={swap.swapperLogo}
+                  exchangeName={swap.swapperId}
                   fromToken={{
-                    name: step.from.symbol,
-                    amount: String(Number(step.fromAmount).toFixed(4) || '0'),
+                    name: swap.from.symbol,
+                    amount: String(Number(swap.fromAmount).toFixed(4) || '0'),
                   }}
                   toToken={{
-                    name: step.to.symbol,
-                    amount: String(Number(step.toAmount).toFixed(4) || '0'),
+                    name: swap.to.symbol,
+                    amount: String(Number(swap.toAmount).toFixed(4) || '0'),
                   }}
                 />
-              </VStack>
-            </AccordionPanel>
-          </AccordionItem>
-        );
-      })}
+              )}
+            </VStack>
+          </AccordionPanel>
+        </AccordionItem>
+      ))}
     </Accordion>
   );
 };

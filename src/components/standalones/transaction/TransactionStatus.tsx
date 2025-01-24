@@ -1,75 +1,37 @@
 import { Box, Divider, Flex, HStack, Text, VStack } from '@chakra-ui/react';
 import { useAtomValue } from 'jotai';
-import { activeRouteAtom } from '../../../store/stateStore';
+import { useEffect } from 'react';
+import {
+  bestRouteAtom,
+  finalTokenEstimateAtom,
+  protocolFinalTokenAtom,
+  protocolInputTokenAtom,
+} from '../../../store/stateStore';
+import { getTransactionGroupData } from '../../../utils/getTransactionGroupData';
 import { CopyIcon } from '../../atoms/icons/transaction/CopyIcon';
-import { TokenIconBox } from '../../molecules/TokenIconBox';
+import { SwapTokenCard } from '../../molecules/card/SwapTokenCard';
 import { TransactionAccordion } from '../accordions/TransactionAccordion';
 
-type SwapTokenProps = {
-  tokenName: string;
-  tokenIcon: string;
-  tokenAmount: string;
-  networkName: string;
-  networkIcon: string;
+type Props = {
+  swapIndex: number;
 };
 
-const SwapToken = ({
-  tokenName,
-  tokenIcon,
-  tokenAmount,
-  networkName,
-  networkIcon,
-}: SwapTokenProps) => {
-  return (
-    <HStack>
-      <TokenIconBox
-        tokenName={tokenName}
-        tokenIcon={tokenIcon}
-        chainName={networkName}
-        chainIcon={networkIcon}
-      />
-      <VStack alignItems="flex-start" justifyContent={'space-between'}>
-        <Text color="white" textStyle={'extraBold.3'}>
-          {tokenAmount}
-        </Text>
-        <Text color="brand.secondary.3" textStyle={'regular.3'}>
-          {tokenName} on {networkName}
-        </Text>
-      </VStack>
-    </HStack>
-  );
-};
+export const TransactionStatus = ({ swapIndex }: Props) => {
+  const bestRoute = useAtomValue(bestRouteAtom);
+  const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
+  const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
+  const protocolInputToken = useAtomValue(protocolInputTokenAtom);
 
-export const TransactionStatus = () => {
-  const activeRoute = useAtomValue(activeRouteAtom);
-  const transactionDetails =
-    activeRoute?.swaps[0].internalSwaps?.map((swap) => ({
-      requestId: activeRoute?.requestId || '',
-      gasPrice: activeRoute?.swaps[0].fee[0]?.price?.toString() || '0',
-      time: activeRoute?.swaps[0].estimatedTimeInSeconds?.toString() || '0',
-      profit: '0.00',
-      from: {
-        name: swap.from.symbol,
-        icon: swap.from.logo,
-        amount: activeRoute?.swaps[0].fromAmount || '0',
-        usdAmount: swap.from.usdPrice?.toString() || '0',
-        chainName: swap.from.blockchain,
-        chainIcon: swap.from.blockchainLogo,
-      },
-      to: {
-        name: swap.to.symbol,
-        icon: swap.to.logo,
-        amount: activeRoute?.swaps[0].toAmount || '0',
-        usdAmount: swap.to.usdPrice?.toString() || '0',
-        chainName: swap.to.blockchain,
-        chainIcon: swap.to.blockchainLogo,
-      },
-      status: 'Pending',
-    })) || [];
+  if (!bestRoute) return null;
+  const swaps = getTransactionGroupData(bestRoute);
 
   const handleCopyClick = () => {
-    navigator.clipboard.writeText(transactionDetails[0].requestId);
+    navigator.clipboard.writeText(swaps[swapIndex].requestId);
   };
+
+  useEffect(() => {
+    console.log(swaps);
+  }, [swaps]);
 
   return (
     <VStack
@@ -91,22 +53,22 @@ export const TransactionStatus = () => {
         gap={'16px'}
       >
         <Text color="white" textStyle={'heading.2'}>
-          Transaction Status
+          Transaction Details
         </Text>
         <HStack justifyContent={'space-between'} w={'100%'}>
-          <SwapToken
-            tokenName={transactionDetails[0].from.name}
-            tokenIcon={transactionDetails[0].from.icon}
-            tokenAmount={Number(transactionDetails[0].from.amount).toFixed(2)}
-            networkName={transactionDetails[0].from.chainName}
-            networkIcon={transactionDetails[0].from.chainIcon}
+          <SwapTokenCard
+            tokenName={swaps[swapIndex].from.name}
+            tokenIcon={swaps[swapIndex].from.icon || ''}
+            tokenAmount={swaps[swapIndex].fromAmount}
+            networkName={swaps[swapIndex].from.chainName || ''}
+            networkIcon={swaps[swapIndex].from.chainIcon || ''}
           />
-          <SwapToken
-            tokenName={transactionDetails[0].to.name}
-            tokenIcon={transactionDetails[0].to.icon}
-            tokenAmount={Number(transactionDetails[0].to.amount).toFixed(2)}
-            networkName={transactionDetails[0].to.chainName}
-            networkIcon={transactionDetails[0].to.chainIcon}
+          <SwapTokenCard
+            tokenIcon={protocolFinalToken?.logoUrl ?? ''}
+            tokenName={protocolFinalToken?.symbol ?? ''}
+            networkIcon={protocolInputToken?.chain?.logoUrl ?? ''}
+            networkName={protocolInputToken?.chain?.displayName ?? ''}
+            tokenAmount={finalTokenEstimate?.amountOut ?? ''}
           />
         </HStack>
         <Divider />
@@ -117,7 +79,7 @@ export const TransactionStatus = () => {
             </Text>
             <Flex alignItems="center" gap="8px">
               <Text color="brand.secondary.3" textStyle="regular.3">
-                {transactionDetails[0].requestId}
+                {swaps[swapIndex].requestId}
               </Text>
               <Box
                 as="button"
@@ -135,7 +97,10 @@ export const TransactionStatus = () => {
         <Text color="white" textStyle={'heading.2'}>
           Swap Steps
         </Text>
-        <TransactionAccordion />
+        <TransactionAccordion
+          swapIndex={swapIndex}
+          transactionDetails={swaps}
+        />
       </VStack>
     </VStack>
   );

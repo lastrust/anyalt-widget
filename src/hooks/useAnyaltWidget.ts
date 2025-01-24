@@ -6,9 +6,9 @@ import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 import {
   activeOperationIdAtom,
-  activeRouteAtom,
   allChainsAtom,
   anyaltInstanceAtom,
+  bestRouteAtom,
   finalTokenEstimateAtom,
   inTokenAmountAtom,
   inTokenAtom,
@@ -37,7 +37,7 @@ export const useAnyaltWidget = ({
   const { address: evmAddress, isConnected: isEvmConnected } = useAccount();
 
   const [loading, setLoading] = useState(false);
-  const { activeStep, goToNext } = useSteps({ index: 0 });
+  const { activeStep, goToNext, goToPrevious } = useSteps({ index: 0 });
 
   const inToken = useAtomValue(inTokenAtom);
   const slippage = useAtomValue(slippageAtom);
@@ -45,7 +45,7 @@ export const useAnyaltWidget = ({
 
   const [openSlippageModal, setOpenSlippageModal] = useState(false);
 
-  const [activeRoute, setActiveRoute] = useAtom(activeRouteAtom);
+  const [activeRoute, setActiveRoute] = useAtom(bestRouteAtom);
   const [, setFinalTokenEstimate] = useAtom(finalTokenEstimateAtom);
   const [selectedRoute] = useAtom(selectedRouteAtom);
   const [, setProtocolFinalToken] = useAtom(protocolFinalTokenAtom);
@@ -142,12 +142,16 @@ export const useAnyaltWidget = ({
   };
 
   const onChooseRouteButtonClick = () => {
-    if (isSolanaConnected && isEvmConnected) goToNext();
-    else connectWalletsOpen();
+    if (isSolanaConnected && isEvmConnected) {
+      connectWalletsConfirm();
+    } else {
+      connectWalletsOpen();
+    }
   };
 
   const connectWalletsConfirm = async () => {
     try {
+      setLoading(true);
       if (!activeRoute?.requestId) return;
 
       const selectedWallets: Record<string, string> = {};
@@ -172,8 +176,6 @@ export const useAnyaltWidget = ({
         }
       });
 
-      console.log(selectedWallets);
-
       const res = await anyaltInstance?.confirmRoute({
         selectedRoute: {
           requestId: activeRoute.requestId,
@@ -181,6 +183,7 @@ export const useAnyaltWidget = ({
         selectedWallets,
         destination: evmAddress || '',
       });
+
       console.log(res);
 
       if (!res?.operationId || !res?.result)
@@ -193,6 +196,8 @@ export const useAnyaltWidget = ({
       goToNext();
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -201,6 +206,7 @@ export const useAnyaltWidget = ({
     activeRoute,
     activeStep,
     onGetQuote,
+    goToPrevious,
     onChooseRouteButtonClick,
     onConfigClick,
     isSolanaConnected,
@@ -212,5 +218,6 @@ export const useAnyaltWidget = ({
     failedToFetchRoute,
     isValidAmountIn,
     connectWalletsConfirm,
+    connectWalletsOpen,
   };
 };

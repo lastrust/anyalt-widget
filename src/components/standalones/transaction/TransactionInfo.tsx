@@ -3,10 +3,12 @@ import { useAtomValue } from 'jotai';
 import { FC, useState } from 'react';
 import {
   activeOperationIdAtom,
-  activeRouteAtom,
   anyaltInstanceAtom,
+  bestRouteAtom,
   slippageAtom,
 } from '../../../store/stateStore';
+import { getTransactionGroupData } from '../../../utils/getTransactionGroupData';
+import { BackIcon } from '../../atoms/icons/transaction/BackIcon';
 import { DividerIcon } from '../../atoms/icons/transaction/DividerIcon';
 import { GasIcon } from '../../atoms/icons/transaction/GasIcon';
 import { TimeIcon } from '../../atoms/icons/transaction/TimeIcon';
@@ -18,35 +20,20 @@ import {
 
 type Props = {
   swapIndex: number;
+  goToPrevious: VoidFunction;
+  setSwapIndex: React.Dispatch<React.SetStateAction<number>>;
 };
 
-export const TransactionDetails: FC<Props> = ({ swapIndex }) => {
-  const activeRoute = useAtomValue(activeRouteAtom);
-  const activeSwap = activeRoute?.swaps[swapIndex];
-  const transactionDetails =
-    activeSwap?.internalSwaps?.map((swap) => ({
-      requestId: activeRoute?.requestId || '',
-      gasPrice: activeSwap?.fee[0]?.price?.toString() || '0',
-      time: activeSwap?.estimatedTimeInSeconds?.toString() || '0',
-      profit: '0.00',
-      from: {
-        name: swap.from.symbol,
-        icon: swap.from.logo,
-        amount: activeSwap?.fromAmount || '0',
-        usdAmount: swap.from.usdPrice?.toString() || '0',
-        chainName: swap.from.blockchain,
-        chainIcon: swap.from.blockchainLogo,
-      },
-      to: {
-        name: swap.to.symbol,
-        icon: swap.to.logo,
-        amount: activeSwap?.toAmount || '0',
-        usdAmount: swap.to.usdPrice?.toString() || '0',
-        chainName: swap.to.blockchain,
-        chainIcon: swap.to.blockchainLogo,
-      },
-      status: 'Pending',
-    })) || [];
+export const TransactionInfo: FC<Props> = ({
+  swapIndex,
+  goToPrevious,
+  setSwapIndex,
+}) => {
+  const bestRoute = useAtomValue(bestRouteAtom);
+  const activeSwap = bestRoute?.swaps[swapIndex];
+
+  if (!bestRoute) return null;
+  const transactionDetails = getTransactionGroupData(bestRoute);
 
   const [internalSwapIndex] = useState(0);
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
@@ -55,6 +42,7 @@ export const TransactionDetails: FC<Props> = ({ swapIndex }) => {
   const slippage = useAtomValue(slippageAtom);
 
   const handleTransactionProgress = (progress: TransactionProgress) => {
+    // setSwapIndex(swapIndex + 1);
     console.log(progress);
   };
 
@@ -65,7 +53,7 @@ export const TransactionDetails: FC<Props> = ({ swapIndex }) => {
       anyaltInstance,
       activeOperationId,
       slippage,
-      activeRoute?.swaps || [],
+      bestRoute?.swaps || [],
       handleTransactionProgress,
     );
   };
@@ -81,12 +69,15 @@ export const TransactionDetails: FC<Props> = ({ swapIndex }) => {
       borderRadius={'16px'}
     >
       <Flex justifyContent="space-between" alignItems="center">
+        <Button variant="ghost" onClick={() => goToPrevious()}>
+          <BackIcon />
+        </Button>
         <Text color="white" fontSize="24px" fontWeight="bold">
           Step {swapIndex + 1}
         </Text>
       </Flex>
       <Text color={'brand.secondary.3'}>
-        Swap Tokens Using {activeRoute?.swaps[0].swapperId}
+        Swap Tokens Using {bestRoute?.swaps[0].swapperId}
       </Text>
       <HStack
         w={'100%'}
@@ -102,11 +93,7 @@ export const TransactionDetails: FC<Props> = ({ swapIndex }) => {
             lineHeight={'120%'}
             fontSize={'16px'}
           >
-            {
-              activeSwap?.internalSwaps?.[internalSwapIndex]
-                ?.estimatedTimeInSeconds
-            }
-            s
+            {activeSwap?.estimatedTimeInSeconds}s
           </Text>
         </HStack>
         <DividerIcon />
@@ -117,7 +104,15 @@ export const TransactionDetails: FC<Props> = ({ swapIndex }) => {
             lineHeight={'120%'}
             fontSize={'16px'}
           >
-            $ {Number(activeSwap?.fee[0]?.price || '0').toFixed(2)}
+            ${' '}
+            {bestRoute.swaps[0].fee
+              .reduce((acc, fee) => {
+                const amount = parseFloat(fee.amount);
+                const price = fee.price || 0;
+                return acc + amount * price;
+              }, 0)
+              .toFixed(2)
+              .toString()}
           </Text>
         </HStack>
         <DividerIcon />
@@ -135,14 +130,14 @@ export const TransactionDetails: FC<Props> = ({ swapIndex }) => {
         <TokenQuoteBox
           loading={false}
           headerText=""
-          tokenName={transactionDetails[0].from.name}
-          tokenLogo={transactionDetails[0].from.icon}
-          chainName={transactionDetails[0].from.chainName}
-          chainLogo={transactionDetails[0].from.chainIcon}
-          amount={Number(transactionDetails[0].from.amount).toFixed(2)}
+          tokenName={transactionDetails[swapIndex].from.name}
+          tokenLogo={transactionDetails[swapIndex].from.icon || ''}
+          chainName={transactionDetails[swapIndex].from.chainName || ''}
+          chainLogo={transactionDetails[swapIndex].from.chainIcon || ''}
+          amount={Number(transactionDetails[swapIndex].fromAmount).toFixed(2)}
           price={(
-            Number(transactionDetails[0].from.usdAmount) *
-            Number(transactionDetails[0].from.amount)
+            Number(transactionDetails[swapIndex].from.usdAmount) *
+            Number(transactionDetails[swapIndex].fromAmount)
           ).toFixed(2)}
           w={'100%'}
           p={'0'}
@@ -152,14 +147,14 @@ export const TransactionDetails: FC<Props> = ({ swapIndex }) => {
         <TokenQuoteBox
           loading={false}
           headerText=""
-          tokenName={transactionDetails[0].to.name}
-          tokenLogo={transactionDetails[0].to.icon}
-          chainName={transactionDetails[0].to.chainName}
-          chainLogo={transactionDetails[0].to.chainIcon}
-          amount={Number(transactionDetails[0].to.amount).toFixed(2)}
+          tokenName={transactionDetails[swapIndex].to.name || ''}
+          tokenLogo={transactionDetails[swapIndex].to.icon || ''}
+          chainName={transactionDetails[swapIndex].to.chainName || ''}
+          chainLogo={transactionDetails[swapIndex].to.chainIcon || ''}
+          amount={Number(transactionDetails[swapIndex].toAmount).toFixed(2)}
           price={(
-            Number(transactionDetails[0].to.usdAmount) *
-            Number(transactionDetails[0].to.amount)
+            Number(transactionDetails[swapIndex].to.usdAmount) *
+            Number(transactionDetails[swapIndex].toAmount)
           ).toFixed(2)}
           w={'100%'}
           p={'0'}
