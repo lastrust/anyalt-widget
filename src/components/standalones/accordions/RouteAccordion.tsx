@@ -28,104 +28,107 @@ export const RouteAccordion = () => {
 
   return (
     <Accordion defaultIndex={[0]} allowMultiple>
-      <AccordionItem
-        key={activeRoute?.swaps[0].swapperId}
-        border="1px solid"
-        borderColor="brand.border.primary"
-        borderRadius={'10px'}
-        p={'16px'}
-        cursor={'pointer'}
-        onClick={handleRouteSelect}
-        bg={
-          selectedRoute?.swaps[0].swapperId === activeRoute?.swaps[0].swapperId
-            ? 'brand.secondary.12'
-            : 'transparent'
-        }
-        _hover={{
-          bgColor: 'bg.secondary.1',
-        }}
-      >
-        <h2>
-          <AccordionButton
-            display={'flex'}
-            flexDir={'column'}
-            justifyContent={'space-between'}
-            gap="12px"
-            p={'0px'}
-          >
-            <Flex
-              flexDirection="row"
-              justifyContent="space-between"
-              alignItems={'center'}
+      {activeRoute?.swaps.map((swap, swapIndex) => (
+        <AccordionItem
+          key={swap.swapperId}
+          border="1px solid"
+          borderColor="brand.border.primary"
+          borderRadius={'10px'}
+          p={'16px'}
+          cursor={'pointer'}
+          onClick={handleRouteSelect}
+          bg={
+            selectedRoute?.swaps[swapIndex].swapperId ===
+            activeRoute?.swaps[swapIndex].swapperId
+              ? 'brand.secondary.12'
+              : 'transparent'
+          }
+          _hover={{
+            bgColor: 'bg.secondary.1',
+          }}
+        >
+          <h2>
+            <AccordionButton
+              display={'flex'}
+              flexDir={'column'}
+              justifyContent={'space-between'}
               gap="12px"
+              p={'0px'}
             >
-              <Flex alignItems="center" gap="8px">
-                <RouteTag
-                  text="Fastest"
-                  textColor="brand.secondary.5"
-                  bgColor="bg.tertiary.100"
-                />
-                <RouteTag
-                  text={`${activeRoute?.swaps[0].estimatedTimeInSeconds}s`}
-                  icon={TimeIcon}
-                  textColor="brand.tertiary.100"
-                />
-                <RouteTag
-                  text={`$${activeRoute?.swaps[0].fee
-                    .reduce((acc, fee) => acc + Number(fee.amount), 0)
-                    .toFixed(2)}`}
-                  icon={GasIcon}
-                  textColor="brand.tertiary.100"
-                />
-                <RouteTag
-                  text={`${activeRoute?.swaps[0].internalSwaps?.length ?? 1}`}
-                  icon={StepsIcon}
-                  textColor="brand.tertiary.100"
-                />
-              </Flex>
-              <Box
-                h={'24px'}
-                w={'24px'}
-                borderRadius={'50%'}
-                bgColor="brand.tertiary.100"
-                cursor="pointer"
+              <Flex
+                flexDirection="row"
+                justifyContent="space-between"
+                alignItems={'center'}
+                gap="12px"
               >
-                <AccordionIcon w={'24px'} h={'24px'} />
-              </Box>
-            </Flex>
-            <TokenRouteInfo
-              tokenName="aarna"
-              tokenIcon={aarnaIcon}
-              amount={10.19}
-              price={2423.53}
-              difference={0.5}
-              network={`${activeRoute?.swaps[0].swapperId}`}
-            />
-          </AccordionButton>
-        </h2>
-        <AccordionPanel p={'0px'} mt="12px">
-          <VStack gap={'12px'}>
-            {activeRoute?.swaps[0].internalSwaps?.map((step, index) => {
-              return (
-                <RouteStep
-                  key={`${activeRoute?.swaps[0].swapperId}-${index}`}
-                  stepNumber={index + 1}
-                  exchangeIcon={activeRoute?.swaps[0].swapperLogo}
-                  exchangeName={activeRoute?.swaps[0].swapperId}
-                  fromToken={{
-                    name: step.from.symbol,
-                    amount: String(Number(step.fromAmount).toFixed(4) || '0'),
-                  }}
-                  toToken={{
-                    name: step.to.symbol,
-                    amount: String(Number(step.toAmount).toFixed(4) || '0'),
-                  }}
-                />
-              );
-            })}
-          </VStack>
-        </AccordionPanel>
-      </AccordionItem>
+                <Flex alignItems="center" gap="8px">
+                  <RouteTag
+                    text="Fastest"
+                    textColor="brand.secondary.5"
+                    bgColor="bg.tertiary.100"
+                  />
+                  <RouteTag
+                    text={`${swap.estimatedTimeInSeconds}s`}
+                    icon={TimeIcon}
+                    textColor="brand.tertiary.100"
+                  />
+                  <RouteTag
+                    text={`$${swap.fee
+                      .reduce((acc, fee) => acc + Number(fee.amount), 0)
+                      .toFixed(2)}`}
+                    icon={GasIcon}
+                    textColor="brand.tertiary.100"
+                  />
+                  <RouteTag
+                    text={`${swap.internalSwaps?.length ?? 1}`}
+                    icon={StepsIcon}
+                    textColor="brand.tertiary.100"
+                  />
+                </Flex>
+                <Box
+                  h={'24px'}
+                  w={'24px'}
+                  borderRadius={'50%'}
+                  bgColor="brand.tertiary.100"
+                  cursor="pointer"
+                >
+                  <AccordionIcon w={'24px'} h={'24px'} />
+                </Box>
+              </Flex>
+              <TokenRouteInfo
+                tokenName="aarna"
+                tokenIcon={aarnaIcon}
+                amount={10.19}
+                price={2423.53}
+                difference={0.5}
+                network={`${swap.swapperId}`}
+              />
+            </AccordionButton>
+          </h2>
+          <AccordionPanel p={'0px'} mt="12px">
+            <VStack gap={'12px'}>
+              {swap.internalSwaps?.map((step, index) => {
+                return (
+                  <RouteStep
+                    key={`${swap.swapperId}-${index}`}
+                    stepNumber={index + 1}
+                    exchangeIcon={swap.swapperLogo}
+                    exchangeName={swap.swapperId}
+                    fromToken={{
+                      name: step.from.symbol,
+                      amount: String(Number(step.fromAmount).toFixed(4) || '0'),
+                    }}
+                    toToken={{
+                      name: step.to.symbol,
+                      amount: String(Number(step.toAmount).toFixed(4) || '0'),
+                    }}
+                  />
+                );
+              })}
+            </VStack>
+          </AccordionPanel>
+        </AccordionItem>
+      ))}
     </Accordion>
   );
 };

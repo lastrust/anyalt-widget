@@ -28,19 +28,20 @@ export const TransactionAccordion = () => {
       display={'flex'}
       flexDir={'column'}
     >
-      {activeRoute?.swaps[0].internalSwaps?.map((step, index) => {
-        return (
-          <AccordionItem
-            key={activeRoute?.swaps[0].swapperId}
-            border="1px solid"
-            borderColor="brand.border.primary"
-            borderRadius={'10px'}
+      {activeRoute?.swaps.map((swap, swapIndex) =>
+        swap.internalSwaps?.map((step, index) => {
+          return (
+            <AccordionItem
+              key={`${swap.swapperId}-${index}`}
+              border="1px solid"
+              borderColor="brand.border.primary"
+              borderRadius={'10px'}
             p={'16px'}
             cursor={'pointer'}
             onClick={handleRouteSelect}
             bg={
-              selectedRoute?.swaps[0].swapperId ===
-              activeRoute?.swaps[0].swapperId
+              selectedRoute?.swaps[swapIndex].swapperId ===
+              activeRoute?.swaps[swapIndex].swapperId
                 ? 'brand.secondary.12'
                 : 'transparent'
             }
@@ -62,10 +63,10 @@ export const TransactionAccordion = () => {
             <AccordionPanel p={'0px'} mt="12px">
               <VStack gap={'12px'}>
                 <TransactionStep
-                  key={`${activeRoute?.swaps[0].swapperId}-${index}`}
+                  key={`${swap.swapperId}-${index}`}
                   stepNumber={index + 1}
-                  exchangeIcon={activeRoute?.swaps[0].swapperLogo}
-                  exchangeName={activeRoute?.swaps[0].swapperId}
+                  exchangeIcon={swap.swapperLogo}
+                  exchangeName={swap.swapperId}
                   fromToken={{
                     name: step.from.symbol,
                     amount: String(Number(step.fromAmount).toFixed(4) || '0'),
@@ -77,9 +78,10 @@ export const TransactionAccordion = () => {
                 />
               </VStack>
             </AccordionPanel>
-          </AccordionItem>
-        );
-      })}
+            </AccordionItem>
+          );
+        })
+      )}
     </Accordion>
   );
 };
