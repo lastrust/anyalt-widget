@@ -1,4 +1,6 @@
-import { Divider, Flex } from '@chakra-ui/react';
+import { Button, Divider, Flex, Text } from '@chakra-ui/react';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { useAccount } from 'wagmi';
 import { SlippageModal } from '../modals/SlippageModal';
 import { TokenInputBox } from '../token/input/TokenInputBox';
 import { TokenQuoteBox } from '../token/quote/TokenQuoteBox';
@@ -9,14 +11,24 @@ type Props = {
   loading: boolean;
   openSlippageModal: boolean;
   setOpenSlippageModal: (open: boolean) => void;
+  showConnectedWallets?: boolean;
   isValidAmountIn?: boolean;
+  buttonText: string;
+  hideButton?: boolean;
+  onButtonClick: () => void;
+  handleWalletsOpen?: () => void;
 };
 
 export const SelectSwap = ({
   loading,
   openSlippageModal,
   setOpenSlippageModal,
+  showConnectedWallets = false,
   isValidAmountIn = true,
+  handleWalletsOpen: connectWalletsOpen,
+  onButtonClick,
+  hideButton,
+  buttonText = 'Start Transaction',
 }: Props) => {
   const {
     finalTokenEstimate,
@@ -29,6 +41,10 @@ export const SelectSwap = ({
     protocolFinalToken,
     activeRoute,
   } = useSelectSwap();
+
+  const { publicKey: solanaAddress, connected: isSolanaConnected } =
+    useWallet();
+  const { address: evmAddress, isConnected: isEvmConnected } = useAccount();
 
   return (
     <Flex flexDirection="column" gap="16px" mb="16px">
@@ -59,6 +75,25 @@ export const SelectSwap = ({
         amount={finalTokenEstimate?.amountOut ?? ''}
         price={finalTokenEstimate?.priceInUSD ?? ''}
       />
+      {showConnectedWallets && isEvmConnected && (
+        <Text onClick={connectWalletsOpen}>{evmAddress}</Text>
+      )}
+      {showConnectedWallets && isSolanaConnected && (
+        <Text onClick={connectWalletsOpen}>{solanaAddress?.toBase58()}</Text>
+      )}
+      <Button
+        width="100%"
+        bg="brand.tertiary.100"
+        color="white"
+        fontSize="16px"
+        fontWeight="bold"
+        borderRadius="8px"
+        h="64px"
+        onClick={onButtonClick}
+        isLoading={loading}
+      >
+        {buttonText}
+      </Button>
       {openTokenSelect && (
         <TokenSelectBox
           onClose={() => setOpenTokenSelect(false)}

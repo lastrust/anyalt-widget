@@ -43,6 +43,7 @@ export const AnyaltWidgetWrapper = ({
     failedToFetchRoute,
     isValidAmountIn,
     connectWalletsConfirm,
+    connectWalletsOpen,
   } = useAnyaltWidget({
     estimateCallback,
     inputToken,
@@ -60,14 +61,13 @@ export const AnyaltWidgetWrapper = ({
       <Header>{activeStep === 2 ? 'Transaction' : 'Start Transaction'}</Header>
       <CustomStepper activeStep={activeStep}>
         <SwappingWrapper
-          loading={loading}
           title={'Select Deposit Token'}
-          buttonText={'Get Quote'}
-          onButtonClick={onGetQuote}
           onConfigClick={onConfigClick}
           failedToFetchRoute={failedToFetchRoute}
         >
           <SelectSwap
+            buttonText={'Get Quote'}
+            onButtonClick={onGetQuote}
             loading={loading}
             openSlippageModal={openSlippageModal}
             setOpenSlippageModal={setOpenSlippageModal}
@@ -75,35 +75,30 @@ export const AnyaltWidgetWrapper = ({
           />
         </SwappingWrapper>
         <SwappingWrapper
-          loading={loading}
           title={'Calculation'}
           secondTitle="Routes"
           secondSubtitle="Please select preferred route"
-          buttonText={
-            activeRoute
-              ? isSolanaConnected && isEvmConnected
-                ? 'Start Transaction'
-                : 'Connect Wallet/s To Start Transaction'
-              : 'Get Quote'
-          }
-          onButtonClick={onChooseRouteButtonClick}
           onConfigClick={onConfigClick}
           failedToFetchRoute={failedToFetchRoute}
         >
           <RoutesWrapper
+            buttonText={
+              activeRoute
+                ? isSolanaConnected && isEvmConnected
+                  ? 'Start Transaction'
+                  : 'Connect Wallet/s To Start Transaction'
+                : 'Get Quote'
+            }
+            onButtonClick={onChooseRouteButtonClick}
             loading={loading}
             openSlippageModal={openSlippageModal}
             setOpenSlippageModal={setOpenSlippageModal}
+            showConnectedWallets={true}
+            handleWalletsOpen={connectWalletsOpen}
           />
         </SwappingWrapper>
         <SwappingWrapper
-          hideButton
           failedToFetchRoute={false}
-          loading={loading}
-          buttonText="Approve"
-          onButtonClick={() => {
-            console.log('Approve');
-          }}
           onConfigClick={onConfigClick}
         >
           <TransactionSwap />
