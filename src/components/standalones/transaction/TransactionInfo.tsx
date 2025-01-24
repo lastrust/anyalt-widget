@@ -99,7 +99,15 @@ export const TransactionInfo: FC<Props> = ({ swapIndex, setSwapIndex }) => {
             lineHeight={'120%'}
             fontSize={'16px'}
           >
-            $ {Number(activeSwap?.fee[0]?.price || '0').toFixed(2)}
+            ${' '}
+            {bestRoute.swaps[0].fee
+              .reduce((acc, fee) => {
+                const amount = parseFloat(fee.amount);
+                const price = fee.price || 0;
+                return acc + amount * price;
+              }, 0)
+              .toFixed(2)
+              .toString()}
           </Text>
         </HStack>
         <DividerIcon />
