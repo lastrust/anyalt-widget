@@ -12,10 +12,13 @@ export {
 } from '../../../theme/defaultTheme';
 export { OpenModalButton } from '../../atoms/buttons/OpenModalButton';
 
+import { Button } from '@chakra-ui/react';
 import { AnyaltWidgetProps } from '../../..';
 import { useAnyaltWidget } from '../../../hooks/useAnyaltWidget';
+import { BackIcon } from '../../atoms/icons/transaction/BackIcon';
 import { RoutesWrapper } from '../../standalones/wrappers/RoutesWrapper';
 import { SwappingWrapper } from '../../standalones/wrappers/SwappingWrapper';
+import { TransactionComplete } from '../../standalones/wrappers/TransactionComplete';
 import { TransactionSwap } from '../../standalones/wrappers/TransactionSwap';
 
 export const AnyaltWidgetWrapper = ({
@@ -25,6 +28,7 @@ export const AnyaltWidgetWrapper = ({
   inputToken,
   finalToken,
   estimateCallback,
+  executeCallBack,
   minDepositAmount = 0,
 }: AnyaltWidgetProps) => {
   const {
@@ -44,7 +48,8 @@ export const AnyaltWidgetWrapper = ({
     isValidAmountIn,
     connectWalletsConfirm,
     connectWalletsOpen,
-    goToPrevious,
+    onBackClick,
+    onTxComplete,
   } = useAnyaltWidget({
     estimateCallback,
     inputToken,
@@ -57,9 +62,18 @@ export const AnyaltWidgetWrapper = ({
     <ModalWrapper
       isOpen={isOpen}
       onClose={onClose}
-      size={activeStep === 0 ? 'lg' : '5xl'}
+      size={activeStep === 0 || activeStep === 3 ? 'lg' : '5xl'}
     >
-      <Header>{activeStep === 2 ? 'Transaction' : 'Start Transaction'}</Header>
+      {activeStep !== 3 && (
+        <Header>
+          {activeStep !== 0 && (
+            <Button variant="ghost" onClick={onBackClick}>
+              <BackIcon />
+            </Button>
+          )}
+          {activeStep === 2 ? 'Transaction' : 'Start Transaction'}
+        </Header>
+      )}
       <CustomStepper activeStep={activeStep}>
         <SwappingWrapper
           title={'Select Deposit Token'}
@@ -102,7 +116,20 @@ export const AnyaltWidgetWrapper = ({
           failedToFetchRoute={false}
           onConfigClick={onConfigClick}
         >
-          <TransactionSwap goToPrevious={goToPrevious} />
+          <TransactionSwap
+            executeCallBack={executeCallBack}
+            onTxComplete={onTxComplete}
+          />
+        </SwappingWrapper>
+        <SwappingWrapper
+          failedToFetchRoute={false}
+          onConfigClick={onConfigClick}
+        >
+          <TransactionComplete
+            onTransactionDoneClick={() => {
+              onClose();
+            }}
+          />
         </SwappingWrapper>
       </CustomStepper>
       <Footer />

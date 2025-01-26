@@ -34,6 +34,7 @@ export const RoutesWrapper = ({
         setOpenSlippageModal={setOpenSlippageModal}
         showConnectedWallets={showConnectedWallets}
         handleWalletsOpen={connectWalletsOpen}
+        isTokenInputReadonly={true}
       />
       <BestRouteAccordion />
     </Grid>

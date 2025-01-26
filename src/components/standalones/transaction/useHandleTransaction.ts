@@ -8,12 +8,19 @@ import {
 import { SwapResult } from '@anyalt/sdk/src/adapter/api/api';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { VersionedTransaction } from '@solana/web3.js';
-import { useAtomValue } from 'jotai';
-import { useCallback, useState } from 'react';
+import { sendTransaction, switchChain } from '@wagmi/core';
+import { useAtom, useAtomValue } from 'jotai';
+import { useCallback } from 'react';
 import { useAccount } from 'wagmi';
-import { sendTransaction, switchChain } from 'wagmi/actions';
-import { wagmiAdapter } from '../../../providers/RainbowKitProvider';
-import { allChainsAtom } from '../../../store/stateStore';
+import { wagmiConfig } from '../../../constants/configs';
+import {
+  allChainsAtom,
+  bestRouteAtom,
+  currentStepAtom,
+  finalTokenAmountAtom,
+  stepsProgressAtom,
+} from '../../../store/stateStore';
+import { ExecuteResponse } from '../../../types/types';
 
 // Types moved to top
 export type TransactionStatus =
@@ -32,9 +39,19 @@ export interface TransactionProgressDetails {
 export interface TransactionProgress {
   status: TransactionStatus;
   message: string;
+  isApproval: boolean;
   txHash?: string;
   error?: string;
   details?: TransactionProgressDetails;
+}
+
+export interface StepProgress {
+  approve?: TransactionProgress;
+  swap?: TransactionProgress;
+}
+
+export interface StepsProgress {
+  steps: StepProgress[];
 }
 
 class TransactionError extends Error {
@@ -48,11 +65,14 @@ class TransactionError extends Error {
 }
 
 export const useHandleTransaction = () => {
-  const { address: evmAddress, isConnected: isEvmConnected } = useAccount();
+  const { isConnected: isEvmConnected } = useAccount();
   const { connection } = useConnection();
   const { publicKey, signTransaction } = useWallet();
   const allChains = useAtomValue(allChainsAtom);
-  const [txHash, setTxHash] = useState<string | undefined>(undefined);
+  const [currentStep, setCurrentStep] = useAtom(currentStepAtom);
+  const [stepsProgress, setStepsProgress] = useAtom(stepsProgressAtom);
+  const [, setFinalTokenAmount] = useAtom(finalTokenAmountAtom);
+  const bestRoute = useAtomValue(bestRouteAtom);
 
   // Function to handle transactions based on type
   const handleTransaction = async (
@@ -101,12 +121,15 @@ export const useHandleTransaction = () => {
             `Unsupported blockchain: ${transactionDetails.blockChain}`,
           );
         }
+        console.log('chain: ', chain.chainId);
 
-        await switchChain(wagmiAdapter.wagmiConfig, {
+        const res = await switchChain(wagmiConfig, {
           chainId: chain.chainId as any,
         });
 
-        const txHash = await sendTransaction(wagmiAdapter.wagmiConfig, {
+        console.log('res: ', res);
+
+        const txHash = await sendTransaction(wagmiConfig, {
           to: transactionDetails.to as `0x${string}`,
           value: BigInt(transactionDetails.value!),
           data: transactionDetails.data! as `0x${string}`,
@@ -160,43 +183,58 @@ export const useHandleTransaction = () => {
     [connection, publicKey, signTransaction],
   );
 
+  const updateStepProgress = (progress: TransactionProgress) => {
+    // Update the progress for the current step
+    setStepsProgress((prev) => {
+      const newSteps = prev?.steps ? [...prev.steps] : [];
+      const stepIndex = currentStep - 1;
+
+      // Determine if this is an approval or swap transaction
+      const progressKey = progress.isApproval ? 'approve' : 'swap';
+
+      newSteps[stepIndex] = {
+        ...newSteps[stepIndex],
+        [progressKey]: progress,
+      };
+
+      return { steps: newSteps };
+    });
+  };
+
   const executeSwap = useCallback(
     async (
       aaInstance: AnyAlt,
       operationId: string,
       slippage: string,
       swaps: SwapResult[],
-      onProgress?: (progress: TransactionProgress) => void,
+      executeCallBack: (amountIn: number) => Promise<ExecuteResponse>,
     ) => {
       let swapIsFinished = false;
-      let currentStep = 1;
-      let totalSteps = calculateTotalSteps(swaps);
-      do {
-        try {
-          onProgress?.({
-            status: 'pending',
-            message: 'Fetching transaction data...',
-            details: {
-              currentStep,
-              totalSteps,
-              stepDescription: 'Preparing transaction',
-            },
-          });
+      setCurrentStep(1);
+      const totalSteps = swaps.length + 1;
 
+      // Initialize steps progress array if not already set
+      if (!stepsProgress?.steps || stepsProgress.steps.length === 0) {
+        setStepsProgress({ steps: Array(totalSteps).fill({}) });
+      }
+
+      do {
+        let isApproval = false;
+        try {
           const transactionData = await getTransactionData(
             aaInstance,
             operationId,
             slippage,
           );
 
-          if (
+          isApproval =
             transactionData.type === 'EVM' &&
-            (transactionData as EVMTransactionDataResponse).isApprovalTx
-          ) {
-            totalSteps = 2;
-          }
+            (transactionData as EVMTransactionDataResponse).isApprovalTx;
 
-          onProgress?.({
+          console.log('isApproval: ', isApproval);
+
+          updateStepProgress({
+            isApproval,
             status: 'signing',
             message: 'Please sign the transaction in your wallet...',
             details: {
@@ -213,7 +251,8 @@ export const useHandleTransaction = () => {
           const txHash = await handleTransaction(transactionData);
           console.log('txHash: ', txHash);
 
-          onProgress?.({
+          updateStepProgress({
+            isApproval,
             status: 'broadcasting',
             message: 'Broadcasting transaction...',
             txHash,
@@ -243,12 +282,13 @@ export const useHandleTransaction = () => {
             signerAddress: signerAddress,
           });
 
-          onProgress?.({
+          updateStepProgress({
+            isApproval,
             status: 'pending',
             message: 'Waiting for transaction confirmation...',
             txHash,
             details: {
-              currentStep: totalSteps,
+              currentStep,
               totalSteps,
               stepDescription:
                 transactionData.type === 'EVM' &&
@@ -264,7 +304,8 @@ export const useHandleTransaction = () => {
           swapIsFinished = waitForTxResponse.swapIsFinished;
 
           if (swapIsFinished) {
-            onProgress?.({
+            updateStepProgress({
+              isApproval,
               status: 'confirmed',
               message: 'Transaction confirmed successfully!',
               txHash,
@@ -275,13 +316,19 @@ export const useHandleTransaction = () => {
               },
             });
             break;
-          } else {
-            // If not finished and there are multiple steps, increment the step counter
-            currentStep++;
+          }
+
+          if (
+            (transactionData.type === 'EVM' &&
+              !(transactionData as EVMTransactionDataResponse).isApprovalTx) ||
+            transactionData.type !== 'EVM'
+          ) {
+            setCurrentStep(currentStep + 1);
           }
         } catch (error) {
           console.error('Error during swap execution:', error);
-          onProgress?.({
+          updateStepProgress({
+            isApproval,
             status: 'failed',
             message:
               error instanceof TransactionError
@@ -294,11 +341,73 @@ export const useHandleTransaction = () => {
               stepDescription: 'Failed',
             },
           });
-          break;
+          throw new TransactionError('Transaction failed', error);
         }
       } while (!swapIsFinished);
+
+      // Execute last mile transaction
+      setCurrentStep(currentStep + 1);
+      try {
+        const executeResponse = await executeCallBack(
+          parseFloat(
+            bestRoute?.swaps[bestRoute.swaps.length - 1]?.toAmount || '0',
+          ),
+        );
+        setFinalTokenAmount(executeResponse.amountOut);
+        if (executeResponse.approvalTxHash) {
+          updateStepProgress({
+            isApproval: true,
+            status: 'confirmed',
+            message: 'Transaction confirmed successfully!',
+            txHash: executeResponse.approvalTxHash,
+            details: {
+              currentStep: totalSteps,
+              totalSteps,
+              stepDescription: 'Complete',
+            },
+          });
+        }
+        if (executeResponse.executeTxHash) {
+          updateStepProgress({
+            isApproval: false,
+            status: 'confirmed',
+            message: 'Transaction confirmed successfully!',
+            txHash: executeResponse.executeTxHash,
+            details: {
+              currentStep: totalSteps,
+              totalSteps,
+              stepDescription: 'Complete',
+            },
+          });
+        }
+      } catch (error) {
+        updateStepProgress({
+          isApproval: false,
+          status: 'failed',
+          message:
+            error instanceof TransactionError
+              ? error.message
+              : 'Transaction failed',
+          error: error instanceof Error ? error.message : String(error),
+          details: {
+            currentStep,
+            totalSteps,
+            stepDescription: 'Failed',
+          },
+        });
+        throw new TransactionError(
+          'Failed to execute last mile transaction',
+          error,
+        );
+      }
     },
-    [handleEvmTransaction, handleSolanaTransaction],
+    [
+      handleEvmTransaction,
+      handleSolanaTransaction,
+      currentStep,
+      setCurrentStep,
+      setStepsProgress,
+    ],
   );
 
   return {

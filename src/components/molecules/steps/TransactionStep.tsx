@@ -1,46 +1,78 @@
-import { Flex, HStack, Image, Text, VStack } from '@chakra-ui/react';
+import { Box, Flex, Image, Text } from '@chakra-ui/react';
+import { getImageURL } from '../../../utils';
 
 type Props = {
-  exchangeIcon: string;
   exchangeName: string;
-  stepNumber: number;
   fromToken: {
     name: string;
     amount: string;
+    chainName: string;
+    chainLogo: string;
   };
   toToken: {
     name: string;
     amount: string;
+    chainName: string;
+    chainLogo: string;
   };
 };
 
 export const TransactionStep = ({
-  exchangeIcon,
   exchangeName,
-  stepNumber,
   fromToken,
   toToken,
 }: Props) => {
   return (
-    <Flex justifyContent={'start'} w={'full'} alignItems={'center'}>
-      <Image
-        src={exchangeIcon}
-        alt={`${exchangeIcon} Icon`}
-        marginRight={'8px'}
-        width="16px"
-        height="16px"
-      />
-      <VStack justifyContent={'start'} alignItems={'start'} gap={'4px'}>
-        <Text color="brand.secondary.3" fontSize="12px" fontWeight="extrabold">
+    <Flex w={'full'}>
+      <Box>
+        <Text
+          color="brand.secondary.3"
+          fontSize="16px"
+          fontWeight="extrabold"
+          mb={'8px'}
+        >
           Swap token using {exchangeName}
         </Text>
-        <HStack>
-          <Text color="brand.secondary.3" fontSize="12px" fontWeight="regular">
-            {fromToken.amount} {fromToken.name} - {toToken.amount}{' '}
-            {toToken.name}
+        <Box display={'flex'} flexDir={'row'} alignItems={'center'}>
+          <Image
+            src={fromToken.chainLogo}
+            alt={`${fromToken.chainLogo} Icon`}
+            mr={'3px'}
+            width="20px"
+            height="20px"
+          />
+          <Text
+            color="brand.secondary.3"
+            fontSize="12px"
+            fontWeight="regular"
+            mr={'8px'}
+          >
+            {fromToken.amount} {fromToken.name} on {fromToken.chainName}
           </Text>
-        </HStack>
-      </VStack>
+          <Image
+            src={getImageURL('arrow-right.svg')}
+            alt={'arrow-right'}
+            mr={'8px'}
+            width="9px"
+            height="9px"
+          />
+          <Image
+            src={toToken.chainLogo}
+            alt={`${toToken.chainLogo} Icon`}
+            mr={'3px'}
+            width="20px"
+            height="20px"
+          />
+          <Text
+            color="brand.secondary.3"
+            fontSize="12px"
+            fontWeight="regular"
+            mr={'8px'}
+          >
+            {toToken.amount} {toToken.name} on {toToken.chainName}
+          </Text>
+        </Box>
+      </Box>
     </Flex>
   );
 };

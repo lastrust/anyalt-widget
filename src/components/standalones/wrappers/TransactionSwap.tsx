@@ -1,23 +1,25 @@
 import { Grid } from '@chakra-ui/react';
-import { useState } from 'react';
+import { FC } from 'react';
+import { ExecuteResponse } from '../../../types/types';
 import { TransactionInfo } from '../transaction/TransactionInfo';
 import { TransactionStatus } from '../transaction/TransactionStatus';
 
 type Props = {
-  goToPrevious: VoidFunction;
+  executeCallBack: (amountIn: number) => Promise<ExecuteResponse>;
+  onTxComplete: () => void;
 };
 
-export const TransactionSwap = ({ goToPrevious }: Props) => {
-  //TODO: David, please use this to controll which step is on going
-  const [swapIndex, setSwapIndex] = useState(0);
+export const TransactionSwap: FC<Props> = ({
+  executeCallBack,
+  onTxComplete,
+}) => {
   return (
     <Grid templateColumns="1fr 1fr" gap="16px">
       <TransactionInfo
-        swapIndex={swapIndex}
-        setSwapIndex={setSwapIndex}
-        goToPrevious={goToPrevious}
+        executeCallBack={executeCallBack}
+        onTxComplete={onTxComplete}
       />
-      <TransactionStatus swapIndex={swapIndex} />
+      <TransactionStatus />
     </Grid>
   );
 };

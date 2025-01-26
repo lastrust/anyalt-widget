@@ -23,7 +23,7 @@ export const BestRouteAccordion = () => {
   const [bestRoute] = useAtom(bestRouteAtom);
   const [selectedRoute, setSelectedRoute] = useAtom(selectedRouteAtom);
 
-  if (!bestRoute) return null;
+  if (!bestRoute) return <></>;
   const swaps = getTransactionGroupData(bestRoute);
 
   const handleRouteSelect = () => {
@@ -33,7 +33,6 @@ export const BestRouteAccordion = () => {
   return (
     <Accordion defaultIndex={[0]} allowMultiple>
       <AccordionItem
-        key={swaps[0].swapperName}
         border="1px solid"
         borderColor="brand.border.primary"
         borderRadius={'10px'}
@@ -126,10 +125,12 @@ export const BestRouteAccordion = () => {
                   fromToken={{
                     name: step.from.name,
                     amount: String(Number(step.fromAmount).toFixed(4) || '0'),
+                    chainName: step.from.chainName || '',
                   }}
                   toToken={{
                     name: step.to.name,
                     amount: String(Number(step.toAmount).toFixed(4) || '0'),
+                    chainName: step.to.chainName || '',
                   }}
                 />
               );

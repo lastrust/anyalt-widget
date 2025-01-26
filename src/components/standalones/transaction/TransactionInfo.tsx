@@ -1,61 +1,62 @@
-import { Button, Divider, Flex, HStack, Text, VStack } from '@chakra-ui/react';
+import { Box, Button, Divider, Flex, Text, VStack } from '@chakra-ui/react';
 import { useAtomValue } from 'jotai';
 import { FC, useState } from 'react';
 import {
   activeOperationIdAtom,
   anyaltInstanceAtom,
   bestRouteAtom,
+  finalTokenEstimateAtom,
+  protocolFinalTokenAtom,
+  protocolInputTokenAtom,
   slippageAtom,
 } from '../../../store/stateStore';
-import { getTransactionGroupData } from '../../../utils/getTransactionGroupData';
-import { BackIcon } from '../../atoms/icons/transaction/BackIcon';
-import { DividerIcon } from '../../atoms/icons/transaction/DividerIcon';
-import { GasIcon } from '../../atoms/icons/transaction/GasIcon';
-import { TimeIcon } from '../../atoms/icons/transaction/TimeIcon';
+import { ExecuteResponse } from '../../../types/types';
+import { CopyIcon } from '../../atoms/icons/transaction/CopyIcon';
 import { TokenQuoteBox } from '../token/quote/TokenQuoteBox';
-import {
-  TransactionProgress,
-  useHandleTransaction,
-} from './useHandleTransaction';
+import { useHandleTransaction } from './useHandleTransaction';
 
 type Props = {
-  swapIndex: number;
-  goToPrevious: VoidFunction;
-  setSwapIndex: React.Dispatch<React.SetStateAction<number>>;
+  executeCallBack: (amountIn: number) => Promise<ExecuteResponse>;
+  onTxComplete: () => void;
 };
 
 export const TransactionInfo: FC<Props> = ({
-  swapIndex,
-  goToPrevious,
-  setSwapIndex,
+  executeCallBack,
+  onTxComplete,
 }) => {
   const bestRoute = useAtomValue(bestRouteAtom);
-  const activeSwap = bestRoute?.swaps[swapIndex];
+  const protocolInputToken = useAtomValue(protocolInputTokenAtom);
+  const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
+  const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
 
-  if (!bestRoute) return null;
-  const transactionDetails = getTransactionGroupData(bestRoute);
-
-  const [internalSwapIndex] = useState(0);
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
   const { executeSwap } = useHandleTransaction();
   const activeOperationId = useAtomValue(activeOperationIdAtom);
   const slippage = useAtomValue(slippageAtom);
-
-  const handleTransactionProgress = (progress: TransactionProgress) => {
-    // setSwapIndex(swapIndex + 1);
-    console.log(progress);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
+  const handleCopyClick = () => {
+    navigator.clipboard.writeText(bestRoute?.requestId || '');
   };
 
   const runTx = async () => {
     if (!anyaltInstance || !activeOperationId) return;
-
-    await executeSwap(
-      anyaltInstance,
-      activeOperationId,
-      slippage,
-      bestRoute?.swaps || [],
-      handleTransactionProgress,
-    );
+    setIsLoading(true);
+    try {
+      await executeSwap(
+        anyaltInstance,
+        activeOperationId,
+        slippage,
+        bestRoute?.swaps || [],
+        executeCallBack,
+      );
+      onTxComplete();
+      setIsLoading(false);
+    } catch (error) {
+      console.error(error);
+      setIsDisabled(true);
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -68,76 +69,50 @@ export const TransactionInfo: FC<Props> = ({
       borderWidth={'1px'}
       borderRadius={'16px'}
     >
-      <Flex justifyContent="space-between" alignItems="center">
-        <Button variant="ghost" onClick={() => goToPrevious()}>
-          <BackIcon />
-        </Button>
-        <Text color="white" fontSize="24px" fontWeight="bold">
-          Step {swapIndex + 1}
+      <Box w={'100%'}>
+        <Text color="white" fontSize="24px" fontWeight="bold" mb="8px">
+          Swap
         </Text>
-      </Flex>
-      <Text color={'brand.secondary.3'}>
-        Swap Tokens Using {bestRoute?.swaps[0].swapperId}
-      </Text>
-      <HStack
-        w={'100%'}
-        p={'16px 24px'}
-        border={'1px solid'}
-        borderColor={'brand.border.primary'}
-        borderRadius={'16px'}
-      >
-        <HStack>
-          <TimeIcon />
-          <Text
-            color={'brand.secondary.3'}
-            lineHeight={'120%'}
-            fontSize={'16px'}
-          >
-            {activeSwap?.estimatedTimeInSeconds}s
-          </Text>
-        </HStack>
-        <DividerIcon />
-        <HStack>
-          <GasIcon />
-          <Text
-            color={'brand.secondary.3'}
-            lineHeight={'120%'}
-            fontSize={'16px'}
-          >
-            ${' '}
-            {bestRoute.swaps[0].fee
-              .reduce((acc, fee) => {
-                const amount = parseFloat(fee.amount);
-                const price = fee.price || 0;
-                return acc + amount * price;
-              }, 0)
-              .toFixed(2)
-              .toString()}
-          </Text>
-        </HStack>
-        <DividerIcon />
-        <Text color={'brand.secondary.3'} lineHeight={'120%'} fontSize={'16px'}>
-          {'0'}
-        </Text>
-      </HStack>
+        <VStack alignItems="flex-start" spacing="16px" w={'100%'}>
+          <Flex w="100%" justifyContent="space-between" alignItems="center">
+            <Text color="brand.secondary.3" fontSize="14px">
+              Request ID:
+            </Text>
+            <Flex alignItems="center" gap="8px">
+              <Text color="brand.secondary.3" textStyle="regular.3">
+                {bestRoute?.requestId}
+              </Text>
+              <Box
+                as="button"
+                onClick={handleCopyClick}
+                cursor="pointer"
+                _hover={{ opacity: 0.8 }}
+              >
+                <CopyIcon />
+              </Box>
+            </Flex>
+          </Flex>
+        </VStack>
+      </Box>
       <VStack
         w={'100%'}
         p={'16px'}
         borderRadius={'16px'}
         borderWidth={'1px'}
         borderColor={'brand.border.primary'}
+        mb="50px"
       >
         <TokenQuoteBox
           loading={false}
           headerText=""
-          tokenName={transactionDetails[swapIndex].from.name}
-          tokenLogo={transactionDetails[swapIndex].from.icon || ''}
-          chainName={transactionDetails[swapIndex].from.chainName || ''}
-          chainLogo={transactionDetails[swapIndex].from.chainIcon || ''}
-          amount={Number(transactionDetails[swapIndex].fromAmount).toFixed(2)}
+          tokenName={bestRoute?.swaps[0].from.symbol || ''}
+          tokenLogo={bestRoute?.swaps[0].from.logo || ''}
+          chainName={bestRoute?.swaps[0].from.blockchain || ''}
+          chainLogo={bestRoute?.swaps[0].from.blockchainLogo || ''}
+          amount={Number(bestRoute?.swaps[0].fromAmount).toFixed(2)}
           price={(
-            Number(transactionDetails[swapIndex].from.usdAmount) *
-            Number(transactionDetails[swapIndex].fromAmount)
+            Number(bestRoute?.swaps[0].from.usdPrice) *
+            Number(bestRoute?.swaps[0].fromAmount)
           ).toFixed(2)}
           w={'100%'}
           p={'0'}
@@ -147,15 +122,12 @@ export const TransactionInfo: FC<Props> = ({
         <TokenQuoteBox
           loading={false}
           headerText=""
-          tokenName={transactionDetails[swapIndex].to.name || ''}
-          tokenLogo={transactionDetails[swapIndex].to.icon || ''}
-          chainName={transactionDetails[swapIndex].to.chainName || ''}
-          chainLogo={transactionDetails[swapIndex].to.chainIcon || ''}
-          amount={Number(transactionDetails[swapIndex].toAmount).toFixed(2)}
-          price={(
-            Number(transactionDetails[swapIndex].to.usdAmount) *
-            Number(transactionDetails[swapIndex].toAmount)
-          ).toFixed(2)}
+          tokenName={protocolFinalToken?.symbol || ''}
+          tokenLogo={protocolFinalToken?.logoUrl || ''}
+          chainName={protocolInputToken?.chain?.displayName || ''}
+          chainLogo={protocolInputToken?.chain?.logoUrl || ''}
+          amount={finalTokenEstimate?.amountOut || ''}
+          price={finalTokenEstimate?.priceInUSD || ''}
           w={'100%'}
           p={'0'}
           m={'0'}
@@ -173,19 +145,11 @@ export const TransactionInfo: FC<Props> = ({
         borderRadius="8px"
         h="64px"
         onClick={runTx}
-        isLoading={false}
+        isLoading={isLoading}
+        isDisabled={isDisabled}
       >
         Run Transaction
       </Button>
-      <Text
-        color="#999"
-        fontSize="16px"
-        textDecoration={'underline'}
-        m={'0 auto'}
-        cursor={'pointer'}
-      >
-        Cancel Transaction
-      </Text>
     </VStack>
   );
 };

@@ -7,10 +7,12 @@ type Props = {
   fromToken: {
     name: string;
     amount: string;
+    chainName: string;
   };
   toToken: {
     name: string;
     amount: string;
+    chainName: string;
   };
 };
 
@@ -36,8 +38,8 @@ export const RouteStep = ({
         </Text>
         <HStack>
           <Text color="brand.secondary.3" fontSize="12px" fontWeight="regular">
-            {fromToken.amount} {fromToken.name} - {toToken.amount}{' '}
-            {toToken.name}
+            {fromToken.amount} {fromToken.name}.{fromToken.chainName} -{' '}
+            {toToken.amount} {toToken.name}.{toToken.chainName}
           </Text>
         </HStack>
       </VStack>

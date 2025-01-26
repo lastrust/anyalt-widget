@@ -17,9 +17,9 @@ export const getTransactionGroupData = (
         gasPrice: internalSwap?.fee[0]?.price?.toString() || '0',
         time: internalSwap?.estimatedTimeInSeconds?.toString() || '0',
         profit: '0.00', //TODO: Ask Sahadat to add profit in response
-        swapperLogo: swap.swapperLogo,
-        swapperName: swap.swapperId,
-        swapperType: swap.swapperType,
+        swapperLogo: internalSwap.swapperLogo,
+        swapperName: internalSwap.swapperId,
+        swapperType: internalSwap.swapperType,
         fromAmount: swap.fromAmount,
         toAmount: swap.toAmount,
         requiredSings: swap.maxRequiredSign,

@@ -10,9 +10,9 @@ export const BackIcon = () => {
       <path
         d="M5.5 1L1.5 5L5.5 9"
         stroke="white"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );

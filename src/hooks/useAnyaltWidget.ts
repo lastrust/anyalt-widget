@@ -37,7 +37,9 @@ export const useAnyaltWidget = ({
   const { address: evmAddress, isConnected: isEvmConnected } = useAccount();
 
   const [loading, setLoading] = useState(false);
-  const { activeStep, goToNext, goToPrevious } = useSteps({ index: 0 });
+  const { activeStep, setActiveStep, goToNext, goToPrevious } = useSteps({
+    index: 0,
+  });
 
   const inToken = useAtomValue(inTokenAtom);
   const slippage = useAtomValue(slippageAtom);
@@ -201,6 +203,18 @@ export const useAnyaltWidget = ({
     }
   };
 
+  const onBackClick = () => {
+    if (activeStep === 2) {
+      setActiveStep(0);
+    } else {
+      goToPrevious();
+    }
+  };
+
+  const onTxComplete = () => {
+    setActiveStep(3);
+  };
+
   return {
     loading,
     activeRoute,
@@ -219,5 +233,7 @@ export const useAnyaltWidget = ({
     isValidAmountIn,
     connectWalletsConfirm,
     connectWalletsOpen,
+    onBackClick,
+    onTxComplete,
   };
 };

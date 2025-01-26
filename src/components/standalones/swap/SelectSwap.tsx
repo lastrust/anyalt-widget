@@ -17,6 +17,7 @@ type Props = {
   hideButton?: boolean;
   onButtonClick: () => void;
   handleWalletsOpen?: () => void;
+  isTokenInputReadonly?: boolean;
 };
 
 export const SelectSwap = ({
@@ -29,6 +30,7 @@ export const SelectSwap = ({
   onButtonClick,
   hideButton,
   buttonText = 'Start Transaction',
+  isTokenInputReadonly = false,
 }: Props) => {
   const {
     finalTokenEstimate,
@@ -53,6 +55,7 @@ export const SelectSwap = ({
         loading={loading}
         price={inTokenPrice}
         isValidAmountIn={isValidAmountIn}
+        readonly={isTokenInputReadonly}
       />
       <TokenQuoteBox
         loading={loading}
