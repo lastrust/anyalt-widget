@@ -8,11 +8,11 @@ import {
 import { SwapResult } from '@anyalt/sdk/src/adapter/api/api';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { VersionedTransaction } from '@solana/web3.js';
-import { sendTransaction, switchChain } from '@wagmi/core';
+import { getChainId, sendTransaction } from '@wagmi/core';
 import { useAtom, useAtomValue } from 'jotai';
 import { useCallback } from 'react';
 import { useAccount } from 'wagmi';
-import { wagmiConfig } from '../../../constants/configs';
+import { defaultWalletConfig } from '../../../constants/configs';
 import {
   allChainsAtom,
   bestRouteAtom,
@@ -65,7 +65,8 @@ class TransactionError extends Error {
 }
 
 export const useHandleTransaction = () => {
-  const { isConnected: isEvmConnected } = useAccount();
+  const { isConnected: isEvmConnected, chain: evmChain } = useAccount();
+  const config = defaultWalletConfig.wagmiConfig
   const { connection } = useConnection();
   const { publicKey, signTransaction } = useWallet();
   const allChains = useAtomValue(allChainsAtom);
@@ -123,13 +124,20 @@ export const useHandleTransaction = () => {
         }
         console.log('chain: ', chain.chainId);
 
-        const res = await switchChain(wagmiConfig, {
-          chainId: chain.chainId as any,
-        });
+        console.log('wagmi chain ', evmChain);
 
-        console.log('res: ', res);
+        console.log(
+          chain.chainId,
+          getChainId(defaultWalletConfig.wagmiConfig),
+        );
 
-        const txHash = await sendTransaction(wagmiConfig, {
+        // const res = await switchChain(defaultWalletConfig, {
+        //   chainId: 8453,
+        // });
+
+        // console.log('res: ', res);
+
+        const txHash = await sendTransaction(config, {
           to: transactionDetails.to as `0x${string}`,
           value: BigInt(transactionDetails.value!),
           data: transactionDetails.data! as `0x${string}`,

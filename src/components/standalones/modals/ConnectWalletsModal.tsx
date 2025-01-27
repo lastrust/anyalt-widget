@@ -1,7 +1,5 @@
 import {
-  Button,
   CloseButton,
-  Flex,
   Modal,
   ModalBody,
   ModalContent,
@@ -14,6 +12,7 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui'; // Import the wallet modal hook
 import { useAtomValue } from 'jotai';
 import { FC, useMemo } from 'react';
+import { useAccount } from 'wagmi';
 import { allChainsAtom, bestRouteAtom } from '../../../store/stateStore';
 import { ChainType } from '../../../types/types';
 import { WalletButton } from '../../molecules/buttons/WalletButton';
@@ -21,7 +20,6 @@ import { WalletButton } from '../../molecules/buttons/WalletButton';
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: () => void;
   title: string;
   isSolanaConnected: boolean;
   isEvmConnected: boolean;
@@ -42,10 +40,15 @@ export const ConnectWalletsModal: FC<Props> = ({
   isOpen,
   onClose,
   title,
-  onConfirm,
   isSolanaConnected,
-  isEvmConnected,
+  // isEvmConnected,
 }) => {
+  const {
+    address: evmAddress,
+    isConnected: isEvmConnected,
+    chain,
+  } = useAccount();
+
   const { openConnectModal } = useConnectModal();
   const { setVisible } = useWalletModal(); // Hook to control the Solana wallet modal
   const activeRoute = useAtomValue(bestRouteAtom);
@@ -124,19 +127,6 @@ export const ConnectWalletsModal: FC<Props> = ({
               />
             ))}
           </VStack>
-          <Flex justify="flex-end" mt="24px">
-            <Button
-              bgColor="brand.tertiary.100"
-              _hover={{ bgColor: 'brand.tertiary.20' }}
-              isDisabled={!areWalletsConnected}
-              onClick={() => {
-                onConfirm();
-                onClose();
-              }}
-            >
-              Next Step
-            </Button>
-          </Flex>
         </ModalBody>
       </ModalContent>
     </Modal>

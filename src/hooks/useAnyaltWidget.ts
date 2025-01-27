@@ -34,7 +34,7 @@ export const useAnyaltWidget = ({
 }) => {
   const { publicKey: solanaAddress, connected: isSolanaConnected } =
     useWallet();
-  const { address: evmAddress, isConnected: isEvmConnected } = useAccount();
+  const { address: evmAddress, isConnected: isEvmConnected, chain } = useAccount();
 
   const [loading, setLoading] = useState(false);
   const { activeStep, setActiveStep, goToNext, goToPrevious } = useSteps({
@@ -92,6 +92,10 @@ export const useAnyaltWidget = ({
       setActiveRoute(selectedRoute);
     }
   }, [selectedRoute]);
+
+  useEffect(() => {
+    console.log('chain: ', chain);
+  }, [chain]);
 
   useEffect(() => {
     const inputTokenChain = allChains.find(
