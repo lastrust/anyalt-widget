@@ -4,6 +4,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { useAtom, useAtomValue } from 'jotai';
 import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
+import { ChainType, EstimateResponse, Token } from '..';
 import {
   activeOperationIdAtom,
   allChainsAtom,
@@ -17,7 +18,6 @@ import {
   selectedRouteAtom,
   slippageAtom,
 } from '../store/stateStore';
-import { ChainType, EstimateResponse, Token } from '../types/types';
 
 export const useAnyaltWidget = ({
   estimateCallback,

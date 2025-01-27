@@ -1,22 +1,20 @@
 {
   "name": "@anyalt/widget",
-  "version": "1.0.0-canary.15",
+  "version": "1.0.0-canary.24",
   "description": "Anyalt Widget",
   "private": false,
-  "main": "dist/index.js",
-  "module": "dist/index.es.js",
-  "types": "dist/index.d.ts",
   "files": [
     "dist",
     "package.json"
   ],
   "sideEffects": false,
+  "main": "dist/anyalt-widget.cjs.js", 
+  "module": "dist/anyalt-widget.es.js", 
+  "types": "dist/index.d.ts", 
   "exports": {
-    ".": {
-      "import": "./dist/index.es.js",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
-    }
+    "import": "./dist/anyalt-widget.es.js",
+    "require": "./dist/anyalt-widget.cjs.js",
+    "types": "./dist/index.d.ts"
   },
   "peerDependencies": {
     "@chakra-ui/react": "^2.10.4",
@@ -24,7 +22,27 @@
     "@emotion/styled": "^11.14.0",
     "framer-motion": "^11.17.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "@fontsource/rethink-sans": "^5.0.1",
+    "@rainbow-me/rainbowkit": "^2.2.2",
+    "@reown/appkit": "^1.6.4",
+    "@reown/appkit-adapter-wagmi": "^1.6.4",
+    "@solana/spl-token": "^0.1.8",
+    "@solana/wallet-adapter-react": "^0.15.35",
+    "@solana/wallet-adapter-react-ui": "^0.9.35",
+    "@solana/wallet-adapter-wallets": "^0.19.32",
+    "@solana/web3.js": "^1.98.0",
+    "@tanstack/react-query": "^5.64.1",
+    "@wagmi/core": "^2.16.3",
+    "@wallet-standard/core": "^1.1.0",
+    "@wallet-standard/features": "^1.1.0",
+    "ethers": "^6.13.5",
+    "jotai": "^2.11.0",
+    "next-themes": "^0.4.4",
+    "prettier": "^3.4.2",
+    "react-icons": "^5.4.0",
+    "viem": "^2.22.9",
+    "wagmi": "^2.14.8"
   },
   "scripts": {
     "dev": "vite",

@@ -12,6 +12,7 @@ import { getChainId, sendTransaction, switchChain } from '@wagmi/core';
 import { useAtom, useAtomValue } from 'jotai';
 import { useCallback } from 'react';
 import { useAccount } from 'wagmi';
+import { ExecuteResponse } from '../../..';
 import { walletConfig } from '../../../constants/configs';
 import {
   allChainsAtom,
@@ -20,7 +21,6 @@ import {
   finalTokenAmountAtom,
   stepsProgressAtom,
 } from '../../../store/stateStore';
-import { ExecuteResponse } from '../../../types/types';
 
 // Types moved to top
 export type TransactionStatus =

@@ -4,8 +4,12 @@ import ReactDOM from 'react-dom/client';
 import { OpenModalButton } from '../src/components/atoms/buttons/OpenModalButton';
 import { defaultTheme } from '../src/components/screens/widget/AnyaltWidget';
 import { useModal } from '../src/hooks/useModal';
-import { AnyaltWidget } from '../src/index';
-import { ChainType, EstimateResponse, ExecuteResponse } from '../src/types/types';
+import {
+  AnyaltWidget,
+  ChainType,
+  EstimateResponse,
+  ExecuteResponse,
+} from '../src/index';
 
 const App = () => {
   const { isOpen, onOpen, onClose } = useModal();
@@ -19,14 +23,16 @@ const App = () => {
     };
   };
 
-  const executeCallBack = async (amountIn: number): Promise<ExecuteResponse> => {
+  const executeCallBack = async (
+    amountIn: number,
+  ): Promise<ExecuteResponse> => {
     console.log('amountIn: ', amountIn);
     return {
       approvalTxHash: '0x123',
       executeTxHash: '0x123',
       amountOut: '10.19',
     };
-  }
+  };
 
   return (
     <ChakraProvider theme={defaultTheme}>

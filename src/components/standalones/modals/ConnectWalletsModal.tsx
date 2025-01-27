@@ -13,8 +13,8 @@ import { useWalletModal } from '@solana/wallet-adapter-react-ui'; // Import the 
 import { useAtomValue } from 'jotai';
 import { FC, useMemo } from 'react';
 import { useAccount } from 'wagmi';
+import { ChainType } from '../../..';
 import { allChainsAtom, bestRouteAtom } from '../../../store/stateStore';
-import { ChainType } from '../../../types/types';
 import { WalletButton } from '../../molecules/buttons/WalletButton';
 
 interface Props {
