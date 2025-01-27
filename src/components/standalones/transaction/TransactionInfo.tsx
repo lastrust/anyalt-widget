@@ -34,7 +34,6 @@ export const TransactionInfo: FC<Props> = ({
   const activeOperationId = useAtomValue(activeOperationIdAtom);
   const slippage = useAtomValue(slippageAtom);
   const [isLoading, setIsLoading] = useState(false);
-  const [isDisabled, setIsDisabled] = useState(false);
   const handleCopyClick = () => {
     navigator.clipboard.writeText(bestRoute?.requestId || '');
   };
@@ -54,7 +53,6 @@ export const TransactionInfo: FC<Props> = ({
       setIsLoading(false);
     } catch (error) {
       console.error(error);
-      setIsDisabled(true);
       setIsLoading(false);
     }
   };
@@ -146,7 +144,6 @@ export const TransactionInfo: FC<Props> = ({
         h="64px"
         onClick={runTx}
         isLoading={isLoading}
-        isDisabled={isDisabled}
       >
         Run Transaction
       </Button>

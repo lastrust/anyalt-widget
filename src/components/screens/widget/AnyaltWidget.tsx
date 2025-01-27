@@ -49,6 +49,8 @@ export const AnyaltWidgetWrapper = ({
     connectWalletsOpen,
     onBackClick,
     onTxComplete,
+    areWalletsConnected,
+    setActiveStep,
   } = useAnyaltWidget({
     estimateCallback,
     inputToken,
@@ -98,7 +100,7 @@ export const AnyaltWidgetWrapper = ({
           <RoutesWrapper
             buttonText={
               activeRoute
-                ? isSolanaConnected && isEvmConnected
+                ? areWalletsConnected
                   ? 'Start Transaction'
                   : 'Connect Wallet/s To Start Transaction'
                 : 'Get Quote'
@@ -127,6 +129,7 @@ export const AnyaltWidgetWrapper = ({
           <TransactionComplete
             onTransactionDoneClick={() => {
               onClose();
+              setActiveStep(0);
             }}
           />
         </SwappingWrapper>
@@ -135,9 +138,8 @@ export const AnyaltWidgetWrapper = ({
       <ConnectWalletsModal
         title="Connect Wallet's"
         isOpen={isConnectWalletsOpen}
-        isEvmConnected={isEvmConnected}
-        isSolanaConnected={isSolanaConnected}
         onClose={connectWalletsClose}
+        areWalletsConnected={areWalletsConnected}
       />
     </ModalWrapper>
   );
