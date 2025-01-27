@@ -8,11 +8,12 @@ import {
 import { SwapResult } from '@anyalt/sdk/src/adapter/api/api';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { VersionedTransaction } from '@solana/web3.js';
-import { sendTransaction, switchChain } from '@wagmi/core';
+import { getChainId, sendTransaction, switchChain } from '@wagmi/core';
 import { useAtom, useAtomValue } from 'jotai';
 import { useCallback } from 'react';
 import { useAccount } from 'wagmi';
-import { wagmiConfig } from '../../../constants/configs';
+import { ExecuteResponse } from '../../..';
+import { walletConfig } from '../../../constants/configs';
 import {
   allChainsAtom,
   bestRouteAtom,
@@ -20,7 +21,6 @@ import {
   finalTokenAmountAtom,
   stepsProgressAtom,
 } from '../../../store/stateStore';
-import { ExecuteResponse } from '../../../types/types';
 
 // Types moved to top
 export type TransactionStatus =
@@ -65,7 +65,7 @@ class TransactionError extends Error {
 }
 
 export const useHandleTransaction = () => {
-  const { isConnected: isEvmConnected } = useAccount();
+  const { isConnected: isEvmConnected, chain: evmChain } = useAccount();
   const { connection } = useConnection();
   const { publicKey, signTransaction } = useWallet();
   const allChains = useAtomValue(allChainsAtom);
@@ -123,13 +123,17 @@ export const useHandleTransaction = () => {
         }
         console.log('chain: ', chain.chainId);
 
-        const res = await switchChain(wagmiConfig, {
-          chainId: chain.chainId as any,
+        console.log('wagmi chain ', evmChain);
+
+        console.log(chain.chainId, getChainId(walletConfig));
+
+        const res = await switchChain(walletConfig, {
+          chainId: 8453,
         });
 
         console.log('res: ', res);
 
-        const txHash = await sendTransaction(wagmiConfig, {
+        const txHash = await sendTransaction(walletConfig, {
           to: transactionDetails.to as `0x${string}`,
           value: BigInt(transactionDetails.value!),
           data: transactionDetails.data! as `0x${string}`,

@@ -15,21 +15,21 @@ import { TokenIconBox } from '../../../molecules/TokenIconBox';
 import { TokenInfoBox } from '../../../molecules/TokenInfoBox';
 
 type Props = BoxProps & {
-  openTokenSelectModal: () => void;
-  loading: boolean;
   price: string;
+  loading: boolean;
+  readonly: boolean;
   isValidAmountIn: boolean;
   isTokenInputDisabled?: boolean;
-  readonly: boolean;
+  openTokenSelectModal: () => void;
 };
 
 export const TokenInputBox: FC<Props> = ({
-  openTokenSelectModal,
   loading,
   price,
-  isValidAmountIn,
-  isTokenInputDisabled = false,
   readonly,
+  isValidAmountIn,
+  openTokenSelectModal,
+  isTokenInputDisabled = false,
   ...props
 }) => {
   const inToken = useAtomValue(inTokenAtom);
@@ -83,7 +83,13 @@ export const TokenInputBox: FC<Props> = ({
           alignItems="center"
           width="100%"
         >
-          <Box display="flex" flexDirection="row" alignItems="center">
+          <Box
+            display="flex"
+            flexDirection="row"
+            alignItems="center"
+            onClick={() => openTokenSelectModal()}
+            cursor={'pointer'}
+          >
             <TokenIconBox
               tokenName={inToken?.symbol ?? ''}
               tokenIcon={inToken?.logoUrl ?? ''}
@@ -100,7 +106,7 @@ export const TokenInputBox: FC<Props> = ({
               }
               mr="12px"
             />
-            <Box cursor="pointer" onClick={() => openTokenSelectModal()}>
+            <Box cursor="pointer">
               <Image
                 src={chevronRight}
                 alt="Chevron Right"
@@ -124,7 +130,9 @@ export const TokenInputBox: FC<Props> = ({
               maxWidth="150px"
               padding="0px"
               value={inTokenAmount}
-              onChange={(e) => setInTokenAmount(e.target.value)}
+              onChange={(e) => {
+                setInTokenAmount(e.target.value);
+              }}
               readOnly={readonly}
             />
           </Box>

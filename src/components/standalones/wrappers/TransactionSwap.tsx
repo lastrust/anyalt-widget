@@ -1,6 +1,6 @@
 import { Grid } from '@chakra-ui/react';
 import { FC } from 'react';
-import { ExecuteResponse } from '../../../types/types';
+import { ExecuteResponse } from '../../..';
 import { TransactionInfo } from '../transaction/TransactionInfo';
 import { TransactionStatus } from '../transaction/TransactionStatus';
 

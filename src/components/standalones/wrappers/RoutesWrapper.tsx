@@ -4,24 +4,24 @@ import { SelectSwap } from '../swap/SelectSwap';
 
 type Props = {
   loading: boolean;
-  openSlippageModal: boolean;
-  showConnectedWallets?: boolean;
-  handleWalletsOpen: () => void;
   buttonText: string;
   hideButton?: boolean;
+  openSlippageModal: boolean;
+  showConnectedWallets?: boolean;
   onButtonClick: () => void;
+  handleWalletsOpen: () => void;
   setOpenSlippageModal: (open: boolean) => void;
 };
 
 export const RoutesWrapper = ({
   loading,
+  buttonText,
+  showConnectedWallets = false,
+  hideButton,
+  onButtonClick,
   openSlippageModal,
   setOpenSlippageModal,
   handleWalletsOpen: connectWalletsOpen,
-  showConnectedWallets = false,
-  buttonText,
-  hideButton,
-  onButtonClick,
 }: Props) => {
   return (
     <Grid gridTemplateColumns="1fr 1fr" gap="24px">

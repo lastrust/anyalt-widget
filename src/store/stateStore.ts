@@ -5,8 +5,8 @@ import {
   SupportedToken,
 } from '@anyalt/sdk';
 import { atom } from 'jotai';
+import { EstimateResponse, Token } from '..';
 import { StepsProgress } from '../components/standalones/transaction/useHandleTransaction';
-import { EstimateResponse, Token } from '../types/types';
 
 export const anyaltInstanceAtom = atom<AnyAlt | undefined>(undefined);
 

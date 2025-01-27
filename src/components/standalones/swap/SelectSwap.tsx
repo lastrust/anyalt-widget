@@ -28,7 +28,6 @@ export const SelectSwap = ({
   isValidAmountIn = true,
   handleWalletsOpen: connectWalletsOpen,
   onButtonClick,
-  hideButton,
   buttonText = 'Start Transaction',
   isTokenInputReadonly = false,
 }: Props) => {
@@ -55,7 +54,7 @@ export const SelectSwap = ({
         loading={loading}
         price={inTokenPrice}
         isValidAmountIn={isValidAmountIn}
-        readonly={isTokenInputReadonly}
+        readonly={false}
       />
       <TokenQuoteBox
         loading={loading}

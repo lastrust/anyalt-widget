@@ -46,7 +46,6 @@ export const AnyaltWidgetWrapper = ({
     connectWalletsClose,
     failedToFetchRoute,
     isValidAmountIn,
-    connectWalletsConfirm,
     connectWalletsOpen,
     onBackClick,
     onTxComplete,
@@ -134,14 +133,11 @@ export const AnyaltWidgetWrapper = ({
       </CustomStepper>
       <Footer />
       <ConnectWalletsModal
-        isSolanaConnected={isSolanaConnected}
-        isEvmConnected={isEvmConnected}
-        isOpen={isConnectWalletsOpen}
-        onClose={() => {
-          connectWalletsClose();
-        }}
-        onConfirm={connectWalletsConfirm}
         title="Connect Wallet's"
+        isOpen={isConnectWalletsOpen}
+        isEvmConnected={isEvmConnected}
+        isSolanaConnected={isSolanaConnected}
+        onClose={connectWalletsClose}
       />
     </ModalWrapper>
   );

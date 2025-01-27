@@ -1,6 +1,7 @@
 import { Box, Button, Divider, Flex, Text, VStack } from '@chakra-ui/react';
 import { useAtomValue } from 'jotai';
 import { FC, useState } from 'react';
+import { ExecuteResponse } from '../../..';
 import {
   activeOperationIdAtom,
   anyaltInstanceAtom,
@@ -10,7 +11,6 @@ import {
   protocolInputTokenAtom,
   slippageAtom,
 } from '../../../store/stateStore';
-import { ExecuteResponse } from '../../../types/types';
 import { CopyIcon } from '../../atoms/icons/transaction/CopyIcon';
 import { TokenQuoteBox } from '../token/quote/TokenQuoteBox';
 import { useHandleTransaction } from './useHandleTransaction';

@@ -4,6 +4,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { useAtom, useAtomValue } from 'jotai';
 import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
+import { ChainType, EstimateResponse, Token } from '..';
 import {
   activeOperationIdAtom,
   allChainsAtom,
@@ -17,7 +18,6 @@ import {
   selectedRouteAtom,
   slippageAtom,
 } from '../store/stateStore';
-import { ChainType, EstimateResponse, Token } from '../types/types';
 
 export const useAnyaltWidget = ({
   estimateCallback,
@@ -34,9 +34,14 @@ export const useAnyaltWidget = ({
 }) => {
   const { publicKey: solanaAddress, connected: isSolanaConnected } =
     useWallet();
-  const { address: evmAddress, isConnected: isEvmConnected } = useAccount();
+  const {
+    address: evmAddress,
+    isConnected: isEvmConnected,
+    chain,
+  } = useAccount();
 
   const [loading, setLoading] = useState(false);
+  const [secondPageButtonText, setSecondPageButtonText] = useState<string>('');
   const { activeStep, setActiveStep, goToNext, goToPrevious } = useSteps({
     index: 0,
   });
@@ -94,6 +99,10 @@ export const useAnyaltWidget = ({
   }, [selectedRoute]);
 
   useEffect(() => {
+    console.log('chain: ', chain);
+  }, [chain]);
+
+  useEffect(() => {
     const inputTokenChain = allChains.find(
       (chain) =>
         chain.chainId === inputToken.chainId &&
@@ -109,7 +118,7 @@ export const useAnyaltWidget = ({
     }
   }, [allChains, anyaltInstance]);
 
-  const onGetQuote = async () => {
+  const onGetQuote = async (withGoNext: boolean = true) => {
     if (!inToken || !protocolInputToken || !inTokenAmount) return;
 
     try {
@@ -130,7 +139,9 @@ export const useAnyaltWidget = ({
       } else {
         setIsValidAmountIn(true);
         setFailedToFetchRoute(false);
-        goToNext();
+        if (withGoNext) {
+          goToNext();
+        }
       }
     } catch (error) {
       console.error(error);
@@ -138,6 +149,12 @@ export const useAnyaltWidget = ({
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (inTokenAmount) {
+      onGetQuote(false);
+    }
+  }, [inTokenAmount]);
 
   const onConfigClick = () => {
     setOpenSlippageModal(true);
@@ -231,7 +248,6 @@ export const useAnyaltWidget = ({
     connectWalletsClose,
     failedToFetchRoute,
     isValidAmountIn,
-    connectWalletsConfirm,
     connectWalletsOpen,
     onBackClick,
     onTxComplete,
