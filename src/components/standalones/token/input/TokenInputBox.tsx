@@ -83,7 +83,13 @@ export const TokenInputBox: FC<Props> = ({
           alignItems="center"
           width="100%"
         >
-          <Box display="flex" flexDirection="row" alignItems="center">
+          <Box
+            display="flex"
+            flexDirection="row"
+            alignItems="center"
+            onClick={() => openTokenSelectModal()}
+            cursor={'pointer'}
+          >
             <TokenIconBox
               tokenName={inToken?.symbol ?? ''}
               tokenIcon={inToken?.logoUrl ?? ''}
@@ -100,7 +106,7 @@ export const TokenInputBox: FC<Props> = ({
               }
               mr="12px"
             />
-            <Box cursor="pointer" onClick={() => openTokenSelectModal()}>
+            <Box cursor="pointer">
               <Image
                 src={chevronRight}
                 alt="Chevron Right"
