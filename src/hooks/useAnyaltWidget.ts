@@ -5,9 +5,10 @@ import { useAtom, useAtomValue } from 'jotai';
 import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 import {
-  activeRouteAtom,
+  activeOperationIdAtom,
   allChainsAtom,
   anyaltInstanceAtom,
+  bestRouteAtom,
   finalTokenEstimateAtom,
   inTokenAmountAtom,
   inTokenAtom,
@@ -16,7 +17,7 @@ import {
   selectedRouteAtom,
   slippageAtom,
 } from '../store/stateStore';
-import { EstimateResponse, Token } from '../types/types';
+import { ChainType, EstimateResponse, Token } from '../types/types';
 
 export const useAnyaltWidget = ({
   estimateCallback,
@@ -31,11 +32,14 @@ export const useAnyaltWidget = ({
   apiKey: string;
   minDepositAmount: number;
 }) => {
-  const { connected: isSolanaConnected } = useWallet();
-  const { isConnected: isEvmConnected } = useAccount();
+  const { publicKey: solanaAddress, connected: isSolanaConnected } =
+    useWallet();
+  const { address: evmAddress, isConnected: isEvmConnected } = useAccount();
 
   const [loading, setLoading] = useState(false);
-  const { activeStep, goToNext } = useSteps({ index: 0 });
+  const { activeStep, setActiveStep, goToNext, goToPrevious } = useSteps({
+    index: 0,
+  });
 
   const inToken = useAtomValue(inTokenAtom);
   const slippage = useAtomValue(slippageAtom);
@@ -43,7 +47,7 @@ export const useAnyaltWidget = ({
 
   const [openSlippageModal, setOpenSlippageModal] = useState(false);
 
-  const [activeRoute, setActiveRoute] = useAtom(activeRouteAtom);
+  const [activeRoute, setActiveRoute] = useAtom(bestRouteAtom);
   const [, setFinalTokenEstimate] = useAtom(finalTokenEstimateAtom);
   const [selectedRoute] = useAtom(selectedRouteAtom);
   const [, setProtocolFinalToken] = useAtom(protocolFinalTokenAtom);
@@ -52,6 +56,7 @@ export const useAnyaltWidget = ({
   const [protocolInputToken, setProtocolInputToken] = useAtom(
     protocolInputTokenAtom,
   );
+  const [, setActiveOperationId] = useAtom(activeOperationIdAtom);
   const [failedToFetchRoute, setFailedToFetchRoute] = useState(false);
   const [isValidAmountIn, setIsValidAmountIn] = useState(true);
 
@@ -139,8 +144,75 @@ export const useAnyaltWidget = ({
   };
 
   const onChooseRouteButtonClick = () => {
-    if (isSolanaConnected && isEvmConnected) goToNext();
-    else connectWalletsOpen();
+    if (isSolanaConnected && isEvmConnected) {
+      connectWalletsConfirm();
+    } else {
+      connectWalletsOpen();
+    }
+  };
+
+  const connectWalletsConfirm = async () => {
+    try {
+      setLoading(true);
+      if (!activeRoute?.requestId) return;
+
+      const selectedWallets: Record<string, string> = {};
+      activeRoute.swaps.forEach((swap) => {
+        if (
+          swap.from.blockchain === 'SOLANA' ||
+          swap.to.blockchain === 'SOLANA'
+        ) {
+          selectedWallets['SOLANA'] = solanaAddress?.toString() || '';
+        }
+        const fromChain = allChains.find(
+          (chain) => chain.name === swap.from.blockchain,
+        );
+        const toChain = allChains.find(
+          (chain) => chain.name === swap.to.blockchain,
+        );
+        if (fromChain?.chainType === ChainType.EVM) {
+          selectedWallets[swap.from.blockchain] = evmAddress || '';
+        }
+        if (toChain?.chainType === ChainType.EVM) {
+          selectedWallets[swap.to.blockchain] = evmAddress || '';
+        }
+      });
+
+      const res = await anyaltInstance?.confirmRoute({
+        selectedRoute: {
+          requestId: activeRoute.requestId,
+        },
+        selectedWallets,
+        destination: evmAddress || '',
+      });
+
+      console.log(res);
+
+      if (!res?.operationId || !res?.result)
+        throw new Error('Failed to confirm route');
+
+      setActiveOperationId(res?.operationId);
+      setActiveRoute(res?.result);
+
+      connectWalletsClose();
+      goToNext();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onBackClick = () => {
+    if (activeStep === 2) {
+      setActiveStep(0);
+    } else {
+      goToPrevious();
+    }
+  };
+
+  const onTxComplete = () => {
+    setActiveStep(3);
   };
 
   return {
@@ -148,6 +220,7 @@ export const useAnyaltWidget = ({
     activeRoute,
     activeStep,
     onGetQuote,
+    goToPrevious,
     onChooseRouteButtonClick,
     onConfigClick,
     isSolanaConnected,
@@ -158,5 +231,9 @@ export const useAnyaltWidget = ({
     connectWalletsClose,
     failedToFetchRoute,
     isValidAmountIn,
+    connectWalletsConfirm,
+    connectWalletsOpen,
+    onBackClick,
+    onTxComplete,
   };
 };

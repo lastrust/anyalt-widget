@@ -19,6 +19,8 @@ type Props = BoxProps & {
   loading: boolean;
   price: string;
   isValidAmountIn: boolean;
+  isTokenInputDisabled?: boolean;
+  readonly: boolean;
 };
 
 export const TokenInputBox: FC<Props> = ({
@@ -26,6 +28,8 @@ export const TokenInputBox: FC<Props> = ({
   loading,
   price,
   isValidAmountIn,
+  isTokenInputDisabled = false,
+  readonly,
   ...props
 }) => {
   const inToken = useAtomValue(inTokenAtom);
@@ -34,7 +38,7 @@ export const TokenInputBox: FC<Props> = ({
   return (
     <Box {...props}>
       <Box
-        display="flex"
+        display={readonly ? 'none' : 'flex'}
         justifyContent="space-between"
         alignItems="center"
         mb="16px"
@@ -42,7 +46,7 @@ export const TokenInputBox: FC<Props> = ({
         <Text color="white" fontSize="14px" fontWeight="bold" opacity={0.32}>
           Choose Your Deposit
         </Text>
-        <Box display="flex" flexDirection="row" alignItems="center" gap="4px">
+        <Box display="none" flexDirection="row" alignItems="center" gap="4px">
           <Text color="white" fontSize="12px" opacity={0.4}>
             Balance: 0
           </Text>
@@ -121,6 +125,7 @@ export const TokenInputBox: FC<Props> = ({
               padding="0px"
               value={inTokenAmount}
               onChange={(e) => setInTokenAmount(e.target.value)}
+              readOnly={readonly}
             />
           </Box>
         </Box>

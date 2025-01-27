@@ -15,3 +15,9 @@ export interface EstimateResponse {
   amountOut: string;
   priceInUSD: string;
 }
+
+export interface ExecuteResponse {
+  approvalTxHash?: string;
+  executeTxHash?: string;
+  amountOut: string;
+}

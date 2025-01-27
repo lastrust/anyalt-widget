@@ -12,7 +12,10 @@ import {
 } from '@chakra-ui/react';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui'; // Import the wallet modal hook
-import { FC } from 'react';
+import { useAtomValue } from 'jotai';
+import { FC, useMemo } from 'react';
+import { allChainsAtom, bestRouteAtom } from '../../../store/stateStore';
+import { ChainType } from '../../../types/types';
 import { WalletButton } from '../../molecules/buttons/WalletButton';
 
 interface Props {
@@ -45,8 +48,41 @@ export const ConnectWalletsModal: FC<Props> = ({
 }) => {
   const { openConnectModal } = useConnectModal();
   const { setVisible } = useWalletModal(); // Hook to control the Solana wallet modal
+  const activeRoute = useAtomValue(bestRouteAtom);
+  const allChains = useAtomValue(allChainsAtom);
 
-  const areWalletsConnected = isSolanaConnected && isEvmConnected;
+  const areWalletsConnected = useMemo(() => {
+    let isSolanaRequired = false;
+    let isEvmRequired = false;
+    activeRoute?.swaps.forEach((swap) => {
+      if (
+        swap.from.blockchain === 'SOLANA' ||
+        swap.to.blockchain === 'SOLANA'
+      ) {
+        isSolanaRequired = true;
+      }
+      const fromChain = allChains.find(
+        (chain) => chain.name === swap.from.blockchain,
+      );
+      const toChain = allChains.find(
+        (chain) => chain.name === swap.to.blockchain,
+      );
+      if (
+        fromChain?.chainType === ChainType.EVM ||
+        toChain?.chainType === ChainType.EVM
+      ) {
+        isEvmRequired = true;
+      }
+    });
+    let isWalletConnected = true;
+    if (isSolanaRequired && !isSolanaConnected) {
+      isWalletConnected = false;
+    }
+    if (isEvmRequired && !isEvmConnected) {
+      isWalletConnected = false;
+    }
+    return isWalletConnected;
+  }, [isSolanaConnected, isEvmConnected, activeRoute]);
 
   // Function to handle wallet type click
   const handleWalletClick = (walletType: string) => {
@@ -76,7 +112,7 @@ export const ConnectWalletsModal: FC<Props> = ({
           <Text color="brand.secondary.2" mb="16px">
             {areWalletsConnected
               ? 'All wallets connected. You can proceed to the next step.'
-              : 'Connect both wallets to proceed to the next step.'}
+              : 'Connect wallets to proceed to the next step.'}
           </Text>
           <VStack spacing="12px" align="stretch">
             {WALLETS.map((wallet) => (

@@ -1,11 +1,24 @@
 import { Grid } from '@chakra-ui/react';
-import { TransactionDetails } from '../transaction/TransactionDetails';
+import { FC } from 'react';
+import { ExecuteResponse } from '../../../types/types';
+import { TransactionInfo } from '../transaction/TransactionInfo';
 import { TransactionStatus } from '../transaction/TransactionStatus';
 
-export const TransactionSwap = () => {
+type Props = {
+  executeCallBack: (amountIn: number) => Promise<ExecuteResponse>;
+  onTxComplete: () => void;
+};
+
+export const TransactionSwap: FC<Props> = ({
+  executeCallBack,
+  onTxComplete,
+}) => {
   return (
     <Grid templateColumns="1fr 1fr" gap="16px">
-      <TransactionDetails />
+      <TransactionInfo
+        executeCallBack={executeCallBack}
+        onTxComplete={onTxComplete}
+      />
       <TransactionStatus />
     </Grid>
   );

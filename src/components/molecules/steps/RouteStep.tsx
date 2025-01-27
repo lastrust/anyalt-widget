@@ -7,10 +7,12 @@ type Props = {
   fromToken: {
     name: string;
     amount: string;
+    chainName: string;
   };
   toToken: {
     name: string;
     amount: string;
+    chainName: string;
   };
 };
 
@@ -32,12 +34,12 @@ export const RouteStep = ({
       />
       <VStack justifyContent={'start'} alignItems={'start'} gap={'4px'}>
         <Text color="brand.secondary.3" fontSize="12px" fontWeight="extrabold">
-          Step {stepNumber}. Swap token using {exchangeName}
+          Swap token using {exchangeName}
         </Text>
         <HStack>
           <Text color="brand.secondary.3" fontSize="12px" fontWeight="regular">
-            {fromToken.amount} {fromToken.name} - {toToken.amount}{' '}
-            {toToken.name}
+            {fromToken.amount} {fromToken.name}.{fromToken.chainName} -{' '}
+            {toToken.amount} {toToken.name}.{toToken.chainName}
           </Text>
         </HStack>
       </VStack>

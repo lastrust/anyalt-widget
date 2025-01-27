@@ -5,7 +5,7 @@ import { OpenModalButton } from '../src/components/atoms/buttons/OpenModalButton
 import { defaultTheme } from '../src/components/screens/widget/AnyaltWidget';
 import { useModal } from '../src/hooks/useModal';
 import { AnyaltWidget } from '../src/index';
-import { ChainType, EstimateResponse } from '../src/types/types';
+import { ChainType, EstimateResponse, ExecuteResponse } from '../src/types/types';
 
 const App = () => {
   const { isOpen, onOpen, onClose } = useModal();
@@ -19,6 +19,15 @@ const App = () => {
     };
   };
 
+  const executeCallBack = async (amountIn: number): Promise<ExecuteResponse> => {
+    console.log('amountIn: ', amountIn);
+    return {
+      approvalTxHash: '0x123',
+      executeTxHash: '0x123',
+      amountOut: '10.19',
+    };
+  }
+
   return (
     <ChakraProvider theme={defaultTheme}>
       <Center h={'100vh'}>
@@ -27,9 +36,9 @@ const App = () => {
           <AnyaltWidget
             walletConnector={{}}
             inputToken={{
-              symbol: 'USDC',
-              address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-              chainId: 1,
+              symbol: 'USDT',
+              address: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
+              chainId: 42161,
               chainType: ChainType.EVM,
             }}
             finalToken={{
@@ -43,7 +52,8 @@ const App = () => {
             isOpen={isOpen}
             onClose={onClose}
             estimateCallback={estimateCallback}
-            minDepositAmount={100}
+            executeCallBack={executeCallBack}
+            minDepositAmount={0}
           />
         </Box>
       </Center>
