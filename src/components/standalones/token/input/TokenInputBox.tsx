@@ -15,21 +15,21 @@ import { TokenIconBox } from '../../../molecules/TokenIconBox';
 import { TokenInfoBox } from '../../../molecules/TokenInfoBox';
 
 type Props = BoxProps & {
-  openTokenSelectModal: () => void;
-  loading: boolean;
   price: string;
+  loading: boolean;
+  readonly: boolean;
   isValidAmountIn: boolean;
   isTokenInputDisabled?: boolean;
-  readonly: boolean;
+  openTokenSelectModal: () => void;
 };
 
 export const TokenInputBox: FC<Props> = ({
-  openTokenSelectModal,
   loading,
   price,
-  isValidAmountIn,
-  isTokenInputDisabled = false,
   readonly,
+  isValidAmountIn,
+  openTokenSelectModal,
+  isTokenInputDisabled = false,
   ...props
 }) => {
   const inToken = useAtomValue(inTokenAtom);
@@ -124,7 +124,9 @@ export const TokenInputBox: FC<Props> = ({
               maxWidth="150px"
               padding="0px"
               value={inTokenAmount}
-              onChange={(e) => setInTokenAmount(e.target.value)}
+              onChange={(e) => {
+                setInTokenAmount(e.target.value);
+              }}
               readOnly={readonly}
             />
           </Box>

@@ -41,6 +41,7 @@ export const useAnyaltWidget = ({
   } = useAccount();
 
   const [loading, setLoading] = useState(false);
+  const [secondPageButtonText, setSecondPageButtonText] = useState<string>('');
   const { activeStep, setActiveStep, goToNext, goToPrevious } = useSteps({
     index: 0,
   });
@@ -117,7 +118,7 @@ export const useAnyaltWidget = ({
     }
   }, [allChains, anyaltInstance]);
 
-  const onGetQuote = async () => {
+  const onGetQuote = async (withGoNext: boolean = true) => {
     if (!inToken || !protocolInputToken || !inTokenAmount) return;
 
     try {
@@ -138,7 +139,9 @@ export const useAnyaltWidget = ({
       } else {
         setIsValidAmountIn(true);
         setFailedToFetchRoute(false);
-        goToNext();
+        if (withGoNext) {
+          goToNext();
+        }
       }
     } catch (error) {
       console.error(error);
@@ -146,6 +149,12 @@ export const useAnyaltWidget = ({
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (inTokenAmount) {
+      onGetQuote(false);
+    }
+  }, [inTokenAmount]);
 
   const onConfigClick = () => {
     setOpenSlippageModal(true);
@@ -239,7 +248,6 @@ export const useAnyaltWidget = ({
     connectWalletsClose,
     failedToFetchRoute,
     isValidAmountIn,
-    connectWalletsConfirm,
     connectWalletsOpen,
     onBackClick,
     onTxComplete,

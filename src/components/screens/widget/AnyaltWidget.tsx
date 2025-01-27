@@ -46,7 +46,6 @@ export const AnyaltWidgetWrapper = ({
     connectWalletsClose,
     failedToFetchRoute,
     isValidAmountIn,
-    connectWalletsConfirm,
     connectWalletsOpen,
     onBackClick,
     onTxComplete,
