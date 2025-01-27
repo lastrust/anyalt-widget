@@ -1,7 +1,5 @@
-import { getDefaultConfig } from '@rainbow-me/rainbowkit';
 import { createAppKit } from '@reown/appkit';
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
-import { http } from 'wagmi';
 import {
   arbitrum,
   base,
@@ -65,3 +63,5 @@ createAppKit({
     analytics: true,
   },
 });
+
+export const walletConfig = defaultWalletConfig.wagmiConfig;
