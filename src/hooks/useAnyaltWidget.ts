@@ -2,7 +2,7 @@ import { AnyAlt } from '@anyalt/sdk';
 import { useDisclosure, useSteps } from '@chakra-ui/react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useAtom, useAtomValue } from 'jotai';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useAccount } from 'wagmi';
 import { ChainType, EstimateResponse, Token } from '..';
 import {
@@ -161,7 +161,7 @@ export const useAnyaltWidget = ({
   };
 
   const onChooseRouteButtonClick = () => {
-    if (isSolanaConnected && isEvmConnected) {
+    if (areWalletsConnected) {
       connectWalletsConfirm();
     } else {
       connectWalletsOpen();
@@ -232,6 +232,39 @@ export const useAnyaltWidget = ({
     setActiveStep(3);
   };
 
+  const areWalletsConnected = useMemo(() => {
+    let isSolanaRequired = false;
+    let isEvmRequired = false;
+    activeRoute?.swaps.forEach((swap) => {
+      if (
+        swap.from.blockchain === 'SOLANA' ||
+        swap.to.blockchain === 'SOLANA'
+      ) {
+        isSolanaRequired = true;
+      }
+      const fromChain = allChains.find(
+        (chain) => chain.name === swap.from.blockchain,
+      );
+      const toChain = allChains.find(
+        (chain) => chain.name === swap.to.blockchain,
+      );
+      if (
+        fromChain?.chainType === ChainType.EVM ||
+        toChain?.chainType === ChainType.EVM
+      ) {
+        isEvmRequired = true;
+      }
+    });
+    let isWalletConnected = true;
+    if (isSolanaRequired && !isSolanaConnected) {
+      isWalletConnected = false;
+    }
+    if (isEvmRequired && !isEvmConnected) {
+      isWalletConnected = false;
+    }
+    return isWalletConnected;
+  }, [isSolanaConnected, isEvmConnected, activeRoute]);
+
   return {
     loading,
     activeRoute,
@@ -251,5 +284,7 @@ export const useAnyaltWidget = ({
     connectWalletsOpen,
     onBackClick,
     onTxComplete,
+    areWalletsConnected,
+    setActiveStep,
   };
 };

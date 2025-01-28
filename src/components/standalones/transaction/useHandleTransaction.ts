@@ -308,6 +308,7 @@ export const useHandleTransaction = () => {
           swapIsFinished = waitForTxResponse.swapIsFinished;
 
           if (swapIsFinished) {
+            console.log('swapIsFinished: ', swapIsFinished);
             updateStepProgress({
               isApproval,
               status: 'confirmed',
@@ -323,11 +324,14 @@ export const useHandleTransaction = () => {
           }
 
           if (
-            (transactionData.type === 'EVM' &&
-              !(transactionData as EVMTransactionDataResponse).isApprovalTx) ||
-            transactionData.type !== 'EVM'
+            transactionData.type === 'EVM' &&
+            (transactionData as EVMTransactionDataResponse).isApprovalTx
           ) {
+            console.log('approvalTx');
+            continue;
+          } else {
             setCurrentStep(currentStep + 1);
+            console.log('currentStep increased ', currentStep + 1);
           }
         } catch (error) {
           console.error('Error during swap execution:', error);
