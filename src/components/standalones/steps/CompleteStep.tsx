@@ -13,7 +13,7 @@ export const CompleteStep = ({
   setActiveStep,
 }: Props) => {
   return (
-    <SwappingWrapper failedToFetchRoute={false} onConfigClick={onConfigClick}>
+    <SwappingWrapper onConfigClick={onConfigClick}>
       <TransactionComplete
         onTransactionDoneClick={() => {
           onClose();

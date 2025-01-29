@@ -9,6 +9,7 @@ type Props = {
   hideButton?: boolean;
   openSlippageModal: boolean;
   showConnectedWallets?: boolean;
+  failedToFetchRoute: boolean;
   onButtonClick: () => void;
   walletConnector?: WalletConnector;
   handleWalletsOpen: () => void;
@@ -24,6 +25,7 @@ export const RoutesWrapper = ({
   openSlippageModal,
   setOpenSlippageModal,
   showConnectedWallets = false,
+  failedToFetchRoute,
   handleWalletsOpen: connectWalletsOpen,
 }: Props) => {
   return (
@@ -39,6 +41,7 @@ export const RoutesWrapper = ({
         handleWalletsOpen={connectWalletsOpen}
         setOpenSlippageModal={setOpenSlippageModal}
         showConnectedWallets={showConnectedWallets}
+        failedToFetchRoute={failedToFetchRoute}
       />
       <BestRouteAccordion />
     </Grid>

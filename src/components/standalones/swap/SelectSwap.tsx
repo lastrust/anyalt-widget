@@ -20,6 +20,7 @@ type Props = {
   handleWalletsOpen?: () => void;
   isTokenInputReadonly?: boolean;
   setOpenSlippageModal: (open: boolean) => void;
+  failedToFetchRoute?: boolean;
 };
 
 export const SelectSwap = ({
@@ -29,8 +30,9 @@ export const SelectSwap = ({
   showConnectedWallets = false,
   isValidAmountIn = true,
   walletConnector,
-  handleWalletsOpen: connectWalletsOpen,
   onButtonClick,
+  failedToFetchRoute,
+  handleWalletsOpen: connectWalletsOpen,
   buttonText = 'Start Transaction',
 }: Props) => {
   const {
@@ -56,6 +58,7 @@ export const SelectSwap = ({
         loading={loading}
         price={inTokenPrice}
         isValidAmountIn={isValidAmountIn}
+        failedToFetchRoute={failedToFetchRoute}
         readonly={false}
       />
       <TokenQuoteBox
@@ -79,6 +82,25 @@ export const SelectSwap = ({
         amount={finalTokenEstimate?.amountOut ?? ''}
         price={finalTokenEstimate?.priceInUSD ?? ''}
       />
+      <Button
+        width="100%"
+        bg="brand.tertiary.100"
+        _hover={{
+          bg: 'brand.tertiary.90',
+        }}
+        color="white"
+        fontSize="16px"
+        fontWeight="bold"
+        borderRadius="8px"
+        h="64px"
+        isDisabled={failedToFetchRoute}
+        onClick={() => {
+          onButtonClick();
+        }}
+        isLoading={loading}
+      >
+        {buttonText}
+      </Button>
       <VStack gap={'8px'} alignItems={'flex-start'}>
         {showConnectedWallets &&
           (isEvmConnected || walletConnector?.isConnected) && (
@@ -106,24 +128,7 @@ export const SelectSwap = ({
           </Text>
         )}
       </VStack>
-      <Button
-        width="100%"
-        bg="brand.tertiary.100"
-        _hover={{
-          bg: 'brand.tertiary.90',
-        }}
-        color="white"
-        fontSize="16px"
-        fontWeight="bold"
-        borderRadius="8px"
-        h="64px"
-        onClick={() => {
-          onButtonClick();
-        }}
-        isLoading={loading}
-      >
-        {buttonText}
-      </Button>
+
       {openTokenSelect && (
         <TokenSelectBox
           onClose={() => setOpenTokenSelect(false)}

@@ -40,7 +40,6 @@ export const ChoosingRouteStep = ({
       secondTitle="Routes"
       secondSubtitle="Please select preferred route"
       onConfigClick={onConfigClick}
-      failedToFetchRoute={failedToFetchRoute}
     >
       <RoutesWrapper
         loading={loading}
@@ -51,6 +50,7 @@ export const ChoosingRouteStep = ({
         handleWalletsOpen={connectWalletsOpen}
         onButtonClick={onChooseRouteButtonClick}
         setOpenSlippageModal={setOpenSlippageModal}
+        failedToFetchRoute={failedToFetchRoute}
       />
     </SwappingWrapper>
   );

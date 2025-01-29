@@ -16,7 +16,7 @@ export const TransactionStep = ({
   onTxComplete,
 }: Props) => {
   return (
-    <SwappingWrapper failedToFetchRoute={false} onConfigClick={onConfigClick}>
+    <SwappingWrapper onConfigClick={onConfigClick}>
       <TransactionSwap
         externalEvmWalletConnector={walletConnector}
         executeCallBack={executeCallBack}

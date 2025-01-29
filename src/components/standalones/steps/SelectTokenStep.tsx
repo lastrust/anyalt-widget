@@ -24,7 +24,6 @@ export const SelectTokenStep = ({
     <SwappingWrapper
       title={'Select Deposit Token'}
       onConfigClick={onConfigClick}
-      failedToFetchRoute={failedToFetchRoute}
     >
       <SelectSwap
         buttonText={'Get Quote'}
@@ -33,6 +32,7 @@ export const SelectTokenStep = ({
         openSlippageModal={openSlippageModal}
         setOpenSlippageModal={setOpenSlippageModal}
         isValidAmountIn={isValidAmountIn}
+        failedToFetchRoute={failedToFetchRoute}
       />
     </SwappingWrapper>
   );

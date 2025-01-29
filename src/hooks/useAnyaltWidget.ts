@@ -114,6 +114,8 @@ export const useAnyaltWidget = ({
     try {
       setLoading(true);
 
+      console.log(inTokenAmount);
+
       const route = await anyaltInstance?.getBestRoute({
         from: inToken.id,
         to: protocolInputToken?.id,
@@ -194,8 +196,6 @@ export const useAnyaltWidget = ({
         selectedWallets,
         destination: evmAddress || '',
       });
-
-      console.log(res);
 
       if (!res?.operationId || !res?.result)
         throw new Error('Failed to confirm route');
