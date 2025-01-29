@@ -34,6 +34,7 @@ export interface ExecuteResponse {
 }
 
 export interface WalletConnector {
+  address: string;
   isConnected: boolean;
   connect: () => Promise<void>;
   disconnect: () => Promise<void>;
