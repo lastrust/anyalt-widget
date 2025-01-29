@@ -19,7 +19,11 @@ import { RouteTag } from '../../molecules/routeTag/RouteTag';
 import { RouteStep } from '../../molecules/steps/RouteStep';
 import { TokenRouteInfo } from '../../molecules/TokenRouteInfo';
 
-export const BestRouteAccordion = () => {
+type Props = {
+  isButtonHidden?: boolean;
+};
+
+export const BestRouteAccordion = ({ isButtonHidden = true }: Props) => {
   const [bestRoute] = useAtom(bestRouteAtom);
   const [selectedRoute, setSelectedRoute] = useAtom(selectedRouteAtom);
 
@@ -94,15 +98,17 @@ export const BestRouteAccordion = () => {
                 textColor="brand.tertiary.100"
               />
             </Flex>
-            <Box
-              h={'24px'}
-              w={'24px'}
-              borderRadius={'50%'}
-              bgColor="brand.tertiary.100"
-              cursor="pointer"
-            >
-              <AccordionIcon w={'24px'} h={'24px'} />
-            </Box>
+            {!isButtonHidden && (
+              <Box
+                h={'24px'}
+                w={'24px'}
+                borderRadius={'50%'}
+                bgColor="brand.tertiary.100"
+                cursor="pointer"
+              >
+                <AccordionIcon w={'24px'} h={'24px'} />
+              </Box>
+            )}
           </Flex>
           <TokenRouteInfo
             tokenName="aarna"
