@@ -51,7 +51,7 @@ const networks = [
 export const defaultWalletConfig = new WagmiAdapter({
   networks,
   projectId,
-  ssr: true,
+  ssr: false,
 });
 
 createAppKit({

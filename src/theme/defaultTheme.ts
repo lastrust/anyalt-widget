@@ -11,6 +11,8 @@ const config: ThemeConfig = {
 
 export const defaultTheme = extendTheme({
   config,
+  colorScheme: 'dark',
+  theme: 'dark',
   fonts: {
     heading: '"Rethink Sans", sans-serif',
     body: '"Rethink Sans", sans-serif',

@@ -1,6 +1,6 @@
 {
   "name": "@anyalt/widget",
-  "version": "1.0.0-canary.24",
+  "version": "1.0.0-canary.33",
   "description": "Anyalt Widget",
   "private": false,
   "files": [
@@ -17,10 +17,6 @@
     "types": "./dist/index.d.ts"
   },
   "peerDependencies": {
-    "@chakra-ui/react": "^2.10.4",
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.0",
-    "framer-motion": "^11.17.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "@fontsource/rethink-sans": "^5.0.1",
@@ -28,6 +24,7 @@
     "@reown/appkit": "^1.6.4",
     "@reown/appkit-adapter-wagmi": "^1.6.4",
     "@solana/spl-token": "^0.1.8",
+    "@solana/wallet-adapter-base": "^0.9.23",
     "@solana/wallet-adapter-react": "^0.15.35",
     "@solana/wallet-adapter-react-ui": "^0.9.35",
     "@solana/wallet-adapter-wallets": "^0.19.32",
@@ -37,12 +34,14 @@
     "@wallet-standard/core": "^1.1.0",
     "@wallet-standard/features": "^1.1.0",
     "ethers": "^6.13.5",
+    "framer-motion": "^11.17.0",
     "jotai": "^2.11.0",
     "next-themes": "^0.4.4",
     "prettier": "^3.4.2",
     "react-icons": "^5.4.0",
     "viem": "^2.22.9",
-    "wagmi": "^2.14.8"
+    "wagmi": "^2.14.8",
+    "@chakra-ui/react": "2.10.4"
   },
   "scripts": {
     "dev": "vite",
