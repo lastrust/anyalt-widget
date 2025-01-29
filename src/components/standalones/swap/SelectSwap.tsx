@@ -1,13 +1,22 @@
-import { Button, Divider, Flex, Text, VStack } from '@chakra-ui/react';
+import {
+  Button,
+  Divider,
+  Flex,
+  HStack,
+  Image,
+  Text,
+  VStack,
+} from '@chakra-ui/react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useAccount } from 'wagmi';
 import { WalletConnector } from '../../..';
+import EthLogo from '../../../assets/imgs/eth.png';
+import SolLogo from '../../../assets/imgs/solana.png';
 import { SlippageModal } from '../modals/SlippageModal';
 import { TokenInputBox } from '../token/input/TokenInputBox';
 import { TokenQuoteBox } from '../token/quote/TokenQuoteBox';
 import { TokenSelectBox } from '../token/select/TokenSelectBox';
 import { useSelectSwap } from './useSelectSwap';
-
 type Props = {
   loading: boolean;
   buttonText: string;
@@ -101,33 +110,46 @@ export const SelectSwap = ({
       >
         {buttonText}
       </Button>
-      <VStack gap={'8px'} alignItems={'flex-start'}>
-        {showConnectedWallets &&
-          (isEvmConnected || walletConnector?.isConnected) && (
-            <Text
-              cursor={'pointer'}
-              textStyle={'regular.2'}
-              color="brand.secondary.3"
-              onClick={
-                walletConnector?.isConnected
-                  ? () => walletConnector.disconnect()
-                  : connectWalletsOpen
-              }
-            >
-              EVM: {evmAddress || walletConnector?.address}
-            </Text>
-          )}
-        {showConnectedWallets && isSolanaConnected && (
-          <Text
-            cursor={'pointer'}
-            textStyle={'regular.2'}
-            color="brand.secondary.3"
-            onClick={connectWalletsOpen}
-          >
-            SOL: {solanaAddress?.toBase58()}
+      {showConnectedWallets && (
+        <HStack alignItems={'self-start'}>
+          <Text color="brand.tertiary.100" textStyle={'regular.2'}>
+            Connected:
           </Text>
-        )}
-      </VStack>
+          <VStack gap={'8px'} alignItems={'flex-start'}>
+            {showConnectedWallets &&
+              (isEvmConnected || walletConnector?.isConnected) && (
+                <HStack>
+                  <Image src={EthLogo} w={'16px'} h={'16px'} alt="EVM" />
+                  <Text
+                    cursor={'pointer'}
+                    textStyle={'regular.2'}
+                    color="brand.secondary.3"
+                    onClick={
+                      walletConnector?.isConnected
+                        ? () => walletConnector.disconnect()
+                        : connectWalletsOpen
+                    }
+                  >
+                    {evmAddress || walletConnector?.address}
+                  </Text>
+                </HStack>
+              )}
+            {showConnectedWallets && isSolanaConnected && (
+              <HStack>
+                <Image src={SolLogo} w={'16px'} h={'16px'} alt="SOL" />
+                <Text
+                  cursor={'pointer'}
+                  textStyle={'regular.2'}
+                  color="brand.secondary.3"
+                  onClick={connectWalletsOpen}
+                >
+                  {solanaAddress?.toBase58()}
+                </Text>
+              </HStack>
+            )}
+          </VStack>
+        </HStack>
+      )}
 
       {openTokenSelect && (
         <TokenSelectBox
