@@ -29,7 +29,6 @@ export const SelectSwap = ({
   handleWalletsOpen: connectWalletsOpen,
   onButtonClick,
   buttonText = 'Start Transaction',
-  isTokenInputReadonly = false,
 }: Props) => {
   const {
     finalTokenEstimate,
@@ -102,6 +101,9 @@ export const SelectSwap = ({
       <Button
         width="100%"
         bg="brand.tertiary.100"
+        _hover={{
+          bg: 'brand.tertiary.90',
+        }}
         color="white"
         fontSize="16px"
         fontWeight="bold"

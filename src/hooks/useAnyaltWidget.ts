@@ -19,6 +19,8 @@ import {
   slippageAtom,
 } from '../store/stateStore';
 
+const REFRESH_INTERVAL = 20000;
+
 export const useAnyaltWidget = ({
   estimateCallback,
   inputToken,
@@ -32,44 +34,37 @@ export const useAnyaltWidget = ({
   apiKey: string;
   minDepositAmount: number;
 }) => {
+  const [loading, setLoading] = useState(false);
+  const [isValidAmountIn, setIsValidAmountIn] = useState(true);
+  const [openSlippageModal, setOpenSlippageModal] = useState(false);
+  const [failedToFetchRoute, setFailedToFetchRoute] = useState(false);
+
+  const { address: evmAddress, isConnected: isEvmConnected } = useAccount();
   const { publicKey: solanaAddress, connected: isSolanaConnected } =
     useWallet();
-  const {
-    address: evmAddress,
-    isConnected: isEvmConnected,
-    chain,
-  } = useAccount();
-
-  const [loading, setLoading] = useState(false);
-  const [secondPageButtonText, setSecondPageButtonText] = useState<string>('');
   const { activeStep, setActiveStep, goToNext, goToPrevious } = useSteps({
     index: 0,
   });
-
-  const inToken = useAtomValue(inTokenAtom);
-  const slippage = useAtomValue(slippageAtom);
-  const inTokenAmount = useAtomValue(inTokenAmountAtom);
-
-  const [openSlippageModal, setOpenSlippageModal] = useState(false);
-
-  const [activeRoute, setActiveRoute] = useAtom(bestRouteAtom);
-  const [, setFinalTokenEstimate] = useAtom(finalTokenEstimateAtom);
-  const [selectedRoute] = useAtom(selectedRouteAtom);
-  const [, setProtocolFinalToken] = useAtom(protocolFinalTokenAtom);
-  const [anyaltInstance, setAnyaltInstance] = useAtom(anyaltInstanceAtom);
-  const [allChains, setAllChains] = useAtom(allChainsAtom);
-  const [protocolInputToken, setProtocolInputToken] = useAtom(
-    protocolInputTokenAtom,
-  );
-  const [, setActiveOperationId] = useAtom(activeOperationIdAtom);
-  const [failedToFetchRoute, setFailedToFetchRoute] = useState(false);
-  const [isValidAmountIn, setIsValidAmountIn] = useState(true);
-
   const {
     isOpen: isConnectWalletsOpen,
     onClose: connectWalletsClose,
     onOpen: connectWalletsOpen,
   } = useDisclosure();
+
+  const inToken = useAtomValue(inTokenAtom);
+  const slippage = useAtomValue(slippageAtom);
+  const inTokenAmount = useAtomValue(inTokenAmountAtom);
+  const selectedRoute = useAtomValue(selectedRouteAtom);
+
+  const [, setActiveOperationId] = useAtom(activeOperationIdAtom);
+  const [, setFinalTokenEstimate] = useAtom(finalTokenEstimateAtom);
+  const [, setProtocolFinalToken] = useAtom(protocolFinalTokenAtom);
+  const [allChains, setAllChains] = useAtom(allChainsAtom);
+  const [activeRoute, setActiveRoute] = useAtom(bestRouteAtom);
+  const [anyaltInstance, setAnyaltInstance] = useAtom(anyaltInstanceAtom);
+  const [protocolInputToken, setProtocolInputToken] = useAtom(
+    protocolInputTokenAtom,
+  );
 
   useEffect(() => {
     if (activeRoute) {
@@ -81,21 +76,18 @@ export const useAnyaltWidget = ({
 
   useEffect(() => {
     const anyaltInstance = new AnyAlt(apiKey);
-
     setAnyaltInstance(anyaltInstance);
 
-    if (anyaltInstance) {
+    if (anyaltInstance)
       anyaltInstance.getChains().then((res) => {
         setAllChains(res.chains);
       });
-    }
+
     setProtocolFinalToken(finalToken);
   }, []);
 
   useEffect(() => {
-    if (selectedRoute) {
-      setActiveRoute(selectedRoute);
-    }
+    if (selectedRoute) setActiveRoute(selectedRoute);
   }, [selectedRoute]);
 
   useEffect(() => {
@@ -126,22 +118,18 @@ export const useAnyaltWidget = ({
         amount: inTokenAmount,
         slippage,
       });
-
       setActiveRoute(route);
-      setLoading(false);
 
-      if (route && parseFloat(route.outputAmount) < minDepositAmount) {
-        setIsValidAmountIn(false);
-      } else {
-        setIsValidAmountIn(true);
-        setFailedToFetchRoute(false);
-        if (withGoNext) {
-          goToNext();
-        }
-      }
+      const tokensOut = parseFloat(route?.outputAmount || '0');
+      const isEnoughDepositTokens = tokensOut > minDepositAmount;
+
+      setIsValidAmountIn(isEnoughDepositTokens);
+      setFailedToFetchRoute(false);
+      if (withGoNext && isEnoughDepositTokens) goToNext();
     } catch (error) {
       console.error(error);
       setFailedToFetchRoute(true);
+    } finally {
       setLoading(false);
     }
   };
@@ -164,6 +152,9 @@ export const useAnyaltWidget = ({
     }
   };
 
+  const getChain = (blockchain: string) =>
+    allChains.find((chain) => chain.name === blockchain);
+
   const connectWalletsConfirm = async () => {
     try {
       setLoading(true);
@@ -171,24 +162,23 @@ export const useAnyaltWidget = ({
 
       const selectedWallets: Record<string, string> = {};
       activeRoute.swaps.forEach((swap) => {
-        if (
-          swap.from.blockchain === 'SOLANA' ||
-          swap.to.blockchain === 'SOLANA'
-        ) {
+        const fromBlockchain = swap.from.blockchain;
+        const toBlockchain = swap.to.blockchain;
+        const isSolanaFrom = fromBlockchain === 'SOLANA';
+        const isSolanaTo = toBlockchain === 'SOLANA';
+
+        if (isSolanaFrom || isSolanaTo) {
           selectedWallets['SOLANA'] = solanaAddress?.toString() || '';
         }
-        const fromChain = allChains.find(
-          (chain) => chain.name === swap.from.blockchain,
-        );
-        const toChain = allChains.find(
-          (chain) => chain.name === swap.to.blockchain,
-        );
-        if (fromChain?.chainType === ChainType.EVM) {
-          selectedWallets[swap.from.blockchain] = evmAddress || '';
-        }
-        if (toChain?.chainType === ChainType.EVM) {
-          selectedWallets[swap.to.blockchain] = evmAddress || '';
-        }
+
+        const fromChain = getChain(fromBlockchain);
+        const toChain = getChain(toBlockchain);
+
+        const isEvmFrom = fromChain?.chainType === ChainType.EVM;
+        const isEvmTo = toChain?.chainType === ChainType.EVM;
+
+        if (isEvmFrom) selectedWallets[fromBlockchain] = evmAddress || '';
+        if (isEvmTo) selectedWallets[toBlockchain] = evmAddress || '';
       });
 
       const res = await anyaltInstance?.confirmRoute({
@@ -228,22 +218,30 @@ export const useAnyaltWidget = ({
     setActiveStep(3);
   };
 
+  useEffect(() => {
+    if (activeStep === 1) {
+      const interval = setInterval(() => {
+        onGetQuote(false);
+      }, REFRESH_INTERVAL);
+
+      return () => clearInterval(interval);
+    }
+  }, [activeStep]);
+
   const areWalletsConnected = useMemo(() => {
     let isSolanaRequired = false;
     let isEvmRequired = false;
     activeRoute?.swaps.forEach((swap) => {
-      if (
-        swap.from.blockchain === 'SOLANA' ||
-        swap.to.blockchain === 'SOLANA'
-      ) {
-        isSolanaRequired = true;
-      }
-      const fromChain = allChains.find(
-        (chain) => chain.name === swap.from.blockchain,
-      );
-      const toChain = allChains.find(
-        (chain) => chain.name === swap.to.blockchain,
-      );
+      const fromBlockchain = swap.from.blockchain;
+      const toBlockchain = swap.to.blockchain;
+      const isSolanaFrom = fromBlockchain === 'SOLANA';
+      const isSolanaTo = toBlockchain === 'SOLANA';
+
+      if (isSolanaFrom || isSolanaTo) isSolanaRequired = true;
+
+      const fromChain = getChain(fromBlockchain);
+      const toChain = getChain(toBlockchain);
+
       if (
         fromChain?.chainType === ChainType.EVM ||
         toChain?.chainType === ChainType.EVM
@@ -269,8 +267,6 @@ export const useAnyaltWidget = ({
     goToPrevious,
     onChooseRouteButtonClick,
     onConfigClick,
-    isSolanaConnected,
-    isEvmConnected,
     openSlippageModal,
     setOpenSlippageModal,
     isConnectWalletsOpen,

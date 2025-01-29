@@ -5,9 +5,9 @@ type Props = {
   title?: string;
   secondTitle?: string;
   secondSubtitle?: string;
+  failedToFetchRoute: boolean;
   onConfigClick: () => void;
   children: React.ReactNode;
-  failedToFetchRoute: boolean;
 };
 
 export const SwappingWrapper = ({

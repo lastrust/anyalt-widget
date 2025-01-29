@@ -19,7 +19,6 @@ type Props = {
 export const RouteStep = ({
   exchangeIcon,
   exchangeName,
-  stepNumber,
   fromToken,
   toToken,
 }: Props) => {

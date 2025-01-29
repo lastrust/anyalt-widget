@@ -29,7 +29,6 @@ export const TokenInputBox: FC<Props> = ({
   readonly,
   isValidAmountIn,
   openTokenSelectModal,
-  isTokenInputDisabled = false,
   ...props
 }) => {
   const inToken = useAtomValue(inTokenAtom);
@@ -151,7 +150,7 @@ export const TokenInputBox: FC<Props> = ({
             <Skeleton width="34px" height="14px" borderRadius="32px" />
           ) : (
             <Text color="white" fontSize="12px" opacity={0.4}>
-              ~${price}
+              ~${price || '0.00'}
             </Text>
           )}
         </Box>

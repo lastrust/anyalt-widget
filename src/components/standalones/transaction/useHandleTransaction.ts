@@ -442,19 +442,6 @@ export const useHandleTransaction = (
   };
 };
 
-// Helper functions
-const calculateTotalSteps = (swaps: SwapResult[]): number => {
-  let totalSteps = 0;
-  const processSwap = (swap: SwapResult) => {
-    totalSteps += swap.maxRequiredSign;
-    if (swap.internalSwaps && swap.internalSwaps.length > 0) {
-      swap.internalSwaps.forEach(processSwap);
-    }
-  };
-  swaps.forEach(processSwap);
-  return totalSteps;
-};
-
 const getTransactionData = async (
   aaInstance: AnyAlt,
   operationId: string,
