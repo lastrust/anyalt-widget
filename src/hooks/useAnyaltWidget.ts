@@ -4,7 +4,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { useAtom, useAtomValue } from 'jotai';
 import { useEffect, useMemo, useState } from 'react';
 import { useAccount } from 'wagmi';
-import { ChainType, EstimateResponse, Token } from '..';
+import { ChainType, EstimateResponse, Token, WalletConnector } from '..';
 import {
   activeOperationIdAtom,
   allChainsAtom,
@@ -27,12 +27,14 @@ export const useAnyaltWidget = ({
   finalToken,
   apiKey,
   minDepositAmount,
+  walletConnector,
 }: {
   estimateCallback: (amount: string) => Promise<EstimateResponse>;
   inputToken: Token;
   finalToken: Token;
   apiKey: string;
   minDepositAmount: number;
+  walletConnector?: WalletConnector;
 }) => {
   const [loading, setLoading] = useState(false);
   const [isValidAmountIn, setIsValidAmountIn] = useState(true);
@@ -148,7 +150,11 @@ export const useAnyaltWidget = ({
     if (areWalletsConnected) {
       connectWalletsConfirm();
     } else {
-      connectWalletsOpen();
+      if (walletConnector) {
+        walletConnector.connect();
+      } else {
+        connectWalletsOpen();
+      }
     }
   };
 
@@ -231,6 +237,11 @@ export const useAnyaltWidget = ({
   const areWalletsConnected = useMemo(() => {
     let isSolanaRequired = false;
     let isEvmRequired = false;
+
+    if (walletConnector && walletConnector.isConnected) {
+      return walletConnector.isConnected;
+    }
+
     activeRoute?.swaps.forEach((swap) => {
       const fromBlockchain = swap.from.blockchain;
       const toBlockchain = swap.to.blockchain;

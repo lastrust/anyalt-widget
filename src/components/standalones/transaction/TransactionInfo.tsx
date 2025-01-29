@@ -16,7 +16,7 @@ import { TokenQuoteBox } from '../token/quote/TokenQuoteBox';
 import { useHandleTransaction } from './useHandleTransaction';
 
 type Props = {
-  externalEvmWalletConnector: WalletConnector;
+  externalEvmWalletConnector?: WalletConnector;
   onTxComplete: () => void;
   executeCallBack: (amountIn: string) => Promise<ExecuteResponse>;
 };

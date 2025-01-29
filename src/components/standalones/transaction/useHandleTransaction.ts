@@ -65,7 +65,7 @@ class TransactionError extends Error {
 }
 
 export const useHandleTransaction = (
-  externalEvmWalletConnector: WalletConnector,
+  externalEvmWalletConnector?: WalletConnector,
 ) => {
   const { isConnected: isEvmConnected, chain: evmChain } = useAccount();
   const { connection } = useConnection();

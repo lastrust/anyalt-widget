@@ -5,7 +5,7 @@ import { TransactionInfo } from '../transaction/TransactionInfo';
 import { TransactionStatus } from '../transaction/TransactionStatus';
 
 type Props = {
-  externalEvmWalletConnector: WalletConnector;
+  externalEvmWalletConnector?: WalletConnector;
   onTxComplete: () => void;
   executeCallBack: (amountIn: string) => Promise<ExecuteResponse>;
 };

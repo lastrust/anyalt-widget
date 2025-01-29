@@ -49,11 +49,11 @@ export type AnyaltWidgetProps = {
   isOpen: boolean;
   inputToken: Token;
   finalToken: Token;
-  walletConnector: WalletConnector;
   apiKey: string;
   onClose: () => void;
   estimateCallback: (amount: string) => Promise<EstimateResponse>;
   executeCallBack: (amount: string) => Promise<ExecuteResponse>;
+  walletConnector?: WalletConnector;
   minDepositAmount?: number;
 };
 
