@@ -214,7 +214,7 @@ export const useAnyaltWidget = ({
 
   const onBackClick = () => {
     if (activeStep === 2) {
-      setActiveStep(0);
+      setActiveStep(1);
     } else {
       goToPrevious();
     }
