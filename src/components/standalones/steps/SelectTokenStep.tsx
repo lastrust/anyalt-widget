@@ -33,10 +33,10 @@ export const SelectTokenStep = ({
         setOpenSlippageModal={setOpenSlippageModal}
         isValidAmountIn={isValidAmountIn}
         failedToFetchRoute={failedToFetchRoute}
-        borderRadius="12px"
-        p="24px"
-        borderWidth="1px"
-        borderColor="brand.border.primary"
+        // borderRadius="12px"
+        // p="24px"
+        // borderWidth="1px"
+        // borderColor="brand.border.primary"
       />
     </SwappingWrapper>
   );

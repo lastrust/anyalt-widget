@@ -29,7 +29,7 @@ export const RoutesWrapper = ({
   handleWalletsOpen: connectWalletsOpen,
 }: Props) => {
   return (
-    <Grid gridTemplateColumns="1fr 1fr" gap="24px">
+    <Grid gridTemplateColumns="448px 448px" gap="24px">
       <SelectSwap
         loading={loading}
         isTokenInputReadonly

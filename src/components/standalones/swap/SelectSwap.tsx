@@ -125,8 +125,9 @@ export const SelectSwap = ({
                   <Image src={EthLogo} w={'16px'} h={'16px'} alt="EVM" />
                   <Text
                     cursor={'pointer'}
-                    textStyle={'regular.2'}
+                    textStyle={'regular.3'}
                     color="brand.secondary.3"
+                    noOfLines={1}
                     onClick={
                       walletConnector?.isConnected
                         ? () => walletConnector.disconnect()
@@ -142,9 +143,10 @@ export const SelectSwap = ({
                 <Image src={SolLogo} w={'16px'} h={'16px'} alt="SOL" />
                 <Text
                   cursor={'pointer'}
-                  textStyle={'regular.2'}
+                  textStyle={'regular.3'}
                   color="brand.secondary.3"
                   onClick={connectWalletsOpen}
+                  noOfLines={1}
                 >
                   {solanaAddress?.toBase58()}
                 </Text>
