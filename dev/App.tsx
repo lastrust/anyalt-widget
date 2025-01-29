@@ -15,7 +15,7 @@ const App = () => {
   const { isOpen, onOpen, onClose } = useModal();
 
   const estimateCallback = async (
-    amountIn: number,
+    amount: string,
   ): Promise<EstimateResponse> => {
     return {
       amountOut: '10.19',
@@ -23,10 +23,8 @@ const App = () => {
     };
   };
 
-  const executeCallBack = async (
-    amountIn: number,
-  ): Promise<ExecuteResponse> => {
-    console.log('amountIn: ', amountIn);
+  const executeCallBack = async (amount: string): Promise<ExecuteResponse> => {
+    console.log('amountIn: ', amount);
     return {
       approvalTxHash: '0x123',
       executeTxHash: '0x123',
@@ -40,7 +38,6 @@ const App = () => {
         <Box maxW={'600px'}>
           <OpenModalButton onOpen={onOpen} />
           <AnyaltWidget
-            walletConnector={{}}
             inputToken={{
               symbol: 'USDT',
               address: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',

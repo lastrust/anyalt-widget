@@ -83,6 +83,7 @@ export const AnyaltWidgetWrapper = ({
           openSlippageModal={openSlippageModal}
           setOpenSlippageModal={setOpenSlippageModal}
           connectWalletsOpen={connectWalletsOpen}
+          walletConnector={walletConnector}
         />
         <TransactionStep
           onConfigClick={onConfigClick}

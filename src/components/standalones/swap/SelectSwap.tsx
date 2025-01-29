@@ -1,6 +1,7 @@
 import { Button, Divider, Flex, Text, VStack } from '@chakra-ui/react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useAccount } from 'wagmi';
+import { WalletConnector } from '../../..';
 import { SlippageModal } from '../modals/SlippageModal';
 import { TokenInputBox } from '../token/input/TokenInputBox';
 import { TokenQuoteBox } from '../token/quote/TokenQuoteBox';
@@ -9,15 +10,16 @@ import { useSelectSwap } from './useSelectSwap';
 
 type Props = {
   loading: boolean;
-  openSlippageModal: boolean;
-  setOpenSlippageModal: (open: boolean) => void;
-  showConnectedWallets?: boolean;
-  isValidAmountIn?: boolean;
   buttonText: string;
   hideButton?: boolean;
+  isValidAmountIn?: boolean;
+  openSlippageModal: boolean;
+  showConnectedWallets?: boolean;
+  walletConnector?: WalletConnector;
   onButtonClick: () => void;
   handleWalletsOpen?: () => void;
   isTokenInputReadonly?: boolean;
+  setOpenSlippageModal: (open: boolean) => void;
 };
 
 export const SelectSwap = ({
@@ -26,6 +28,7 @@ export const SelectSwap = ({
   setOpenSlippageModal,
   showConnectedWallets = false,
   isValidAmountIn = true,
+  walletConnector,
   handleWalletsOpen: connectWalletsOpen,
   onButtonClick,
   buttonText = 'Start Transaction',
@@ -77,16 +80,21 @@ export const SelectSwap = ({
         price={finalTokenEstimate?.priceInUSD ?? ''}
       />
       <VStack gap={'8px'} alignItems={'flex-start'}>
-        {showConnectedWallets && isEvmConnected && (
-          <Text
-            cursor={'pointer'}
-            textStyle={'regular.2'}
-            color="brand.secondary.3"
-            onClick={connectWalletsOpen}
-          >
-            EVM: {evmAddress}
-          </Text>
-        )}
+        {showConnectedWallets &&
+          (isEvmConnected || walletConnector?.isConnected) && (
+            <Text
+              cursor={'pointer'}
+              textStyle={'regular.2'}
+              color="brand.secondary.3"
+              onClick={
+                walletConnector?.isConnected
+                  ? () => walletConnector.disconnect()
+                  : connectWalletsOpen
+              }
+            >
+              EVM: {evmAddress || walletConnector?.address}
+            </Text>
+          )}
         {showConnectedWallets && isSolanaConnected && (
           <Text
             cursor={'pointer'}
@@ -109,7 +117,9 @@ export const SelectSwap = ({
         fontWeight="bold"
         borderRadius="8px"
         h="64px"
-        onClick={onButtonClick}
+        onClick={() => {
+          onButtonClick();
+        }}
         isLoading={loading}
       >
         {buttonText}

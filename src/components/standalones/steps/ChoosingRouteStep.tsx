@@ -1,4 +1,5 @@
 import { BestRouteResponse } from '@anyalt/sdk';
+import { WalletConnector } from '../../..';
 import { RoutesWrapper } from '../wrappers/RoutesWrapper';
 import { SwappingWrapper } from '../wrappers/SwappingWrapper';
 
@@ -7,6 +8,7 @@ type Props = {
   openSlippageModal: boolean;
   failedToFetchRoute: boolean;
   areWalletsConnected: boolean;
+  walletConnector?: WalletConnector;
   activeRoute: BestRouteResponse | undefined;
   onConfigClick: () => void;
   connectWalletsOpen: () => void;
@@ -15,16 +17,23 @@ type Props = {
 };
 
 export const ChoosingRouteStep = ({
-  onConfigClick,
-  failedToFetchRoute,
-  activeRoute,
-  areWalletsConnected,
-  onChooseRouteButtonClick,
   loading,
+  activeRoute,
+  failedToFetchRoute,
+  walletConnector,
+  areWalletsConnected,
+  onConfigClick,
   openSlippageModal,
-  setOpenSlippageModal,
   connectWalletsOpen,
+  setOpenSlippageModal,
+  onChooseRouteButtonClick,
 }: Props) => {
+  const buttonText = activeRoute
+    ? areWalletsConnected
+      ? 'Start Transaction'
+      : 'Connect Wallet/s To Start Transaction'
+    : 'Get Quote';
+
   return (
     <SwappingWrapper
       title={'Calculation'}
@@ -34,19 +43,14 @@ export const ChoosingRouteStep = ({
       failedToFetchRoute={failedToFetchRoute}
     >
       <RoutesWrapper
-        buttonText={
-          activeRoute
-            ? areWalletsConnected
-              ? 'Start Transaction'
-              : 'Connect Wallet/s To Start Transaction'
-            : 'Get Quote'
-        }
-        onButtonClick={onChooseRouteButtonClick}
         loading={loading}
-        openSlippageModal={openSlippageModal}
-        setOpenSlippageModal={setOpenSlippageModal}
+        buttonText={buttonText}
         showConnectedWallets={true}
+        walletConnector={walletConnector}
+        openSlippageModal={openSlippageModal}
         handleWalletsOpen={connectWalletsOpen}
+        onButtonClick={onChooseRouteButtonClick}
+        setOpenSlippageModal={setOpenSlippageModal}
       />
     </SwappingWrapper>
   );
