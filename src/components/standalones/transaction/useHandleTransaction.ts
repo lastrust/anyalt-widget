@@ -12,7 +12,7 @@ import { getChainId, sendTransaction, switchChain } from '@wagmi/core';
 import { useAtom, useAtomValue } from 'jotai';
 import { useCallback } from 'react';
 import { useAccount } from 'wagmi';
-import { ExecuteResponse } from '../../..';
+import { ExecuteResponse, WalletConnector } from '../../..';
 import { walletConfig } from '../../../constants/configs';
 import {
   allChainsAtom,
@@ -64,7 +64,9 @@ class TransactionError extends Error {
   }
 }
 
-export const useHandleTransaction = () => {
+export const useHandleTransaction = (
+  externalEvmWalletConnector: WalletConnector,
+) => {
   const { isConnected: isEvmConnected, chain: evmChain } = useAccount();
   const { connection } = useConnection();
   const { publicKey, signTransaction } = useWallet();
@@ -105,6 +107,26 @@ export const useHandleTransaction = () => {
 
   const handleEvmTransaction = useCallback(
     async (transactionDetails: EVMTransactionDataResponse): Promise<string> => {
+      const chain = allChains.find(
+        (chain) => chain.name === transactionDetails.blockChain,
+      );
+
+      if (externalEvmWalletConnector) {
+        if (!externalEvmWalletConnector.isConnected) {
+          throw new TransactionError(
+            'EVM wallet not connected. Please connect your wallet.',
+          );
+        }
+
+        if (chain?.chainId !== (await externalEvmWalletConnector.getChain())) {
+          await externalEvmWalletConnector.switchChain(chain?.chainId || 0);
+        }
+
+        const txHash =
+          await externalEvmWalletConnector.signTransaction(transactionDetails);
+
+        return txHash;
+      }
       if (!isEvmConnected) {
         throw new TransactionError(
           'EVM wallet not connected. Please connect your wallet.',
@@ -113,9 +135,6 @@ export const useHandleTransaction = () => {
 
       try {
         // switch to the network from transactionDetails.blockchain finding from chains
-        const chain = allChains.find(
-          (chain) => chain.name === transactionDetails.blockChain,
-        );
         if (!chain || !chain.chainId) {
           throw new TransactionError(
             `Unsupported blockchain: ${transactionDetails.blockChain}`,
@@ -211,7 +230,7 @@ export const useHandleTransaction = () => {
       operationId: string,
       slippage: string,
       swaps: SwapResult[],
-      executeCallBack: (amountIn: number) => Promise<ExecuteResponse>,
+      executeCallBack: (amountIn: string) => Promise<ExecuteResponse>,
     ) => {
       let swapIsFinished = false;
       setCurrentStep(1);
@@ -357,9 +376,7 @@ export const useHandleTransaction = () => {
       setCurrentStep(currentStep + 1);
       try {
         const executeResponse = await executeCallBack(
-          parseFloat(
-            bestRoute?.swaps[bestRoute.swaps.length - 1]?.toAmount || '0',
-          ),
+          bestRoute?.swaps[bestRoute.swaps.length - 1]?.toAmount || '0',
         );
         setFinalTokenAmount(executeResponse.amountOut);
         if (executeResponse.approvalTxHash) {

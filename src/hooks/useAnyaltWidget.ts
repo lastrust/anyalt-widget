@@ -26,7 +26,7 @@ export const useAnyaltWidget = ({
   apiKey,
   minDepositAmount,
 }: {
-  estimateCallback: (amountIn: number) => Promise<EstimateResponse>;
+  estimateCallback: (amount: string) => Promise<EstimateResponse>;
   inputToken: Token;
   finalToken: Token;
   apiKey: string;
@@ -73,7 +73,7 @@ export const useAnyaltWidget = ({
 
   useEffect(() => {
     if (activeRoute) {
-      estimateCallback(parseFloat(activeRoute.outputAmount)).then((res) => {
+      estimateCallback(activeRoute.outputAmount.toString()).then((res) => {
         setFinalTokenEstimate(res);
       });
     }
@@ -97,10 +97,6 @@ export const useAnyaltWidget = ({
       setActiveRoute(selectedRoute);
     }
   }, [selectedRoute]);
-
-  useEffect(() => {
-    console.log('chain: ', chain);
-  }, [chain]);
 
   useEffect(() => {
     const inputTokenChain = allChains.find(

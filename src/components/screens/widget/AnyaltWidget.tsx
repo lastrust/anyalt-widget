@@ -29,6 +29,7 @@ export const AnyaltWidgetWrapper = ({
   finalToken,
   estimateCallback,
   executeCallBack,
+  walletConnector,
   minDepositAmount = 0,
 }: AnyaltWidgetProps) => {
   const {
@@ -118,6 +119,7 @@ export const AnyaltWidgetWrapper = ({
           onConfigClick={onConfigClick}
         >
           <TransactionSwap
+            externalEvmWalletConnector={walletConnector}
             executeCallBack={executeCallBack}
             onTxComplete={onTxComplete}
           />

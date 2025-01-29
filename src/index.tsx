@@ -1,3 +1,4 @@
+import { Provider } from 'jotai';
 import {
   AnyaltWidgetWrapper,
   defaultTheme,
@@ -5,6 +6,8 @@ import {
 } from './components/screens/widget/AnyaltWidget';
 import { AppKitProvider } from './providers/RainbowKitProvider';
 import { SolanaProvider } from './providers/SolanaProvider';
+import { WidgetProvider } from './providers/WidgetProvider';
+import './style.css';
 
 export enum ChainType {
   EVM = 'EVM',
@@ -30,9 +33,14 @@ export interface ExecuteResponse {
   amountOut: string;
 }
 
-import { Provider } from 'jotai';
-import { WidgetProvider } from './providers/WidgetProvider';
-import './style.css';
+export interface WalletConnector {
+  isConnected: boolean;
+  connect: () => Promise<void>;
+  disconnect: () => Promise<void>;
+  signTransaction: (transaction: unknown) => Promise<string>;
+  getChain: () => Promise<number>;
+  switchChain: (chainId: number) => Promise<void>;
+}
 
 export { defaultTheme, useModal, WidgetProvider };
 
@@ -40,11 +48,11 @@ export type AnyaltWidgetProps = {
   isOpen: boolean;
   inputToken: Token;
   finalToken: Token;
-  walletConnector: unknown;
+  walletConnector: WalletConnector;
   apiKey: string;
   onClose: () => void;
-  estimateCallback: (amountIn: number) => Promise<EstimateResponse>;
-  executeCallBack: (amountIn: number) => Promise<ExecuteResponse>;
+  estimateCallback: (amount: string) => Promise<EstimateResponse>;
+  executeCallBack: (amount: string) => Promise<ExecuteResponse>;
   minDepositAmount?: number;
 };
 
