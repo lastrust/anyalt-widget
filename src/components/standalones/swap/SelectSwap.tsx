@@ -1,4 +1,5 @@
 import {
+  BoxProps,
   Button,
   Divider,
   Flex,
@@ -17,6 +18,7 @@ import { TokenInputBox } from '../token/input/TokenInputBox';
 import { TokenQuoteBox } from '../token/quote/TokenQuoteBox';
 import { TokenSelectBox } from '../token/select/TokenSelectBox';
 import { useSelectSwap } from './useSelectSwap';
+
 type Props = {
   loading: boolean;
   buttonText: string;
@@ -30,7 +32,7 @@ type Props = {
   isTokenInputReadonly?: boolean;
   setOpenSlippageModal: (open: boolean) => void;
   failedToFetchRoute?: boolean;
-};
+} & BoxProps;
 
 export const SelectSwap = ({
   loading,
@@ -43,6 +45,7 @@ export const SelectSwap = ({
   failedToFetchRoute,
   handleWalletsOpen: connectWalletsOpen,
   buttonText = 'Start Transaction',
+  ...props
 }: Props) => {
   const {
     finalTokenEstimate,
@@ -61,7 +64,7 @@ export const SelectSwap = ({
   const { address: evmAddress, isConnected: isEvmConnected } = useAccount();
 
   return (
-    <Flex flexDirection="column" gap="16px" mb="16px">
+    <Flex flexDirection="column" gap="16px" mb="16px" {...props}>
       <TokenInputBox
         openTokenSelectModal={() => setOpenTokenSelect(true)}
         loading={loading}

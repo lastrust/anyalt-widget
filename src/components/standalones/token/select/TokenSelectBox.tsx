@@ -38,6 +38,7 @@ export const TokenSelectBox: FC<Props> = ({ onClose, onTokenSelect }) => {
       flexDir="column"
       justifyContent="flex-end"
       bgColor="rgba(0, 0, 0, 0.5)"
+      backdropFilter="blur(10px)"
     >
       <Box
         width="100%"
