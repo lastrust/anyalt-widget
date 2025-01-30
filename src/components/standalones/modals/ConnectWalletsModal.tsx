@@ -28,6 +28,7 @@ const WALLETS = [
   {
     walletType: 'Solana wallets',
     network: 'solana',
+    isDisabled: true,
   },
 ];
 
@@ -77,6 +78,7 @@ export const ConnectWalletsModal: FC<Props> = ({
                 walletType={wallet.walletType}
                 network={wallet.network}
                 onConnect={() => handleWalletClick(wallet.walletType)}
+                isDisabled={wallet.isDisabled || false}
               />
             ))}
           </VStack>

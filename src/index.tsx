@@ -16,9 +16,12 @@ export enum ChainType {
 }
 
 export interface Token {
+  name: string;
   symbol: string;
   address: string;
   chainId?: number;
+  decimals?: number;
+  amount?: string;
   chainType: ChainType;
   logoUrl?: string;
 }
@@ -52,8 +55,8 @@ export type AnyaltWidgetProps = {
   finalToken: Token;
   apiKey: string;
   onClose: () => void;
-  estimateCallback: (amount: string) => Promise<EstimateResponse>;
-  executeCallBack: (amount: string) => Promise<ExecuteResponse>;
+  estimateCallback: (token: Token) => Promise<EstimateResponse>;
+  executeCallBack: (token: Token) => Promise<ExecuteResponse>;
   walletConnector?: WalletConnector;
   minDepositAmount?: number;
 };

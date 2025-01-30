@@ -1,11 +1,11 @@
-import { ExecuteResponse, WalletConnector } from '../../..';
+import { ExecuteResponse, Token, WalletConnector } from '../../..';
 import { SwappingWrapper } from '../wrappers/SwappingWrapper';
 import { TransactionSwap } from '../wrappers/TransactionSwap';
 
 type Props = {
   onConfigClick: () => void;
   walletConnector?: WalletConnector;
-  executeCallBack: (amountIn: string) => Promise<ExecuteResponse>;
+  executeCallBack: (amount: Token) => Promise<ExecuteResponse>;
   onTxComplete: () => void;
 };
 

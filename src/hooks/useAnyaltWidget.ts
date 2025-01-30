@@ -29,7 +29,7 @@ export const useAnyaltWidget = ({
   minDepositAmount,
   walletConnector,
 }: {
-  estimateCallback: (amount: string) => Promise<EstimateResponse>;
+  estimateCallback: (token: Token) => Promise<EstimateResponse>;
   inputToken: Token;
   finalToken: Token;
   apiKey: string;
@@ -70,7 +70,11 @@ export const useAnyaltWidget = ({
 
   useEffect(() => {
     if (bestRoute) {
-      estimateCallback(bestRoute.outputAmount.toString()).then((res) => {
+      const token = {
+        ...finalToken,
+        amount: bestRoute.outputAmount.toString(),
+      };
+      estimateCallback(token).then((res) => {
         setFinalTokenEstimate(res);
       });
     }
@@ -113,8 +117,6 @@ export const useAnyaltWidget = ({
 
     try {
       setLoading(true);
-
-      console.log(inTokenAmount);
 
       const route = await anyaltInstance?.getBestRoute({
         from: inToken.id,

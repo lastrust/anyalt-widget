@@ -12,7 +12,7 @@ import { getChainId, sendTransaction, switchChain } from '@wagmi/core';
 import { useAtom, useAtomValue } from 'jotai';
 import { useCallback } from 'react';
 import { useAccount } from 'wagmi';
-import { ExecuteResponse, WalletConnector } from '..';
+import { ChainType, ExecuteResponse, Token, WalletConnector } from '..';
 import { walletConfig } from '../constants/configs';
 import {
   allChainsAtom,
@@ -230,7 +230,7 @@ export const useHandleTransaction = (
       operationId: string,
       slippage: string,
       swaps: SwapResult[],
-      executeCallBack: (amountIn: string) => Promise<ExecuteResponse>,
+      executeCallBack: (token: Token) => Promise<ExecuteResponse>,
     ) => {
       let swapIsFinished = false;
       setCurrentStep(1);
@@ -375,9 +375,19 @@ export const useHandleTransaction = (
       // Execute last mile transaction
       setCurrentStep(currentStep + 1);
       try {
-        const executeResponse = await executeCallBack(
-          bestRoute?.swaps[bestRoute.swaps.length - 1]?.toAmount || '0',
+        const lastSwap = bestRoute?.swaps[bestRoute.swaps.length - 1];
+        const chain = allChains.find(
+          (chain) => chain.name === lastSwap?.to.blockchain,
         );
+        const isEvm = chain?.chainType === ChainType.EVM;
+        const executeResponse = await executeCallBack({
+          amount: lastSwap?.toAmount || '0',
+          address: lastSwap?.to.address || '',
+          decimals: lastSwap?.to.decimals || 0,
+          name: lastSwap?.to.symbol || '',
+          symbol: lastSwap?.to.symbol || '',
+          chainType: isEvm ? ChainType.EVM : ChainType.SOLANA,
+        });
         setFinalTokenAmount(executeResponse.amountOut);
         if (executeResponse.approvalTxHash) {
           updateStepProgress({

@@ -1,7 +1,7 @@
 import { Box, Button, Divider, Flex, Text, VStack } from '@chakra-ui/react';
 import { useAtomValue } from 'jotai';
 import { FC, useState } from 'react';
-import { ExecuteResponse, WalletConnector } from '../../..';
+import { ExecuteResponse, Token, WalletConnector } from '../../..';
 import { useHandleTransaction } from '../../../hooks/useHandleTransaction';
 import {
   activeOperationIdAtom,
@@ -18,7 +18,7 @@ import { TokenQuoteBox } from '../token/quote/TokenQuoteBox';
 type Props = {
   externalEvmWalletConnector?: WalletConnector;
   onTxComplete: () => void;
-  executeCallBack: (amountIn: string) => Promise<ExecuteResponse>;
+  executeCallBack: (amount: Token) => Promise<ExecuteResponse>;
 };
 
 export const TransactionInfo: FC<Props> = ({

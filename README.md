@@ -73,7 +73,7 @@ const Widget = () => {
     chainType: ChainType.SOLANA,
   };
 
-  const estimateCallback = async (amount: string) => {
+  const estimateCallback = async (token: Token): Promise<EstimateResponse> => {
     // Call API to get estimated output
     return {
       amountOut: '0.95',
@@ -81,7 +81,7 @@ const Widget = () => {
     };
   };
 
-  const executeCallBack = async (amount: string) => {
+  const executeCallBack = async (token: Token): Promise<ExecuteResponse> => {
     // Call API to execute the transaction
     return {
       approvalTxHash: '0x123abc',
@@ -139,10 +139,10 @@ export const ClientWidgetWrapper = dynamic(
 | `finalToken`        | `Token`                                         | Output token details                     |
 | `apiKey`            | `string`                                        | API key for Anyalt services              |
 | `onClose`           | `() => void`                                    | Callback triggered when widget is closed |
-| `estimateCallback`  | `(amount: string) => Promise<EstimateResponse>` | Function to estimate token swap          |
-| `executeCallBack`   | `(amount: string) => Promise<ExecuteResponse>`  | Function to execute token swap           |
+| `estimateCallback`  | `(token: Token) => Promise<EstimateResponse>`   | Function to estimate token swap          |
+| `executeCallBack`   | `(token: Token) => Promise<ExecuteResponse>`    | Function to execute token swap           |
 | `walletConnector?`  | `WalletConnector`                               | Optional custom wallet connector         |
-| `minDepositAmount?` | `number`                                        | Minimum deposit amount                   |
+| `minDepositAmount?` | `number`                                        | Minimum deposit amount in USD equivalent |
 
 ### `Token`
 

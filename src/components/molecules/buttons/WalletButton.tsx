@@ -7,13 +7,19 @@ interface WalletButtonProps {
   walletType: string;
   network: string;
   onConnect: () => void;
+  isDisabled: boolean;
 }
 
 export const WalletButton: FC<WalletButtonProps> = ({
   walletType,
   network,
   onConnect,
+  isDisabled,
 }) => {
+  if (isDisabled) {
+    return null;
+  }
+
   const { isConnected: isEvmConnected, address: evmAddress } = useAccount();
   const { disconnect: disconnectEvm } = useDisconnect();
   const {

@@ -9,6 +9,7 @@ import {
   defaultTheme,
   EstimateResponse,
   ExecuteResponse,
+  Token,
   WalletsProviders,
   WidgetProvider,
 } from '../src/index';
@@ -16,17 +17,16 @@ import {
 const App = () => {
   const { isOpen, onOpen, onClose } = useModal();
 
-  const estimateCallback = async (
-    amount: string,
-  ): Promise<EstimateResponse> => {
+  const estimateCallback = async (token: Token): Promise<EstimateResponse> => {
+    console.log('token: ', token);
     return {
       amountOut: '10.19',
       priceInUSD: '2423.53',
     };
   };
 
-  const executeCallBack = async (amount: string): Promise<ExecuteResponse> => {
-    console.log('amountIn: ', amount);
+  const executeCallBack = async (token: Token): Promise<ExecuteResponse> => {
+    console.log('token: ', token);
     return {
       approvalTxHash: '0x123',
       executeTxHash: '0x123',
@@ -46,6 +46,8 @@ const App = () => {
                 address: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
                 chainId: 42161,
                 chainType: ChainType.EVM,
+                name: 'Arbitrum',
+                decimals: 18,
               }}
               finalToken={{
                 symbol: 'Aarnâ Afi802',
@@ -53,13 +55,15 @@ const App = () => {
                 chainId: 1,
                 chainType: ChainType.EVM,
                 logoUrl: 'https://engine.aarna.ai/static/logo-only.svg',
+                name: 'Arbitrum',
+                decimals: 18,
               }}
               apiKey={'pk_0xCYxjM8dFF0Vii7syrgpR6U4'}
               isOpen={isOpen}
               onClose={onClose}
               estimateCallback={estimateCallback}
               executeCallBack={executeCallBack}
-              minDepositAmount={0}
+              minDepositAmount={10}
             />
           </Box>
         </Center>
