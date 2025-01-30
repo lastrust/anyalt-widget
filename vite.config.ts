@@ -4,8 +4,6 @@ import { resolve } from 'path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 
-const externalPackages = ['react', 'react-dom'];
-
 export default defineConfig({
   plugins: [
     react(),
@@ -21,14 +19,7 @@ export default defineConfig({
       fileName: (format) => `anyalt-widget.${format}.js`,
     },
     rollupOptions: {
-      external: externalPackages,
-
-      output: {
-        globals: {
-          react: 'React',
-          'react-dom': 'ReactDOM',
-        },
-      },
+      external: [],
     },
     minify: 'terser',
   },
