@@ -2,15 +2,19 @@
 
 ## Overview
 
-**Anyalt Widget** is a cross-chain widget for swapping tokens, supporting both EVM and Solana-based assets. It provides an easy-to-integrate interface for embedding a decentralized exchange functionality into applications.
+**Anyalt Widget** is a versatile widget designed for last-mile transactions, whether they occur within a chain, across chains, or using fiat currency.
 
-## Features
+Anyalt supports a wide range of chains, including Bitcoin, Solana, Ethereum, Base, Arbitrum, Optimism, Blast, Scroll, Linea, Binance Smart Chain, Polygon, ZK Sync Era, and Avalanche.
 
-- Supports **EVM** and **Solana** chains
-- Handles token swaps with **estimate** and **execution** callbacks
-- Integrated with multiple wallets
-- **Theme customization** support
-- Works seamlessly within **Next.js** and **React applications**
+It assists protocols with deposit functions within contracts, such as a user depositing ETH to receive stETH in Lido Finance.
+
+## Key features of Anyalt Widget include:
+
+- Quick and easy 10-minute integration
+- Complete UI integration that minimizes user friction
+- Integration with multiple wallets
+- Theme customization support
+- Seamless compatibility with Next.js and React applications
 
 ---
 
