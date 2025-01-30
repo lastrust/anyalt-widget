@@ -6,6 +6,7 @@ import {
 } from './components/screens/widget/AnyaltWidget';
 import { AppKitProvider } from './providers/RainbowKitProvider';
 import { SolanaProvider } from './providers/SolanaProvider';
+import { WalletsProviders } from './providers/WalletsProviders';
 import { WidgetProvider } from './providers/WidgetProvider';
 import './style.css';
 
@@ -43,7 +44,7 @@ export interface WalletConnector {
   switchChain: (chainId: number) => Promise<void>;
 }
 
-export { defaultTheme, useModal, WidgetProvider };
+export { defaultTheme, useModal, WalletsProviders, WidgetProvider };
 
 export type AnyaltWidgetProps = {
   isOpen: boolean;
