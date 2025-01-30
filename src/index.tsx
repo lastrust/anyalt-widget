@@ -62,10 +62,6 @@ export type AnyaltWidgetProps = {
 };
 
 export const AnyaltWidget = (props: AnyaltWidgetProps) => {
-  if (typeof window === 'undefined') {
-    return null;
-  }
-
   return (
     <Provider>
       <AppKitProvider>
