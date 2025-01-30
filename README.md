@@ -42,6 +42,8 @@ pnpm add @anyalt/widget
 
 Import and use the `WidgetProvider` and `AnyaltWidget` component in your project. Via `WidgetProvider`, you can customize the widget's appearance by modifying `defaultTheme`.
 
+Apply styles for the wallets to display them correctly on your app.
+
 ```tsx
 import {
   AnyaltWidget,
@@ -51,6 +53,9 @@ import {
   Token,
 } from '@anyalt/widget';
 import { useState } from 'react';
+
+import '@solana/wallet-adapter-react-ui/styles.css';
+import '@rainbow-me/rainbowkit/styles.css';
 
 const Widget = () => {
   const [isOpen, setIsOpen] = useState(true);
