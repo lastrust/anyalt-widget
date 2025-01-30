@@ -2,6 +2,7 @@ import { Box, Button, Divider, Flex, Text, VStack } from '@chakra-ui/react';
 import { useAtomValue } from 'jotai';
 import { FC, useState } from 'react';
 import { ExecuteResponse, WalletConnector } from '../../..';
+import { useHandleTransaction } from '../../../hooks/useHandleTransaction';
 import {
   activeOperationIdAtom,
   anyaltInstanceAtom,
@@ -13,7 +14,6 @@ import {
 } from '../../../store/stateStore';
 import { CopyIcon } from '../../atoms/icons/transaction/CopyIcon';
 import { TokenQuoteBox } from '../token/quote/TokenQuoteBox';
-import { useHandleTransaction } from './useHandleTransaction';
 
 type Props = {
   externalEvmWalletConnector?: WalletConnector;

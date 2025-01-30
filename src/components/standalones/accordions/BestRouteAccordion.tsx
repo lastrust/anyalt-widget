@@ -81,7 +81,7 @@ export const BestRouteAccordion = ({ isButtonHidden = true }: Props) => {
                   bgColor="bg.tertiary.100"
                 />
                 <RouteTag
-                  text={`${swaps[0].time}s`}
+                  text={`${bestRoute.swaps.reduce((acc, swap) => acc + swap.estimatedTimeInSeconds, 0)}s`}
                   icon={TimeIcon}
                   textColor="brand.tertiary.100"
                 />
@@ -100,7 +100,7 @@ export const BestRouteAccordion = ({ isButtonHidden = true }: Props) => {
                   textColor="brand.tertiary.100"
                 />
                 <RouteTag
-                  text={`${bestRoute.swaps[0].maxRequiredSign}`}
+                  text={`${bestRoute.swaps.reduce((acc, swap) => acc + swap.maxRequiredSign, 0)}`}
                   icon={StepsIcon}
                   textColor="brand.tertiary.100"
                 />

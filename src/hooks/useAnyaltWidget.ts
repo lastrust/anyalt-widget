@@ -62,19 +62,19 @@ export const useAnyaltWidget = ({
   const [, setFinalTokenEstimate] = useAtom(finalTokenEstimateAtom);
   const [, setProtocolFinalToken] = useAtom(protocolFinalTokenAtom);
   const [allChains, setAllChains] = useAtom(allChainsAtom);
-  const [activeRoute, setActiveRoute] = useAtom(bestRouteAtom);
+  const [bestRoute, setBestRoute] = useAtom(bestRouteAtom);
   const [anyaltInstance, setAnyaltInstance] = useAtom(anyaltInstanceAtom);
   const [protocolInputToken, setProtocolInputToken] = useAtom(
     protocolInputTokenAtom,
   );
 
   useEffect(() => {
-    if (activeRoute) {
-      estimateCallback(activeRoute.outputAmount.toString()).then((res) => {
+    if (bestRoute) {
+      estimateCallback(bestRoute.outputAmount.toString()).then((res) => {
         setFinalTokenEstimate(res);
       });
     }
-  }, [activeRoute]);
+  }, [bestRoute]);
 
   useEffect(() => {
     const anyaltInstance = new AnyAlt(apiKey);
@@ -89,7 +89,7 @@ export const useAnyaltWidget = ({
   }, []);
 
   useEffect(() => {
-    if (selectedRoute) setActiveRoute(selectedRoute);
+    if (selectedRoute) setBestRoute(selectedRoute);
   }, [selectedRoute]);
 
   useEffect(() => {
@@ -122,7 +122,7 @@ export const useAnyaltWidget = ({
         amount: inTokenAmount,
         slippage,
       });
-      setActiveRoute(route);
+      setBestRoute(route);
 
       const tokensOut = parseFloat(route?.outputAmount || '0');
       const isEnoughDepositTokens = tokensOut > minDepositAmount;
@@ -166,10 +166,10 @@ export const useAnyaltWidget = ({
   const connectWalletsConfirm = async () => {
     try {
       setLoading(true);
-      if (!activeRoute?.requestId) return;
+      if (!bestRoute?.requestId) return;
 
       const selectedWallets: Record<string, string> = {};
-      activeRoute.swaps.forEach((swap) => {
+      bestRoute.swaps.forEach((swap) => {
         const fromBlockchain = swap.from.blockchain;
         const toBlockchain = swap.to.blockchain;
         const isSolanaFrom = fromBlockchain === 'SOLANA';
@@ -191,7 +191,7 @@ export const useAnyaltWidget = ({
 
       const res = await anyaltInstance?.confirmRoute({
         selectedRoute: {
-          requestId: activeRoute.requestId,
+          requestId: bestRoute.requestId,
         },
         selectedWallets,
         destination: evmAddress || '',
@@ -201,7 +201,7 @@ export const useAnyaltWidget = ({
         throw new Error('Failed to confirm route');
 
       setActiveOperationId(res?.operationId);
-      setActiveRoute(res?.result);
+      setBestRoute(res?.result);
 
       connectWalletsClose();
       goToNext();
@@ -242,7 +242,7 @@ export const useAnyaltWidget = ({
       return walletConnector.isConnected;
     }
 
-    activeRoute?.swaps.forEach((swap) => {
+    bestRoute?.swaps.forEach((swap) => {
       const fromBlockchain = swap.from.blockchain;
       const toBlockchain = swap.to.blockchain;
       const isSolanaFrom = fromBlockchain === 'SOLANA';
@@ -268,11 +268,11 @@ export const useAnyaltWidget = ({
       isWalletConnected = false;
     }
     return isWalletConnected;
-  }, [isSolanaConnected, isEvmConnected, activeRoute]);
+  }, [isSolanaConnected, isEvmConnected, bestRoute]);
 
   return {
     loading,
-    activeRoute,
+    activeRoute: bestRoute,
     activeStep,
     onGetQuote,
     goToPrevious,
