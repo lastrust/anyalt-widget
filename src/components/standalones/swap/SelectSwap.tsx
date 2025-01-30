@@ -22,14 +22,12 @@ import { useSelectSwap } from './useSelectSwap';
 type Props = {
   loading: boolean;
   buttonText: string;
-  hideButton?: boolean;
   isValidAmountIn?: boolean;
   openSlippageModal: boolean;
   showConnectedWallets?: boolean;
   walletConnector?: WalletConnector;
   onButtonClick: () => void;
   handleWalletsOpen?: () => void;
-  isTokenInputReadonly?: boolean;
   setOpenSlippageModal: (open: boolean) => void;
   failedToFetchRoute?: boolean;
 } & BoxProps;

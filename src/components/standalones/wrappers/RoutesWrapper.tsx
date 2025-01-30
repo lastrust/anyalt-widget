@@ -6,7 +6,6 @@ import { SelectSwap } from '../swap/SelectSwap';
 type Props = {
   loading: boolean;
   buttonText: string;
-  hideButton?: boolean;
   openSlippageModal: boolean;
   showConnectedWallets?: boolean;
   failedToFetchRoute: boolean;
@@ -19,7 +18,6 @@ type Props = {
 export const RoutesWrapper = ({
   loading,
   buttonText,
-  hideButton,
   walletConnector,
   onButtonClick,
   openSlippageModal,
@@ -32,9 +30,7 @@ export const RoutesWrapper = ({
     <Grid gridTemplateColumns="448px 448px" gap="24px">
       <SelectSwap
         loading={loading}
-        isTokenInputReadonly
         buttonText={buttonText}
-        hideButton={hideButton}
         onButtonClick={onButtonClick}
         walletConnector={walletConnector}
         openSlippageModal={openSlippageModal}
