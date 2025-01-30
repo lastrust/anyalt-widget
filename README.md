@@ -26,7 +26,7 @@ or
 yarn add @anyalt/widget
 ```
 
-or 
+or
 
 ```sh
 pnpm add @anyalt/widget
@@ -36,13 +36,19 @@ pnpm add @anyalt/widget
 
 ## Usage
 
-Import and use the `AnyaltWidget` component in your React project.
+Import and use the `WidgetProvider` and `AnyaltWidget` component in your project. Via `WidgetProvider`, you can customize the widget's appearance by modifying `defaultTheme`.
 
 ```tsx
-import { AnyaltWidget, ChainType, Token } from '@anyalt/widget';
+import {
+  AnyaltWidget,
+  WidgetProvider,
+  defaultTheme,
+  ChainType,
+  Token,
+} from '@anyalt/widget';
 import { useState } from 'react';
 
-const App = () => {
+const Widget = () => {
   const [isOpen, setIsOpen] = useState(true);
 
   const inputToken: Token = {
@@ -76,20 +82,39 @@ const App = () => {
   };
 
   return (
-    <AnyaltWidget
-      isOpen={isOpen}
-      inputToken={inputToken}
-      finalToken={finalToken}
-      apiKey="your-api-key"
-      onClose={() => setIsOpen(false)}
-      estimateCallback={estimateCallback}
-      executeCallBack={executeCallBack}
-      minDepositAmount={10}
-    />
+    <WidgetProvider theme={defaultTheme}>
+      <AnyaltWidget
+        isOpen={isOpen}
+        inputToken={inputToken}
+        finalToken={finalToken}
+        apiKey="your-api-key"
+        onClose={() => setIsOpen(false)}
+        estimateCallback={estimateCallback}
+        executeCallBack={executeCallBack}
+        minDepositAmount={10}
+      />
+    </WidgetProvider>
   );
 };
 
-export default App;
+export default Widget;
+```
+
+## Integation with Next.js
+
+Please wrap your components with `'use client'` and use `dynamic` to import the widget to avoid server-side rendering issues.
+
+```tsx
+'use client';
+
+import dynamic from 'next/dynamic';
+
+export const ClientWidgetWrapper = dynamic(
+  () => import('../components/Widget').then((mod) => mod.default),
+  {
+    ssr: false,
+  },
+);
 ```
 
 ---
