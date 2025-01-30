@@ -11,6 +11,7 @@ import {
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui'; // Import the wallet modal hook
 import { FC } from 'react';
+import { WalletConnector } from '../../..';
 import { WalletButton } from '../../molecules/buttons/WalletButton';
 
 interface Props {
@@ -18,6 +19,7 @@ interface Props {
   onClose: () => void;
   title: string;
   areWalletsConnected: boolean;
+  walletConnector?: WalletConnector;
 }
 
 const WALLETS = [
@@ -37,12 +39,21 @@ export const ConnectWalletsModal: FC<Props> = ({
   onClose,
   title,
   areWalletsConnected,
+  walletConnector,
 }) => {
   const { openConnectModal } = useConnectModal();
   const { setVisible } = useWalletModal(); // Hook to control the Solana wallet modal
 
   // Function to handle wallet type click
   const handleWalletClick = (walletType: string) => {
+    if (walletConnector) {
+      if (walletConnector?.isConnected) {
+        walletConnector.disconnect();
+      } else if (!walletConnector.isConnected) {
+        walletConnector.connect();
+      }
+    }
+
     if (walletType === 'EVM wallets') {
       openConnectModal?.();
     } else if (walletType === 'Solana wallets') {
@@ -79,6 +90,7 @@ export const ConnectWalletsModal: FC<Props> = ({
                 network={wallet.network}
                 onConnect={() => handleWalletClick(wallet.walletType)}
                 isDisabled={wallet.isDisabled || false}
+                walletConnector={walletConnector}
               />
             ))}
           </VStack>

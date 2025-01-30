@@ -103,6 +103,7 @@ export const AnyaltWidgetWrapper = ({
         isOpen={isConnectWalletsOpen}
         onClose={connectWalletsClose}
         areWalletsConnected={areWalletsConnected}
+        walletConnector={walletConnector}
       />
     </ModalWrapper>
   );

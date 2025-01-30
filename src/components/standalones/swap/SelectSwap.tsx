@@ -61,6 +61,9 @@ export const SelectSwap = ({
     useWallet();
   const { address: evmAddress, isConnected: isEvmConnected } = useAccount();
 
+  const isConnected =
+    isEvmConnected || isSolanaConnected || walletConnector?.isConnected;
+
   return (
     <Flex flexDirection="column" gap="16px" mb="16px" {...props}>
       <TokenInputBox
@@ -113,9 +116,11 @@ export const SelectSwap = ({
       </Button>
       {showConnectedWallets && (
         <HStack alignItems={'self-start'}>
-          <Text color="brand.tertiary.100" textStyle={'regular.2'}>
-            Connected:
-          </Text>
+          {isConnected && (
+            <Text color="brand.tertiary.100" textStyle={'regular.2'}>
+              Connected:
+            </Text>
+          )}
           <VStack gap={'8px'} alignItems={'flex-start'}>
             {showConnectedWallets &&
               (isEvmConnected || walletConnector?.isConnected) && (

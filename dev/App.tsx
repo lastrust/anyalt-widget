@@ -41,6 +41,27 @@ const App = () => {
           <Box maxW={'600px'}>
             <OpenModalButton onOpen={onOpen} />
             <AnyaltWidget
+              walletConnector={{
+                address: '0x123',
+                isConnected: true,
+                connect: async () => {
+                  console.log('clicked on connect');
+                },
+                disconnect: async () => {
+                  console.log('clicked on disconnect');
+                },
+                signTransaction: async (transaction: unknown) => {
+                  console.log('clicked on signTransaction');
+                  return '0x123';
+                },
+                getChain: async () => {
+                  console.log('clicked on getChain');
+                  return 42161;
+                },
+                switchChain: async () => {
+                  console.log('clicked on switchChain');
+                },
+              }}
               inputToken={{
                 symbol: 'USDT',
                 address: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
@@ -63,7 +84,7 @@ const App = () => {
               onClose={onClose}
               estimateCallback={estimateCallback}
               executeCallBack={executeCallBack}
-              minDepositAmount={10}
+              minDepositAmount={0}
             />
           </Box>
         </Center>

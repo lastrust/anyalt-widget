@@ -2,12 +2,14 @@ import { Button, Circle, Flex, Text } from '@chakra-ui/react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { FC } from 'react';
 import { useAccount, useDisconnect } from 'wagmi';
+import { WalletConnector } from '../../..';
 
 interface WalletButtonProps {
   walletType: string;
   network: string;
   onConnect: () => void;
   isDisabled: boolean;
+  walletConnector?: WalletConnector;
 }
 
 export const WalletButton: FC<WalletButtonProps> = ({
@@ -15,6 +17,7 @@ export const WalletButton: FC<WalletButtonProps> = ({
   network,
   onConnect,
   isDisabled,
+  walletConnector,
 }) => {
   if (isDisabled) {
     return null;
@@ -39,6 +42,14 @@ export const WalletButton: FC<WalletButtonProps> = ({
   };
 
   const handleClick = () => {
+    if (walletConnector) {
+      if (walletConnector?.isConnected) {
+        walletConnector.disconnect();
+      } else if (!walletConnector.isConnected) {
+        walletConnector.connect();
+      }
+    }
+
     if (isWalletConnected) {
       if (isEvmWallet) {
         disconnectEvm();
