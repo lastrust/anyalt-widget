@@ -233,6 +233,7 @@ export const useHandleTransaction = (
       executeCallBack: (token: Token) => Promise<ExecuteResponse>,
     ) => {
       let swapIsFinished = false;
+      let crosschainSwapOutputAmount = '0';
       setCurrentStep(1);
       const totalSteps = swaps.length + 1;
 
@@ -325,6 +326,7 @@ export const useHandleTransaction = (
             operationId,
           });
           swapIsFinished = waitForTxResponse.swapIsFinished;
+          crosschainSwapOutputAmount = waitForTxResponse?.outputAmount || '0';
 
           if (swapIsFinished) {
             console.log('swapIsFinished: ', swapIsFinished);
@@ -381,7 +383,7 @@ export const useHandleTransaction = (
         );
         const isEvm = chain?.chainType === ChainType.EVM;
         const executeResponse = await executeCallBack({
-          amount: lastSwap?.toAmount || '0',
+          amount: crosschainSwapOutputAmount,
           address: lastSwap?.to.address || '',
           decimals: lastSwap?.to.decimals || 0,
           name: lastSwap?.to.symbol || '',
