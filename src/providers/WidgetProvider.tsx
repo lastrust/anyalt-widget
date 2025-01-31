@@ -12,6 +12,10 @@ type Props = {
 const chakraTheme = extendTheme(defaultTheme);
 
 export const WidgetProvider = ({ children, theme = chakraTheme }: Props) => {
+  if (window === undefined) {
+    return null;
+  }
+
   return (
     <AppKitProvider>
       <SolanaProvider>
