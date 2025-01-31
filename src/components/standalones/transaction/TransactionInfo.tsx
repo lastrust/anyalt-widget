@@ -1,7 +1,8 @@
 import { Box, Button, Divider, Flex, Text, VStack } from '@chakra-ui/react';
 import { useAtomValue } from 'jotai';
 import { FC, useState } from 'react';
-import { ExecuteResponse } from '../../..';
+import { ExecuteResponse, Token, WalletConnector } from '../../..';
+import { useHandleTransaction } from '../../../hooks/useHandleTransaction';
 import {
   activeOperationIdAtom,
   anyaltInstanceAtom,
@@ -13,16 +14,17 @@ import {
 } from '../../../store/stateStore';
 import { CopyIcon } from '../../atoms/icons/transaction/CopyIcon';
 import { TokenQuoteBox } from '../token/quote/TokenQuoteBox';
-import { useHandleTransaction } from './useHandleTransaction';
 
 type Props = {
-  executeCallBack: (amountIn: number) => Promise<ExecuteResponse>;
+  externalEvmWalletConnector?: WalletConnector;
   onTxComplete: () => void;
+  executeCallBack: (amount: Token) => Promise<ExecuteResponse>;
 };
 
 export const TransactionInfo: FC<Props> = ({
-  executeCallBack,
+  externalEvmWalletConnector,
   onTxComplete,
+  executeCallBack,
 }) => {
   const bestRoute = useAtomValue(bestRouteAtom);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
@@ -30,7 +32,7 @@ export const TransactionInfo: FC<Props> = ({
   const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
 
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
-  const { executeSwap } = useHandleTransaction();
+  const { executeSwap } = useHandleTransaction(externalEvmWalletConnector);
   const activeOperationId = useAtomValue(activeOperationIdAtom);
   const slippage = useAtomValue(slippageAtom);
   const [isLoading, setIsLoading] = useState(false);

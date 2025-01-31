@@ -12,12 +12,14 @@ type ModalWrapperProps = {
   isOpen: boolean;
   onClose: () => void;
   children: ReactNode;
+  maxWidthCustom?: string;
 } & ModalProps;
 
 const ModalWrapper: FC<ModalWrapperProps> = ({
   isOpen,
   onClose,
   children,
+  maxWidthCustom,
   ...props
 }) => {
   return (
@@ -28,6 +30,7 @@ const ModalWrapper: FC<ModalWrapperProps> = ({
         borderRadius="12px"
         border="1px solid"
         borderColor="brand.secondary.12"
+        maxW={maxWidthCustom || '1000px'}
       >
         <ModalCloseButton color="white" />
         <Box padding="40px">{children}</Box>

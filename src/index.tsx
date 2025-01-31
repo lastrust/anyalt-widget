@@ -1,3 +1,4 @@
+import { Provider } from 'jotai';
 import {
   AnyaltWidgetWrapper,
   defaultTheme,
@@ -5,6 +6,9 @@ import {
 } from './components/screens/widget/AnyaltWidget';
 import { AppKitProvider } from './providers/RainbowKitProvider';
 import { SolanaProvider } from './providers/SolanaProvider';
+import { WalletsProviders } from './providers/WalletsProviders';
+import { WidgetProvider } from './providers/WidgetProvider';
+import './style.css';
 
 export enum ChainType {
   EVM = 'EVM',
@@ -12,9 +16,12 @@ export enum ChainType {
 }
 
 export interface Token {
+  name: string;
   symbol: string;
   address: string;
   chainId?: number;
+  decimals?: number;
+  amount?: string;
   chainType: ChainType;
   logoUrl?: string;
 }
@@ -30,29 +37,31 @@ export interface ExecuteResponse {
   amountOut: string;
 }
 
-import { Provider } from 'jotai';
-import { WidgetProvider } from './providers/WidgetProvider';
-import './style.css';
+export interface WalletConnector {
+  address: string;
+  isConnected: boolean;
+  connect: () => Promise<void>;
+  disconnect: () => Promise<void>;
+  signTransaction: (transaction: unknown) => Promise<string>;
+  getChain: () => Promise<number>;
+  switchChain: (chainId: number) => Promise<void>;
+}
 
-export { defaultTheme, useModal, WidgetProvider };
+export { defaultTheme, useModal, WalletsProviders, WidgetProvider };
 
 export type AnyaltWidgetProps = {
   isOpen: boolean;
   inputToken: Token;
   finalToken: Token;
-  walletConnector: unknown;
   apiKey: string;
   onClose: () => void;
-  estimateCallback: (amountIn: number) => Promise<EstimateResponse>;
-  executeCallBack: (amountIn: number) => Promise<ExecuteResponse>;
+  estimateCallback: (token: Token) => Promise<EstimateResponse>;
+  executeCallBack: (token: Token) => Promise<ExecuteResponse>;
+  walletConnector?: WalletConnector;
   minDepositAmount?: number;
 };
 
 export const AnyaltWidget = (props: AnyaltWidgetProps) => {
-  if (typeof window === 'undefined') {
-    return null;
-  }
-
   return (
     <Provider>
       <AppKitProvider>

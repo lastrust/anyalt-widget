@@ -38,8 +38,26 @@ export const TokenSelectBox: FC<Props> = ({ onClose, onTokenSelect }) => {
       flexDir="column"
       justifyContent="flex-end"
       bgColor="rgba(0, 0, 0, 0.5)"
+      backdropFilter="blur(10px)"
+      _hover={{
+        backdropFilter: 'blur(11px)',
+      }}
+      id="token-select-box-container"
+      onMouseMove={(e) => {
+        if ((e.target as HTMLDivElement).id === 'token-select-box-container') {
+          (e.target as HTMLDivElement).style.cursor = 'pointer';
+        } else {
+          // (e.target as HTMLDivElement).style.cursor = 'default';
+        }
+      }}
+      onClick={(e: React.MouseEvent<HTMLDivElement>) => {
+        if ((e.target as HTMLDivElement).id === 'token-select-box-container') {
+          onClose();
+        }
+      }}
     >
       <Box
+        id="token-select-box"
         width="100%"
         maxH="504px"
         padding="24px"
@@ -60,7 +78,28 @@ export const TokenSelectBox: FC<Props> = ({ onClose, onTokenSelect }) => {
           right="16px"
           onClick={onClose}
         >
-          Close
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+          >
+            <path
+              d="M14.375 14.3748L5.625 5.62482"
+              stroke="#919EAB"
+              strokeWidth="1.25"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M14.375 5.62482L5.625 14.3748"
+              stroke="#919EAB"
+              strokeWidth="1.25"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
         </Box>
         <Box mb="16px">
           <Text fontSize="20px" fontWeight="bold" mb="16px">
@@ -74,7 +113,7 @@ export const TokenSelectBox: FC<Props> = ({ onClose, onTokenSelect }) => {
                 flexDir="row"
                 alignItems="center"
                 gap="6px"
-                cursor="pointer"
+                cursor="pointer!important"
                 padding="4px"
                 borderRadius="32px"
                 border="1px solid"
@@ -100,8 +139,8 @@ export const TokenSelectBox: FC<Props> = ({ onClose, onTokenSelect }) => {
             ))}
           </Box>
           <Text
-            cursor="pointer"
             fontSize="14px"
+            cursor="pointer!important"
             color="brand.secondary.100"
             textDecoration="underline"
             textAlign="center"

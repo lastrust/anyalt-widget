@@ -1,7 +1,6 @@
 import { ConnectWalletsModal } from '../../standalones/modals/ConnectWalletsModal';
 import ModalWrapper from '../../standalones/modals/ModalWrapper';
 import CustomStepper from '../../standalones/stepper/Stepper';
-import { SelectSwap } from '../../standalones/swap/SelectSwap';
 import { Footer } from '../../standalones/widget/Footer';
 import { Header } from '../../standalones/widget/Header';
 
@@ -12,14 +11,12 @@ export {
 } from '../../../theme/defaultTheme';
 export { OpenModalButton } from '../../atoms/buttons/OpenModalButton';
 
-import { Button } from '@chakra-ui/react';
 import { AnyaltWidgetProps } from '../../..';
 import { useAnyaltWidget } from '../../../hooks/useAnyaltWidget';
-import { BackIcon } from '../../atoms/icons/transaction/BackIcon';
-import { RoutesWrapper } from '../../standalones/wrappers/RoutesWrapper';
-import { SwappingWrapper } from '../../standalones/wrappers/SwappingWrapper';
-import { TransactionComplete } from '../../standalones/wrappers/TransactionComplete';
-import { TransactionSwap } from '../../standalones/wrappers/TransactionSwap';
+import { ChoosingRouteStep } from '../../standalones/steps/ChoosingRouteStep';
+import { CompleteStep } from '../../standalones/steps/CompleteStep';
+import { SelectTokenStep } from '../../standalones/steps/SelectTokenStep';
+import { TransactionStep } from '../../standalones/steps/TransactionStep';
 
 export const AnyaltWidgetWrapper = ({
   isOpen,
@@ -29,6 +26,7 @@ export const AnyaltWidgetWrapper = ({
   finalToken,
   estimateCallback,
   executeCallBack,
+  walletConnector,
   minDepositAmount = 0,
 }: AnyaltWidgetProps) => {
   const {
@@ -38,8 +36,6 @@ export const AnyaltWidgetWrapper = ({
     onGetQuote,
     onChooseRouteButtonClick,
     onConfigClick,
-    isSolanaConnected,
-    isEvmConnected,
     openSlippageModal,
     setOpenSlippageModal,
     isConnectWalletsOpen,
@@ -52,87 +48,54 @@ export const AnyaltWidgetWrapper = ({
     areWalletsConnected,
     setActiveStep,
   } = useAnyaltWidget({
-    estimateCallback,
+    apiKey,
     inputToken,
     finalToken,
-    apiKey,
     minDepositAmount,
+    estimateCallback,
+    walletConnector,
   });
 
   return (
     <ModalWrapper
       isOpen={isOpen}
       onClose={onClose}
-      size={activeStep === 0 || activeStep === 3 ? 'lg' : '5xl'}
+      maxWidthCustom={activeStep === 0 || activeStep === 3 ? '530px' : '1000px'}
     >
-      {activeStep !== 3 && (
-        <Header>
-          {activeStep !== 0 && (
-            <Button variant="ghost" onClick={onBackClick}>
-              <BackIcon />
-            </Button>
-          )}
-          {activeStep === 2 ? 'Transaction' : 'Start Transaction'}
-        </Header>
-      )}
+      <Header activeStep={activeStep} onBackClick={onBackClick} />
       <CustomStepper activeStep={activeStep}>
-        <SwappingWrapper
-          title={'Select Deposit Token'}
+        <SelectTokenStep
+          loading={loading}
+          onGetQuote={onGetQuote}
+          isValidAmountIn={isValidAmountIn}
           onConfigClick={onConfigClick}
           failedToFetchRoute={failedToFetchRoute}
-        >
-          <SelectSwap
-            buttonText={'Get Quote'}
-            onButtonClick={onGetQuote}
-            loading={loading}
-            openSlippageModal={openSlippageModal}
-            setOpenSlippageModal={setOpenSlippageModal}
-            isValidAmountIn={isValidAmountIn}
-          />
-        </SwappingWrapper>
-        <SwappingWrapper
-          title={'Calculation'}
-          secondTitle="Routes"
-          secondSubtitle="Please select preferred route"
+          openSlippageModal={openSlippageModal}
+          setOpenSlippageModal={setOpenSlippageModal}
+        />
+        <ChoosingRouteStep
           onConfigClick={onConfigClick}
           failedToFetchRoute={failedToFetchRoute}
-        >
-          <RoutesWrapper
-            buttonText={
-              activeRoute
-                ? areWalletsConnected
-                  ? 'Start Transaction'
-                  : 'Connect Wallet/s To Start Transaction'
-                : 'Get Quote'
-            }
-            onButtonClick={onChooseRouteButtonClick}
-            loading={loading}
-            openSlippageModal={openSlippageModal}
-            setOpenSlippageModal={setOpenSlippageModal}
-            showConnectedWallets={true}
-            handleWalletsOpen={connectWalletsOpen}
-          />
-        </SwappingWrapper>
-        <SwappingWrapper
-          failedToFetchRoute={false}
+          activeRoute={activeRoute}
+          areWalletsConnected={areWalletsConnected}
+          onChooseRouteButtonClick={onChooseRouteButtonClick}
+          loading={loading}
+          openSlippageModal={openSlippageModal}
+          setOpenSlippageModal={setOpenSlippageModal}
+          connectWalletsOpen={connectWalletsOpen}
+          walletConnector={walletConnector}
+        />
+        <TransactionStep
           onConfigClick={onConfigClick}
-        >
-          <TransactionSwap
-            executeCallBack={executeCallBack}
-            onTxComplete={onTxComplete}
-          />
-        </SwappingWrapper>
-        <SwappingWrapper
-          failedToFetchRoute={false}
+          walletConnector={walletConnector}
+          executeCallBack={executeCallBack}
+          onTxComplete={onTxComplete}
+        />
+        <CompleteStep
           onConfigClick={onConfigClick}
-        >
-          <TransactionComplete
-            onTransactionDoneClick={() => {
-              onClose();
-              setActiveStep(0);
-            }}
-          />
-        </SwappingWrapper>
+          onClose={onClose}
+          setActiveStep={setActiveStep}
+        />
       </CustomStepper>
       <Footer />
       <ConnectWalletsModal
@@ -140,6 +103,7 @@ export const AnyaltWidgetWrapper = ({
         isOpen={isConnectWalletsOpen}
         onClose={connectWalletsClose}
         areWalletsConnected={areWalletsConnected}
+        walletConnector={walletConnector}
       />
     </ModalWrapper>
   );

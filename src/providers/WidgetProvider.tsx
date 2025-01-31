@@ -1,15 +1,17 @@
-import { ChakraProvider, Theme } from '@chakra-ui/react';
+import { ChakraProvider, extendTheme, Theme } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 import { defaultTheme } from '../theme/defaultTheme';
 import { AppKitProvider } from './RainbowKitProvider';
 import { SolanaProvider } from './SolanaProvider';
 
 type Props = {
-  children: ReactNode;
   theme?: Partial<Theme>;
+  children: ReactNode;
 };
 
-export const WidgetProvider = ({ children, theme = defaultTheme }: Props) => {
+const chakraTheme = extendTheme(defaultTheme);
+
+export const WidgetProvider = ({ children, theme = chakraTheme }: Props) => {
   return (
     <AppKitProvider>
       <SolanaProvider>

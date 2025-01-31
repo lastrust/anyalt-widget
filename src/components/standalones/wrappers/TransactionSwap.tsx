@@ -1,21 +1,24 @@
 import { Grid } from '@chakra-ui/react';
 import { FC } from 'react';
-import { ExecuteResponse } from '../../..';
+import { ExecuteResponse, Token, WalletConnector } from '../../..';
 import { TransactionInfo } from '../transaction/TransactionInfo';
 import { TransactionStatus } from '../transaction/TransactionStatus';
 
 type Props = {
-  executeCallBack: (amountIn: number) => Promise<ExecuteResponse>;
+  externalEvmWalletConnector?: WalletConnector;
   onTxComplete: () => void;
+  executeCallBack: (amount: Token) => Promise<ExecuteResponse>;
 };
 
 export const TransactionSwap: FC<Props> = ({
   executeCallBack,
   onTxComplete,
+  externalEvmWalletConnector,
 }) => {
   return (
     <Grid templateColumns="1fr 1fr" gap="16px">
       <TransactionInfo
+        externalEvmWalletConnector={externalEvmWalletConnector}
         executeCallBack={executeCallBack}
         onTxComplete={onTxComplete}
       />

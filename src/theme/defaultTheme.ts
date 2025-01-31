@@ -41,7 +41,9 @@ export const defaultTheme = extendTheme({
       },
       tertiary: {
         100: '#008080',
+        90: '#006666',
         20: '#00808033',
+        30: '#0080801a',
       },
       quaternary: '#0C0600',
       quinary: {

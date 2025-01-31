@@ -7,7 +7,6 @@ type Props = {
   secondSubtitle?: string;
   onConfigClick: () => void;
   children: React.ReactNode;
-  failedToFetchRoute: boolean;
 };
 
 export const SwappingWrapper = ({
@@ -16,15 +15,9 @@ export const SwappingWrapper = ({
   secondSubtitle,
   onConfigClick,
   children,
-  failedToFetchRoute,
 }: Props) => {
   return (
-    <Box
-      margin="24px 0px"
-      border="1px solid"
-      borderColor={failedToFetchRoute ? 'brand.quinary.100' : 'transparent'}
-      borderRadius="12px"
-    >
+    <Box margin="24px 0px">
       <Grid gridTemplateColumns={secondTitle ? '1fr 1fr' : '1fr'} gap="16px">
         {title && (
           <Flex justifyContent="space-between" alignItems="center" mb="16px">
@@ -57,19 +50,6 @@ export const SwappingWrapper = ({
         )}
       </Grid>
       {children}
-      {failedToFetchRoute && (
-        <Box
-          mt="16px"
-          padding="4px"
-          bgColor="brand.quinary.10"
-          borderRadius="8px"
-          width="100%"
-        >
-          <Text color="brand.quinary.100" fontSize="14px" fontWeight="bold">
-            No Available Route
-          </Text>
-        </Box>
-      )}
     </Box>
   );
 };

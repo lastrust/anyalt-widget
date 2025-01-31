@@ -72,7 +72,7 @@ export const TokenQuoteBox: FC<Props> = ({
             <Skeleton width="34px" height="14px" borderRadius="32px" />
           ) : (
             <Text fontSize="12px" fontWeight="regular" opacity={0.4}>
-              ~${price}
+              ~${price || '0.00'}
             </Text>
           )}
         </Box>

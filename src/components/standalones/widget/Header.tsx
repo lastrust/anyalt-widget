@@ -1,14 +1,22 @@
-import { Box } from '@chakra-ui/react';
-import { ReactNode } from 'react';
+import { Button, Flex } from '@chakra-ui/react';
+import { BackIcon } from '../../atoms/icons/transaction/BackIcon';
 
 type Props = {
-  children: ReactNode;
+  activeStep: number;
+  onBackClick: () => void;
 };
 
-export const Header = ({ children }: Props) => {
+export const Header = ({ activeStep, onBackClick }: Props) => {
+  if (activeStep === 3) return null;
+
   return (
-    <Box color="white" fontSize="24px" fontWeight="bold">
-      {children}
-    </Box>
+    <Flex color="white" fontSize="24px" fontWeight="bold" gap={'5px'}>
+      {activeStep == 2 && (
+        <Button variant="ghost" onClick={onBackClick}>
+          <BackIcon />
+        </Button>
+      )}
+      {activeStep === 2 ? 'Transaction' : 'Start Transaction'}
+    </Flex>
   );
 };

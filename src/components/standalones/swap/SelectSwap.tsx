@@ -1,6 +1,18 @@
-import { Button, Divider, Flex, Text, VStack } from '@chakra-ui/react';
+import {
+  BoxProps,
+  Button,
+  Divider,
+  Flex,
+  HStack,
+  Image,
+  Text,
+  VStack,
+} from '@chakra-ui/react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useAccount } from 'wagmi';
+import { WalletConnector } from '../../..';
+import EthLogo from '../../../assets/imgs/eth.png';
+import SolLogo from '../../../assets/imgs/solana.png';
 import { SlippageModal } from '../modals/SlippageModal';
 import { TokenInputBox } from '../token/input/TokenInputBox';
 import { TokenQuoteBox } from '../token/quote/TokenQuoteBox';
@@ -9,16 +21,16 @@ import { useSelectSwap } from './useSelectSwap';
 
 type Props = {
   loading: boolean;
-  openSlippageModal: boolean;
-  setOpenSlippageModal: (open: boolean) => void;
-  showConnectedWallets?: boolean;
-  isValidAmountIn?: boolean;
   buttonText: string;
-  hideButton?: boolean;
+  isValidAmountIn?: boolean;
+  openSlippageModal: boolean;
+  showConnectedWallets?: boolean;
+  walletConnector?: WalletConnector;
   onButtonClick: () => void;
   handleWalletsOpen?: () => void;
-  isTokenInputReadonly?: boolean;
-};
+  setOpenSlippageModal: (open: boolean) => void;
+  failedToFetchRoute?: boolean;
+} & BoxProps;
 
 export const SelectSwap = ({
   loading,
@@ -26,10 +38,12 @@ export const SelectSwap = ({
   setOpenSlippageModal,
   showConnectedWallets = false,
   isValidAmountIn = true,
-  handleWalletsOpen: connectWalletsOpen,
+  walletConnector,
   onButtonClick,
+  failedToFetchRoute,
+  handleWalletsOpen: connectWalletsOpen,
   buttonText = 'Start Transaction',
-  isTokenInputReadonly = false,
+  ...props
 }: Props) => {
   const {
     finalTokenEstimate,
@@ -47,13 +61,17 @@ export const SelectSwap = ({
     useWallet();
   const { address: evmAddress, isConnected: isEvmConnected } = useAccount();
 
+  const isConnected =
+    isEvmConnected || isSolanaConnected || walletConnector?.isConnected;
+
   return (
-    <Flex flexDirection="column" gap="16px" mb="16px">
+    <Flex flexDirection="column" gap="16px" mb="16px" {...props}>
       <TokenInputBox
         openTokenSelectModal={() => setOpenTokenSelect(true)}
         loading={loading}
         price={inTokenPrice}
         isValidAmountIn={isValidAmountIn}
+        failedToFetchRoute={failedToFetchRoute}
         readonly={false}
       />
       <TokenQuoteBox
@@ -77,41 +95,70 @@ export const SelectSwap = ({
         amount={finalTokenEstimate?.amountOut ?? ''}
         price={finalTokenEstimate?.priceInUSD ?? ''}
       />
-      <VStack gap={'8px'} alignItems={'flex-start'}>
-        {showConnectedWallets && isEvmConnected && (
-          <Text
-            cursor={'pointer'}
-            textStyle={'regular.2'}
-            color="brand.secondary.3"
-            onClick={connectWalletsOpen}
-          >
-            EVM: {evmAddress}
-          </Text>
-        )}
-        {showConnectedWallets && isSolanaConnected && (
-          <Text
-            cursor={'pointer'}
-            textStyle={'regular.2'}
-            color="brand.secondary.3"
-            onClick={connectWalletsOpen}
-          >
-            SOL: {solanaAddress?.toBase58()}
-          </Text>
-        )}
-      </VStack>
       <Button
         width="100%"
         bg="brand.tertiary.100"
+        _hover={{
+          bg: 'brand.tertiary.90',
+        }}
         color="white"
         fontSize="16px"
         fontWeight="bold"
         borderRadius="8px"
         h="64px"
-        onClick={onButtonClick}
+        isDisabled={failedToFetchRoute}
+        onClick={() => {
+          onButtonClick();
+        }}
         isLoading={loading}
       >
         {buttonText}
       </Button>
+      {showConnectedWallets && (
+        <HStack alignItems={'self-start'}>
+          {isConnected && (
+            <Text color="brand.tertiary.100" textStyle={'regular.2'}>
+              Connected:
+            </Text>
+          )}
+          <VStack gap={'8px'} alignItems={'flex-start'}>
+            {showConnectedWallets &&
+              (isEvmConnected || walletConnector?.isConnected) && (
+                <HStack>
+                  <Image src={EthLogo} w={'16px'} h={'16px'} alt="EVM" />
+                  <Text
+                    cursor={'pointer'}
+                    textStyle={'regular.3'}
+                    color="brand.secondary.3"
+                    noOfLines={1}
+                    onClick={
+                      walletConnector?.isConnected
+                        ? () => walletConnector.disconnect()
+                        : connectWalletsOpen
+                    }
+                  >
+                    {evmAddress || walletConnector?.address}
+                  </Text>
+                </HStack>
+              )}
+            {showConnectedWallets && isSolanaConnected && (
+              <HStack>
+                <Image src={SolLogo} w={'16px'} h={'16px'} alt="SOL" />
+                <Text
+                  cursor={'pointer'}
+                  textStyle={'regular.3'}
+                  color="brand.secondary.3"
+                  onClick={connectWalletsOpen}
+                  noOfLines={1}
+                >
+                  {solanaAddress?.toBase58()}
+                </Text>
+              </HStack>
+            )}
+          </VStack>
+        </HStack>
+      )}
+
       {openTokenSelect && (
         <TokenSelectBox
           onClose={() => setOpenTokenSelect(false)}

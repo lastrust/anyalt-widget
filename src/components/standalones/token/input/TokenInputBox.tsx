@@ -20,6 +20,7 @@ type Props = BoxProps & {
   readonly: boolean;
   isValidAmountIn: boolean;
   isTokenInputDisabled?: boolean;
+  failedToFetchRoute?: boolean;
   openTokenSelectModal: () => void;
 };
 
@@ -29,7 +30,7 @@ export const TokenInputBox: FC<Props> = ({
   readonly,
   isValidAmountIn,
   openTokenSelectModal,
-  isTokenInputDisabled = false,
+  failedToFetchRoute,
   ...props
 }) => {
   const inToken = useAtomValue(inTokenAtom);
@@ -72,8 +73,12 @@ export const TokenInputBox: FC<Props> = ({
         bgColor="brand.secondary.4"
         padding="16px"
         borderRadius="8px"
-        border={isValidAmountIn ? 'none' : '1px solid'}
-        borderColor={isValidAmountIn ? 'transparent' : 'brand.quinary.100'}
+        border={!isValidAmountIn || failedToFetchRoute ? '1px solid' : 'none'}
+        borderColor={
+          !isValidAmountIn || failedToFetchRoute
+            ? 'brand.quinary.100'
+            : 'transparent'
+        }
         mb="8px"
       >
         <Box
@@ -151,7 +156,7 @@ export const TokenInputBox: FC<Props> = ({
             <Skeleton width="34px" height="14px" borderRadius="32px" />
           ) : (
             <Text color="white" fontSize="12px" opacity={0.4}>
-              ~${price}
+              ~${price || '0.00'}
             </Text>
           )}
         </Box>
@@ -165,6 +170,19 @@ export const TokenInputBox: FC<Props> = ({
         >
           <Text color="brand.quinary.100" fontSize="14px" fontWeight="bold">
             Amount not supported. Please try different amount.
+          </Text>
+        </Box>
+      )}
+      {failedToFetchRoute && (
+        <Box
+          mt="4px"
+          padding="4px"
+          bgColor="brand.quinary.10"
+          borderRadius="8px"
+          width="100%"
+        >
+          <Text color="brand.quinary.100" fontSize="14px" fontWeight="bold">
+            No Available Route
           </Text>
         </Box>
       )}

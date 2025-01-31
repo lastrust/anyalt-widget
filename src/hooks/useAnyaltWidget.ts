@@ -4,7 +4,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { useAtom, useAtomValue } from 'jotai';
 import { useEffect, useMemo, useState } from 'react';
 import { useAccount } from 'wagmi';
-import { ChainType, EstimateResponse, Token } from '..';
+import { ChainType, EstimateResponse, Token, WalletConnector } from '..';
 import {
   activeOperationIdAtom,
   allChainsAtom,
@@ -19,88 +19,82 @@ import {
   slippageAtom,
 } from '../store/stateStore';
 
+const REFRESH_INTERVAL = 20000;
+
 export const useAnyaltWidget = ({
   estimateCallback,
   inputToken,
   finalToken,
   apiKey,
   minDepositAmount,
+  walletConnector,
 }: {
-  estimateCallback: (amountIn: number) => Promise<EstimateResponse>;
+  estimateCallback: (token: Token) => Promise<EstimateResponse>;
   inputToken: Token;
   finalToken: Token;
   apiKey: string;
   minDepositAmount: number;
+  walletConnector?: WalletConnector;
 }) => {
+  const [loading, setLoading] = useState(false);
+  const [isValidAmountIn, setIsValidAmountIn] = useState(true);
+  const [openSlippageModal, setOpenSlippageModal] = useState(false);
+  const [failedToFetchRoute, setFailedToFetchRoute] = useState(false);
+
+  const { address: evmAddress, isConnected: isEvmConnected } = useAccount();
   const { publicKey: solanaAddress, connected: isSolanaConnected } =
     useWallet();
-  const {
-    address: evmAddress,
-    isConnected: isEvmConnected,
-    chain,
-  } = useAccount();
-
-  const [loading, setLoading] = useState(false);
-  const [secondPageButtonText, setSecondPageButtonText] = useState<string>('');
   const { activeStep, setActiveStep, goToNext, goToPrevious } = useSteps({
     index: 0,
   });
-
-  const inToken = useAtomValue(inTokenAtom);
-  const slippage = useAtomValue(slippageAtom);
-  const inTokenAmount = useAtomValue(inTokenAmountAtom);
-
-  const [openSlippageModal, setOpenSlippageModal] = useState(false);
-
-  const [activeRoute, setActiveRoute] = useAtom(bestRouteAtom);
-  const [, setFinalTokenEstimate] = useAtom(finalTokenEstimateAtom);
-  const [selectedRoute] = useAtom(selectedRouteAtom);
-  const [, setProtocolFinalToken] = useAtom(protocolFinalTokenAtom);
-  const [anyaltInstance, setAnyaltInstance] = useAtom(anyaltInstanceAtom);
-  const [allChains, setAllChains] = useAtom(allChainsAtom);
-  const [protocolInputToken, setProtocolInputToken] = useAtom(
-    protocolInputTokenAtom,
-  );
-  const [, setActiveOperationId] = useAtom(activeOperationIdAtom);
-  const [failedToFetchRoute, setFailedToFetchRoute] = useState(false);
-  const [isValidAmountIn, setIsValidAmountIn] = useState(true);
-
   const {
     isOpen: isConnectWalletsOpen,
     onClose: connectWalletsClose,
     onOpen: connectWalletsOpen,
   } = useDisclosure();
 
+  const inToken = useAtomValue(inTokenAtom);
+  const slippage = useAtomValue(slippageAtom);
+  const inTokenAmount = useAtomValue(inTokenAmountAtom);
+  const selectedRoute = useAtomValue(selectedRouteAtom);
+
+  const [, setActiveOperationId] = useAtom(activeOperationIdAtom);
+  const [, setFinalTokenEstimate] = useAtom(finalTokenEstimateAtom);
+  const [, setProtocolFinalToken] = useAtom(protocolFinalTokenAtom);
+  const [allChains, setAllChains] = useAtom(allChainsAtom);
+  const [bestRoute, setBestRoute] = useAtom(bestRouteAtom);
+  const [anyaltInstance, setAnyaltInstance] = useAtom(anyaltInstanceAtom);
+  const [protocolInputToken, setProtocolInputToken] = useAtom(
+    protocolInputTokenAtom,
+  );
+
   useEffect(() => {
-    if (activeRoute) {
-      estimateCallback(parseFloat(activeRoute.outputAmount)).then((res) => {
+    if (bestRoute) {
+      const token = {
+        ...finalToken,
+        amount: bestRoute.outputAmount.toString(),
+      };
+      estimateCallback(token).then((res) => {
         setFinalTokenEstimate(res);
       });
     }
-  }, [activeRoute]);
+  }, [bestRoute]);
 
   useEffect(() => {
     const anyaltInstance = new AnyAlt(apiKey);
-
     setAnyaltInstance(anyaltInstance);
 
-    if (anyaltInstance) {
+    if (anyaltInstance)
       anyaltInstance.getChains().then((res) => {
         setAllChains(res.chains);
       });
-    }
+
     setProtocolFinalToken(finalToken);
   }, []);
 
   useEffect(() => {
-    if (selectedRoute) {
-      setActiveRoute(selectedRoute);
-    }
+    if (selectedRoute) setBestRoute(selectedRoute);
   }, [selectedRoute]);
-
-  useEffect(() => {
-    console.log('chain: ', chain);
-  }, [chain]);
 
   useEffect(() => {
     const inputTokenChain = allChains.find(
@@ -130,22 +124,18 @@ export const useAnyaltWidget = ({
         amount: inTokenAmount,
         slippage,
       });
+      setBestRoute(route);
 
-      setActiveRoute(route);
-      setLoading(false);
+      const tokensOut = parseFloat(route?.outputAmount || '0');
+      const isEnoughDepositTokens = tokensOut > minDepositAmount;
 
-      if (route && parseFloat(route.outputAmount) < minDepositAmount) {
-        setIsValidAmountIn(false);
-      } else {
-        setIsValidAmountIn(true);
-        setFailedToFetchRoute(false);
-        if (withGoNext) {
-          goToNext();
-        }
-      }
+      setIsValidAmountIn(isEnoughDepositTokens);
+      setFailedToFetchRoute(false);
+      if (withGoNext && isEnoughDepositTokens) goToNext();
     } catch (error) {
       console.error(error);
       setFailedToFetchRoute(true);
+    } finally {
       setLoading(false);
     }
   };
@@ -164,52 +154,56 @@ export const useAnyaltWidget = ({
     if (areWalletsConnected) {
       connectWalletsConfirm();
     } else {
-      connectWalletsOpen();
+      if (walletConnector) {
+        walletConnector.connect();
+      } else {
+        connectWalletsOpen();
+      }
     }
   };
+
+  const getChain = (blockchain: string) =>
+    allChains.find((chain) => chain.name === blockchain);
 
   const connectWalletsConfirm = async () => {
     try {
       setLoading(true);
-      if (!activeRoute?.requestId) return;
+      if (!bestRoute?.requestId) return;
 
       const selectedWallets: Record<string, string> = {};
-      activeRoute.swaps.forEach((swap) => {
-        if (
-          swap.from.blockchain === 'SOLANA' ||
-          swap.to.blockchain === 'SOLANA'
-        ) {
+      bestRoute.swaps.forEach((swap) => {
+        const fromBlockchain = swap.from.blockchain;
+        const toBlockchain = swap.to.blockchain;
+        const isSolanaFrom = fromBlockchain === 'SOLANA';
+        const isSolanaTo = toBlockchain === 'SOLANA';
+
+        if (isSolanaFrom || isSolanaTo) {
           selectedWallets['SOLANA'] = solanaAddress?.toString() || '';
         }
-        const fromChain = allChains.find(
-          (chain) => chain.name === swap.from.blockchain,
-        );
-        const toChain = allChains.find(
-          (chain) => chain.name === swap.to.blockchain,
-        );
-        if (fromChain?.chainType === ChainType.EVM) {
-          selectedWallets[swap.from.blockchain] = evmAddress || '';
-        }
-        if (toChain?.chainType === ChainType.EVM) {
-          selectedWallets[swap.to.blockchain] = evmAddress || '';
-        }
+
+        const fromChain = getChain(fromBlockchain);
+        const toChain = getChain(toBlockchain);
+
+        const isEvmFrom = fromChain?.chainType === ChainType.EVM;
+        const isEvmTo = toChain?.chainType === ChainType.EVM;
+
+        if (isEvmFrom) selectedWallets[fromBlockchain] = evmAddress || '';
+        if (isEvmTo) selectedWallets[toBlockchain] = evmAddress || '';
       });
 
       const res = await anyaltInstance?.confirmRoute({
         selectedRoute: {
-          requestId: activeRoute.requestId,
+          requestId: bestRoute.requestId,
         },
         selectedWallets,
         destination: evmAddress || '',
       });
 
-      console.log(res);
-
       if (!res?.operationId || !res?.result)
         throw new Error('Failed to confirm route');
 
       setActiveOperationId(res?.operationId);
-      setActiveRoute(res?.result);
+      setBestRoute(res?.result);
 
       connectWalletsClose();
       goToNext();
@@ -222,7 +216,7 @@ export const useAnyaltWidget = ({
 
   const onBackClick = () => {
     if (activeStep === 2) {
-      setActiveStep(0);
+      setActiveStep(1);
     } else {
       goToPrevious();
     }
@@ -232,22 +226,35 @@ export const useAnyaltWidget = ({
     setActiveStep(3);
   };
 
+  useEffect(() => {
+    if (activeStep === 1) {
+      const interval = setInterval(() => {
+        onGetQuote(false);
+      }, REFRESH_INTERVAL);
+
+      return () => clearInterval(interval);
+    }
+  }, [activeStep]);
+
   const areWalletsConnected = useMemo(() => {
     let isSolanaRequired = false;
     let isEvmRequired = false;
-    activeRoute?.swaps.forEach((swap) => {
-      if (
-        swap.from.blockchain === 'SOLANA' ||
-        swap.to.blockchain === 'SOLANA'
-      ) {
-        isSolanaRequired = true;
-      }
-      const fromChain = allChains.find(
-        (chain) => chain.name === swap.from.blockchain,
-      );
-      const toChain = allChains.find(
-        (chain) => chain.name === swap.to.blockchain,
-      );
+
+    if (walletConnector && walletConnector.isConnected) {
+      return walletConnector.isConnected;
+    }
+
+    bestRoute?.swaps.forEach((swap) => {
+      const fromBlockchain = swap.from.blockchain;
+      const toBlockchain = swap.to.blockchain;
+      const isSolanaFrom = fromBlockchain === 'SOLANA';
+      const isSolanaTo = toBlockchain === 'SOLANA';
+
+      if (isSolanaFrom || isSolanaTo) isSolanaRequired = true;
+
+      const fromChain = getChain(fromBlockchain);
+      const toChain = getChain(toBlockchain);
+
       if (
         fromChain?.chainType === ChainType.EVM ||
         toChain?.chainType === ChainType.EVM
@@ -263,18 +270,16 @@ export const useAnyaltWidget = ({
       isWalletConnected = false;
     }
     return isWalletConnected;
-  }, [isSolanaConnected, isEvmConnected, activeRoute]);
+  }, [isSolanaConnected, isEvmConnected, bestRoute]);
 
   return {
     loading,
-    activeRoute,
+    activeRoute: bestRoute,
     activeStep,
     onGetQuote,
     goToPrevious,
     onChooseRouteButtonClick,
     onConfigClick,
-    isSolanaConnected,
-    isEvmConnected,
     openSlippageModal,
     setOpenSlippageModal,
     isConnectWalletsOpen,
