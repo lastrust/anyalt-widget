@@ -1,3 +1,10 @@
+import { connectorsForWallets } from '@rainbow-me/rainbowkit';
+import {
+  coinbaseWallet,
+  metaMaskWallet,
+  okxWallet,
+  walletConnectWallet,
+} from '@rainbow-me/rainbowkit/wallets';
 import { createAppKit } from '@reown/appkit';
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
 import {
@@ -10,23 +17,6 @@ import {
   polygon,
   scroll,
 } from 'wagmi/chains';
-
-// export const defaultWalletConfig = getDefaultConfig({
-//   appName: 'Anyalt Widget',
-//   projectId: 'c9123e47ba32bd9e6b2ab13381d5e51b',
-//   ssr: false,
-//   chains: [mainnet, arbitrum, polygon, optimism, base, linea, scroll, blast],
-//   transports: {
-//     [mainnet.id]: http(),
-//     [arbitrum.id]: http(),
-//     [polygon.id]: http(),
-//     [optimism.id]: http(),
-//     [base.id]: http(),
-//     [linea.id]: http(),
-//     [scroll.id]: http(),
-//     [blast.id]: http(),
-//   },
-// });
 
 const projectId = 'c9123e47ba32bd9e6b2ab13381d5e51b';
 
@@ -48,7 +38,21 @@ const networks = [
   blast,
 ];
 
+const connectors = connectorsForWallets(
+  [
+    {
+      groupName: 'Recommended',
+      wallets: [metaMaskWallet, coinbaseWallet, okxWallet, walletConnectWallet],
+    },
+  ],
+  {
+    appName: 'Anyalt Widget',
+    projectId: projectId,
+  },
+);
+
 export const defaultWalletConfig = new WagmiAdapter({
+  connectors,
   networks,
   projectId,
   ssr: false,
