@@ -1,15 +1,6 @@
-import {
-  Box,
-  BoxProps,
-  Button,
-  Image,
-  Input,
-  Skeleton,
-  Text,
-} from '@chakra-ui/react';
+import { Box, BoxProps, Button, Input, Skeleton, Text } from '@chakra-ui/react';
 import { useAtom, useAtomValue } from 'jotai';
 import { FC } from 'react';
-import chevronRight from '../../../../assets/imgs/chevron-right.svg';
 import { inTokenAmountAtom, inTokenAtom } from '../../../../store/stateStore';
 import { TokenIconBox } from '../../../molecules/TokenIconBox';
 import { TokenInfoBox } from '../../../molecules/TokenInfoBox';
@@ -112,12 +103,28 @@ export const TokenInputBox: FC<Props> = ({
               mr="12px"
             />
             <Box cursor="pointer">
-              <Image
-                src={chevronRight}
-                alt="Chevron Right"
-                minW="20px"
-                minH="20px"
-              />
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect
+                  width="20"
+                  height="20"
+                  rx="10"
+                  transform="matrix(-4.37114e-08 1 1 4.37114e-08 0 0)"
+                  fill="#008080"
+                />
+                <path
+                  d="M9.375 7.5L11.875 10L9.375 12.5"
+                  stroke="white"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
             </Box>
           </Box>
           <Box>
