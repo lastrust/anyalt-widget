@@ -141,6 +141,20 @@ export default Widget;
 
 Please declare your components with `'use client'` and use `dynamic` to import the widget to avoid server-side rendering issues.
 
+
+```tsx
+'use client';
+
+import dynamic from 'next/dynamic';
+
+export const ClientWidgetWrapper = dynamic(
+  () => import('../components/Widget').then((mod) => mod.default),
+  {
+    ssr: false,
+  },
+);
+```
+
 ---
 
 
