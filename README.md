@@ -21,7 +21,7 @@ It assists protocols with deposit functions within contracts, such as a user dep
 ## Installation
 
 ```sh
-npm install @anyalt/widget @rainbow-me/rainbowkit
+npm install @anyalt/widget @tanstack/react-query
 ```
 
 or
