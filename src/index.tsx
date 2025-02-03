@@ -4,8 +4,6 @@ import {
   defaultTheme,
   useModal,
 } from './components/screens/widget/AnyaltWidget';
-import { AppKitProvider } from './providers/RainbowKitProvider';
-import { SolanaProvider } from './providers/SolanaProvider';
 import { WalletsProviders } from './providers/WalletsProviders';
 import { WidgetProvider } from './providers/WidgetProvider';
 import './style.css';
@@ -64,11 +62,7 @@ export type AnyaltWidgetProps = {
 export const AnyaltWidget = (props: AnyaltWidgetProps) => {
   return (
     <Provider>
-      <AppKitProvider>
-        <SolanaProvider>
-          <AnyaltWidgetWrapper {...props} />
-        </SolanaProvider>
-      </AppKitProvider>
+      <AnyaltWidgetWrapper {...props} />
     </Provider>
   );
 };
