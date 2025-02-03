@@ -1,4 +1,5 @@
 import { Box, Center } from '@chakra-ui/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { OpenModalButton } from '../src/components/atoms/buttons/OpenModalButton';
@@ -13,6 +14,8 @@ import {
   WalletsProviders,
   WidgetProvider,
 } from '../src/index';
+
+const queryClient = new QueryClient();
 
 const App = () => {
   const { isOpen, onOpen, onClose } = useModal();
@@ -35,40 +38,63 @@ const App = () => {
   };
 
   return (
-    <WidgetProvider theme={defaultTheme}>
-      <WalletsProviders>
-        <Center h={'100vh'}>
-          <Box maxW={'600px'}>
-            <OpenModalButton onOpen={onOpen} />
-            <AnyaltWidget
-              inputToken={{
-                symbol: 'USDT',
-                address: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
-                chainId: 42161,
-                chainType: ChainType.EVM,
-                name: 'Arbitrum',
-                decimals: 18,
-              }}
-              finalToken={{
-                symbol: 'Aarnâ Afi802',
-                address: '0x123',
-                chainId: 1,
-                chainType: ChainType.EVM,
-                logoUrl: 'https://engine.aarna.ai/static/logo-only.svg',
-                name: 'Arbitrum',
-                decimals: 18,
-              }}
-              apiKey={'pk_0xCYxjM8dFF0Vii7syrgpR6U4'}
-              isOpen={isOpen}
-              onClose={onClose}
-              estimateCallback={estimateCallback}
-              executeCallBack={executeCallBack}
-              minDepositAmount={0}
-            />
-          </Box>
-        </Center>
-      </WalletsProviders>
-    </WidgetProvider>
+    <QueryClientProvider client={queryClient}>
+      <WidgetProvider theme={defaultTheme}>
+        <WalletsProviders>
+          <Center h={'100vh'}>
+            <Box maxW={'600px'}>
+              <OpenModalButton onOpen={onOpen} />
+              <AnyaltWidget
+                walletConnector={{
+                  address: '0x123',
+                  isConnected: true,
+                  connect: async () => {
+                    console.log('clicked on connect');
+                  },
+                  disconnect: async () => {
+                    console.log('clicked on disconnect');
+                  },
+                  signTransaction: async (transaction: unknown) => {
+                    console.log('clicked on signTransaction');
+                    return '0x123';
+                  },
+                  getChain: async () => {
+                    console.log('clicked on getChain');
+                    return 42161;
+                  },
+                  switchChain: async () => {
+                    console.log('clicked on switchChain');
+                  },
+                }}
+                inputToken={{
+                  symbol: 'USDT',
+                  address: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
+                  chainId: 42161,
+                  chainType: ChainType.EVM,
+                  name: 'Arbitrum',
+                  decimals: 18,
+                }}
+                finalToken={{
+                  symbol: 'Aarnâ Afi802',
+                  address: '0x123',
+                  chainId: 1,
+                  chainType: ChainType.EVM,
+                  logoUrl: 'https://engine.aarna.ai/static/logo-only.svg',
+                  name: 'Arbitrum',
+                  decimals: 18,
+                }}
+                apiKey={'pk_0xCYxjM8dFF0Vii7syrgpR6U4'}
+                isOpen={isOpen}
+                onClose={onClose}
+                estimateCallback={estimateCallback}
+                executeCallBack={executeCallBack}
+                minDepositAmount={0}
+              />
+            </Box>
+          </Center>
+        </WalletsProviders>
+      </WidgetProvider>
+    </QueryClientProvider>
   );
 };
 
