@@ -18,7 +18,7 @@ It assists protocols with deposit functions within contracts, such as a user dep
 
 ---
 
-## Installation
+## Setup
 
 ```sh
 npm install @anyalt/widget @tanstack/react-query
@@ -36,13 +36,35 @@ or
 pnpm add @anyalt/widget @tanstack/react-query
 ```
 
----
+- Apply styles for the wallets to display them correctly on your app.
+```tsx
+import '@solana/wallet-adapter-react-ui/styles.css';
+import '@rainbow-me/rainbowkit/styles.css';
+```
 
-## Usage
+- From `@tanstack/react-query`, import the `QueryClientProvider` component and `QueryClient` class. 
+- From `@anyalt/widget/` import the `WidgetProvider` and `AnyaltWidget` components.
+- Wrap your app with the providers:
+```tsx
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { WidgetProvider, AnyaltWidget } from '@anyalt/widget';
 
-Import and use `QueryClientProvider` to wrap the `WidgetProvider` and `AnyaltWidget` component in your project. Via `WidgetProvider`, you can customize the widget's appearance by modifying `defaultTheme`.
+const queryClient = new QueryClient();
 
-Apply styles for the wallets to display them correctly on your app.
+const App = () => {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <WidgetProvider>
+        ...
+      </WidgetProvider>
+    </QueryClientProvider>
+  );
+};
+```
+
+> **_NOTE:_**  Via `WidgetProvider`, you can customize the widget's appearance by modifying `defaultTheme`.
+
+## Example Usage
 
 ```tsx
 import {
@@ -115,9 +137,9 @@ const Widget = () => {
 export default Widget;
 ```
 
-## Integation with Next.js
+## Integration with Next.js
 
-Please wrap your components with `'use client'` and use `dynamic` to import the widget to avoid server-side rendering issues.
+Please declare your components with `'use client'` and use `dynamic` to import the widget to avoid server-side rendering issues.
 
 ---
 
