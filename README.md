@@ -21,26 +21,26 @@ It assists protocols with deposit functions within contracts, such as a user dep
 ## Installation
 
 ```sh
-npm install @anyalt/widget
+npm install @anyalt/widget @rainbow-me/rainbowkit
 ```
 
 or
 
 ```sh
-yarn add @anyalt/widget
+yarn add @anyalt/widget @tanstack/react-query
 ```
 
 or
 
 ```sh
-pnpm add @anyalt/widget
+pnpm add @anyalt/widget @tanstack/react-query
 ```
 
 ---
 
 ## Usage
 
-Import and use the `WidgetProvider` and `AnyaltWidget` component in your project. Via `WidgetProvider`, you can customize the widget's appearance by modifying `defaultTheme`.
+Import and use `QueryClientProvider` to wrap the `WidgetProvider` and `AnyaltWidget` component in your project. Via `WidgetProvider`, you can customize the widget's appearance by modifying `defaultTheme`.
 
 Apply styles for the wallets to display them correctly on your app.
 
@@ -53,9 +53,12 @@ import {
   Token,
 } from '@anyalt/widget';
 import { useState } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import '@solana/wallet-adapter-react-ui/styles.css';
 import '@rainbow-me/rainbowkit/styles.css';
+
+const queryClient = new QueryClient();
 
 const Widget = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -91,18 +94,21 @@ const Widget = () => {
   };
 
   return (
-    <WidgetProvider theme={defaultTheme}>
-      <AnyaltWidget
-        isOpen={isOpen}
-        inputToken={inputToken}
-        finalToken={finalToken}
-        apiKey="your-api-key"
-        onClose={() => setIsOpen(false)}
-        estimateCallback={estimateCallback}
-        executeCallBack={executeCallBack}
-        minDepositAmount={10}
-      />
-    </WidgetProvider>
+    <QueryClientProvider client={queryClient}>
+      <WidgetProvider theme={defaultTheme}>
+        <button onClick={() => setIsOpen(true)}>Open Widget</button>
+        <AnyaltWidget
+          isOpen={isOpen}
+          inputToken={inputToken}
+          finalToken={finalToken}
+          apiKey="your-api-key"
+          onClose={() => setIsOpen(false)}
+          estimateCallback={estimateCallback}
+          executeCallBack={executeCallBack}
+          minDepositAmount={10}
+        />
+      </WidgetProvider>
+    </QueryClientProvider>
   );
 };
 
@@ -113,36 +119,22 @@ export default Widget;
 
 Please wrap your components with `'use client'` and use `dynamic` to import the widget to avoid server-side rendering issues.
 
-```tsx
-'use client';
-
-import dynamic from 'next/dynamic';
-
-export const ClientWidgetWrapper = dynamic(
-  () => import('../components/Widget').then((mod) => mod.default),
-  {
-    ssr: false,
-  },
-);
-```
-
 ---
 
-## API Reference
 
-### `AnyaltWidgetProps`
+### Props
 
-| Prop                | Type                                            | Description                              |
-| ------------------- | ----------------------------------------------- | ---------------------------------------- |
-| `isOpen`            | `boolean`                                       | Controls widget visibility               |
-| `inputToken`        | `Token`                                         | Input token details                      |
-| `finalToken`        | `Token`                                         | Output token details                     |
-| `apiKey`            | `string`                                        | API key for Anyalt services              |
-| `onClose`           | `() => void`                                    | Callback triggered when widget is closed |
-| `estimateCallback`  | `(token: Token) => Promise<EstimateResponse>`   | Function to estimate token swap          |
-| `executeCallBack`   | `(token: Token) => Promise<ExecuteResponse>`    | Function to execute token swap           |
-| `walletConnector?`  | `WalletConnector`                               | Optional custom wallet connector         |
-| `minDepositAmount?` | `number`                                        | Minimum deposit amount in USD equivalent |
+| Prop                | Type                                          | Description                              |
+| ------------------- | --------------------------------------------- | ---------------------------------------- |
+| `isOpen`            | `boolean`                                     | Controls widget visibility               |
+| `inputToken`        | `Token`                                       | Input token details                      |
+| `finalToken`        | `Token`                                       | Output token details                     |
+| `apiKey`            | `string`                                      | API key for Anyalt services              |
+| `onClose`           | `() => void`                                  | Callback triggered when widget is closed |
+| `estimateCallback`  | `(token: Token) => Promise<EstimateResponse>` | Function to estimate token swap          |
+| `executeCallBack`   | `(token: Token) => Promise<ExecuteResponse>`  | Function to execute token swap           |
+| `walletConnector?`  | `WalletConnector`                             | Optional custom wallet connector         |
+| `minDepositAmount?` | `number`                                      | Minimum deposit amount in USD equivalent |
 
 ### `Token`
 
