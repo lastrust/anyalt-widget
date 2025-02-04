@@ -5,7 +5,6 @@ import {
   AccordionItem,
   AccordionPanel,
   HStack,
-  Image,
   Text,
   VStack,
 } from '@chakra-ui/react';
@@ -20,7 +19,7 @@ import {
   selectedRouteAtom,
   stepsProgressAtom,
 } from '../../../store/stateStore';
-import { getImageURL } from '../../../utils';
+import { CheckIcon } from '../../atoms/icons/transaction/CheckIcon';
 import { DividerIcon } from '../../atoms/icons/transaction/DividerIcon';
 import { GasIcon } from '../../atoms/icons/transaction/GasIcon';
 import { TimeIcon } from '../../atoms/icons/transaction/TimeIcon';
@@ -88,14 +87,7 @@ export const TransactionAccordion = () => {
                 <Text textStyle={'bold.0'} mr="8px">
                   Step {index + 1}
                 </Text>
-                {currentStep - 1 > index && (
-                  <Image
-                    src={getImageURL('check-icon.svg')}
-                    alt={'check-icon'}
-                    width="20px"
-                    height="20px"
-                  />
-                )}
+                {currentStep - 1 > index && <CheckIcon />}
                 {currentStep - 1 === index && (
                   <Text textStyle={'bold.1'} color="brand.tertiary.100">
                     In Progress

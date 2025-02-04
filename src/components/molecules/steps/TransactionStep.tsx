@@ -1,5 +1,5 @@
 import { Box, Flex, Image, Text } from '@chakra-ui/react';
-import { getImageURL } from '../../../utils';
+import { ArrowRightIcon } from '../../atoms/icons/transaction/ArrowRightIcon';
 
 type Props = {
   exchangeName: string;
@@ -49,13 +49,9 @@ export const TransactionStep = ({
           >
             {fromToken.amount} {fromToken.name} on {fromToken.chainName}
           </Text>
-          <Image
-            src={getImageURL('arrow-right.svg')}
-            alt={'arrow-right'}
-            mr={'8px'}
-            width="9px"
-            height="9px"
-          />
+          <Box mr={'8px'}>
+            <ArrowRightIcon />
+          </Box>
           <Image
             src={toToken.chainLogo}
             alt={`${toToken.chainLogo} Icon`}
