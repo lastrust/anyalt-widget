@@ -2,6 +2,7 @@ import { SupportedToken } from '@anyalt/sdk';
 import { Box, Image, Input, Text } from '@chakra-ui/react';
 import { FC } from 'react';
 import { getImageURL } from '../../../../utils';
+import { SearchIcon } from '../../../atoms/icons/selectToken/SearchIcon';
 import { TokenAccept } from '../../../molecules/TokenAccept';
 import { TokenItem } from '../../../molecules/TokenItem';
 import { useTokenSelectBox } from './useTokenSelectBox';
@@ -167,12 +168,7 @@ export const TokenSelectBox: FC<Props> = ({ onClose, onTokenSelect }) => {
             opacity="0.4"
             mb="16px"
           >
-            <Image
-              src={getImageURL('search-icon.svg')}
-              alt="search"
-              width="20px"
-              height="20px"
-            />
+            <SearchIcon />
             <Input
               value={searchInputValue}
               onChange={(e) => setSearchInputValue(e.target.value)}
