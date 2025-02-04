@@ -26,11 +26,12 @@ const WALLETS = [
   {
     walletType: 'EVM wallets',
     network: 'Ethereum',
+    isDisabled: false,
   },
   {
     walletType: 'Solana wallets',
     network: 'solana',
-    isDisabled: true,
+    isDisabled: false,
   },
 ];
 
