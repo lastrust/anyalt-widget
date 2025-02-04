@@ -112,6 +112,7 @@ export const useHandleTransaction = (
       );
 
       if (externalEvmWalletConnector) {
+        console.log('externalEvmWalletConnector: ', externalEvmWalletConnector);
         if (!externalEvmWalletConnector.isConnected) {
           throw new TransactionError(
             'EVM wallet not connected. Please connect your wallet.',
@@ -127,6 +128,7 @@ export const useHandleTransaction = (
 
         return txHash;
       }
+
       if (!isEvmConnected) {
         throw new TransactionError(
           'EVM wallet not connected. Please connect your wallet.',
@@ -147,18 +149,25 @@ export const useHandleTransaction = (
         console.log(chain.chainId, getChainId(walletConfig));
 
         const res = await switchChain(walletConfig, {
-          chainId: 8453,
+          chainId: chain.chainId,
         });
 
         console.log('res: ', res);
 
-        const txHash = await sendTransaction(walletConfig, {
-          to: transactionDetails.to as `0x${string}`,
-          value: BigInt(transactionDetails.value!),
-          data: transactionDetails.data! as `0x${string}`,
-        });
+        console.log(transactionDetails);
 
-        return txHash;
+        if (transactionDetails.isApprovalTx) {
+          return await sendTransaction(walletConfig, {
+            to: transactionDetails.to as `0x${string}`,
+            data: transactionDetails.data! as `0x${string}`,
+          });
+        } else {
+          return await sendTransaction(walletConfig, {
+            to: transactionDetails.to as `0x${string}`,
+            value: BigInt(transactionDetails.value!),
+            data: transactionDetails.data! as `0x${string}`,
+          });
+        }
       } catch (error) {
         throw new TransactionError(
           'Failed to send EVM transaction',
