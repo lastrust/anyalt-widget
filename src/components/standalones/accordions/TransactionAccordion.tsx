@@ -147,11 +147,15 @@ export const TransactionAccordion = () => {
                 <VStack w={'100%'}>
                   {stepsProgress?.steps[index].approve && (
                     <ProgressItem
+                      isApprove={true}
                       progress={stepsProgress.steps[index].approve}
                     />
                   )}
                   {stepsProgress?.steps[index].swap && (
-                    <ProgressItem progress={stepsProgress.steps[index].swap} />
+                    <ProgressItem
+                      isApprove={false}
+                      progress={stepsProgress.steps[index].swap}
+                    />
                   )}
                 </VStack>
               </VStack>
@@ -218,11 +222,13 @@ export const TransactionAccordion = () => {
             <VStack w={'100%'}>
               {stepsProgress?.steps[bestRoute.swaps.length].approve && (
                 <ProgressItem
+                  isApprove={true}
                   progress={stepsProgress.steps[bestRoute.swaps.length].approve}
                 />
               )}
               {stepsProgress?.steps[bestRoute.swaps.length].swap && (
                 <ProgressItem
+                  isApprove={false}
                   progress={stepsProgress.steps[bestRoute.swaps.length].swap}
                 />
               )}
