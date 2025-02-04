@@ -1,8 +1,8 @@
-import { Box, Image, Input, Text } from '@chakra-ui/react';
+import { Box, Input, Text } from '@chakra-ui/react';
 import { useAtom } from 'jotai';
 import { FC, useRef } from 'react';
 import { slippageAtom } from '../../../store/stateStore';
-import { getImageURL } from '../../../utils';
+import { InfoIcon } from '../../atoms/icons/modals/InfoIcon';
 import { SlippageItem } from '../../molecules/SlippageItem';
 
 type Props = {
@@ -80,12 +80,7 @@ export const SlippageModal: FC<Props> = ({ onClose }) => {
           <Text fontSize="20px" fontWeight="bold">
             Slippage tolerance per swap
           </Text>
-          <Image
-            src={getImageURL('info-icon.svg')}
-            alt="info"
-            width="16px"
-            height="16px"
-          />
+          <InfoIcon />
         </Box>
         <Box>
           <Box display="flex" flexDir="row" gap="6px" mb="6px">

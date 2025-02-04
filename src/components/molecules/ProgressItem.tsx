@@ -1,7 +1,8 @@
 import { TransactionProgress } from '@anyalt/sdk';
-import { CircularProgress, HStack, Image, Text } from '@chakra-ui/react';
+import { Box, CircularProgress, HStack, Text } from '@chakra-ui/react';
 import { FC } from 'react';
-import { getImageURL } from '../../utils';
+import { CheckIcon } from '../atoms/icons/transaction/CheckIcon';
+import { FailIcon } from '../atoms/icons/transaction/FailIcon';
 
 type Props = {
   progress: TransactionProgress | undefined;
@@ -23,20 +24,14 @@ export const ProgressItem: FC<Props> = ({ progress }) => {
         />
       )}
       {progress.status === 'confirmed' && (
-        <Image
-          src={getImageURL('check-icon.svg')}
-          alt={'check-icon'}
-          width="20px"
-          height="20px"
-        />
+        <Box w={'20px'} h={'20px'}>
+          <CheckIcon />
+        </Box>
       )}
       {progress.status === 'failed' && (
-        <Image
-          src={getImageURL('fail-icon.svg')}
-          alt={'fail-icon'}
-          width="20px"
-          height="20px"
-        />
+        <Box w={'20px'} h={'20px'}>
+          <FailIcon />
+        </Box>
       )}
       <Text fontSize={'16px'} color="brand.secondary.3">
         Swap: {progress.message}

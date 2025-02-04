@@ -1,6 +1,6 @@
-import { Box, BoxProps, Button, Image, Text } from '@chakra-ui/react';
+import { Box, BoxProps, Button, Text } from '@chakra-ui/react';
 import { FC } from 'react';
-import { getImageURL } from '../../utils';
+import { WarningIcon } from '../atoms/icons/transaction/WarningIcon';
 
 type Props = BoxProps & {
   onClick: () => void;
@@ -17,7 +17,7 @@ export const TokenAccept: FC<Props> = ({ onClick, ...props }) => {
       {...props}
     >
       <Box display="flex" flexDir="row" alignItems="center" gap="8px" mb="8px">
-        <Image src={getImageURL('warning-icon.svg')} alt="warning" />
+        <WarningIcon />
         <Text color="brand.white" fontSize="16px" fontWeight="bold">
           Warning
         </Text>

@@ -1,4 +1,4 @@
-import { Button, Flex, Image, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Text } from '@chakra-ui/react';
 import { useAtomValue } from 'jotai';
 import { FC } from 'react';
 import {
@@ -6,7 +6,7 @@ import {
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
 } from '../../../store/stateStore';
-import { getImageURL } from '../../../utils';
+import { ThumbIcon } from '../../atoms/icons/transaction/ThumbIcon';
 import { TokenIconBox } from '../../molecules/TokenIconBox';
 
 type Props = {
@@ -25,13 +25,9 @@ export const TransactionComplete: FC<Props> = ({ onTransactionDoneClick }) => {
       justifyContent="center"
       height="100%"
     >
-      <Image
-        src={getImageURL('thumb-icon.svg')}
-        alt="thumb-icon"
-        width="64px"
-        height="64px"
-        mb="24px"
-      />
+      <Box mb="24px">
+        <ThumbIcon />
+      </Box>
       <Text
         fontSize="32px"
         fontWeight="bold"

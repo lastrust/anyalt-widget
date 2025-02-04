@@ -1,10 +1,6 @@
 import { PublicKey } from '@solana/web3.js';
 import { ethers } from 'ethers';
 
-export function getImageURL(name: string) {
-  return new URL(`../assets/imgs/${name}`, import.meta.url).href;
-}
-
 export function isValidEthereumAddress(address: string): boolean {
   return ethers.isAddress(address);
 }
