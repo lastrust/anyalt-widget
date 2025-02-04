@@ -9,8 +9,8 @@ type Props = {
   openSlippageModal: boolean;
   showConnectedWallets?: boolean;
   failedToFetchRoute: boolean;
-  onButtonClick: () => void;
   walletConnector?: WalletConnector;
+  onButtonClick: () => void;
   handleWalletsOpen: () => void;
   setOpenSlippageModal: (open: boolean) => void;
 };

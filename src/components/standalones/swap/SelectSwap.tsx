@@ -11,8 +11,6 @@ import {
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useAccount } from 'wagmi';
 import { WalletConnector } from '../../..';
-import EthLogo from '../../../assets/imgs/eth.png';
-import SolLogo from '../../../assets/imgs/solana.png';
 import { SlippageModal } from '../modals/SlippageModal';
 import { TokenInputBox } from '../token/input/TokenInputBox';
 import { TokenQuoteBox } from '../token/quote/TokenQuoteBox';
@@ -125,7 +123,12 @@ export const SelectSwap = ({
             {showConnectedWallets &&
               (isEvmConnected || walletConnector?.isConnected) && (
                 <HStack>
-                  <Image src={EthLogo} w={'16px'} h={'16px'} alt="EVM" />
+                  <Image
+                    src={'https://www.anyalt.finance/widget/eth.png'}
+                    w={'16px'}
+                    h={'16px'}
+                    alt="EVM"
+                  />
                   <Text
                     cursor={'pointer'}
                     textStyle={'regular.3'}
@@ -143,7 +146,12 @@ export const SelectSwap = ({
               )}
             {showConnectedWallets && isSolanaConnected && (
               <HStack>
-                <Image src={SolLogo} w={'16px'} h={'16px'} alt="SOL" />
+                <Image
+                  src={'https://www.anyalt.finance/widget/solana.png'}
+                  w={'16px'}
+                  h={'16px'}
+                  alt="SOL"
+                />
                 <Text
                   cursor={'pointer'}
                   textStyle={'regular.3'}

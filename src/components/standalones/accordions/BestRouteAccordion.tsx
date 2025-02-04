@@ -8,9 +8,12 @@ import {
   Flex,
   VStack,
 } from '@chakra-ui/react';
-import { useAtom } from 'jotai';
-import aarnaIcon from '../../../assets/imgs/aarna.png';
-import { bestRouteAtom, selectedRouteAtom } from '../../../store/stateStore';
+import { useAtom, useAtomValue } from 'jotai';
+import {
+  bestRouteAtom,
+  protocolFinalTokenAtom,
+  selectedRouteAtom,
+} from '../../../store/stateStore';
 import { getTransactionGroupData } from '../../../utils/getTransactionGroupData';
 import { GasIcon } from '../../atoms/icons/GasIcon';
 import { StepsIcon } from '../../atoms/icons/StepsIcon';
@@ -24,6 +27,7 @@ type Props = {
 };
 
 export const BestRouteAccordion = ({ isButtonHidden = true }: Props) => {
+  const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
   const [bestRoute] = useAtom(bestRouteAtom);
   const [selectedRoute, setSelectedRoute] = useAtom(selectedRouteAtom);
 
@@ -118,8 +122,8 @@ export const BestRouteAccordion = ({ isButtonHidden = true }: Props) => {
               )}
             </Flex>
             <TokenRouteInfo
-              tokenName="aarna"
-              tokenIcon={aarnaIcon}
+              tokenName={protocolFinalToken?.name || ''}
+              tokenIcon={protocolFinalToken?.logoUrl || ''}
               amount={10.19}
               price={2423.53}
               difference={0.5}

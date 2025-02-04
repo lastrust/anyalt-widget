@@ -1,6 +1,5 @@
 import { Image } from '@chakra-ui/react';
 import { type FC } from 'react';
-import AnyaltLogoPng from '../../../assets/imgs/anyalt-logo.png';
 
 type Props = {
   width?: string;
@@ -10,7 +9,7 @@ type Props = {
 export const AnyaltLogo: FC<Props> = ({ width = '84px', height = '24px' }) => {
   return (
     <Image
-      src={AnyaltLogoPng}
+      src={'https://www.anyalt.finance/anyalt-logo.png'}
       alt="Anyalt Logo"
       width={width}
       height={height}
