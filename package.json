@@ -39,7 +39,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@anyalt/sdk": "^1.0.5-canary.1",
+    "@anyalt/sdk": "1.0.5-canary.3",
     "@chakra-ui/react": "2.10.4",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
