@@ -1,15 +1,17 @@
 import { Box, Button, Divider, Flex, Text, VStack } from '@chakra-ui/react';
-import { useAtomValue } from 'jotai';
-import { FC, useState } from 'react';
+import { useAtom, useAtomValue } from 'jotai';
+import { FC, useEffect, useState } from 'react';
 import { ExecuteResponse, Token, WalletConnector } from '../../..';
 import { useHandleTransaction } from '../../../hooks/useHandleTransaction';
 import {
   activeOperationIdAtom,
   anyaltInstanceAtom,
   bestRouteAtom,
+  currentStepAtom,
   finalTokenEstimateAtom,
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
+  selectedRouteAtom,
   slippageAtom,
 } from '../../../store/stateStore';
 import { CopyIcon } from '../../atoms/icons/transaction/CopyIcon';
@@ -40,6 +42,9 @@ export const TransactionInfo: FC<Props> = ({
     navigator.clipboard.writeText(bestRoute?.requestId || '');
   };
 
+  const currentStep = useAtomValue(currentStepAtom);
+  const [selectedRoute] = useAtom(selectedRouteAtom);
+
   const runTx = async () => {
     if (!anyaltInstance || !activeOperationId) return;
     setIsLoading(true);
@@ -58,6 +63,12 @@ export const TransactionInfo: FC<Props> = ({
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (selectedRoute) {
+      console.log('selectedRoute', selectedRoute.swaps[currentStep - 1]);
+    }
+  });
 
   return (
     <VStack w={'100%'} alignItems={'flex-start'} gap={'16px'}>

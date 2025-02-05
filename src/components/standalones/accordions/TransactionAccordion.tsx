@@ -4,6 +4,7 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
+  Box,
   HStack,
   Text,
   VStack,
@@ -27,14 +28,16 @@ import { ProgressItem } from '../../molecules/ProgressItem';
 import { TransactionStep } from '../../molecules/steps/TransactionStep';
 
 export const TransactionAccordion = () => {
-  const currentStep = useAtomValue(currentStepAtom);
-  const bestRoute = useAtomValue(bestRouteAtom);
-  const [selectedRoute, setSelectedRoute] = useAtom(selectedRouteAtom);
-  const stepsProgress = useAtomValue(stepsProgressAtom);
   const [isLastMileExpanded, setIsLastMileExpanded] = useState(false);
+
+  const bestRoute = useAtomValue(bestRouteAtom);
+  const currentStep = useAtomValue(currentStepAtom);
+  const stepsProgress = useAtomValue(stepsProgressAtom);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
   const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
+
+  const [, setSelectedRoute] = useAtom(selectedRouteAtom);
 
   const handleRouteSelect = () => {
     setSelectedRoute(bestRoute);
@@ -59,17 +62,14 @@ export const TransactionAccordion = () => {
         bestRoute?.swaps.map((swap, index) => (
           <AccordionItem
             key={`${swap.swapperId}-${index}`}
-            border="1px solid"
-            borderColor="brand.border.primary"
-            borderRadius={'10px'}
             p={'16px'}
             cursor={'pointer'}
+            bg="brand.secondary.6"
             onClick={handleRouteSelect}
-            bg={
-              selectedRoute?.swaps[currentStep - 1].swapperId ===
-              bestRoute?.swaps[currentStep - 1].swapperId
-                ? 'brand.secondary.12'
-                : 'transparent'
+            borderRadius={'10px'}
+            borderWidth={'3px'}
+            borderColor={
+              currentStep - 1 === index ? 'brand.tertiary.100' : 'transparent'
             }
             _hover={{
               bgColor: 'bg.secondary.1',
@@ -89,12 +89,19 @@ export const TransactionAccordion = () => {
                 </Text>
                 {currentStep - 1 > index && <CheckIcon />}
                 {currentStep - 1 === index && (
-                  <Text textStyle={'bold.1'} color="brand.tertiary.100">
+                  <Text textStyle={'bold.2'} color="brand.tertiary.100">
                     In Progress
                   </Text>
                 )}
               </HStack>
-              <AccordionIcon w={'24px'} h={'24px'} />
+              <Box
+                bg="brand.tertiary.100"
+                borderRadius={'50%'}
+                w={'24px'}
+                h={'24px'}
+              >
+                <AccordionIcon w={'24px'} h={'24px'} />
+              </Box>
             </AccordionButton>
             <AccordionPanel p={'0px'} mt="12px">
               <VStack gap={'12px'}>
@@ -119,7 +126,7 @@ export const TransactionAccordion = () => {
                     <Text
                       color={'brand.secondary.3'}
                       lineHeight={'120%'}
-                      fontSize={'16px'}
+                      textStyle={'regular.3'}
                     >
                       {swap.estimatedTimeInSeconds}s
                     </Text>
@@ -130,7 +137,7 @@ export const TransactionAccordion = () => {
                     <Text
                       color={'brand.secondary.3'}
                       lineHeight={'120%'}
-                      fontSize={'16px'}
+                      textStyle={'regular.3'}
                     >
                       ${' '}
                       {swap.fee
