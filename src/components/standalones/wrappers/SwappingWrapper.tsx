@@ -27,7 +27,7 @@ export const SwappingWrapper = ({
     >
       <Grid gridTemplateColumns={secondTitle ? '1fr 1fr' : '1fr'} gap="16px">
         {title && (
-          <Flex justifyContent="space-between" alignItems="center" mb="16px">
+          <Flex justifyContent="space-between" alignItems="center">
             <VStack alignItems="left">
               <Text color="white" fontSize="24px" fontWeight="bold">
                 {title}

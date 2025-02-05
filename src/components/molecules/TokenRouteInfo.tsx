@@ -47,7 +47,7 @@ export const TokenRouteInfo: FC<Props> = ({
           height="40px"
         />
       )}
-      <VStack justifyContent={'start'} alignItems={'start'} gap={'8px'}>
+      <VStack justifyContent={'start'} alignItems={'start'} gap={'4px'}>
         {loading ? (
           <Skeleton w={'100px'} h={'16px'} />
         ) : (

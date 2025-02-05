@@ -6,12 +6,15 @@ import {
   AccordionPanel,
   Box,
   Flex,
+  Skeleton,
+  Text,
   VStack,
 } from '@chakra-ui/react';
 import { useAtom, useAtomValue } from 'jotai';
 import { useEffect } from 'react';
 import {
   bestRouteAtom,
+  currentStepAtom,
   protocolFinalTokenAtom,
   selectedRouteAtom,
 } from '../../../store/stateStore';
@@ -35,6 +38,7 @@ export const BestRouteAccordion = ({
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
   const [bestRoute] = useAtom(bestRouteAtom);
   const [selectedRoute, setSelectedRoute] = useAtom(selectedRouteAtom);
+  const currentStep = useAtomValue(currentStepAtom);
 
   if (!bestRoute) return <></>;
   const swaps = getTransactionGroupData(bestRoute);
@@ -138,7 +142,19 @@ export const BestRouteAccordion = ({
             />
           </AccordionButton>
           <AccordionPanel p={'0px'} mt="12px">
-            <VStack gap={'12px'}>
+            <VStack
+              gap={'12px'}
+              alignItems={'flex-start'}
+              color="brand.secondary.3"
+            >
+              {loading ? (
+                <Skeleton w={'180px'} h={'18px'} ml="24px" />
+              ) : (
+                <Text textStyle={'bold.3'} ml={'24px'} lineHeight={'120%'}>
+                  Transaction {currentStep}:{' '}
+                  {swaps[currentStep - 1].swapperName}
+                </Text>
+              )}
               {swaps?.map((step, index) => {
                 return (
                   <RouteStep
