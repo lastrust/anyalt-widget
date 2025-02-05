@@ -214,7 +214,14 @@ export const TransactionAccordion = () => {
               </Text>
             )}
           </HStack>
-          <AccordionIcon w={'24px'} h={'24px'} />
+          <Box
+            bg="brand.tertiary.100"
+            borderRadius={'50%'}
+            w={'24px'}
+            h={'24px'}
+          >
+            <AccordionIcon w={'24px'} h={'24px'} />
+          </Box>
         </AccordionButton>
         <AccordionPanel p={'0px'} mt="12px">
           <VStack gap={'12px'}>
