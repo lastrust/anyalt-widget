@@ -1,6 +1,4 @@
-import { Grid } from '@chakra-ui/react';
 import { WalletConnector } from '../../..';
-import { BestRouteAccordion } from '../accordions/BestRouteAccordion';
 import { SelectSwap } from '../swap/SelectSwap';
 
 type Props = {
@@ -27,19 +25,16 @@ export const RoutesWrapper = ({
   handleWalletsOpen: connectWalletsOpen,
 }: Props) => {
   return (
-    <Grid gridTemplateColumns="448px 448px" gap="24px">
-      <SelectSwap
-        loading={loading}
-        buttonText={buttonText}
-        onButtonClick={onButtonClick}
-        walletConnector={walletConnector}
-        openSlippageModal={openSlippageModal}
-        handleWalletsOpen={connectWalletsOpen}
-        setOpenSlippageModal={setOpenSlippageModal}
-        showConnectedWallets={showConnectedWallets}
-        failedToFetchRoute={failedToFetchRoute}
-      />
-      <BestRouteAccordion />
-    </Grid>
+    <SelectSwap
+      loading={loading}
+      buttonText={buttonText}
+      onButtonClick={onButtonClick}
+      walletConnector={walletConnector}
+      openSlippageModal={openSlippageModal}
+      handleWalletsOpen={connectWalletsOpen}
+      setOpenSlippageModal={setOpenSlippageModal}
+      showConnectedWallets={showConnectedWallets}
+      failedToFetchRoute={failedToFetchRoute}
+    />
   );
 };

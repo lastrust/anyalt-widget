@@ -170,7 +170,11 @@ export const SelectSwap = ({
       {openTokenSelect && (
         <TokenSelectBox
           onClose={() => setOpenTokenSelect(false)}
-          onTokenSelect={onTokenSelect}
+          onTokenSelect={(token) =>
+            onTokenSelect(token, () => {
+              setOpenTokenSelect(false);
+            })
+          }
         />
       )}
       {openSlippageModal && (

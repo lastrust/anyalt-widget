@@ -1,5 +1,7 @@
 import { BestRouteResponse } from '@anyalt/sdk';
+import { Grid } from '@chakra-ui/react';
 import { WalletConnector } from '../../..';
+import { BestRouteAccordion } from '../accordions/BestRouteAccordion';
 import { RoutesWrapper } from '../wrappers/RoutesWrapper';
 import { SwappingWrapper } from '../wrappers/SwappingWrapper';
 
@@ -35,23 +37,26 @@ export const ChoosingRouteStep = ({
     : 'Get Quote';
 
   return (
-    <SwappingWrapper
-      title={'Calculation'}
-      secondTitle="Routes"
-      secondSubtitle="Please select preferred route"
-      onConfigClick={onConfigClick}
-    >
-      <RoutesWrapper
-        loading={loading}
-        buttonText={buttonText}
-        showConnectedWallets={true}
-        walletConnector={walletConnector}
-        openSlippageModal={openSlippageModal}
-        handleWalletsOpen={connectWalletsOpen}
-        onButtonClick={onChooseRouteButtonClick}
-        setOpenSlippageModal={setOpenSlippageModal}
-        failedToFetchRoute={failedToFetchRoute}
-      />
-    </SwappingWrapper>
+    <Grid gridTemplateColumns="448px 448px" gap="24px">
+      <SwappingWrapper title={'Calculation'} onConfigClick={onConfigClick}>
+        <RoutesWrapper
+          loading={loading}
+          buttonText={buttonText}
+          showConnectedWallets={true}
+          walletConnector={walletConnector}
+          openSlippageModal={openSlippageModal}
+          handleWalletsOpen={connectWalletsOpen}
+          onButtonClick={onChooseRouteButtonClick}
+          setOpenSlippageModal={setOpenSlippageModal}
+          failedToFetchRoute={failedToFetchRoute}
+        />
+      </SwappingWrapper>
+      <SwappingWrapper
+        title={'Routes'}
+        subtitle="Please select preferred route"
+      >
+        <BestRouteAccordion loading={loading} />
+      </SwappingWrapper>
+    </Grid>
   );
 };

@@ -115,6 +115,8 @@ export const useAnyaltWidget = ({
   const onGetQuote = async (withGoNext: boolean = true) => {
     if (!inToken || !protocolInputToken || !inTokenAmount) return;
 
+    console.log('called');
+
     try {
       setLoading(true);
 
@@ -124,6 +126,7 @@ export const useAnyaltWidget = ({
         amount: inTokenAmount,
         slippage,
       });
+      console.log('route', route);
       setBestRoute(route);
 
       const tokensOut = parseFloat(route?.outputAmount || '0');
@@ -144,7 +147,7 @@ export const useAnyaltWidget = ({
     if (inTokenAmount) {
       onGetQuote(false);
     }
-  }, [inTokenAmount]);
+  }, [inTokenAmount, inToken]);
 
   const onConfigClick = () => {
     setOpenSlippageModal(true);
@@ -218,6 +221,7 @@ export const useAnyaltWidget = ({
   const onBackClick = () => {
     if (activeStep === 2) {
       setActiveStep(1);
+      onGetQuote(false);
     } else {
       goToPrevious();
     }
