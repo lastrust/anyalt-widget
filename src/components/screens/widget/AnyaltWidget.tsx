@@ -11,6 +11,7 @@ export {
 } from '../../../theme/defaultTheme';
 export { OpenModalButton } from '../../atoms/buttons/OpenModalButton';
 
+import { useEffect } from 'react';
 import { AnyaltWidgetProps } from '../../..';
 import { useAnyaltWidget } from '../../../hooks/useAnyaltWidget';
 import { ChoosingRouteStep } from '../../standalones/steps/ChoosingRouteStep';
@@ -56,6 +57,10 @@ export const AnyaltWidgetWrapper = ({
     walletConnector,
   });
 
+  useEffect(() => {
+    console.log('loading', loading);
+  }, [loading]);
+
   return (
     <ModalWrapper
       isOpen={isOpen}
@@ -79,7 +84,6 @@ export const AnyaltWidgetWrapper = ({
           walletConnector={walletConnector}
           failedToFetchRoute={failedToFetchRoute}
           areWalletsConnected={areWalletsConnected}
-          onGetQuote={onGetQuote}
           onConfigClick={onConfigClick}
           openSlippageModal={openSlippageModal}
           setOpenSlippageModal={setOpenSlippageModal}

@@ -147,7 +147,7 @@ export const useAnyaltWidget = ({
     if (inTokenAmount) {
       onGetQuote(false);
     }
-  }, [inTokenAmount]);
+  }, [inTokenAmount, inToken]);
 
   const onConfigClick = () => {
     setOpenSlippageModal(true);

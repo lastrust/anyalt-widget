@@ -12,7 +12,6 @@ type Props = {
   areWalletsConnected: boolean;
   walletConnector?: WalletConnector;
   activeRoute: BestRouteResponse | undefined;
-  onGetQuote: (withGoNext: boolean) => void;
   onConfigClick: () => void;
   connectWalletsOpen: () => void;
   onChooseRouteButtonClick: () => void;
@@ -26,7 +25,6 @@ export const ChoosingRouteStep = ({
   walletConnector,
   areWalletsConnected,
   onConfigClick,
-  onGetQuote,
   openSlippageModal,
   connectWalletsOpen,
   setOpenSlippageModal,
@@ -42,7 +40,6 @@ export const ChoosingRouteStep = ({
     <Grid gridTemplateColumns="448px 448px" gap="24px">
       <SwappingWrapper title={'Calculation'} onConfigClick={onConfigClick}>
         <RoutesWrapper
-          refetchCallback={onGetQuote}
           loading={loading}
           buttonText={buttonText}
           showConnectedWallets={true}
@@ -58,7 +55,7 @@ export const ChoosingRouteStep = ({
         title={'Routes'}
         subtitle="Please select preferred route"
       >
-        <BestRouteAccordion />
+        <BestRouteAccordion loading={loading} />
       </SwappingWrapper>
     </Grid>
   );

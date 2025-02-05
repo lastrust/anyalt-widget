@@ -25,13 +25,15 @@ export const TransactionInfo: FC<Props> = ({
   onTxComplete,
   executeCallBack,
 }) => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const bestRoute = useAtomValue(bestRouteAtom);
 
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
   const { executeSwap } = useHandleTransaction(externalEvmWalletConnector);
   const activeOperationId = useAtomValue(activeOperationIdAtom);
   const slippage = useAtomValue(slippageAtom);
-  const [isLoading, setIsLoading] = useState(false);
+
   const handleCopyClick = () => {
     navigator.clipboard.writeText(bestRoute?.requestId || '');
   };

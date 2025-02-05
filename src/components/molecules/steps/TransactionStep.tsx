@@ -40,6 +40,8 @@ export const TransactionStep = ({
             color="brand.secondary.3"
             textStyle={'bold.3'}
             fontSize={'12px'}
+            noOfLines={1}
+            maxW={'100px'}
           >
             {exchangeName}:
           </Text>

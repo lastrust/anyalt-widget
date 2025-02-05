@@ -25,7 +25,6 @@ type Props = {
   showConnectedWallets?: boolean;
   walletConnector?: WalletConnector;
   onButtonClick: () => void;
-  refetchCallback: (withGoNext: boolean) => void;
   handleWalletsOpen?: () => void;
   setOpenSlippageModal: (open: boolean) => void;
   failedToFetchRoute?: boolean;
@@ -42,7 +41,6 @@ export const SelectSwap = ({
   failedToFetchRoute,
   handleWalletsOpen: connectWalletsOpen,
   buttonText = 'Start Transaction',
-  refetchCallback,
   ...props
 }: Props) => {
   const {
@@ -175,7 +173,6 @@ export const SelectSwap = ({
           onTokenSelect={(token) =>
             onTokenSelect(token, () => {
               setOpenTokenSelect(false);
-              refetchCallback?.(false);
             })
           }
         />
