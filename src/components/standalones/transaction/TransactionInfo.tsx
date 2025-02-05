@@ -72,123 +72,133 @@ export const TransactionInfo: FC<Props> = ({
       justifyContent={'space-between'}
       h="88%"
     >
-      <VStack w={'100%'} gap={'16px'}>
-        <Box w={'100%'}>
-          <VStack alignItems="flex-start" spacing="16px" w={'100%'}>
-            <Text textStyle={'regular.1'} color="brand.secondary.3">
-              Swap tokens using {bestRoute?.swaps[currentStep - 1].swapperId}
-            </Text>
+      {bestRoute?.swaps[currentStep - 1] && (
+        <>
+          <VStack w={'100%'} gap={'16px'}>
+            <Box w={'100%'}>
+              <VStack alignItems="flex-start" spacing="16px" w={'100%'}>
+                <Text textStyle={'regular.1'} color="brand.secondary.3">
+                  Swap tokens using{' '}
+                  {bestRoute?.swaps[currentStep - 1].swapperId}
+                </Text>
 
-            <HStack
+                <HStack
+                  w={'100%'}
+                  p={'16px 24px'}
+                  borderRadius={'16px'}
+                  borderWidth={'1px'}
+                  borderColor={'brand.border.primary'}
+                >
+                  <HStack>
+                    <TimeIcon />
+                    <Text
+                      color={'brand.secondary.3'}
+                      lineHeight={'120%'}
+                      textStyle={'regular.1'}
+                    >
+                      {bestRoute?.swaps[currentStep - 1].estimatedTimeInSeconds}
+                      s
+                    </Text>
+                  </HStack>
+                  <DividerIcon />
+                  <HStack>
+                    <GasIcon />
+                    <Text
+                      color={'brand.secondary.3'}
+                      lineHeight={'120%'}
+                      textStyle={'regular.1'}
+                    >
+                      ${' '}
+                      {bestRoute?.swaps[currentStep - 1].fee
+                        .reduce((acc, fee) => {
+                          const amount = parseFloat(fee.amount);
+                          const price = fee.price || 0;
+                          return acc + amount * price;
+                        }, 0)
+                        .toFixed(2)
+                        .toString()}
+                    </Text>
+                  </HStack>
+                </HStack>
+              </VStack>
+            </Box>
+            <VStack
               w={'100%'}
-              p={'16px 24px'}
+              p={'16px'}
               borderRadius={'16px'}
               borderWidth={'1px'}
               borderColor={'brand.border.primary'}
             >
-              <HStack>
-                <TimeIcon />
-                <Text
-                  color={'brand.secondary.3'}
-                  lineHeight={'120%'}
-                  textStyle={'regular.1'}
-                >
-                  {bestRoute?.swaps[currentStep - 1].estimatedTimeInSeconds}s
-                </Text>
-              </HStack>
-              <DividerIcon />
-              <HStack>
-                <GasIcon />
-                <Text
-                  color={'brand.secondary.3'}
-                  lineHeight={'120%'}
-                  textStyle={'regular.1'}
-                >
-                  ${' '}
-                  {bestRoute?.swaps[currentStep - 1].fee
-                    .reduce((acc, fee) => {
-                      const amount = parseFloat(fee.amount);
-                      const price = fee.price || 0;
-                      return acc + amount * price;
-                    }, 0)
-                    .toFixed(2)
-                    .toString()}
-                </Text>
-              </HStack>
-            </HStack>
+              <TokenQuoteBox
+                loading={false}
+                headerText=""
+                tokenName={bestRoute?.swaps[currentStep - 1].from.symbol || ''}
+                tokenLogo={bestRoute?.swaps[currentStep - 1].from.logo || ''}
+                chainName={
+                  bestRoute?.swaps[currentStep - 1].from.blockchain || ''
+                }
+                chainLogo={
+                  bestRoute?.swaps[currentStep - 1].from.blockchainLogo || ''
+                }
+                amount={Number(
+                  bestRoute?.swaps[currentStep - 1].fromAmount,
+                ).toFixed(2)}
+                price={(
+                  Number(bestRoute?.swaps[currentStep - 1].from.usdPrice) *
+                  Number(bestRoute?.swaps[currentStep - 1].fromAmount)
+                ).toFixed(2)}
+                w={'100%'}
+                p={'0'}
+                m={'0'}
+              />
+              <Divider w="100%" h="1px" bgColor="brand.secondary.12" />
+              <TokenQuoteBox
+                loading={false}
+                headerText=""
+                tokenName={bestRoute?.swaps[currentStep - 1].to.symbol || ''}
+                tokenLogo={bestRoute?.swaps[currentStep - 1].to.logo || ''}
+                chainName={
+                  bestRoute?.swaps[currentStep - 1].to.blockchain || ''
+                }
+                chainLogo={
+                  bestRoute?.swaps[currentStep - 1].to.blockchainLogo || ''
+                }
+                amount={Number(
+                  bestRoute?.swaps[currentStep - 1].toAmount,
+                ).toFixed(2)}
+                price={(
+                  Number(bestRoute?.swaps[currentStep - 1].to.usdPrice) *
+                  Number(bestRoute?.swaps[currentStep - 1].toAmount)
+                ).toFixed(2)}
+                w={'100%'}
+                p={'0'}
+                m={'0'}
+              />
+            </VStack>
           </VStack>
-        </Box>
-        <VStack
-          w={'100%'}
-          p={'16px'}
-          borderRadius={'16px'}
-          borderWidth={'1px'}
-          borderColor={'brand.border.primary'}
-        >
-          <TokenQuoteBox
-            loading={false}
-            headerText=""
-            tokenName={bestRoute?.swaps[currentStep - 1].from.symbol || ''}
-            tokenLogo={bestRoute?.swaps[currentStep - 1].from.logo || ''}
-            chainName={bestRoute?.swaps[currentStep - 1].from.blockchain || ''}
-            chainLogo={
-              bestRoute?.swaps[currentStep - 1].from.blockchainLogo || ''
-            }
-            amount={Number(
-              bestRoute?.swaps[currentStep - 1].fromAmount,
-            ).toFixed(2)}
-            price={(
-              Number(bestRoute?.swaps[currentStep - 1].from.usdPrice) *
-              Number(bestRoute?.swaps[currentStep - 1].fromAmount)
-            ).toFixed(2)}
-            w={'100%'}
-            p={'0'}
-            m={'0'}
-          />
-          <Divider w="100%" h="1px" bgColor="brand.secondary.12" />
-          <TokenQuoteBox
-            loading={false}
-            headerText=""
-            tokenName={bestRoute?.swaps[currentStep - 1].to.symbol || ''}
-            tokenLogo={bestRoute?.swaps[currentStep - 1].to.logo || ''}
-            chainName={bestRoute?.swaps[currentStep - 1].to.blockchain || ''}
-            chainLogo={
-              bestRoute?.swaps[currentStep - 1].to.blockchainLogo || ''
-            }
-            amount={Number(bestRoute?.swaps[currentStep - 1].toAmount).toFixed(
-              2,
-            )}
-            price={(
-              Number(bestRoute?.swaps[currentStep - 1].to.usdPrice) *
-              Number(bestRoute?.swaps[currentStep - 1].toAmount)
-            ).toFixed(2)}
-            w={'100%'}
-            p={'0'}
-            m={'0'}
-          />
-        </VStack>
-      </VStack>
-      <VStack w="100%" alignItems={'center'} gap={'16px'}>
-        <Button
-          width={'100%'}
-          bg="brand.tertiary.100"
-          _hover={{
-            bg: 'brand.tertiary.20',
-          }}
-          color="white"
-          fontSize="16px"
-          fontWeight="bold"
-          borderRadius="8px"
-          h="64px"
-          onClick={runTx}
-          isLoading={isLoading}
-        >
-          Run Transaction
-        </Button>
-        <Text textDecoration={'underline'} color="#999" cursor={'pointer'}>
-          Cancel Transaction
-        </Text>
-      </VStack>
+          <VStack w="100%" alignItems={'center'} gap={'16px'}>
+            <Button
+              width={'100%'}
+              bg="brand.tertiary.100"
+              _hover={{
+                bg: 'brand.tertiary.20',
+              }}
+              color="white"
+              fontSize="16px"
+              fontWeight="bold"
+              borderRadius="8px"
+              h="64px"
+              onClick={runTx}
+              isLoading={isLoading}
+            >
+              Run Transaction
+            </Button>
+            <Text textDecoration={'underline'} color="#999" cursor={'pointer'}>
+              Cancel Transaction
+            </Text>
+          </VStack>
+        </>
+      )}
     </VStack>
   );
 };

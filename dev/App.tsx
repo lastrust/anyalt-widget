@@ -35,12 +35,15 @@ const App = () => {
   };
 
   const executeCallBack = async (token: Token): Promise<ExecuteResponse> => {
-    console.log('token: ');
-    return {
-      approvalTxHash: '0x123',
-      executeTxHash: '0x123',
-      amountOut: '10.19',
-    };
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({
+          approvalTxHash: '0x123',
+          executeTxHash: '0x123',
+          amountOut: '10.19',
+        });
+      }, 10000);
+    });
   };
 
   return (
