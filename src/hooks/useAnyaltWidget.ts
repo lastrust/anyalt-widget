@@ -10,6 +10,7 @@ import {
   allChainsAtom,
   anyaltInstanceAtom,
   bestRouteAtom,
+  currentUiStepAtom,
   finalTokenEstimateAtom,
   inTokenAmountAtom,
   inTokenAtom,
@@ -40,6 +41,7 @@ export const useAnyaltWidget = ({
   const [isValidAmountIn, setIsValidAmountIn] = useState(true);
   const [openSlippageModal, setOpenSlippageModal] = useState(false);
   const [failedToFetchRoute, setFailedToFetchRoute] = useState(false);
+  const [, setCurrentUiStep] = useAtom(currentUiStepAtom);
 
   const { address: evmAddress, isConnected: isEvmConnected } = useAccount();
   const { publicKey: solanaAddress, connected: isSolanaConnected } =
@@ -67,6 +69,10 @@ export const useAnyaltWidget = ({
   const [protocolInputToken, setProtocolInputToken] = useAtom(
     protocolInputTokenAtom,
   );
+
+  useEffect(() => {
+    setCurrentUiStep(activeStep);
+  }, [activeStep]);
 
   useEffect(() => {
     if (bestRoute) {

@@ -5,7 +5,7 @@ import { getSolana } from '../utils/solana';
 
 // Solana Token Balance Hook
 export const useSolana = () => {
-  // Create a Solana connection to the devnet by default
+  // Create a Solana connection to the mainnet-beta by default
   const connection = useMemo(() => getSolana(), []);
 
   const getSolanaTokenBalance = async (

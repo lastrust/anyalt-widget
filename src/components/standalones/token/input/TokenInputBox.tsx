@@ -1,7 +1,15 @@
 import { Box, BoxProps, Button, Input, Skeleton, Text } from '@chakra-ui/react';
+import { useWallet } from '@solana/wallet-adapter-react';
 import { useAtom, useAtomValue } from 'jotai';
-import { FC } from 'react';
-import { inTokenAmountAtom, inTokenAtom } from '../../../../store/stateStore';
+import { FC, useEffect, useState } from 'react';
+import { useAccount } from 'wagmi';
+import { useSolana } from '../../../../providers/useSolana';
+import {
+  currentUiStepAtom,
+  inTokenAmountAtom,
+  inTokenAtom,
+} from '../../../../store/stateStore';
+import { getEvmTokenBalance } from '../../../../utils';
 import { TokenIconBox } from '../../../molecules/TokenIconBox';
 import { TokenInfoBox } from '../../../molecules/TokenInfoBox';
 
@@ -26,6 +34,49 @@ export const TokenInputBox: FC<Props> = ({
 }) => {
   const inToken = useAtomValue(inTokenAtom);
   const [inTokenAmount, setInTokenAmount] = useAtom(inTokenAmountAtom);
+  const currentStep = useAtomValue(currentUiStepAtom);
+  const { getSolanaTokenBalance } = useSolana();
+  const { address: evmAddress } = useAccount();
+  const { publicKey } = useWallet();
+  const [balance, setBalance] = useState<string | undefined>(undefined);
+
+  const getBalance = async () => {
+    if (inToken) {
+      if (inToken?.chain?.chainType === 'SOLANA' && publicKey) {
+        const balance = await getSolanaTokenBalance(
+          inToken.tokenAddress ?? '',
+          publicKey.toString(),
+        );
+        setBalance(parseFloat(balance).toFixed(2));
+      } else if (inToken?.chain?.chainType === 'EVM' && evmAddress) {
+        const balance = await getEvmTokenBalance(
+          inToken.chain?.rpcUrl ?? '',
+          inToken.tokenAddress ?? '',
+          evmAddress,
+        );
+        setBalance(parseFloat(balance).toFixed(2));
+      }
+    }
+  };
+
+  const maxButtonClick = async () => {
+    setInTokenAmount(balance);
+  };
+
+  useEffect(() => {
+    if (
+      currentStep === 1 &&
+      balance &&
+      inTokenAmount &&
+      parseFloat(balance) < parseFloat(inTokenAmount)
+    ) {
+      setInTokenAmount(balance);
+    }
+  }, [inTokenAmount, balance, currentStep]);
+
+  useEffect(() => {
+    getBalance();
+  }, [inToken, evmAddress, publicKey]);
 
   return (
     <Box {...props}>
@@ -38,9 +89,14 @@ export const TokenInputBox: FC<Props> = ({
         <Text color="white" fontSize="14px" fontWeight="bold" opacity={0.32}>
           Choose Your Deposit
         </Text>
-        <Box display="none" flexDirection="row" alignItems="center" gap="4px">
+        <Box
+          display={currentStep === 1 ? 'flex' : 'none'}
+          flexDirection="row"
+          alignItems="center"
+          gap="4px"
+        >
           <Text color="white" fontSize="12px" opacity={0.4}>
-            Balance: 0
+            Balance: {balance ? balance : ''}
           </Text>
           <Button
             bg="brand.tertiary.20"
@@ -50,6 +106,7 @@ export const TokenInputBox: FC<Props> = ({
             borderRadius="4px"
             padding="4px 2px"
             maxH="16px"
+            onClick={maxButtonClick}
           >
             Max
           </Button>
