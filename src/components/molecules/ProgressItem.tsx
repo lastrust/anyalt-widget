@@ -5,10 +5,11 @@ import { CheckIcon } from '../atoms/icons/transaction/CheckIcon';
 import { FailIcon } from '../atoms/icons/transaction/FailIcon';
 
 type Props = {
+  isApprove: boolean;
   progress: TransactionProgress | undefined;
 };
 
-export const ProgressItem: FC<Props> = ({ progress }) => {
+export const ProgressItem: FC<Props> = ({ isApprove, progress }) => {
   if (!progress) return <></>;
 
   return (
@@ -34,7 +35,7 @@ export const ProgressItem: FC<Props> = ({ progress }) => {
         </Box>
       )}
       <Text fontSize={'16px'} color="brand.secondary.3">
-        Swap: {progress.message}
+        {isApprove ? 'Approve' : 'Swap'}: {progress.message}
       </Text>
     </HStack>
   );

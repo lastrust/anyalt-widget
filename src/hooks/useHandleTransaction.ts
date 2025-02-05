@@ -250,7 +250,7 @@ export const useHandleTransaction = (
       if (!stepsProgress?.steps || stepsProgress.steps.length === 0) {
         setStepsProgress({ steps: Array(totalSteps).fill({}) });
       }
-
+      let isCrosschainSwapError = false;
       do {
         let isApproval = false;
         try {
@@ -353,6 +353,24 @@ export const useHandleTransaction = (
             break;
           }
 
+          if (waitForTxResponse.status === 'FAILED') {
+            throw new TransactionError(
+              'Transaction failed: ' + waitForTxResponse.message,
+            );
+          }
+
+          updateStepProgress({
+            isApproval,
+            status: 'confirmed',
+            message: 'Transaction confirmed successfully!',
+            txHash,
+            details: {
+              currentStep: totalSteps,
+              totalSteps,
+              stepDescription: 'Complete',
+            },
+          });
+
           if (
             transactionData.type === 'EVM' &&
             (transactionData as EVMTransactionDataResponse).isApprovalTx
@@ -365,6 +383,7 @@ export const useHandleTransaction = (
           }
         } catch (error) {
           console.error('Error during swap execution:', error);
+          isCrosschainSwapError = true;
           updateStepProgress({
             isApproval,
             status: 'failed',
@@ -379,72 +398,74 @@ export const useHandleTransaction = (
               stepDescription: 'Failed',
             },
           });
-          throw new TransactionError('Transaction failed', error);
+          break;
         }
       } while (!swapIsFinished);
 
-      // Execute last mile transaction
-      setCurrentStep(currentStep + 1);
-      try {
-        const lastSwap = bestRoute?.swaps[bestRoute.swaps.length - 1];
-        const chain = allChains.find(
-          (chain) => chain.name === lastSwap?.to.blockchain,
-        );
-        const isEvm = chain?.chainType === ChainType.EVM;
-        const executeResponse = await executeCallBack({
-          amount: crosschainSwapOutputAmount,
-          address: lastSwap?.to.address || '',
-          decimals: lastSwap?.to.decimals || 0,
-          name: lastSwap?.to.symbol || '',
-          symbol: lastSwap?.to.symbol || '',
-          chainType: isEvm ? ChainType.EVM : ChainType.SOLANA,
-        });
-        setFinalTokenAmount(executeResponse.amountOut);
-        if (executeResponse.approvalTxHash) {
-          updateStepProgress({
-            isApproval: true,
-            status: 'confirmed',
-            message: 'Transaction confirmed successfully!',
-            txHash: executeResponse.approvalTxHash,
-            details: {
-              currentStep: totalSteps,
-              totalSteps,
-              stepDescription: 'Complete',
-            },
+      if (isCrosschainSwapError) {
+        throw new TransactionError('Transaction failed');
+      } else {
+        // Execute last mile transaction
+        try {
+          setCurrentStep(currentStep + 1);
+          const lastSwap = bestRoute?.swaps[bestRoute.swaps.length - 1];
+          const chain = allChains.find(
+            (chain) => chain.name === lastSwap?.to.blockchain,
+          );
+          const isEvm = chain?.chainType === ChainType.EVM;
+          if (isEvm && chain?.chainId) {
+            await switchChain(walletConfig, {
+              chainId: chain.chainId,
+            });
+          }
+          console.log(
+            'crosschainSwapOutputAmount: ',
+            crosschainSwapOutputAmount,
+          );
+          const executeResponse = await executeCallBack({
+            amount: crosschainSwapOutputAmount,
+            address: lastSwap?.to.address || '',
+            decimals: lastSwap?.to.decimals || 0,
+            name: lastSwap?.to.symbol || '',
+            symbol: lastSwap?.to.symbol || '',
+            chainType: isEvm ? ChainType.EVM : ChainType.SOLANA,
           });
-        }
-        if (executeResponse.executeTxHash) {
+          setFinalTokenAmount(executeResponse.amountOut);
+          if (executeResponse.approvalTxHash || executeResponse.executeTxHash) {
+            updateStepProgress({
+              isApproval: executeResponse.approvalTxHash ? true : false,
+              status: 'confirmed',
+              message: 'Transaction confirmed successfully!',
+              txHash: executeResponse.approvalTxHash
+                ? executeResponse.approvalTxHash
+                : executeResponse.executeTxHash,
+              details: {
+                currentStep: totalSteps,
+                totalSteps,
+                stepDescription: 'Complete',
+              },
+            });
+          }
+        } catch (error) {
           updateStepProgress({
             isApproval: false,
-            status: 'confirmed',
-            message: 'Transaction confirmed successfully!',
-            txHash: executeResponse.executeTxHash,
+            status: 'failed',
+            message:
+              error instanceof TransactionError
+                ? error.message
+                : 'Transaction failed',
+            error: error instanceof Error ? error.message : String(error),
             details: {
-              currentStep: totalSteps,
+              currentStep,
               totalSteps,
-              stepDescription: 'Complete',
+              stepDescription: 'Failed',
             },
           });
+          throw new TransactionError(
+            'Failed to execute last mile transaction',
+            error,
+          );
         }
-      } catch (error) {
-        updateStepProgress({
-          isApproval: false,
-          status: 'failed',
-          message:
-            error instanceof TransactionError
-              ? error.message
-              : 'Transaction failed',
-          error: error instanceof Error ? error.message : String(error),
-          details: {
-            currentStep,
-            totalSteps,
-            stepDescription: 'Failed',
-          },
-        });
-        throw new TransactionError(
-          'Failed to execute last mile transaction',
-          error,
-        );
       }
     },
     [

@@ -153,8 +153,9 @@ export const useAnyaltWidget = ({
     setOpenSlippageModal(true);
   };
 
-  const onChooseRouteButtonClick = () => {
+  const onChooseRouteButtonClick = async () => {
     if (areWalletsConnected) {
+      await onGetQuote(false);
       connectWalletsConfirm();
     } else {
       if (walletConnector) {
