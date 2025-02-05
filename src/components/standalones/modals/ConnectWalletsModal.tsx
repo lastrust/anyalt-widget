@@ -64,8 +64,12 @@ export const ConnectWalletsModal: FC<Props> = ({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered size="sm">
-      <ModalOverlay backdropFilter="blur(4px)" />
-      <ModalContent bg="brand.primary" p="24px">
+      <ModalOverlay backdropFilter="blur(4px)" zIndex={1000} />
+      <ModalContent
+        bg="brand.primary"
+        p="24px"
+        containerProps={{ zIndex: 1000 }}
+      >
         <ModalHeader
           color="white"
           p="0"

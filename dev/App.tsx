@@ -15,6 +15,9 @@ import {
   WidgetProvider,
 } from '../src/index';
 
+import '@rainbow-me/rainbowkit/styles.css';
+import '@solana/wallet-adapter-react-ui/styles.css';
+
 const queryClient = new QueryClient();
 
 const App = () => {
