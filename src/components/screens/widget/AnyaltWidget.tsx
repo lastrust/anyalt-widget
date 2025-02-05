@@ -86,7 +86,6 @@ export const AnyaltWidgetWrapper = ({
           walletConnector={walletConnector}
         />
         <TransactionStep
-          onConfigClick={onConfigClick}
           walletConnector={walletConnector}
           executeCallBack={executeCallBack}
           onTxComplete={onTxComplete}

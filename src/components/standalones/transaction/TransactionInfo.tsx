@@ -60,19 +60,8 @@ export const TransactionInfo: FC<Props> = ({
   };
 
   return (
-    <VStack
-      w={'100%'}
-      p="24px"
-      alignItems={'flex-start'}
-      gap={'16px'}
-      borderColor={'brand.border.primary'}
-      borderWidth={'1px'}
-      borderRadius={'16px'}
-    >
+    <VStack w={'100%'} alignItems={'flex-start'} gap={'16px'}>
       <Box w={'100%'}>
-        <Text color="white" fontSize="24px" fontWeight="bold" mb="8px">
-          Swap
-        </Text>
         <VStack alignItems="flex-start" spacing="16px" w={'100%'}>
           <Flex w="100%" justifyContent="space-between" alignItems="center">
             <Text color="brand.secondary.3" fontSize="14px">
