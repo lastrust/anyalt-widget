@@ -105,7 +105,32 @@ export const TransactionAccordion = () => {
             </AccordionButton>
             <AccordionPanel p={'0px'} mt="12px">
               <VStack gap={'12px'}>
-                <TransactionStep
+                {swap.internalSwaps?.map((internalSwap, index) => {
+                  return (
+                    <TransactionStep
+                      key={`${internalSwap.swapperId}-${index}`}
+                      exchangeLogo={internalSwap.swapperLogo}
+                      exchangeName={internalSwap.swapperId}
+                      fromToken={{
+                        name: internalSwap.from.symbol,
+                        amount: String(
+                          Number(internalSwap.fromAmount).toFixed(2) || '0',
+                        ),
+                        chainName: internalSwap.from.blockchain,
+                        chainLogo: internalSwap.from.blockchainLogo,
+                      }}
+                      toToken={{
+                        name: internalSwap.to.symbol,
+                        amount: String(
+                          Number(internalSwap.toAmount).toFixed(2) || '0',
+                        ),
+                        chainName: internalSwap.to.blockchain,
+                        chainLogo: internalSwap.to.blockchainLogo,
+                      }}
+                    />
+                  );
+                })}
+                {/* <TransactionStep
                   exchangeName={swap.swapperId}
                   fromToken={{
                     name: swap.from.symbol,
@@ -119,7 +144,7 @@ export const TransactionAccordion = () => {
                     chainName: swap.to.blockchain,
                     chainLogo: swap.to.blockchainLogo,
                   }}
-                />
+                /> */}
                 <HStack w={'100%'}>
                   <HStack>
                     <TimeIcon />
@@ -202,6 +227,9 @@ export const TransactionAccordion = () => {
         <AccordionPanel p={'0px'} mt="12px">
           <VStack gap={'12px'}>
             <TransactionStep
+              exchangeLogo={
+                bestRoute.swaps[bestRoute.swaps.length - 1].swapperLogo
+              }
               exchangeName={'Last mile transaction'}
               fromToken={{
                 name: protocolInputToken?.symbol || '',

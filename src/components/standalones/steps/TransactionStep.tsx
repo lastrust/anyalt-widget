@@ -1,5 +1,7 @@
 import { Grid } from '@chakra-ui/react';
+import { useAtomValue } from 'jotai';
 import { ExecuteResponse, Token, WalletConnector } from '../../..';
+import { currentStepAtom } from '../../../store/stateStore';
 import { TransactionStatus } from '../transaction/TransactionStatus';
 import { SwappingWrapper } from '../wrappers/SwappingWrapper';
 import { TransactionSwap } from '../wrappers/TransactionSwap';
@@ -15,9 +17,10 @@ export const TransactionStep = ({
   executeCallBack,
   onTxComplete,
 }: Props) => {
+  const currentStep = useAtomValue(currentStepAtom);
   return (
     <Grid templateColumns="1fr 1fr" gap="16px">
-      <SwappingWrapper title="Step 1">
+      <SwappingWrapper title={`Transaction ${currentStep}`}>
         <TransactionSwap
           externalEvmWalletConnector={walletConnector}
           executeCallBack={executeCallBack}

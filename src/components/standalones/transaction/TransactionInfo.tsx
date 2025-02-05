@@ -8,9 +8,6 @@ import {
   anyaltInstanceAtom,
   bestRouteAtom,
   currentStepAtom,
-  finalTokenEstimateAtom,
-  protocolFinalTokenAtom,
-  protocolInputTokenAtom,
   selectedRouteAtom,
   slippageAtom,
 } from '../../../store/stateStore';
@@ -29,9 +26,6 @@ export const TransactionInfo: FC<Props> = ({
   executeCallBack,
 }) => {
   const bestRoute = useAtomValue(bestRouteAtom);
-  const protocolInputToken = useAtomValue(protocolInputTokenAtom);
-  const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
-  const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
 
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
   const { executeSwap } = useHandleTransaction(externalEvmWalletConnector);
@@ -105,14 +99,18 @@ export const TransactionInfo: FC<Props> = ({
         <TokenQuoteBox
           loading={false}
           headerText=""
-          tokenName={bestRoute?.swaps[0].from.symbol || ''}
-          tokenLogo={bestRoute?.swaps[0].from.logo || ''}
-          chainName={bestRoute?.swaps[0].from.blockchain || ''}
-          chainLogo={bestRoute?.swaps[0].from.blockchainLogo || ''}
-          amount={Number(bestRoute?.swaps[0].fromAmount).toFixed(2)}
+          tokenName={bestRoute?.swaps[currentStep - 1].from.symbol || ''}
+          tokenLogo={bestRoute?.swaps[currentStep - 1].from.logo || ''}
+          chainName={bestRoute?.swaps[currentStep - 1].from.blockchain || ''}
+          chainLogo={
+            bestRoute?.swaps[currentStep - 1].from.blockchainLogo || ''
+          }
+          amount={Number(bestRoute?.swaps[currentStep - 1].fromAmount).toFixed(
+            2,
+          )}
           price={(
-            Number(bestRoute?.swaps[0].from.usdPrice) *
-            Number(bestRoute?.swaps[0].fromAmount)
+            Number(bestRoute?.swaps[currentStep - 1].from.usdPrice) *
+            Number(bestRoute?.swaps[currentStep - 1].fromAmount)
           ).toFixed(2)}
           w={'100%'}
           p={'0'}
@@ -122,12 +120,15 @@ export const TransactionInfo: FC<Props> = ({
         <TokenQuoteBox
           loading={false}
           headerText=""
-          tokenName={protocolFinalToken?.symbol || ''}
-          tokenLogo={protocolFinalToken?.logoUrl || ''}
-          chainName={protocolInputToken?.chain?.displayName || ''}
-          chainLogo={protocolInputToken?.chain?.logoUrl || ''}
-          amount={finalTokenEstimate?.amountOut || ''}
-          price={finalTokenEstimate?.priceInUSD || ''}
+          tokenName={bestRoute?.swaps[currentStep - 1].to.symbol || ''}
+          tokenLogo={bestRoute?.swaps[currentStep - 1].to.logo || ''}
+          chainName={bestRoute?.swaps[currentStep - 1].to.blockchain || ''}
+          chainLogo={bestRoute?.swaps[currentStep - 1].to.blockchainLogo || ''}
+          amount={Number(bestRoute?.swaps[currentStep - 1].toAmount).toFixed(2)}
+          price={(
+            Number(bestRoute?.swaps[currentStep - 1].to.usdPrice) *
+            Number(bestRoute?.swaps[currentStep - 1].toAmount)
+          ).toFixed(2)}
           w={'100%'}
           p={'0'}
           m={'0'}

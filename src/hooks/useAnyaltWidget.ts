@@ -217,6 +217,7 @@ export const useAnyaltWidget = ({
   const onBackClick = () => {
     if (activeStep === 2) {
       setActiveStep(1);
+      onGetQuote(false);
     } else {
       goToPrevious();
     }
