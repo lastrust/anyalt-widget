@@ -202,7 +202,7 @@ export const TransactionAccordion = () => {
         >
           <HStack justifyContent={'flex-start'}>
             <Text textStyle={'bold.0'} mr="8px">
-              Step {bestRoute.swaps.length + 1}
+              Transaction {bestRoute.swaps.length + 1}
             </Text>
             {currentStep === bestRoute.swaps.length + 1 && (
               <Text textStyle={'bold.1'} color="brand.tertiary.100">
