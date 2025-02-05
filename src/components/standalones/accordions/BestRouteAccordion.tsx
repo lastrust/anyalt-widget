@@ -6,11 +6,15 @@ import {
   AccordionPanel,
   Box,
   Flex,
+  Skeleton,
+  Text,
   VStack,
 } from '@chakra-ui/react';
 import { useAtom, useAtomValue } from 'jotai';
+import { useEffect } from 'react';
 import {
   bestRouteAtom,
+  currentStepAtom,
   protocolFinalTokenAtom,
   selectedRouteAtom,
 } from '../../../store/stateStore';
@@ -23,13 +27,18 @@ import { RouteStep } from '../../molecules/steps/RouteStep';
 import { TokenRouteInfo } from '../../molecules/TokenRouteInfo';
 
 type Props = {
+  loading: boolean;
   isButtonHidden?: boolean;
 };
 
-export const BestRouteAccordion = ({ isButtonHidden = true }: Props) => {
+export const BestRouteAccordion = ({
+  loading,
+  isButtonHidden = true,
+}: Props) => {
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
   const [bestRoute] = useAtom(bestRouteAtom);
   const [selectedRoute, setSelectedRoute] = useAtom(selectedRouteAtom);
+  const currentStep = useAtomValue(currentStepAtom);
 
   if (!bestRoute) return <></>;
   const swaps = getTransactionGroupData(bestRoute);
@@ -37,15 +46,12 @@ export const BestRouteAccordion = ({ isButtonHidden = true }: Props) => {
   const handleRouteSelect = () => {
     setSelectedRoute(bestRoute);
   };
+  useEffect(() => {
+    console.log('bestRoute', bestRoute);
+  }, [bestRoute]);
 
   return (
-    <Box
-      // borderRadius="12px"
-      // p="24px"
-      // borderWidth="1px"
-      // borderColor="brand.border.primary"
-      w={'100%'}
-    >
+    <Box w={'100%'} mt="16px">
       <Accordion defaultIndex={[0]} allowMultiple>
         <AccordionItem
           border="1px solid"
@@ -80,16 +86,19 @@ export const BestRouteAccordion = ({ isButtonHidden = true }: Props) => {
             >
               <Flex alignItems="center" gap="8px" w={'100%'}>
                 <RouteTag
+                  loading={loading}
                   text="Fastest"
                   textColor="brand.secondary.5"
                   bgColor="bg.tertiary.100"
                 />
                 <RouteTag
+                  loading={loading}
                   text={`${bestRoute.swaps.reduce((acc, swap) => acc + swap.estimatedTimeInSeconds, 0)}s`}
                   icon={TimeIcon}
                   textColor="brand.tertiary.100"
                 />
                 <RouteTag
+                  loading={loading}
                   text={
                     bestRoute.swaps[0].fee
                       .reduce((acc, fee) => {
@@ -104,6 +113,7 @@ export const BestRouteAccordion = ({ isButtonHidden = true }: Props) => {
                   textColor="brand.tertiary.100"
                 />
                 <RouteTag
+                  loading={loading}
                   text={`${bestRoute.swaps.reduce((acc, swap) => acc + swap.maxRequiredSign, 0)}`}
                   icon={StepsIcon}
                   textColor="brand.tertiary.100"
@@ -122,19 +132,33 @@ export const BestRouteAccordion = ({ isButtonHidden = true }: Props) => {
               )}
             </Flex>
             <TokenRouteInfo
+              loading={loading}
               tokenName={protocolFinalToken?.name || ''}
               tokenIcon={protocolFinalToken?.logoUrl || ''}
-              amount={10.19}
-              price={2423.53}
+              amount={Number(bestRoute.outputAmount)}
+              price={Number(bestRoute.outputAmount)}
               difference={0.5}
               network={`${swaps[0].swapperName}`}
             />
           </AccordionButton>
           <AccordionPanel p={'0px'} mt="12px">
-            <VStack gap={'12px'}>
+            <VStack
+              gap={'12px'}
+              alignItems={'flex-start'}
+              color="brand.secondary.3"
+            >
+              {loading ? (
+                <Skeleton w={'180px'} h={'18px'} ml="24px" />
+              ) : (
+                <Text textStyle={'bold.3'} ml={'24px'} lineHeight={'120%'}>
+                  Transaction {currentStep}:{' '}
+                  {swaps[currentStep - 1].swapperName}
+                </Text>
+              )}
               {swaps?.map((step, index) => {
                 return (
                   <RouteStep
+                    loading={loading}
                     key={`${step.swapperName}-${index}`}
                     stepNumber={index + 1}
                     exchangeIcon={step.swapperLogo}

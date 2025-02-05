@@ -4,6 +4,7 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
+  Box,
   HStack,
   Text,
   VStack,
@@ -27,14 +28,16 @@ import { ProgressItem } from '../../molecules/ProgressItem';
 import { TransactionStep } from '../../molecules/steps/TransactionStep';
 
 export const TransactionAccordion = () => {
-  const currentStep = useAtomValue(currentStepAtom);
-  const bestRoute = useAtomValue(bestRouteAtom);
-  const [selectedRoute, setSelectedRoute] = useAtom(selectedRouteAtom);
-  const stepsProgress = useAtomValue(stepsProgressAtom);
   const [isLastMileExpanded, setIsLastMileExpanded] = useState(false);
+
+  const bestRoute = useAtomValue(bestRouteAtom);
+  const currentStep = useAtomValue(currentStepAtom);
+  const stepsProgress = useAtomValue(stepsProgressAtom);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
   const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
+
+  const [, setSelectedRoute] = useAtom(selectedRouteAtom);
 
   const handleRouteSelect = () => {
     setSelectedRoute(bestRoute);
@@ -59,17 +62,14 @@ export const TransactionAccordion = () => {
         bestRoute?.swaps.map((swap, index) => (
           <AccordionItem
             key={`${swap.swapperId}-${index}`}
-            border="1px solid"
-            borderColor="brand.border.primary"
-            borderRadius={'10px'}
             p={'16px'}
             cursor={'pointer'}
+            bg="brand.secondary.6"
             onClick={handleRouteSelect}
-            bg={
-              selectedRoute?.swaps[currentStep - 1].swapperId ===
-              bestRoute?.swaps[currentStep - 1].swapperId
-                ? 'brand.secondary.12'
-                : 'transparent'
+            borderRadius={'10px'}
+            borderWidth={'3px'}
+            borderColor={
+              currentStep - 1 === index ? 'brand.tertiary.100' : 'transparent'
             }
             _hover={{
               bgColor: 'bg.secondary.1',
@@ -85,41 +85,61 @@ export const TransactionAccordion = () => {
             >
               <HStack justifyContent={'flex-start'}>
                 <Text textStyle={'bold.0'} mr="8px">
-                  Step {index + 1}
+                  Transaction {index + 1}
                 </Text>
                 {currentStep - 1 > index && <CheckIcon />}
                 {currentStep - 1 === index && (
-                  <Text textStyle={'bold.1'} color="brand.tertiary.100">
+                  <Text textStyle={'bold.2'} color="brand.tertiary.100">
                     In Progress
                   </Text>
                 )}
               </HStack>
-              <AccordionIcon w={'24px'} h={'24px'} />
+              <Box
+                bg="brand.tertiary.100"
+                borderRadius={'50%'}
+                w={'24px'}
+                h={'24px'}
+              >
+                <AccordionIcon w={'24px'} h={'24px'} />
+              </Box>
             </AccordionButton>
             <AccordionPanel p={'0px'} mt="12px">
-              <VStack gap={'12px'}>
-                <TransactionStep
-                  exchangeName={swap.swapperId}
-                  fromToken={{
-                    name: swap.from.symbol,
-                    amount: String(Number(swap.fromAmount).toFixed(4) || '0'),
-                    chainName: swap.from.blockchain,
-                    chainLogo: swap.from.blockchainLogo,
-                  }}
-                  toToken={{
-                    name: swap.to.symbol,
-                    amount: String(Number(swap.toAmount).toFixed(4) || '0'),
-                    chainName: swap.to.blockchain,
-                    chainLogo: swap.to.blockchainLogo,
-                  }}
-                />
+              <VStack gap={'12px'} alignItems={'flex-start'}>
+                <Text textStyle={'regular.1'} color="brand.secondary.3">
+                  Swap tokens using {swap.swapperId}
+                </Text>
+                {swap.internalSwaps?.map((internalSwap, index) => {
+                  return (
+                    <TransactionStep
+                      key={`${internalSwap.swapperId}-${index}`}
+                      exchangeLogo={internalSwap.swapperLogo}
+                      exchangeName={internalSwap.swapperId}
+                      fromToken={{
+                        name: internalSwap.from.symbol,
+                        amount: String(
+                          Number(internalSwap.fromAmount).toFixed(2) || '0',
+                        ),
+                        chainName: internalSwap.from.blockchain,
+                        chainLogo: internalSwap.from.blockchainLogo,
+                      }}
+                      toToken={{
+                        name: internalSwap.to.symbol,
+                        amount: String(
+                          Number(internalSwap.toAmount).toFixed(2) || '0',
+                        ),
+                        chainName: internalSwap.to.blockchain,
+                        chainLogo: internalSwap.to.blockchainLogo,
+                      }}
+                    />
+                  );
+                })}
                 <HStack w={'100%'}>
                   <HStack>
                     <TimeIcon />
                     <Text
                       color={'brand.secondary.3'}
                       lineHeight={'120%'}
-                      fontSize={'16px'}
+                      textStyle={'regular.3'}
                     >
                       {swap.estimatedTimeInSeconds}s
                     </Text>
@@ -130,7 +150,7 @@ export const TransactionAccordion = () => {
                     <Text
                       color={'brand.secondary.3'}
                       lineHeight={'120%'}
-                      fontSize={'16px'}
+                      textStyle={'regular.3'}
                     >
                       ${' '}
                       {swap.fee
@@ -186,7 +206,7 @@ export const TransactionAccordion = () => {
         >
           <HStack justifyContent={'flex-start'}>
             <Text textStyle={'bold.0'} mr="8px">
-              Step {bestRoute.swaps.length + 1}
+              Transaction {bestRoute.swaps.length + 1}
             </Text>
             {currentStep === bestRoute.swaps.length + 1 && (
               <Text textStyle={'bold.1'} color="brand.tertiary.100">
@@ -194,11 +214,21 @@ export const TransactionAccordion = () => {
               </Text>
             )}
           </HStack>
-          <AccordionIcon w={'24px'} h={'24px'} />
+          <Box
+            bg="brand.tertiary.100"
+            borderRadius={'50%'}
+            w={'24px'}
+            h={'24px'}
+          >
+            <AccordionIcon w={'24px'} h={'24px'} />
+          </Box>
         </AccordionButton>
         <AccordionPanel p={'0px'} mt="12px">
           <VStack gap={'12px'}>
             <TransactionStep
+              exchangeLogo={
+                bestRoute.swaps[bestRoute.swaps.length - 1].swapperLogo
+              }
               exchangeName={'Last mile transaction'}
               fromToken={{
                 name: protocolInputToken?.symbol || '',

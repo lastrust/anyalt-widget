@@ -7,7 +7,7 @@ type Props = {
   openSlippageModal: boolean;
   isValidAmountIn: boolean;
   onConfigClick: () => void;
-  onGetQuote: () => void;
+  onGetQuote: (withGoNext: boolean) => void;
   setOpenSlippageModal: (open: boolean) => void;
 };
 
@@ -27,7 +27,7 @@ export const SelectTokenStep = ({
     >
       <SelectSwap
         buttonText={'Get Quote'}
-        onButtonClick={onGetQuote}
+        onButtonClick={() => onGetQuote(true)}
         loading={loading}
         openSlippageModal={openSlippageModal}
         setOpenSlippageModal={setOpenSlippageModal}

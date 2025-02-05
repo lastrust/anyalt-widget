@@ -11,6 +11,7 @@ export {
 } from '../../../theme/defaultTheme';
 export { OpenModalButton } from '../../atoms/buttons/OpenModalButton';
 
+import { useEffect } from 'react';
 import { AnyaltWidgetProps } from '../../..';
 import { useAnyaltWidget } from '../../../hooks/useAnyaltWidget';
 import { ChoosingRouteStep } from '../../standalones/steps/ChoosingRouteStep';
@@ -56,6 +57,10 @@ export const AnyaltWidgetWrapper = ({
     walletConnector,
   });
 
+  useEffect(() => {
+    console.log('loading', loading);
+  }, [loading]);
+
   return (
     <ModalWrapper
       isOpen={isOpen}
@@ -74,19 +79,18 @@ export const AnyaltWidgetWrapper = ({
           setOpenSlippageModal={setOpenSlippageModal}
         />
         <ChoosingRouteStep
-          onConfigClick={onConfigClick}
-          failedToFetchRoute={failedToFetchRoute}
-          activeRoute={activeRoute}
-          areWalletsConnected={areWalletsConnected}
-          onChooseRouteButtonClick={onChooseRouteButtonClick}
           loading={loading}
+          activeRoute={activeRoute}
+          walletConnector={walletConnector}
+          failedToFetchRoute={failedToFetchRoute}
+          areWalletsConnected={areWalletsConnected}
+          onConfigClick={onConfigClick}
           openSlippageModal={openSlippageModal}
           setOpenSlippageModal={setOpenSlippageModal}
           connectWalletsOpen={connectWalletsOpen}
-          walletConnector={walletConnector}
+          onChooseRouteButtonClick={onChooseRouteButtonClick}
         />
         <TransactionStep
-          onConfigClick={onConfigClick}
           walletConnector={walletConnector}
           executeCallBack={executeCallBack}
           onTxComplete={onTxComplete}

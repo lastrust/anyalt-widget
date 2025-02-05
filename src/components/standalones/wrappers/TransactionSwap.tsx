@@ -1,8 +1,6 @@
-import { Grid } from '@chakra-ui/react';
 import { FC } from 'react';
 import { ExecuteResponse, Token, WalletConnector } from '../../..';
 import { TransactionInfo } from '../transaction/TransactionInfo';
-import { TransactionStatus } from '../transaction/TransactionStatus';
 
 type Props = {
   externalEvmWalletConnector?: WalletConnector;
@@ -16,13 +14,10 @@ export const TransactionSwap: FC<Props> = ({
   externalEvmWalletConnector,
 }) => {
   return (
-    <Grid templateColumns="1fr 1fr" gap="16px">
-      <TransactionInfo
-        externalEvmWalletConnector={externalEvmWalletConnector}
-        executeCallBack={executeCallBack}
-        onTxComplete={onTxComplete}
-      />
-      <TransactionStatus />
-    </Grid>
+    <TransactionInfo
+      externalEvmWalletConnector={externalEvmWalletConnector}
+      executeCallBack={executeCallBack}
+      onTxComplete={onTxComplete}
+    />
   );
 };
