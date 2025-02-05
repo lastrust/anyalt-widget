@@ -40,6 +40,7 @@ export interface TransactionProgress {
   status: TransactionStatus;
   message: string;
   isApproval: boolean;
+  chainName?: string;
   txHash?: string;
   error?: string;
   details?: TransactionProgressDetails;
@@ -253,6 +254,8 @@ export const useHandleTransaction = (
       let isCrosschainSwapError = false;
       do {
         let isApproval = false;
+        let chainName: string | undefined;
+        let txHash: string | undefined;
         try {
           const transactionData = await getTransactionData(
             aaInstance,
@@ -265,6 +268,8 @@ export const useHandleTransaction = (
             (transactionData as EVMTransactionDataResponse).isApprovalTx;
 
           console.log('isApproval: ', isApproval);
+
+          chainName = transactionData.blockChain;
 
           updateStepProgress({
             isApproval,
@@ -281,13 +286,14 @@ export const useHandleTransaction = (
             },
           });
 
-          const txHash = await handleTransaction(transactionData);
+          txHash = await handleTransaction(transactionData);
           console.log('txHash: ', txHash);
 
           updateStepProgress({
             isApproval,
             status: 'broadcasting',
             message: 'Broadcasting transaction...',
+            chainName,
             txHash,
             details: {
               currentStep,
@@ -318,7 +324,9 @@ export const useHandleTransaction = (
           updateStepProgress({
             isApproval,
             status: 'pending',
-            message: 'Waiting for transaction confirmation...',
+            message:
+              'Waiting for confirmation on source and destination chains...',
+            chainName,
             txHash,
             details: {
               currentStep,
@@ -343,6 +351,7 @@ export const useHandleTransaction = (
               isApproval,
               status: 'confirmed',
               message: 'Transaction confirmed successfully!',
+              chainName,
               txHash,
               details: {
                 currentStep: totalSteps,
@@ -363,6 +372,7 @@ export const useHandleTransaction = (
             isApproval,
             status: 'confirmed',
             message: 'Transaction confirmed successfully!',
+            chainName,
             txHash,
             details: {
               currentStep: totalSteps,
@@ -392,6 +402,8 @@ export const useHandleTransaction = (
                 ? error.message
                 : 'Transaction failed',
             error: error instanceof Error ? error.message : String(error),
+            chainName,
+            txHash,
             details: {
               currentStep,
               totalSteps,
@@ -431,14 +443,27 @@ export const useHandleTransaction = (
             chainType: isEvm ? ChainType.EVM : ChainType.SOLANA,
           });
           setFinalTokenAmount(executeResponse.amountOut);
-          if (executeResponse.approvalTxHash || executeResponse.executeTxHash) {
+          if (executeResponse.approvalTxHash) {
             updateStepProgress({
-              isApproval: executeResponse.approvalTxHash ? true : false,
+              isApproval: true,
               status: 'confirmed',
               message: 'Transaction confirmed successfully!',
-              txHash: executeResponse.approvalTxHash
-                ? executeResponse.approvalTxHash
-                : executeResponse.executeTxHash,
+              txHash: executeResponse.approvalTxHash,
+              chainName: lastSwap?.to.blockchain,
+              details: {
+                currentStep: totalSteps,
+                totalSteps,
+                stepDescription: 'Complete',
+              },
+            });
+          }
+          if (executeResponse.executeTxHash) {
+            updateStepProgress({
+              isApproval: false,
+              status: 'confirmed',
+              message: 'Transaction confirmed successfully!',
+              txHash: executeResponse.executeTxHash,
+              chainName: lastSwap?.to.blockchain,
               details: {
                 currentStep: totalSteps,
                 totalSteps,
