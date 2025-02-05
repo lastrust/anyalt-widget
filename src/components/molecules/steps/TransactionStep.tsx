@@ -41,7 +41,7 @@ export const TransactionStep = ({
             textStyle={'bold.3'}
             fontSize={'12px'}
             noOfLines={1}
-            maxW={'100px'}
+            minW={'100px'}
           >
             {exchangeName}:
           </Text>
