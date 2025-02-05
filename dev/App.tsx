@@ -24,7 +24,7 @@ const App = () => {
   const { isOpen, onOpen, onClose } = useModal();
 
   const estimateCallback = async (token: Token): Promise<EstimateResponse> => {
-    console.log('token: ', token);
+    console.log('token: ');
     return {
       amountOut: '10.19',
       priceInUSD: '2423.53',
@@ -32,7 +32,7 @@ const App = () => {
   };
 
   const executeCallBack = async (token: Token): Promise<ExecuteResponse> => {
-    console.log('token: ', token);
+    console.log('token: ');
     return {
       approvalTxHash: '0x123',
       executeTxHash: '0x123',

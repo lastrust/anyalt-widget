@@ -130,21 +130,6 @@ export const TransactionAccordion = () => {
                     />
                   );
                 })}
-                {/* <TransactionStep
-                  exchangeName={swap.swapperId}
-                  fromToken={{
-                    name: swap.from.symbol,
-                    amount: String(Number(swap.fromAmount).toFixed(4) || '0'),
-                    chainName: swap.from.blockchain,
-                    chainLogo: swap.from.blockchainLogo,
-                  }}
-                  toToken={{
-                    name: swap.to.symbol,
-                    amount: String(Number(swap.toAmount).toFixed(4) || '0'),
-                    chainName: swap.to.blockchain,
-                    chainLogo: swap.to.blockchainLogo,
-                  }}
-                /> */}
                 <HStack w={'100%'}>
                   <HStack>
                     <TimeIcon />

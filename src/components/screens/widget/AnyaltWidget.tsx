@@ -74,16 +74,17 @@ export const AnyaltWidgetWrapper = ({
           setOpenSlippageModal={setOpenSlippageModal}
         />
         <ChoosingRouteStep
-          onConfigClick={onConfigClick}
-          failedToFetchRoute={failedToFetchRoute}
-          activeRoute={activeRoute}
-          areWalletsConnected={areWalletsConnected}
-          onChooseRouteButtonClick={onChooseRouteButtonClick}
           loading={loading}
+          activeRoute={activeRoute}
+          walletConnector={walletConnector}
+          failedToFetchRoute={failedToFetchRoute}
+          areWalletsConnected={areWalletsConnected}
+          onGetQuote={onGetQuote}
+          onConfigClick={onConfigClick}
           openSlippageModal={openSlippageModal}
           setOpenSlippageModal={setOpenSlippageModal}
           connectWalletsOpen={connectWalletsOpen}
-          walletConnector={walletConnector}
+          onChooseRouteButtonClick={onChooseRouteButtonClick}
         />
         <TransactionStep
           walletConnector={walletConnector}

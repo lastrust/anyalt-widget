@@ -7,6 +7,7 @@ type Props = {
   openSlippageModal: boolean;
   showConnectedWallets?: boolean;
   failedToFetchRoute: boolean;
+  refetchCallback: (withGoNext: boolean) => void;
   walletConnector?: WalletConnector;
   onButtonClick: () => void;
   handleWalletsOpen: () => void;
@@ -23,10 +24,12 @@ export const RoutesWrapper = ({
   showConnectedWallets = false,
   failedToFetchRoute,
   handleWalletsOpen: connectWalletsOpen,
+  refetchCallback,
 }: Props) => {
   return (
     <SelectSwap
       loading={loading}
+      refetchCallback={refetchCallback}
       buttonText={buttonText}
       onButtonClick={onButtonClick}
       walletConnector={walletConnector}

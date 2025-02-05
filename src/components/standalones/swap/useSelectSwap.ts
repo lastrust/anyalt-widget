@@ -18,9 +18,10 @@ export const useSelectSwap = () => {
   const bestRoute = useAtomValue(bestRouteAtom);
   const inTokenAmount = useAtomValue(inTokenAmountAtom);
 
-  const onTokenSelect = (token: SupportedToken) => {
+  const onTokenSelect = (token: SupportedToken, callback: () => void) => {
     setInToken(token);
     setOpenTokenSelect(false);
+    callback();
   };
 
   const inTokenPrice = useMemo(() => {
