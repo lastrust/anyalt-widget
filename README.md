@@ -37,14 +37,20 @@ pnpm add @anyalt/widget @tanstack/react-query
 ```
 
 - Apply styles for the wallets to display them correctly on your app.
+
 ```tsx
+import '@fontsource/rethink-sans/400.css';
+import '@fontsource/rethink-sans/500.css';
+import '@fontsource/rethink-sans/600.css';
+
 import '@solana/wallet-adapter-react-ui/styles.css';
 import '@rainbow-me/rainbowkit/styles.css';
 ```
 
-- From `@tanstack/react-query`, import the `QueryClientProvider` component and `QueryClient` class. 
+- From `@tanstack/react-query`, import the `QueryClientProvider` component and `QueryClient` class.
 - From `@anyalt/widget/` import the `WidgetProvider` and `AnyaltWidget` components.
 - Wrap your app with the providers:
+
 ```tsx
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WidgetProvider, AnyaltWidget } from '@anyalt/widget';
@@ -54,15 +60,13 @@ const queryClient = new QueryClient();
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <WidgetProvider>
-        ...
-      </WidgetProvider>
+      <WidgetProvider>...</WidgetProvider>
     </QueryClientProvider>
   );
 };
 ```
 
-> **_NOTE:_**  Via `WidgetProvider`, you can customize the widget's appearance by modifying `defaultTheme`.
+> **_NOTE:_** Via `WidgetProvider`, you can customize the widget's appearance by modifying `defaultTheme`.
 
 ## Example Usage
 
@@ -141,7 +145,6 @@ export default Widget;
 
 Please declare your components with `'use client'` and use `dynamic` to import the widget to avoid server-side rendering issues.
 
-
 ```tsx
 'use client';
 
@@ -156,7 +159,6 @@ export const ClientWidgetWrapper = dynamic(
 ```
 
 ---
-
 
 ### Props
 
