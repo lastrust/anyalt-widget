@@ -1,7 +1,5 @@
 import { darkTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { WagmiProvider } from 'wagmi';
-
-import '@rainbow-me/rainbowkit/styles.css';
 import { walletConfig } from '../constants/configs';
 
 export function AppKitProvider({ children }: { children: React.ReactNode }) {

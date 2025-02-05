@@ -1,7 +1,4 @@
 import { extendTheme, ThemeConfig } from '@chakra-ui/react';
-import '@fontsource/rethink-sans/400.css';
-import '@fontsource/rethink-sans/500.css';
-import '@fontsource/rethink-sans/600.css';
 import { textStyles } from './textStyles';
 
 const config: ThemeConfig = {

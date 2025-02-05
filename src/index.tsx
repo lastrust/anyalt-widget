@@ -6,7 +6,6 @@ import {
 } from './components/screens/widget/AnyaltWidget';
 import { WalletsProviders } from './providers/WalletsProviders';
 import { WidgetProvider } from './providers/WidgetProvider';
-import './style.css';
 
 export enum ChainType {
   EVM = 'EVM',

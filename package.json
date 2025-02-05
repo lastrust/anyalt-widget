@@ -1,6 +1,6 @@
 {
   "name": "@anyalt/widget",
-  "version": "1.0.2-canary.31",
+  "version": "1.0.2-canary.35",
   "description": "Anyalt Widget",
   "private": false,
   "files": [
@@ -26,12 +26,11 @@
     "test": "jest",
     "prepare": "husky install",
     "type-check": "tsc --noEmit",
-    "build": "npm run clean && npm run build:assets && npm run build:types && npm run build:js",
+    "build": "npm run clean && npm run build:types && npm run build:js",
     "build:js": "npm run build:esm && npm run build:cjs",
     "build:esm": "swc src -d dist --config-file .swcrc.esm --out-file-extension mjs",
     "build:cjs": "swc src -d dist --config-file .swcrc",
     "build:types": "tsc --emitDeclarationOnly",
-    "build:assets": "copyfiles -u 1 \"src/assets/**/*\" dist/src && copyfiles -u 1 \"src/style.css\" dist/src",
     "clean": "rimraf dist",
     "prepublishOnly": "npm run clean && npm run build"
   },

@@ -24,13 +24,14 @@ const ModalWrapper: FC<ModalWrapperProps> = ({
 }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered size="2xl" {...props}>
-      <ModalOverlay backdropFilter="blur(4px)" />
+      <ModalOverlay backdropFilter="blur(4px)" zIndex={1000} />
       <ModalContent
         bg="brand.primary"
         borderRadius="12px"
         border="1px solid"
         borderColor="brand.secondary.12"
         maxW={maxWidthCustom || '1000px'}
+        containerProps={{ zIndex: 1000 }}
       >
         <ModalCloseButton color="white" />
         <Box padding="40px">{children}</Box>
