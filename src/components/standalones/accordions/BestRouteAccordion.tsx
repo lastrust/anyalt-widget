@@ -51,7 +51,7 @@ export const BestRouteAccordion = ({
   }, [bestRoute]);
 
   return (
-    <Box w={'100%'}>
+    <Box w={'100%'} mt="16px">
       <Accordion defaultIndex={[0]} allowMultiple>
         <AccordionItem
           border="1px solid"

@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Text, VStack } from '@chakra-ui/react';
+import { Box, Button, Divider, HStack, Text, VStack } from '@chakra-ui/react';
 import { useAtom, useAtomValue } from 'jotai';
 import { FC, useEffect, useState } from 'react';
 import { ExecuteResponse, Token, WalletConnector } from '../../..';
@@ -11,6 +11,9 @@ import {
   selectedRouteAtom,
   slippageAtom,
 } from '../../../store/stateStore';
+import { DividerIcon } from '../../atoms/icons/transaction/DividerIcon';
+import { GasIcon } from '../../atoms/icons/transaction/GasIcon';
+import { TimeIcon } from '../../atoms/icons/transaction/TimeIcon';
 import { TokenQuoteBox } from '../token/quote/TokenQuoteBox';
 
 type Props = {
@@ -75,6 +78,44 @@ export const TransactionInfo: FC<Props> = ({
             <Text textStyle={'regular.1'} color="brand.secondary.3">
               Swap tokens using {bestRoute?.swaps[currentStep - 1].swapperId}
             </Text>
+
+            <HStack
+              w={'100%'}
+              p={'16px 24px'}
+              borderRadius={'16px'}
+              borderWidth={'1px'}
+              borderColor={'brand.border.primary'}
+            >
+              <HStack>
+                <TimeIcon />
+                <Text
+                  color={'brand.secondary.3'}
+                  lineHeight={'120%'}
+                  textStyle={'regular.1'}
+                >
+                  {bestRoute?.swaps[currentStep - 1].estimatedTimeInSeconds}s
+                </Text>
+              </HStack>
+              <DividerIcon />
+              <HStack>
+                <GasIcon />
+                <Text
+                  color={'brand.secondary.3'}
+                  lineHeight={'120%'}
+                  textStyle={'regular.1'}
+                >
+                  ${' '}
+                  {bestRoute?.swaps[currentStep - 1].fee
+                    .reduce((acc, fee) => {
+                      const amount = parseFloat(fee.amount);
+                      const price = fee.price || 0;
+                      return acc + amount * price;
+                    }, 0)
+                    .toFixed(2)
+                    .toString()}
+                </Text>
+              </HStack>
+            </HStack>
           </VStack>
         </Box>
         <VStack
