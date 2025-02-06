@@ -47,14 +47,14 @@ export const TokenInputBox: FC<Props> = ({
           inToken.tokenAddress ?? '',
           publicKey.toString(),
         );
-        setBalance(parseFloat(balance).toFixed(2));
+        setBalance(balance);
       } else if (inToken?.chain?.chainType === 'EVM' && evmAddress) {
         const balance = await getEvmTokenBalance(
-          inToken.chain?.rpcUrl ?? '',
+          inToken.chain?.chainId ?? 1,
           inToken.tokenAddress ?? '',
           evmAddress,
         );
-        setBalance(parseFloat(balance).toFixed(2));
+        setBalance(balance);
       }
     }
   };
@@ -96,7 +96,7 @@ export const TokenInputBox: FC<Props> = ({
           gap="4px"
         >
           <Text color="white" fontSize="12px" opacity={0.4}>
-            Balance: {balance ? balance : ''}
+            Balance: {balance ? parseFloat(balance).toFixed(6) : ''}
           </Text>
           <Button
             bg="brand.tertiary.20"
