@@ -49,6 +49,11 @@ export const textStyles = {
       fontWeight: '600', // bold
       lineHeight: '14px',
     },
+    4: {
+      fontSize: '14px',
+      fontWeight: '600', // bold
+      lineHeight: '7px',
+    },
   },
   body: {
     1: {

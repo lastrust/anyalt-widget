@@ -29,7 +29,7 @@ export const TokenQuoteBox: FC<Props> = ({
     <Box padding="4px 16px" {...props}>
       {headerText && (
         <Box mb="16px">
-          <Text color="white" fontSize="14px" fontWeight="bold" opacity={0.32}>
+          <Text textStyle={'bold.4'} color="white" opacity={0.32}>
             {headerText}
           </Text>
         </Box>
@@ -62,14 +62,14 @@ export const TokenQuoteBox: FC<Props> = ({
           gap={'2px'}
         >
           {loading ? (
-            <Skeleton width="70px" height="19px" borderRadius="32px" />
+            <Skeleton width="70px" height="36px" borderRadius="10px" />
           ) : (
             <Text fontSize="24px" fontWeight="bold">
               {amount}
             </Text>
           )}
           {loading ? (
-            <Skeleton width="34px" height="14px" borderRadius="32px" />
+            <Skeleton width="34px" height="18px" borderRadius="10px" />
           ) : (
             <Text fontSize="12px" fontWeight="regular" opacity={0.4}>
               ~${price || '0.00'}
