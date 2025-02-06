@@ -1,5 +1,4 @@
 import { AnyaltWidgetProps } from '../../..';
-import { useAnyaltWidget } from '../../../hooks/useAnyaltWidget';
 import { Footer } from '../../molecules/footer/Footer';
 import { Header } from '../../molecules/header/Header';
 import { ConnectWalletsModal } from '../../standalones/modals/ConnectWalletsModal';
@@ -9,6 +8,7 @@ import { ChoosingRouteStep } from '../../standalones/steps/ChoosingRouteStep';
 import { CompleteStep } from '../../standalones/steps/CompleteStep';
 import { SelectTokenStep } from '../../standalones/steps/SelectTokenStep';
 import { TransactionStep } from '../../standalones/steps/TransactionStep';
+import { useAnyaltWidget } from './useAnyaltWidget';
 export { useModal } from '../../../hooks/useModal';
 export {
   defaultTheme,

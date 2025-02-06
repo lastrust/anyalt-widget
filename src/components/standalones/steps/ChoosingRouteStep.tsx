@@ -53,9 +53,16 @@ export const ChoosingRouteStep = ({
       </SwappingWrapper>
       <SwappingWrapper
         title={'Routes'}
-        subtitle="Please select preferred route"
+        subtitle={
+          failedToFetchRoute
+            ? 'Please change the amount or token'
+            : 'Please select preferred route'
+        }
       >
-        <BestRouteAccordion loading={loading} />
+        <BestRouteAccordion
+          loading={loading}
+          failedToFetchRoute={failedToFetchRoute}
+        />
       </SwappingWrapper>
     </Grid>
   );

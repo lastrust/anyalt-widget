@@ -4,7 +4,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { useAtom, useAtomValue } from 'jotai';
 import { useEffect, useMemo, useState } from 'react';
 import { useAccount } from 'wagmi';
-import { ChainType, EstimateResponse, Token, WalletConnector } from '..';
+import { ChainType, EstimateResponse, Token, WalletConnector } from '../../..';
 import {
   activeOperationIdAtom,
   allChainsAtom,
@@ -18,7 +18,7 @@ import {
   protocolInputTokenAtom,
   selectedRouteAtom,
   slippageAtom,
-} from '../store/stateStore';
+} from '../../../store/stateStore';
 
 const REFRESH_INTERVAL = 20000;
 
@@ -121,7 +121,7 @@ export const useAnyaltWidget = ({
   const onGetQuote = async (withGoNext: boolean = true) => {
     if (!inToken || !protocolInputToken || !inTokenAmount) return;
 
-    console.log('called');
+    console.log(inToken, protocolInputToken, inTokenAmount);
 
     try {
       setLoading(true);
@@ -240,12 +240,29 @@ export const useAnyaltWidget = ({
   useEffect(() => {
     if (activeStep === 1) {
       const interval = setInterval(() => {
-        onGetQuote(false);
+        // Capture latest values inside the interval callback
+        const currentInToken = inToken;
+        const currentProtocolInputToken = protocolInputToken;
+        const currentInTokenAmount = inTokenAmount;
+
+        if (
+          currentInToken &&
+          currentProtocolInputToken &&
+          currentInTokenAmount
+        ) {
+          console.log(
+            'refetching',
+            currentInToken,
+            currentProtocolInputToken,
+            currentInTokenAmount,
+          );
+          onGetQuote(false);
+        }
       }, REFRESH_INTERVAL);
 
       return () => clearInterval(interval);
     }
-  }, [activeStep]);
+  }, [activeStep, inToken, protocolInputToken, inTokenAmount, onGetQuote]);
 
   const areWalletsConnected = useMemo(() => {
     let isSolanaRequired = false;
