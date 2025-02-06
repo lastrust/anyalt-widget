@@ -182,8 +182,6 @@ export const useHandleTransaction = (
 
         console.log('res: ', res);
 
-        console.log(transactionDetails);
-
         if (transactionDetails.isApprovalTx) {
           return await sendTransaction(walletConfig, {
             to: transactionDetails.to as `0x${string}`,

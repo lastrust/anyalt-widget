@@ -69,7 +69,7 @@ export const useAnyaltWidget = ({
   const [allChains, setAllChains] = useAtom(allChainsAtom);
   const [bestRoute, setBestRoute] = useAtom(bestRouteAtom);
   const [anyaltInstance, setAnyaltInstance] = useAtom(anyaltInstanceAtom);
-  const [transactionsList, setTransactionsList] = useAtom(transactionsListAtom);
+  const [, setTransactionsList] = useAtom(transactionsListAtom);
   const [protocolInputToken, setProtocolInputToken] = useAtom(
     protocolInputTokenAtom,
   );
@@ -203,10 +203,6 @@ export const useAnyaltWidget = ({
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    console.log(transactionsList);
-  }, [transactionsList]);
 
   useEffect(() => {
     if (inTokenAmount) {
