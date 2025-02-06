@@ -113,7 +113,7 @@ export const SelectSwap = ({
         {buttonText}
       </Button>
       {showConnectedWallets && (
-        <HStack alignItems={'self-start'}>
+        <HStack alignItems={'center'}>
           {isConnected && (
             <Text color="brand.tertiary.100" textStyle={'regular.2'}>
               Connected:

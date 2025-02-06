@@ -22,7 +22,7 @@ export const ProgressItem: FC<Props> = ({ isApprove, progress }) => {
   if (!progress) return <></>;
 
   return (
-    <VStack mb={'12px'} spacing={'8px'}>
+    <VStack mb={'12px'} spacing={'8px'} alignItems={'flex-start'} w={'100%'}>
       <HStack spacing={'8px'} w={'100%'}>
         {(progress.status === 'signing' ||
           progress.status === 'broadcasting' ||
@@ -44,7 +44,7 @@ export const ProgressItem: FC<Props> = ({ isApprove, progress }) => {
             <FailIcon />
           </Box>
         )}
-        <Text fontSize={'16px'} color="brand.secondary.3">
+        <Text textStyle={'regular.3'} color="brand.secondary.3">
           {isApprove ? 'Approve' : 'Swap'}: {progress.message}
         </Text>
       </HStack>
