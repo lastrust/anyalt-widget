@@ -1,8 +1,8 @@
 import { ConnectWalletsModal } from '../../standalones/modals/ConnectWalletsModal';
 import ModalWrapper from '../../standalones/modals/ModalWrapper';
 import CustomStepper from '../../standalones/stepper/Stepper';
-import { Footer } from '../../standalones/widget/Footer';
-import { Header } from '../../standalones/widget/Header';
+import { Footer } from '../../molecules/footer/Footer';
+import { Header } from '../../molecules/header/Header';
 
 export { useModal } from '../../../hooks/useModal';
 export {

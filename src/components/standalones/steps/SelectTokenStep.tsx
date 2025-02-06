@@ -1,4 +1,4 @@
-import { SelectSwap } from '../swap/SelectSwap';
+import { SelectToken } from '../selectSwap/SelectToken';
 import { SwappingWrapper } from '../wrappers/SwappingWrapper';
 
 type Props = {
@@ -25,7 +25,7 @@ export const SelectTokenStep = ({
       title={'Select Deposit Token'}
       onConfigClick={onConfigClick}
     >
-      <SelectSwap
+      <SelectToken
         buttonText={'Get Quote'}
         onButtonClick={() => onGetQuote(true)}
         loading={loading}

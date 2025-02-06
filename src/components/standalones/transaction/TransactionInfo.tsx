@@ -14,7 +14,7 @@ import {
 import { DividerIcon } from '../../atoms/icons/transaction/DividerIcon';
 import { GasIcon } from '../../atoms/icons/transaction/GasIcon';
 import { TimeIcon } from '../../atoms/icons/transaction/TimeIcon';
-import { TokenQuoteBox } from '../token/quote/TokenQuoteBox';
+import { TokenQuoteBox } from '../selectSwap/token/quote/TokenQuoteBox';
 
 type Props = {
   externalEvmWalletConnector?: WalletConnector;

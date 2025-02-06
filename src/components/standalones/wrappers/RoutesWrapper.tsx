@@ -1,5 +1,5 @@
 import { WalletConnector } from '../../..';
-import { SelectSwap } from '../swap/SelectSwap';
+import { SelectToken } from '../selectSwap/SelectToken';
 
 type Props = {
   loading: boolean;
@@ -25,7 +25,7 @@ export const RoutesWrapper = ({
   handleWalletsOpen: connectWalletsOpen,
 }: Props) => {
   return (
-    <SelectSwap
+    <SelectToken
       loading={loading}
       buttonText={buttonText}
       onButtonClick={onButtonClick}

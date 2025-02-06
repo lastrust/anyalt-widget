@@ -3,15 +3,15 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { useAtom, useAtomValue } from 'jotai';
 import { FC, useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
-import { useSolana } from '../../../../providers/useSolana';
+import { useSolana } from '../../../../../providers/useSolana';
 import {
   currentUiStepAtom,
   inTokenAmountAtom,
   inTokenAtom,
-} from '../../../../store/stateStore';
-import { getEvmTokenBalance } from '../../../../utils';
-import { TokenIconBox } from '../../../molecules/TokenIconBox';
-import { TokenInfoBox } from '../../../molecules/TokenInfoBox';
+} from '../../../../../store/stateStore';
+import { getEvmTokenBalance } from '../../../../../utils';
+import { TokenIconBox } from '../../../../molecules/TokenIconBox';
+import { TokenInfoBox } from '../../../../molecules/TokenInfoBox';
 
 type Props = BoxProps & {
   price: string;
