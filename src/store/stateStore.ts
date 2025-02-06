@@ -39,3 +39,5 @@ export const currentStepAtom = atom<number>(1);
 export const stepsProgressAtom = atom<StepsProgress | undefined>(undefined);
 
 export const finalTokenAmountAtom = atom<string>('');
+
+export const currentUiStepAtom = atom<number>(0);
