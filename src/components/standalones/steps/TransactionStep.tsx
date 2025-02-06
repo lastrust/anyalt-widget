@@ -4,7 +4,7 @@ import { ExecuteResponse, Token, WalletConnector } from '../../..';
 import { currentStepAtom } from '../../../store/stateStore';
 import { SwappingTemplate } from '../../templates/SwappingTemplate';
 import { TransactionInfo } from '../transaction/TransactionInfo';
-import { TransactionStatus } from '../transaction/TransactionStatus';
+import { TransactionList } from '../transaction/TransactionsList';
 
 type Props = {
   walletConnector?: WalletConnector;
@@ -28,7 +28,7 @@ export const TransactionStep = ({
         />
       </SwappingTemplate>
       <SwappingTemplate>
-        <TransactionStatus />
+        <TransactionList />
       </SwappingTemplate>
     </Grid>
   );

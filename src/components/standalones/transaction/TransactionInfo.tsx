@@ -1,20 +1,11 @@
 import { Box, Button, Divider, HStack, Text, VStack } from '@chakra-ui/react';
-import { useAtom, useAtomValue } from 'jotai';
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 import { ExecuteResponse, Token, WalletConnector } from '../../..';
-import {
-  activeOperationIdAtom,
-  anyaltInstanceAtom,
-  bestRouteAtom,
-  currentStepAtom,
-  selectedRouteAtom,
-  slippageAtom,
-} from '../../../store/stateStore';
 import { DividerIcon } from '../../atoms/icons/transaction/DividerIcon';
 import { GasIcon } from '../../atoms/icons/transaction/GasIcon';
 import { TimeIcon } from '../../atoms/icons/transaction/TimeIcon';
 import { TokenQuoteBox } from '../selectSwap/token/quote/TokenQuoteBox';
-import { useHandleTransaction } from './useHandleTransaction';
+import { useTransactionInfo } from './useTransactionInfo';
 
 type Props = {
   externalEvmWalletConnector?: WalletConnector;
@@ -27,41 +18,18 @@ export const TransactionInfo: FC<Props> = ({
   onTxComplete,
   executeCallBack,
 }) => {
-  const [isLoading, setIsLoading] = useState(false);
-
-  const bestRoute = useAtomValue(bestRouteAtom);
-
-  const anyaltInstance = useAtomValue(anyaltInstanceAtom);
-  const { executeSwap } = useHandleTransaction(externalEvmWalletConnector);
-  const activeOperationId = useAtomValue(activeOperationIdAtom);
-  const slippage = useAtomValue(slippageAtom);
-
-  const currentStep = useAtomValue(currentStepAtom);
-  const [selectedRoute] = useAtom(selectedRouteAtom);
-
-  const runTx = async () => {
-    if (!anyaltInstance || !activeOperationId) return;
-    setIsLoading(true);
-    try {
-      await executeSwap(
-        anyaltInstance,
-        activeOperationId,
-        slippage,
-        bestRoute?.swaps || [],
-        executeCallBack,
-      );
-      onTxComplete();
-      setIsLoading(false);
-    } catch (error) {
-      console.error(error);
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (selectedRoute) {
-      console.log('selectedRoute', selectedRoute.swaps[currentStep - 1]);
-    }
+  const {
+    runTx,
+    recentTransaction,
+    isLoading,
+    bestRoute,
+    currentStep,
+    fees,
+    estimatedTime,
+  } = useTransactionInfo({
+    externalEvmWalletConnector,
+    onTxComplete,
+    executeCallBack,
   });
 
   return (
@@ -78,8 +46,7 @@ export const TransactionInfo: FC<Props> = ({
             <Box w={'100%'}>
               <VStack alignItems="flex-start" spacing="16px" w={'100%'}>
                 <Text textStyle={'regular.1'} color="brand.secondary.3">
-                  Swap tokens using{' '}
-                  {bestRoute?.swaps[currentStep - 1].swapperId}
+                  Swap tokens using {recentTransaction?.swapperId}
                 </Text>
 
                 <HStack
@@ -96,8 +63,7 @@ export const TransactionInfo: FC<Props> = ({
                       lineHeight={'120%'}
                       textStyle={'regular.1'}
                     >
-                      {bestRoute?.swaps[currentStep - 1].estimatedTimeInSeconds}
-                      s
+                      {estimatedTime} s
                     </Text>
                   </HStack>
                   <DividerIcon />
@@ -108,15 +74,7 @@ export const TransactionInfo: FC<Props> = ({
                       lineHeight={'120%'}
                       textStyle={'regular.1'}
                     >
-                      ${' '}
-                      {bestRoute?.swaps[currentStep - 1].fee
-                        .reduce((acc, fee) => {
-                          const amount = parseFloat(fee.amount);
-                          const price = fee.price || 0;
-                          return acc + amount * price;
-                        }, 0)
-                        .toFixed(2)
-                        .toString()}
+                      $ {fees}
                     </Text>
                   </HStack>
                 </HStack>
@@ -132,20 +90,14 @@ export const TransactionInfo: FC<Props> = ({
               <TokenQuoteBox
                 loading={false}
                 headerText=""
-                tokenName={bestRoute?.swaps[currentStep - 1].from.symbol || ''}
-                tokenLogo={bestRoute?.swaps[currentStep - 1].from.logo || ''}
-                chainName={
-                  bestRoute?.swaps[currentStep - 1].from.blockchain || ''
-                }
-                chainLogo={
-                  bestRoute?.swaps[currentStep - 1].from.blockchainLogo || ''
-                }
-                amount={Number(
-                  bestRoute?.swaps[currentStep - 1].fromAmount,
-                ).toFixed(2)}
+                tokenName={recentTransaction?.from.symbol || ''}
+                tokenLogo={recentTransaction?.from.logo || ''}
+                chainName={recentTransaction?.from.blockchain || ''}
+                chainLogo={recentTransaction?.from.blockchainLogo || ''}
+                amount={Number(recentTransaction?.fromAmount).toFixed(2)}
                 price={(
-                  Number(bestRoute?.swaps[currentStep - 1].from.usdPrice) *
-                  Number(bestRoute?.swaps[currentStep - 1].fromAmount)
+                  Number(recentTransaction?.from.usdPrice) *
+                  Number(recentTransaction?.fromAmount)
                 ).toFixed(2)}
                 w={'100%'}
                 p={'0'}
@@ -155,20 +107,14 @@ export const TransactionInfo: FC<Props> = ({
               <TokenQuoteBox
                 loading={false}
                 headerText=""
-                tokenName={bestRoute?.swaps[currentStep - 1].to.symbol || ''}
-                tokenLogo={bestRoute?.swaps[currentStep - 1].to.logo || ''}
-                chainName={
-                  bestRoute?.swaps[currentStep - 1].to.blockchain || ''
-                }
-                chainLogo={
-                  bestRoute?.swaps[currentStep - 1].to.blockchainLogo || ''
-                }
-                amount={Number(
-                  bestRoute?.swaps[currentStep - 1].toAmount,
-                ).toFixed(2)}
+                tokenName={recentTransaction?.to.symbol || ''}
+                tokenLogo={recentTransaction?.to.logo || ''}
+                chainName={recentTransaction?.to.blockchain || ''}
+                chainLogo={recentTransaction?.to.blockchainLogo || ''}
+                amount={Number(recentTransaction?.toAmount).toFixed(2)}
                 price={(
-                  Number(bestRoute?.swaps[currentStep - 1].to.usdPrice) *
-                  Number(bestRoute?.swaps[currentStep - 1].toAmount)
+                  Number(recentTransaction?.to.usdPrice) *
+                  Number(recentTransaction?.toAmount)
                 ).toFixed(2)}
                 w={'100%'}
                 p={'0'}

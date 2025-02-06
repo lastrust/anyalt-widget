@@ -9,7 +9,7 @@ import {
 import { TransactionOverviewCard } from '../../molecules/card/TransactionOverviewCard';
 import { TransactionAccordion } from '../accordions/TransactionAccordion';
 
-export const TransactionStatus = () => {
+export const TransactionList = () => {
   const bestRoute = useAtomValue(bestRouteAtom);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
