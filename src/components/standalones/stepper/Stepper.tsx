@@ -6,7 +6,7 @@ type Props = {
   activeStep: number;
 } & BoxProps;
 
-const CustomStepper = ({ children, activeStep, ...props }: Props) => {
+const Stepper = ({ children, activeStep, ...props }: Props) => {
   return (
     <Box {...props}>
       {children &&
@@ -23,4 +23,4 @@ const CustomStepper = ({ children, activeStep, ...props }: Props) => {
   );
 };
 
-export default CustomStepper;
+export default Stepper;

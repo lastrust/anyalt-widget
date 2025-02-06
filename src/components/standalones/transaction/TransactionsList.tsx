@@ -6,10 +6,10 @@ import {
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
 } from '../../../store/stateStore';
+import { TransactionOverviewCard } from '../../molecules/card/TransactionOverviewCard';
 import { TransactionAccordion } from '../accordions/TransactionAccordion';
-import { GeneralTransactionInfo } from './TransactionOverview';
 
-export const TransactionStatus = () => {
+export const TransactionList = () => {
   const bestRoute = useAtomValue(bestRouteAtom);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
@@ -17,7 +17,7 @@ export const TransactionStatus = () => {
 
   return (
     <VStack w="100%" alignItems="flex-start" spacing="16px">
-      <GeneralTransactionInfo
+      <TransactionOverviewCard
         requestId={bestRoute?.requestId || ''}
         from={{
           address: bestRoute?.swaps[0].from.address || '',

@@ -25,16 +25,20 @@ export const useSelectSwap = () => {
 
   const inTokenPrice = useMemo(() => {
     if (!activeRoute || !inTokenAmount) return '';
+
     const tokenPrice = activeRoute.swaps[0].from.usdPrice;
     if (!tokenPrice) return '';
+
     return (tokenPrice * parseFloat(inTokenAmount)).toFixed(2);
   }, [activeRoute, inTokenAmount]);
 
   const outTokenPrice = useMemo(() => {
     if (!activeRoute) return '';
+
     const lastSwap = activeRoute.swaps[activeRoute.swaps.length - 1];
     const tokenPrice = lastSwap.to.usdPrice;
     if (!tokenPrice) return '';
+
     return (tokenPrice * parseFloat(activeRoute.outputAmount)).toFixed(2);
   }, [activeRoute]);
 

@@ -12,15 +12,15 @@ import { getChainId, sendTransaction, switchChain } from '@wagmi/core';
 import { useAtom, useAtomValue } from 'jotai';
 import { useCallback } from 'react';
 import { useAccount } from 'wagmi';
-import { ChainType, ExecuteResponse, Token, WalletConnector } from '..';
-import { walletConfig } from '../constants/configs';
+import { ChainType, ExecuteResponse, Token, WalletConnector } from '../../..';
+import { walletConfig } from '../../../constants/configs';
 import {
   allChainsAtom,
   bestRouteAtom,
   currentStepAtom,
   finalTokenAmountAtom,
   stepsProgressAtom,
-} from '../store/stateStore';
+} from '../../../store/stateStore';
 
 // Types moved to top
 export type TransactionStatus =
@@ -51,6 +51,31 @@ export interface StepProgress {
   swap?: TransactionProgress;
 }
 
+export type TransactionStatusList = {
+  steps?: {
+    from: {
+      tokenName: string;
+      tokenLogo: string;
+      tokenAmount: string;
+      tokenPrice: string;
+      tokenUsdPrice: string;
+      tokenDecimals: number;
+      blockchain: string;
+      blockchainLogo: string;
+    };
+    to: {
+      tokenName: string;
+      tokenLogo: string;
+      tokenAmount: string;
+      tokenPrice: string;
+      tokenUsdPrice: string;
+      tokenDecimals: number;
+      blockchain: string;
+      blockchainLogo: string;
+    };
+  }[];
+};
+
 export interface StepsProgress {
   steps: StepProgress[];
 }
@@ -68,13 +93,15 @@ class TransactionError extends Error {
 export const useHandleTransaction = (
   externalEvmWalletConnector?: WalletConnector,
 ) => {
-  const { isConnected: isEvmConnected, chain: evmChain } = useAccount();
   const { connection } = useConnection();
   const { publicKey, signTransaction } = useWallet();
-  const allChains = useAtomValue(allChainsAtom);
+  const { isConnected: isEvmConnected, chain: evmChain } = useAccount();
+
+  const [, setFinalTokenAmount] = useAtom(finalTokenAmountAtom);
   const [currentStep, setCurrentStep] = useAtom(currentStepAtom);
   const [stepsProgress, setStepsProgress] = useAtom(stepsProgressAtom);
-  const [, setFinalTokenAmount] = useAtom(finalTokenAmountAtom);
+
+  const allChains = useAtomValue(allChainsAtom);
   const bestRoute = useAtomValue(bestRouteAtom);
 
   // Function to handle transactions based on type
@@ -154,8 +181,6 @@ export const useHandleTransaction = (
         });
 
         console.log('res: ', res);
-
-        console.log(transactionDetails);
 
         if (transactionDetails.isApprovalTx) {
           return await sendTransaction(walletConfig, {
@@ -251,6 +276,7 @@ export const useHandleTransaction = (
       if (!stepsProgress?.steps || stepsProgress.steps.length === 0) {
         setStepsProgress({ steps: Array(totalSteps).fill({}) });
       }
+
       let isCrosschainSwapError = false;
       do {
         let isApproval = false;

@@ -5,13 +5,13 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
+  Center,
   Flex,
   Skeleton,
   Text,
   VStack,
 } from '@chakra-ui/react';
 import { useAtom, useAtomValue } from 'jotai';
-import { useEffect } from 'react';
 import {
   bestRouteAtom,
   currentStepAtom,
@@ -29,10 +29,12 @@ import { TokenRouteInfo } from '../../molecules/TokenRouteInfo';
 type Props = {
   loading: boolean;
   isButtonHidden?: boolean;
+  failedToFetchRoute: boolean;
 };
 
 export const BestRouteAccordion = ({
   loading,
+  failedToFetchRoute,
   isButtonHidden = true,
 }: Props) => {
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
@@ -46,9 +48,14 @@ export const BestRouteAccordion = ({
   const handleRouteSelect = () => {
     setSelectedRoute(bestRoute);
   };
-  useEffect(() => {
-    console.log('bestRoute', bestRoute);
-  }, [bestRoute]);
+
+  if (failedToFetchRoute) {
+    return (
+      <Center h={'400px'}>
+        <Text textStyle={'bold.1'}>No routes found</Text>
+      </Center>
+    );
+  }
 
   return (
     <Box w={'100%'} mt="16px">

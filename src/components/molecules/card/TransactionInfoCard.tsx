@@ -1,0 +1,43 @@
+import { HStack, Text } from '@chakra-ui/react';
+import { GasIcon } from '../../atoms/icons/GasIcon';
+import { TimeIcon } from '../../atoms/icons/TimeIcon';
+import { DividerIcon } from '../../atoms/icons/transaction/DividerIcon';
+
+type Props = {
+  estimatedTime?: number;
+  fees?: string;
+};
+
+export const TransactionInfoCard = ({ estimatedTime, fees }: Props) => {
+  return (
+    <HStack
+      w={'100%'}
+      p={'16px 24px'}
+      borderRadius={'16px'}
+      borderWidth={'1px'}
+      borderColor={'brand.border.primary'}
+    >
+      <HStack>
+        <TimeIcon />
+        <Text
+          color={'brand.secondary.3'}
+          lineHeight={'120%'}
+          textStyle={'regular.1'}
+        >
+          {estimatedTime} s
+        </Text>
+      </HStack>
+      <DividerIcon />
+      <HStack>
+        <GasIcon />
+        <Text
+          color={'brand.secondary.3'}
+          lineHeight={'120%'}
+          textStyle={'regular.1'}
+        >
+          $ {fees}
+        </Text>
+      </HStack>
+    </HStack>
+  );
+};

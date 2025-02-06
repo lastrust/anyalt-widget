@@ -9,7 +9,7 @@ type Props = {
   children: React.ReactNode;
 };
 
-export const SwappingWrapper = ({
+export const SwappingTemplate = ({
   title,
   subtitle,
   secondTitle,

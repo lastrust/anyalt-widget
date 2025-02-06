@@ -4,11 +4,11 @@ import { useEffect, useMemo, useState } from 'react';
 import {
   allChainsAtom,
   anyaltInstanceAtom,
-} from '../../../../store/stateStore';
+} from '../../../../../store/stateStore';
 import {
   isValidEthereumAddress,
   isValidSolanaAddress,
-} from '../../../../utils';
+} from '../../../../../utils';
 
 export const useTokenSelectBox = () => {
   const allChains = useAtomValue(allChainsAtom);

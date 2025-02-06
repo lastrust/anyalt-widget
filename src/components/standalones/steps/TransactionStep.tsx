@@ -2,9 +2,9 @@ import { Grid } from '@chakra-ui/react';
 import { useAtomValue } from 'jotai';
 import { ExecuteResponse, Token, WalletConnector } from '../../..';
 import { currentStepAtom } from '../../../store/stateStore';
-import { TransactionStatus } from '../transaction/TransactionStatus';
-import { SwappingWrapper } from '../wrappers/SwappingWrapper';
-import { TransactionSwap } from '../wrappers/TransactionSwap';
+import { SwappingTemplate } from '../../templates/SwappingTemplate';
+import { TransactionInfo } from '../transaction/info/TransactionInfo';
+import { TransactionList } from '../transaction/TransactionsList';
 
 type Props = {
   walletConnector?: WalletConnector;
@@ -20,16 +20,16 @@ export const TransactionStep = ({
   const currentStep = useAtomValue(currentStepAtom);
   return (
     <Grid templateColumns="1fr 1fr" gap="16px">
-      <SwappingWrapper title={`Transaction ${currentStep}`}>
-        <TransactionSwap
+      <SwappingTemplate title={`Transaction ${currentStep}`}>
+        <TransactionInfo
           externalEvmWalletConnector={walletConnector}
           executeCallBack={executeCallBack}
           onTxComplete={onTxComplete}
         />
-      </SwappingWrapper>
-      <SwappingWrapper>
-        <TransactionStatus />
-      </SwappingWrapper>
+      </SwappingTemplate>
+      <SwappingTemplate>
+        <TransactionList />
+      </SwappingTemplate>
     </Grid>
   );
 };

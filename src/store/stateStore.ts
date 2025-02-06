@@ -6,7 +6,10 @@ import {
 } from '@anyalt/sdk';
 import { atom } from 'jotai';
 import { EstimateResponse, Token } from '..';
-import { StepsProgress } from '../hooks/useHandleTransaction';
+import {
+  StepsProgress,
+  TransactionStatusList,
+} from '../components/standalones/transaction/useHandleTransaction';
 
 export const anyaltInstanceAtom = atom<AnyAlt | undefined>(undefined);
 
@@ -41,3 +44,7 @@ export const stepsProgressAtom = atom<StepsProgress | undefined>(undefined);
 export const finalTokenAmountAtom = atom<string>('');
 
 export const currentUiStepAtom = atom<number>(0);
+
+export const transactionsListAtom = atom<TransactionStatusList | undefined>(
+  undefined,
+);

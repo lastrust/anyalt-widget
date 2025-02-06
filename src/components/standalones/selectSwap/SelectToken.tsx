@@ -12,10 +12,10 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { useAccount } from 'wagmi';
 import { WalletConnector } from '../../..';
 import { SlippageModal } from '../modals/SlippageModal';
-import { TokenInputBox } from '../token/input/TokenInputBox';
-import { TokenQuoteBox } from '../token/quote/TokenQuoteBox';
-import { TokenSelectBox } from '../token/select/TokenSelectBox';
-import { useSelectSwap } from './useSelectSwap';
+import { TokenInputBox } from './token/input/TokenInputBox';
+import { TokenQuoteBox } from './token/quote/TokenQuoteBox';
+import { TokenSelectBox } from './token/select/TokenSelectBox';
+import { useSelectToken } from './useSelectToken';
 
 type Props = {
   loading: boolean;
@@ -30,7 +30,7 @@ type Props = {
   failedToFetchRoute?: boolean;
 } & BoxProps;
 
-export const SelectSwap = ({
+export const SelectToken = ({
   loading,
   openSlippageModal,
   setOpenSlippageModal,
@@ -53,7 +53,7 @@ export const SelectSwap = ({
     protocolInputToken,
     protocolFinalToken,
     activeRoute,
-  } = useSelectSwap();
+  } = useSelectToken();
 
   const { publicKey: solanaAddress, connected: isSolanaConnected } =
     useWallet();
@@ -113,7 +113,7 @@ export const SelectSwap = ({
         {buttonText}
       </Button>
       {showConnectedWallets && (
-        <HStack alignItems={'self-start'}>
+        <HStack alignItems={'center'}>
           {isConnected && (
             <Text color="brand.tertiary.100" textStyle={'regular.2'}>
               Connected:

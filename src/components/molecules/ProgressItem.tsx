@@ -7,11 +7,11 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { FC } from 'react';
-import { TransactionProgress } from '../../hooks/useHandleTransaction';
 import { chainExplorers } from '../../utils/chains';
 import { CopyIcon } from '../atoms/icons/CopyIcon';
 import { CheckIcon } from '../atoms/icons/transaction/CheckIcon';
 import { FailIcon } from '../atoms/icons/transaction/FailIcon';
+import { TransactionProgress } from '../standalones/transaction/useHandleTransaction';
 
 type Props = {
   isApprove: boolean;
@@ -22,7 +22,7 @@ export const ProgressItem: FC<Props> = ({ isApprove, progress }) => {
   if (!progress) return <></>;
 
   return (
-    <VStack mb={'12px'} spacing={'8px'}>
+    <VStack mb={'12px'} spacing={'8px'} alignItems={'flex-start'} w={'100%'}>
       <HStack spacing={'8px'} w={'100%'}>
         {(progress.status === 'signing' ||
           progress.status === 'broadcasting' ||
@@ -44,7 +44,7 @@ export const ProgressItem: FC<Props> = ({ isApprove, progress }) => {
             <FailIcon />
           </Box>
         )}
-        <Text fontSize={'16px'} color="brand.secondary.3">
+        <Text textStyle={'regular.3'} color="brand.secondary.3">
           {isApprove ? 'Approve' : 'Swap'}: {progress.message}
         </Text>
       </HStack>
