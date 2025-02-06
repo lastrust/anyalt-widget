@@ -2,10 +2,10 @@ import { SupportedToken } from '@anyalt/sdk';
 import { Box, Image, Input, Text } from '@chakra-ui/react';
 import { FC } from 'react';
 
-import { useTokenSelectBox } from './useTokenSelectBox';
 import { SearchIcon } from '../../../../atoms/icons/selectToken/SearchIcon';
 import { TokenAccept } from '../../../../molecules/TokenAccept';
 import { TokenItem } from '../../../../molecules/TokenItem';
+import { useTokenSelectBox } from './useTokenSelectBox';
 
 type Props = {
   onClose: () => void;

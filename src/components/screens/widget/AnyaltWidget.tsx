@@ -1,8 +1,8 @@
-import { ConnectWalletsModal } from '../../standalones/modals/ConnectWalletsModal';
-import ModalWrapper from '../../standalones/modals/ModalWrapper';
-import CustomStepper from '../../standalones/stepper/Stepper';
 import { Footer } from '../../molecules/footer/Footer';
 import { Header } from '../../molecules/header/Header';
+import { ConnectWalletsModal } from '../../standalones/modals/ConnectWalletsModal';
+import ModalWrapper from '../../standalones/modals/ModalWrapper';
+import Stepper from '../../standalones/stepper/Stepper';
 
 export { useModal } from '../../../hooks/useModal';
 export {
@@ -11,7 +11,6 @@ export {
 } from '../../../theme/defaultTheme';
 export { OpenModalButton } from '../../atoms/buttons/OpenModalButton';
 
-import { useEffect } from 'react';
 import { AnyaltWidgetProps } from '../../..';
 import { useAnyaltWidget } from '../../../hooks/useAnyaltWidget';
 import { ChoosingRouteStep } from '../../standalones/steps/ChoosingRouteStep';
@@ -57,10 +56,6 @@ export const AnyaltWidgetWrapper = ({
     walletConnector,
   });
 
-  useEffect(() => {
-    console.log('loading', loading);
-  }, [loading]);
-
   return (
     <ModalWrapper
       isOpen={isOpen}
@@ -68,7 +63,7 @@ export const AnyaltWidgetWrapper = ({
       maxWidthCustom={activeStep === 0 || activeStep === 3 ? '530px' : '1000px'}
     >
       <Header activeStep={activeStep} onBackClick={onBackClick} />
-      <CustomStepper activeStep={activeStep}>
+      <Stepper activeStep={activeStep}>
         <SelectTokenStep
           loading={loading}
           onGetQuote={onGetQuote}
@@ -100,7 +95,7 @@ export const AnyaltWidgetWrapper = ({
           onClose={onClose}
           setActiveStep={setActiveStep}
         />
-      </CustomStepper>
+      </Stepper>
       <Footer />
       <ConnectWalletsModal
         title="Connect Wallet's"

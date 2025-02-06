@@ -3,7 +3,6 @@ import { FC } from 'react';
 import { TokenIconBox } from '../../../../molecules/TokenIconBox';
 import { TokenInfoBox } from '../../../../molecules/TokenInfoBox';
 
-
 type Props = {
   loading: boolean;
   headerText: string;
