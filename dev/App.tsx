@@ -35,8 +35,9 @@ const App = () => {
   };
 
   const executeCallBack = async (token: Token): Promise<ExecuteResponse> => {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       setTimeout(() => {
+        // reject(new Error('Error'));
         resolve({
           approvalTxHash: '0x123',
           executeTxHash: '0x123',
