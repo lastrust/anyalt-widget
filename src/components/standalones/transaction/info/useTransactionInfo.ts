@@ -1,5 +1,5 @@
 import { useAtomValue } from 'jotai';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ExecuteResponse, Token, WalletConnector } from '../../../..';
 import {
   activeOperationIdAtom,
@@ -7,7 +7,6 @@ import {
   bestRouteAtom,
   currentStepAtom,
   slippageAtom,
-  stepsProgressAtom,
   transactionsListAtom,
 } from '../../../../store/stateStore';
 import { useHandleTransaction } from '../useHandleTransaction';
@@ -26,7 +25,6 @@ export const useTransactionInfo = ({
   const slippage = useAtomValue(slippageAtom);
   const bestRoute = useAtomValue(bestRouteAtom);
   const currentStep = useAtomValue(currentStepAtom);
-  const stepsProgress = useAtomValue(stepsProgressAtom);
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
   const activeOperationId = useAtomValue(activeOperationIdAtom);
   const transactionsList = useAtomValue(transactionsListAtom);
@@ -52,24 +50,23 @@ export const useTransactionInfo = ({
     }
   };
 
-  useEffect(() => {
-    console.log(stepsProgress);
-  }, [stepsProgress]);
-
   return {
     bestRoute,
     runTx,
     currentStep,
     isLoading,
+    transactionsList,
     recentTransaction: transactionsList?.steps?.[currentStep - 1],
-    estimatedTime: bestRoute?.swaps[currentStep - 1].estimatedTimeInSeconds,
-    fees: bestRoute?.swaps[currentStep - 1].fee
-      .reduce((acc, fee) => {
-        const amount = parseFloat(fee.amount);
-        const price = fee.price || 0;
-        return acc + amount * price;
-      }, 0)
-      .toFixed(2)
-      .toString(),
+    estimatedTime:
+      bestRoute?.swaps[currentStep - 1]?.estimatedTimeInSeconds || 0,
+    fees:
+      bestRoute?.swaps[currentStep - 1]?.fee
+        .reduce((acc, fee) => {
+          const amount = parseFloat(fee?.amount);
+          const price = fee.price || 0;
+          return acc + amount * price;
+        }, 0)
+        .toFixed(2)
+        .toString() || '0',
   };
 };

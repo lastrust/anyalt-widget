@@ -1,7 +1,7 @@
 import { HStack, Text } from '@chakra-ui/react';
-import { GasIcon } from '../../atoms/icons/GasIcon';
-import { TimeIcon } from '../../atoms/icons/TimeIcon';
 import { DividerIcon } from '../../atoms/icons/transaction/DividerIcon';
+import { GasIcon } from '../../atoms/icons/transaction/GasIcon';
+import { TimeIcon } from '../../atoms/icons/transaction/TimeIcon';
 
 type Props = {
   estimatedTime?: number;
