@@ -1,14 +1,14 @@
 import { useAtomValue } from 'jotai';
 import { useState } from 'react';
-import { ExecuteResponse, Token, WalletConnector } from '../../..';
+import { ExecuteResponse, Token, WalletConnector } from '../../../..';
 import {
   activeOperationIdAtom,
   anyaltInstanceAtom,
   bestRouteAtom,
   currentStepAtom,
   slippageAtom,
-} from '../../../store/stateStore';
-import { useHandleTransaction } from './useHandleTransaction';
+} from '../../../../store/stateStore';
+import { useHandleTransaction } from '../useHandleTransaction';
 
 export const useTransactionInfo = ({
   externalEvmWalletConnector,

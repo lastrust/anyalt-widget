@@ -1,10 +1,8 @@
-import { Box, Button, Divider, HStack, Text, VStack } from '@chakra-ui/react';
+import { Box, Button, Divider, Text, VStack } from '@chakra-ui/react';
 import { FC } from 'react';
-import { ExecuteResponse, Token, WalletConnector } from '../../..';
-import { DividerIcon } from '../../atoms/icons/transaction/DividerIcon';
-import { GasIcon } from '../../atoms/icons/transaction/GasIcon';
-import { TimeIcon } from '../../atoms/icons/transaction/TimeIcon';
-import { TokenQuoteBox } from '../selectSwap/token/quote/TokenQuoteBox';
+import { ExecuteResponse, Token, WalletConnector } from '../../../..';
+import { TransactionInfoCard } from '../../../molecules/card/TransactionInfoCard';
+import { TokenQuoteBox } from '../../selectSwap/token/quote/TokenQuoteBox';
 import { useTransactionInfo } from './useTransactionInfo';
 
 type Props = {
@@ -20,11 +18,11 @@ export const TransactionInfo: FC<Props> = ({
 }) => {
   const {
     runTx,
-    recentTransaction,
+    fees,
     isLoading,
     bestRoute,
     currentStep,
-    fees,
+    recentTransaction,
     estimatedTime,
   } = useTransactionInfo({
     externalEvmWalletConnector,
@@ -49,35 +47,10 @@ export const TransactionInfo: FC<Props> = ({
                   Swap tokens using {recentTransaction?.swapperId}
                 </Text>
 
-                <HStack
-                  w={'100%'}
-                  p={'16px 24px'}
-                  borderRadius={'16px'}
-                  borderWidth={'1px'}
-                  borderColor={'brand.border.primary'}
-                >
-                  <HStack>
-                    <TimeIcon />
-                    <Text
-                      color={'brand.secondary.3'}
-                      lineHeight={'120%'}
-                      textStyle={'regular.1'}
-                    >
-                      {estimatedTime} s
-                    </Text>
-                  </HStack>
-                  <DividerIcon />
-                  <HStack>
-                    <GasIcon />
-                    <Text
-                      color={'brand.secondary.3'}
-                      lineHeight={'120%'}
-                      textStyle={'regular.1'}
-                    >
-                      $ {fees}
-                    </Text>
-                  </HStack>
-                </HStack>
+                <TransactionInfoCard
+                  estimatedTime={estimatedTime}
+                  fees={fees}
+                />
               </VStack>
             </Box>
             <VStack
