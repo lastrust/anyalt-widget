@@ -1,5 +1,5 @@
 import { useAtomValue } from 'jotai';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ExecuteResponse, Token, WalletConnector } from '../../../..';
 import {
   activeOperationIdAtom,
@@ -7,6 +7,8 @@ import {
   bestRouteAtom,
   currentStepAtom,
   slippageAtom,
+  stepsProgressAtom,
+  transactionsListAtom,
 } from '../../../../store/stateStore';
 import { useHandleTransaction } from '../useHandleTransaction';
 
@@ -24,8 +26,10 @@ export const useTransactionInfo = ({
   const slippage = useAtomValue(slippageAtom);
   const bestRoute = useAtomValue(bestRouteAtom);
   const currentStep = useAtomValue(currentStepAtom);
+  const stepsProgress = useAtomValue(stepsProgressAtom);
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
   const activeOperationId = useAtomValue(activeOperationIdAtom);
+  const transactionsList = useAtomValue(transactionsListAtom);
 
   const { executeSwap } = useHandleTransaction(externalEvmWalletConnector);
 
@@ -48,12 +52,16 @@ export const useTransactionInfo = ({
     }
   };
 
+  useEffect(() => {
+    console.log(stepsProgress);
+  }, [stepsProgress]);
+
   return {
     bestRoute,
     runTx,
     currentStep,
     isLoading,
-    recentTransaction: bestRoute?.swaps[currentStep - 1],
+    recentTransaction: transactionsList?.steps?.[currentStep - 1],
     estimatedTime: bestRoute?.swaps[currentStep - 1].estimatedTimeInSeconds,
     fees: bestRoute?.swaps[currentStep - 1].fee
       .reduce((acc, fee) => {

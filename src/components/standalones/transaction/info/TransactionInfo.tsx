@@ -44,7 +44,7 @@ export const TransactionInfo: FC<Props> = ({
             <Box w={'100%'}>
               <VStack alignItems="flex-start" spacing="16px" w={'100%'}>
                 <Text textStyle={'regular.1'} color="brand.secondary.3">
-                  Swap tokens using {recentTransaction?.swapperId}
+                  Swap tokens using {bestRoute.swaps[currentStep - 1].swapperId}
                 </Text>
 
                 <TransactionInfoCard
@@ -63,14 +63,14 @@ export const TransactionInfo: FC<Props> = ({
               <TokenQuoteBox
                 loading={false}
                 headerText=""
-                tokenName={recentTransaction?.from.symbol || ''}
-                tokenLogo={recentTransaction?.from.logo || ''}
+                tokenName={recentTransaction?.from.tokenName || ''}
+                tokenLogo={recentTransaction?.from.tokenLogo || ''}
                 chainName={recentTransaction?.from.blockchain || ''}
                 chainLogo={recentTransaction?.from.blockchainLogo || ''}
-                amount={Number(recentTransaction?.fromAmount).toFixed(2)}
+                amount={Number(recentTransaction?.from.tokenAmount).toFixed(2)}
                 price={(
-                  Number(recentTransaction?.from.usdPrice) *
-                  Number(recentTransaction?.fromAmount)
+                  Number(recentTransaction?.from.tokenUsdPrice) *
+                  Number(recentTransaction?.from.tokenAmount)
                 ).toFixed(2)}
                 w={'100%'}
                 p={'0'}
@@ -80,14 +80,14 @@ export const TransactionInfo: FC<Props> = ({
               <TokenQuoteBox
                 loading={false}
                 headerText=""
-                tokenName={recentTransaction?.to.symbol || ''}
-                tokenLogo={recentTransaction?.to.logo || ''}
+                tokenName={recentTransaction?.to.tokenName || ''}
+                tokenLogo={recentTransaction?.to.tokenLogo || ''}
                 chainName={recentTransaction?.to.blockchain || ''}
                 chainLogo={recentTransaction?.to.blockchainLogo || ''}
-                amount={Number(recentTransaction?.toAmount).toFixed(2)}
+                amount={Number(recentTransaction?.to.tokenAmount).toFixed(2)}
                 price={(
-                  Number(recentTransaction?.to.usdPrice) *
-                  Number(recentTransaction?.toAmount)
+                  Number(recentTransaction?.to.tokenUsdPrice) *
+                  Number(recentTransaction?.to.tokenAmount)
                 ).toFixed(2)}
                 w={'100%'}
                 p={'0'}

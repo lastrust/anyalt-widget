@@ -59,7 +59,7 @@ const App = () => {
                   address: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
                   chainId: 42161,
                   chainType: ChainType.EVM,
-                  name: 'Arbitrum',
+                  name: 'USDT',
                   decimals: 18,
                 }}
                 finalToken={{
@@ -68,7 +68,7 @@ const App = () => {
                   chainId: 1,
                   chainType: ChainType.EVM,
                   logoUrl: 'https://engine.aarna.ai/static/logo-only.svg',
-                  name: 'Arbitrum',
+                  name: 'Aarna Afi802',
                   decimals: 18,
                 }}
                 apiKey={'pk_0xCYxjM8dFF0Vii7syrgpR6U4'}

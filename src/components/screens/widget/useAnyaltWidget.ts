@@ -18,6 +18,7 @@ import {
   protocolInputTokenAtom,
   selectedRouteAtom,
   slippageAtom,
+  transactionsListAtom,
 } from '../../../store/stateStore';
 
 const REFRESH_INTERVAL = 20000;
@@ -61,11 +62,14 @@ export const useAnyaltWidget = ({
   const selectedRoute = useAtomValue(selectedRouteAtom);
 
   const [, setActiveOperationId] = useAtom(activeOperationIdAtom);
-  const [, setFinalTokenEstimate] = useAtom(finalTokenEstimateAtom);
+  const [finalEstimateToken, setFinalTokenEstimate] = useAtom(
+    finalTokenEstimateAtom,
+  );
   const [, setProtocolFinalToken] = useAtom(protocolFinalTokenAtom);
   const [allChains, setAllChains] = useAtom(allChainsAtom);
   const [bestRoute, setBestRoute] = useAtom(bestRouteAtom);
   const [anyaltInstance, setAnyaltInstance] = useAtom(anyaltInstanceAtom);
+  const [transactionsList, setTransactionsList] = useAtom(transactionsListAtom);
   const [protocolInputToken, setProtocolInputToken] = useAtom(
     protocolInputTokenAtom,
   );
@@ -121,8 +125,6 @@ export const useAnyaltWidget = ({
   const onGetQuote = async (withGoNext: boolean = true) => {
     if (!inToken || !protocolInputToken || !inTokenAmount) return;
 
-    console.log(inToken, protocolInputToken, inTokenAmount);
-
     try {
       setLoading(true);
 
@@ -132,8 +134,61 @@ export const useAnyaltWidget = ({
         amount: inTokenAmount,
         slippage,
       });
-      console.log('route', route);
       setBestRoute(route);
+
+      setTransactionsList({
+        steps: [
+          ...(route?.swaps.map((swap) => ({
+            from: {
+              tokenName: swap.from.symbol,
+              tokenLogo: swap.from.logo,
+              tokenAmount: swap.fromAmount,
+              tokenPrice: swap.fromAmount,
+              tokenUsdPrice: swap.from.usdPrice?.toString() || '0',
+              tokenDecimals: swap.from.decimals,
+              blockchain: swap.from.blockchain,
+              blockchainLogo: swap.from.blockchainLogo,
+            },
+            to: {
+              tokenName: swap.to.symbol,
+              tokenLogo: swap.to.logo,
+              tokenAmount: swap.toAmount,
+              tokenPrice: swap.toAmount,
+              tokenUsdPrice: swap.to.usdPrice?.toString() || '0',
+              tokenDecimals: swap.to.decimals,
+              blockchain: swap.to.blockchain,
+              blockchainLogo: swap.to.blockchainLogo,
+            },
+          })) || []),
+          {
+            from: {
+              tokenName: route?.swaps[route?.swaps.length - 1].to.symbol || '',
+              tokenLogo: route?.swaps[route?.swaps.length - 1].to.logo || '',
+              tokenAmount: route?.swaps[route?.swaps.length - 1].toAmount || '',
+              tokenPrice: route?.swaps[route?.swaps.length - 1].toAmount || '',
+              tokenUsdPrice:
+                route?.swaps[route?.swaps.length - 1].to.usdPrice?.toString() ||
+                '0',
+              tokenDecimals:
+                route?.swaps[route?.swaps.length - 1].to.decimals || 0,
+              blockchain:
+                route?.swaps[route?.swaps.length - 1].to.blockchain || '',
+              blockchainLogo:
+                route?.swaps[route?.swaps.length - 1].to.blockchainLogo || '',
+            },
+            to: {
+              tokenName: finalToken.name,
+              tokenLogo: finalToken.logoUrl || '',
+              tokenAmount: route?.outputAmount || '',
+              tokenPrice: route?.outputAmount || '',
+              tokenUsdPrice: finalEstimateToken?.priceInUSD || '0',
+              tokenDecimals: finalToken.decimals || 0,
+              blockchain: protocolInputToken.chain?.displayName || '',
+              blockchainLogo: protocolInputToken.chain?.logoUrl || '',
+            },
+          },
+        ],
+      });
 
       const tokensOut = parseFloat(route?.outputAmount || '0');
       const isEnoughDepositTokens = tokensOut > minDepositAmount;
@@ -148,6 +203,10 @@ export const useAnyaltWidget = ({
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    console.log(transactionsList);
+  }, [transactionsList]);
 
   useEffect(() => {
     if (inTokenAmount) {
@@ -250,12 +309,6 @@ export const useAnyaltWidget = ({
           currentProtocolInputToken &&
           currentInTokenAmount
         ) {
-          console.log(
-            'refetching',
-            currentInToken,
-            currentProtocolInputToken,
-            currentInTokenAmount,
-          );
           onGetQuote(false);
         }
       }, REFRESH_INTERVAL);
