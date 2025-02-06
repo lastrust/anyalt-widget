@@ -12,15 +12,15 @@ import { getChainId, sendTransaction, switchChain } from '@wagmi/core';
 import { useAtom, useAtomValue } from 'jotai';
 import { useCallback } from 'react';
 import { useAccount } from 'wagmi';
-import { ChainType, ExecuteResponse, Token, WalletConnector } from '..';
-import { walletConfig } from '../constants/configs';
+import { ChainType, ExecuteResponse, Token, WalletConnector } from '../../..';
+import { walletConfig } from '../../../constants/configs';
 import {
   allChainsAtom,
   bestRouteAtom,
   currentStepAtom,
   finalTokenAmountAtom,
   stepsProgressAtom,
-} from '../store/stateStore';
+} from '../../../store/stateStore';
 
 // Types moved to top
 export type TransactionStatus =

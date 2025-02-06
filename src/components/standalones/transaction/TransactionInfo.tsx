@@ -2,7 +2,6 @@ import { Box, Button, Divider, HStack, Text, VStack } from '@chakra-ui/react';
 import { useAtom, useAtomValue } from 'jotai';
 import { FC, useEffect, useState } from 'react';
 import { ExecuteResponse, Token, WalletConnector } from '../../..';
-import { useHandleTransaction } from '../../../hooks/useHandleTransaction';
 import {
   activeOperationIdAtom,
   anyaltInstanceAtom,
@@ -15,6 +14,7 @@ import { DividerIcon } from '../../atoms/icons/transaction/DividerIcon';
 import { GasIcon } from '../../atoms/icons/transaction/GasIcon';
 import { TimeIcon } from '../../atoms/icons/transaction/TimeIcon';
 import { TokenQuoteBox } from '../selectSwap/token/quote/TokenQuoteBox';
+import { useHandleTransaction } from './useHandleTransaction';
 
 type Props = {
   externalEvmWalletConnector?: WalletConnector;

@@ -7,11 +7,11 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { FC } from 'react';
-import { TransactionProgress } from '../../hooks/useHandleTransaction';
 import { chainExplorers } from '../../utils/chains';
 import { CopyIcon } from '../atoms/icons/CopyIcon';
 import { CheckIcon } from '../atoms/icons/transaction/CheckIcon';
 import { FailIcon } from '../atoms/icons/transaction/FailIcon';
+import { TransactionProgress } from '../standalones/transaction/useHandleTransaction';
 
 type Props = {
   isApprove: boolean;

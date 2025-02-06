@@ -1,7 +1,7 @@
 import { SwapResultAsset } from '@anyalt/sdk/dist/adapter/api/api';
 import { Box, Divider, HStack, Text, VStack } from '@chakra-ui/react';
 import { CopyIcon } from '../../atoms/icons/CopyIcon';
-import { TokenCard } from '../../molecules/card/TokenCard';
+import { TokenCard } from './TokenCard';
 
 type SwapResultAssetWithAmount = SwapResultAsset & { amount: string };
 
@@ -11,7 +11,7 @@ type Props = {
   to?: SwapResultAssetWithAmount | undefined;
 };
 
-export const GeneralTransactionInfo = ({ requestId, to, from }: Props) => {
+export const TransactionOverviewCard = ({ requestId, to, from }: Props) => {
   return (
     <VStack
       w="100%"

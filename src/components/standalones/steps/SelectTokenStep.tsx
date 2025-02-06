@@ -1,5 +1,5 @@
+import { SwappingTemplate } from '../../templates/SwappingTemplate';
 import { SelectToken } from '../selectSwap/SelectToken';
-import { SwappingWrapper } from '../wrappers/SwappingWrapper';
 
 type Props = {
   failedToFetchRoute: boolean;
@@ -21,7 +21,7 @@ export const SelectTokenStep = ({
   isValidAmountIn,
 }: Props) => {
   return (
-    <SwappingWrapper
+    <SwappingTemplate
       title={'Select Deposit Token'}
       onConfigClick={onConfigClick}
     >
@@ -34,6 +34,6 @@ export const SelectTokenStep = ({
         isValidAmountIn={isValidAmountIn}
         failedToFetchRoute={failedToFetchRoute}
       />
-    </SwappingWrapper>
+    </SwappingTemplate>
   );
 };

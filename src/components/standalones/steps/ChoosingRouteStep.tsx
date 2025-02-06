@@ -1,9 +1,9 @@
 import { BestRouteResponse } from '@anyalt/sdk';
 import { Grid } from '@chakra-ui/react';
 import { WalletConnector } from '../../..';
+import { SwappingTemplate } from '../../templates/SwappingTemplate';
 import { BestRouteAccordion } from '../accordions/BestRouteAccordion';
-import { RoutesWrapper } from '../wrappers/RoutesWrapper';
-import { SwappingWrapper } from '../wrappers/SwappingWrapper';
+import { SelectToken } from '../selectSwap/SelectToken';
 
 type Props = {
   loading: boolean;
@@ -38,20 +38,20 @@ export const ChoosingRouteStep = ({
 
   return (
     <Grid gridTemplateColumns="448px 448px" gap="24px">
-      <SwappingWrapper title={'Calculation'} onConfigClick={onConfigClick}>
-        <RoutesWrapper
+      <SwappingTemplate title={'Calculation'} onConfigClick={onConfigClick}>
+        <SelectToken
           loading={loading}
           buttonText={buttonText}
-          showConnectedWallets={true}
+          onButtonClick={onChooseRouteButtonClick}
           walletConnector={walletConnector}
           openSlippageModal={openSlippageModal}
           handleWalletsOpen={connectWalletsOpen}
-          onButtonClick={onChooseRouteButtonClick}
           setOpenSlippageModal={setOpenSlippageModal}
+          showConnectedWallets={areWalletsConnected}
           failedToFetchRoute={failedToFetchRoute}
         />
-      </SwappingWrapper>
-      <SwappingWrapper
+      </SwappingTemplate>
+      <SwappingTemplate
         title={'Routes'}
         subtitle={
           failedToFetchRoute
@@ -63,7 +63,7 @@ export const ChoosingRouteStep = ({
           loading={loading}
           failedToFetchRoute={failedToFetchRoute}
         />
-      </SwappingWrapper>
+      </SwappingTemplate>
     </Grid>
   );
 };
