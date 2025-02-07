@@ -54,14 +54,14 @@ export const useTransactionInfo = ({
 
   const estimatedTime = useMemo(() => {
     if (!bestRoute) return 0;
-    if (currentStep >= bestRoute.swaps.length)
+    if (currentStep > bestRoute.swaps.length)
       return finalTokenEstimate?.estimatedTimeInSeconds || 0;
     return bestRoute.swaps[currentStep - 1]?.estimatedTimeInSeconds || 0;
   }, [bestRoute, currentStep, finalTokenEstimate]);
 
   const fees = useMemo(() => {
     if (!bestRoute) return '0';
-    if (currentStep >= bestRoute.swaps.length)
+    if (currentStep > bestRoute.swaps.length)
       return finalTokenEstimate?.estimatedFeeInUSD || '0';
     return (
       bestRoute.swaps[currentStep - 1]?.fee
