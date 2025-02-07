@@ -48,7 +48,7 @@ export const ProgressItem: FC<Props> = ({ isApprove, progress }) => {
           {isApprove ? 'Approve' : 'Swap'}: {progress.message}
         </Text>
       </HStack>
-      {progress.txHash && progress.chainName && (
+      {/* {progress.txHash && progress.chainName && (
         <HStack justifyContent={'space-between'} w="100%">
           <HStack>
             <Text textStyle={'regular.3'} color="brand.secondary.3">
@@ -70,7 +70,7 @@ export const ProgressItem: FC<Props> = ({ isApprove, progress }) => {
             <CopyIcon />
           </Box>
         </HStack>
-      )}
+      )} */}
     </VStack>
   );
 };

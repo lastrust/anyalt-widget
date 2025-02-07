@@ -156,7 +156,12 @@ export const BestRouteAccordion = ({
               color="brand.secondary.3"
             >
               {loading ? (
-                <Skeleton w={'180px'} h={'18px'} ml="24px" />
+                <Skeleton
+                  w={'180px'}
+                  h={'18px'}
+                  ml="24px"
+                  borderRadius="12px"
+                />
               ) : (
                 <Text textStyle={'bold.3'} ml={'24px'} lineHeight={'120%'}>
                   Transaction {currentStep}:{' '}

@@ -24,8 +24,8 @@ import { CheckIcon } from '../../atoms/icons/transaction/CheckIcon';
 import { DividerIcon } from '../../atoms/icons/transaction/DividerIcon';
 import { GasIcon } from '../../atoms/icons/transaction/GasIcon';
 import { TimeIcon } from '../../atoms/icons/transaction/TimeIcon';
-import { ProgressItem } from '../../molecules/ProgressItem';
 import { TransactionStep } from '../../molecules/steps/TransactionStep';
+import { TransactionHash } from '../../molecules/text/TransactionHash';
 
 export const TransactionAccordion = () => {
   const [isLastMileExpanded, setIsLastMileExpanded] = useState(false);
@@ -58,8 +58,7 @@ export const TransactionAccordion = () => {
       display={'flex'}
       flexDir={'column'}
     >
-      {currentStep <= bestRoute?.swaps.length &&
-        bestRoute?.swaps.map((swap, index) => (
+        {bestRoute?.swaps.map((swap, index) => (
           <AccordionItem
             key={`${swap.swapperId}-${index}`}
             p={'16px'}
@@ -164,20 +163,20 @@ export const TransactionAccordion = () => {
                     </Text>
                   </HStack>
                 </HStack>
-                <VStack w={'100%'}>
+                <Box w={'100%'}>
                   {stepsProgress?.steps[index].approve && (
-                    <ProgressItem
-                      isApprove={true}
-                      progress={stepsProgress.steps[index].approve}
+                    <TransactionHash
+                      type="Approval"
+                      progress={stepsProgress?.steps[index].approve}
                     />
                   )}
                   {stepsProgress?.steps[index].swap && (
-                    <ProgressItem
-                      isApprove={false}
-                      progress={stepsProgress.steps[index].swap}
+                    <TransactionHash
+                      type="Swap"
+                      progress={stepsProgress?.steps[index].swap}
                     />
                   )}
-                </VStack>
+                </Box>
               </VStack>
             </AccordionPanel>
           </AccordionItem>
@@ -249,21 +248,22 @@ export const TransactionAccordion = () => {
                 chainLogo: protocolInputToken?.chain?.logoUrl || '',
               }}
             />
-            <VStack w={'100%'}>
-              {stepsProgress?.steps[bestRoute.swaps.length].approve && (
-                <ProgressItem
-                  isApprove={true}
-                  progress={stepsProgress.steps[bestRoute.swaps.length].approve}
-                />
-              )}
-              {stepsProgress?.steps[bestRoute.swaps.length].swap && (
-                <ProgressItem
-                  isApprove={false}
-                  progress={stepsProgress.steps[bestRoute.swaps.length].swap}
-                />
-              )}
-            </VStack>
           </VStack>
+
+          <Box>
+            {stepsProgress?.steps[bestRoute.swaps.length].approve && (
+              <TransactionHash
+                type="Approval"
+                progress={stepsProgress?.steps[bestRoute.swaps.length].approve}
+              />
+            )}
+            {stepsProgress?.steps[bestRoute.swaps.length].swap && (
+              <TransactionHash
+                type="Swap"
+                progress={stepsProgress?.steps[bestRoute.swaps.length].swap}
+              />
+            )}
+          </Box>
         </AccordionPanel>
       </AccordionItem>
     </Accordion>

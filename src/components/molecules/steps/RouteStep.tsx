@@ -39,14 +39,14 @@ export const RouteStep = ({
       )}
       <VStack justifyContent={'start'} alignItems={'start'} gap={'4px'}>
         {loading ? (
-          <Skeleton w={'180px'} h={'18px'} />
+          <Skeleton w={'180px'} h={'18px'} borderRadius="12px" />
         ) : (
           <Text color="brand.secondary.3" textStyle={'regular.3'}>
             Swap token using {exchangeName}
           </Text>
         )}
         {loading ? (
-          <Skeleton w={'250px'} h={'18px'} />
+          <Skeleton w={'250px'} h={'18px'} borderRadius="12px" />
         ) : (
           <HStack>
             <Text

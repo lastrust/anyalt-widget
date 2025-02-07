@@ -2,17 +2,17 @@ import { SupportedToken } from '@anyalt/sdk';
 import { Box, Image, Input, Text } from '@chakra-ui/react';
 import { FC } from 'react';
 
-import { SearchIcon } from '../../../../atoms/icons/selectToken/SearchIcon';
-import { TokenAccept } from '../../../../molecules/TokenAccept';
-import { TokenItem } from '../../../../molecules/TokenItem';
-import { useTokenSelectBox } from './useTokenSelectBox';
+import { SearchIcon } from '../../atoms/icons/selectToken/SearchIcon';
+import { TokenAccept } from '../../molecules/TokenAccept';
+import { TokenItem } from '../../molecules/TokenItem';
+import { useTokenSelectModal } from './useTokenSelectModal';
 
 type Props = {
   onClose: () => void;
   onTokenSelect: (token: SupportedToken) => void;
 };
 
-export const TokenSelectBox: FC<Props> = ({ onClose, onTokenSelect }) => {
+export const TokenSelectModal: FC<Props> = ({ onClose, onTokenSelect }) => {
   const {
     showAccept,
     setShowAccept,
@@ -26,7 +26,7 @@ export const TokenSelectBox: FC<Props> = ({ onClose, onTokenSelect }) => {
     showAllChains,
     setShowAllChains,
     searchInputValue,
-  } = useTokenSelectBox();
+  } = useTokenSelectModal();
 
   return (
     <Box
@@ -177,8 +177,9 @@ export const TokenSelectBox: FC<Props> = ({ onClose, onTokenSelect }) => {
               border="none"
               bgColor="transparent"
               color="white"
-              h="30px"
               fontSize="16px"
+              fontWeight="regular"
+              lineHeight="120%"
               focusBorderColor="transparent"
               padding="0"
               _placeholder={{

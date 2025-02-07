@@ -12,9 +12,9 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { useAccount } from 'wagmi';
 import { WalletConnector } from '../../..';
 import { SlippageModal } from '../modals/SlippageModal';
+import { TokenSelectModal } from '../modals/TokenSelectModal';
 import { TokenInputBox } from './token/input/TokenInputBox';
 import { TokenQuoteBox } from './token/quote/TokenQuoteBox';
-import { TokenSelectBox } from './token/select/TokenSelectBox';
 import { useSelectToken } from './useSelectToken';
 
 type Props = {
@@ -91,8 +91,8 @@ export const SelectToken = ({
           tokenLogo={protocolFinalToken?.logoUrl ?? ''}
           chainName={protocolInputToken?.chain?.displayName ?? ''}
           chainLogo={protocolInputToken?.chain?.logoUrl ?? ''}
-          amount={finalTokenEstimate?.amountOut ?? ''}
-          price={finalTokenEstimate?.priceInUSD ?? ''}
+          amount={finalTokenEstimate?.amountOut ?? '0.00'}
+          price={finalTokenEstimate?.priceInUSD ?? '0.00'}
         />
       </VStack>
 
@@ -173,7 +173,7 @@ export const SelectToken = ({
       )}
 
       {openTokenSelect && (
-        <TokenSelectBox
+        <TokenSelectModal
           onClose={() => setOpenTokenSelect(false)}
           onTokenSelect={(token) =>
             onTokenSelect(token, () => {

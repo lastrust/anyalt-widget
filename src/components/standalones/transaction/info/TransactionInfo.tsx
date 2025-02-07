@@ -1,8 +1,11 @@
 import { Box, Button, Divider, Text, VStack } from '@chakra-ui/react';
-import { FC } from 'react';
+import { useAtomValue } from 'jotai';
+import { FC, useEffect } from 'react';
 import { ExecuteResponse, Token, WalletConnector } from '../../../..';
+import { stepsProgressAtom } from '../../../../store/stateStore';
 import { TransactionInfoCard } from '../../../molecules/card/TransactionInfoCard';
 import { TokenQuoteBox } from '../../selectSwap/token/quote/TokenQuoteBox';
+import { ProgressList } from '../ProgressList';
 import { useTransactionInfo } from './useTransactionInfo';
 
 type Props = {
@@ -29,6 +32,11 @@ export const TransactionInfo: FC<Props> = ({
     onTxComplete,
     executeCallBack,
   });
+  const stepsProgress = useAtomValue(stepsProgressAtom);
+
+  useEffect(() => {
+    console.log(stepsProgress);
+  }, [stepsProgress]);
 
   return (
     <VStack
@@ -47,6 +55,10 @@ export const TransactionInfo: FC<Props> = ({
                 ? `Swap tokens using ${bestRoute?.swaps[currentStep - 1]?.swapperId}`
                 : `Depositing tokens to ${recentTransaction?.to.tokenName}`}
             </Text>
+            <ProgressList
+              stepsProgress={stepsProgress}
+              index={currentStep - 1}
+            />
 
             <TransactionInfoCard estimatedTime={estimatedTime} fees={fees} />
           </VStack>

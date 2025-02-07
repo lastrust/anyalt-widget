@@ -68,14 +68,9 @@ export const TokenQuoteBox: FC<Props> = ({
           gap={'2px'}
         >
           {loading ? (
-            <Skeleton
-              width="70px"
-              height="25px"
-              borderRadius="10px"
-              mb="10px"
-            />
+            <Skeleton width="70px" height="28px" borderRadius="12px" mb="2px" />
           ) : (
-            <Text fontSize="24px" fontWeight="bold">
+            <Text textStyle="bold.0" fontSize="24px">
               {amount}
             </Text>
           )}

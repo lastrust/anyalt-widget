@@ -15,7 +15,7 @@ export const textStyles = {
     1: {
       fontSize: '24px',
       fontWeight: '700', // bold
-      lineHeight: '32px',
+      lineHeight: '120%',
     },
     2: {
       fontSize: '20px',
@@ -32,7 +32,7 @@ export const textStyles = {
     0: {
       fontSize: '20px',
       fontWeight: '600', // bold
-      lineHeight: '24px',
+      lineHeight: '120%',
     },
     1: {
       fontSize: '16px',
