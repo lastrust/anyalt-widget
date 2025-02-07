@@ -96,7 +96,8 @@ export const BestRouteAccordion = ({
                   loading={loading}
                   text="Fastest"
                   textColor="brand.secondary.5"
-                  bgColor="bg.tertiary.100"
+                  bgColor="brand.tertiary.100"
+                  withBorder={false}
                 />
                 <RouteTag
                   loading={loading}
