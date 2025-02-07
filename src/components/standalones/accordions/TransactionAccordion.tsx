@@ -58,130 +58,129 @@ export const TransactionAccordion = () => {
       display={'flex'}
       flexDir={'column'}
     >
-      {currentStep <= bestRoute?.swaps.length &&
-        bestRoute?.swaps.map((swap, index) => (
-          <AccordionItem
-            key={`${swap.swapperId}-${index}`}
-            p={'16px'}
-            cursor={'pointer'}
-            bg="brand.secondary.6"
-            onClick={handleRouteSelect}
-            borderRadius={'10px'}
-            borderWidth={'3px'}
-            borderColor={
-              currentStep - 1 === index ? 'brand.tertiary.100' : 'transparent'
-            }
-            _hover={{
-              bgColor: 'bg.secondary.1',
-            }}
-            w={'100%'}
+      {bestRoute?.swaps.map((swap, index) => (
+        <AccordionItem
+          key={`${swap.swapperId}-${index}`}
+          p={'16px'}
+          cursor={'pointer'}
+          bg="brand.secondary.6"
+          onClick={handleRouteSelect}
+          borderRadius={'10px'}
+          borderWidth={'3px'}
+          borderColor={
+            currentStep - 1 === index ? 'brand.tertiary.100' : 'transparent'
+          }
+          _hover={{
+            bgColor: 'bg.secondary.1',
+          }}
+          w={'100%'}
+        >
+          <AccordionButton
+            display={'flex'}
+            flexDir={'row'}
+            justifyContent={'space-between'}
+            gap="12px"
+            p={'0px'}
           >
-            <AccordionButton
-              display={'flex'}
-              flexDir={'row'}
-              justifyContent={'space-between'}
-              gap="12px"
-              p={'0px'}
+            <HStack justifyContent={'flex-start'}>
+              <Text textStyle={'bold.0'} mr="8px">
+                Transaction {index + 1}
+              </Text>
+              {currentStep - 1 > index && <CheckIcon />}
+              {currentStep - 1 === index && (
+                <Text textStyle={'bold.2'} color="brand.tertiary.100">
+                  In Progress
+                </Text>
+              )}
+            </HStack>
+            <Box
+              bg="brand.tertiary.100"
+              borderRadius={'50%'}
+              w={'24px'}
+              h={'24px'}
             >
-              <HStack justifyContent={'flex-start'}>
-                <Text textStyle={'bold.0'} mr="8px">
-                  Transaction {index + 1}
-                </Text>
-                {currentStep - 1 > index && <CheckIcon />}
-                {currentStep - 1 === index && (
-                  <Text textStyle={'bold.2'} color="brand.tertiary.100">
-                    In Progress
+              <AccordionIcon w={'24px'} h={'24px'} />
+            </Box>
+          </AccordionButton>
+          <AccordionPanel p={'0px'} mt="12px">
+            <VStack gap={'12px'} alignItems={'flex-start'}>
+              <Text textStyle={'regular.1'} color="brand.secondary.3">
+                Swap tokens using {swap.swapperId}
+              </Text>
+              {swap.internalSwaps?.map((internalSwap, index) => {
+                return (
+                  <TransactionStep
+                    key={`${internalSwap.swapperId}-${index}`}
+                    exchangeLogo={internalSwap.swapperLogo}
+                    exchangeName={internalSwap.swapperId}
+                    fromToken={{
+                      name: internalSwap.from.symbol,
+                      amount: String(
+                        Number(internalSwap.fromAmount).toFixed(2) || '0',
+                      ),
+                      chainName: internalSwap.from.blockchain,
+                      chainLogo: internalSwap.from.blockchainLogo,
+                    }}
+                    toToken={{
+                      name: internalSwap.to.symbol,
+                      amount: String(
+                        Number(internalSwap.toAmount).toFixed(2) || '0',
+                      ),
+                      chainName: internalSwap.to.blockchain,
+                      chainLogo: internalSwap.to.blockchainLogo,
+                    }}
+                  />
+                );
+              })}
+              <HStack w={'100%'}>
+                <HStack>
+                  <TimeIcon />
+                  <Text
+                    color={'brand.secondary.3'}
+                    lineHeight={'120%'}
+                    textStyle={'regular.3'}
+                  >
+                    {swap.estimatedTimeInSeconds}s
                   </Text>
-                )}
-              </HStack>
-              <Box
-                bg="brand.tertiary.100"
-                borderRadius={'50%'}
-                w={'24px'}
-                h={'24px'}
-              >
-                <AccordionIcon w={'24px'} h={'24px'} />
-              </Box>
-            </AccordionButton>
-            <AccordionPanel p={'0px'} mt="12px">
-              <VStack gap={'12px'} alignItems={'flex-start'}>
-                <Text textStyle={'regular.1'} color="brand.secondary.3">
-                  Swap tokens using {swap.swapperId}
-                </Text>
-                {swap.internalSwaps?.map((internalSwap, index) => {
-                  return (
-                    <TransactionStep
-                      key={`${internalSwap.swapperId}-${index}`}
-                      exchangeLogo={internalSwap.swapperLogo}
-                      exchangeName={internalSwap.swapperId}
-                      fromToken={{
-                        name: internalSwap.from.symbol,
-                        amount: String(
-                          Number(internalSwap.fromAmount).toFixed(2) || '0',
-                        ),
-                        chainName: internalSwap.from.blockchain,
-                        chainLogo: internalSwap.from.blockchainLogo,
-                      }}
-                      toToken={{
-                        name: internalSwap.to.symbol,
-                        amount: String(
-                          Number(internalSwap.toAmount).toFixed(2) || '0',
-                        ),
-                        chainName: internalSwap.to.blockchain,
-                        chainLogo: internalSwap.to.blockchainLogo,
-                      }}
-                    />
-                  );
-                })}
-                <HStack w={'100%'}>
-                  <HStack>
-                    <TimeIcon />
-                    <Text
-                      color={'brand.secondary.3'}
-                      lineHeight={'120%'}
-                      textStyle={'regular.3'}
-                    >
-                      {swap.estimatedTimeInSeconds}s
-                    </Text>
-                  </HStack>
-                  <DividerIcon />
-                  <HStack>
-                    <GasIcon />
-                    <Text
-                      color={'brand.secondary.3'}
-                      lineHeight={'120%'}
-                      textStyle={'regular.3'}
-                    >
-                      ${' '}
-                      {swap.fee
-                        .reduce((acc, fee) => {
-                          const amount = parseFloat(fee.amount);
-                          const price = fee.price || 0;
-                          return acc + amount * price;
-                        }, 0)
-                        .toFixed(2)
-                        .toString()}
-                    </Text>
-                  </HStack>
                 </HStack>
-                <VStack w={'100%'}>
-                  {stepsProgress?.steps[index].approve && (
-                    <ProgressItem
-                      isApprove={true}
-                      progress={stepsProgress.steps[index].approve}
-                    />
-                  )}
-                  {stepsProgress?.steps[index].swap && (
-                    <ProgressItem
-                      isApprove={false}
-                      progress={stepsProgress.steps[index].swap}
-                    />
-                  )}
-                </VStack>
+                <DividerIcon />
+                <HStack>
+                  <GasIcon />
+                  <Text
+                    color={'brand.secondary.3'}
+                    lineHeight={'120%'}
+                    textStyle={'regular.3'}
+                  >
+                    ${' '}
+                    {swap.fee
+                      .reduce((acc, fee) => {
+                        const amount = parseFloat(fee.amount);
+                        const price = fee.price || 0;
+                        return acc + amount * price;
+                      }, 0)
+                      .toFixed(2)
+                      .toString()}
+                  </Text>
+                </HStack>
+              </HStack>
+              <VStack w={'100%'}>
+                {stepsProgress?.steps[index].approve && (
+                  <ProgressItem
+                    isApprove={true}
+                    progress={stepsProgress.steps[index].approve}
+                  />
+                )}
+                {stepsProgress?.steps[index].swap && (
+                  <ProgressItem
+                    isApprove={false}
+                    progress={stepsProgress.steps[index].swap}
+                  />
+                )}
               </VStack>
-            </AccordionPanel>
-          </AccordionItem>
-        ))}
+            </VStack>
+          </AccordionPanel>
+        </AccordionItem>
+      ))}
 
       <AccordionItem
         key={'last mile tx'}
@@ -226,9 +225,7 @@ export const TransactionAccordion = () => {
         <AccordionPanel p={'0px'} mt="12px">
           <VStack gap={'12px'}>
             <TransactionStep
-              exchangeLogo={
-                bestRoute.swaps[bestRoute.swaps.length - 1].swapperLogo
-              }
+              exchangeLogo={protocolFinalToken?.logoUrl || ''}
               exchangeName={'Last mile transaction'}
               fromToken={{
                 name: protocolInputToken?.symbol || '',
@@ -249,6 +246,29 @@ export const TransactionAccordion = () => {
                 chainLogo: protocolInputToken?.chain?.logoUrl || '',
               }}
             />
+            <HStack w={'100%'}>
+              <HStack>
+                <TimeIcon />
+                <Text
+                  color={'brand.secondary.3'}
+                  lineHeight={'120%'}
+                  textStyle={'regular.3'}
+                >
+                  {finalTokenEstimate?.estimatedTimeInSeconds}s
+                </Text>
+              </HStack>
+              <DividerIcon />
+              <HStack>
+                <GasIcon />
+                <Text
+                  color={'brand.secondary.3'}
+                  lineHeight={'120%'}
+                  textStyle={'regular.3'}
+                >
+                  ${finalTokenEstimate?.estimatedFeeInUSD}
+                </Text>
+              </HStack>
+            </HStack>
             <VStack w={'100%'}>
               {stepsProgress?.steps[bestRoute.swaps.length].approve && (
                 <ProgressItem
