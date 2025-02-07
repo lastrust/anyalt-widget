@@ -84,7 +84,7 @@ export const TransactionAccordion = () => {
               p={'0px'}
             >
               <HStack justifyContent={'flex-start'}>
-                <Text textStyle={'bold.0'} mr="8px">
+                <Text textStyle={'bold.1'} mr="8px">
                   Transaction {index + 1}
                 </Text>
                 {currentStep - 1 > index && <CheckIcon />}
@@ -205,7 +205,7 @@ export const TransactionAccordion = () => {
           p={'0px'}
         >
           <HStack justifyContent={'flex-start'}>
-            <Text textStyle={'bold.0'} mr="8px">
+            <Text textStyle={'bold.1'} mr="8px">
               Transaction {bestRoute.swaps.length + 1}
             </Text>
             {currentStep === bestRoute.swaps.length + 1 && (

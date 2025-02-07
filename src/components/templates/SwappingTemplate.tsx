@@ -1,4 +1,4 @@
-import { Box, Flex, Grid, Text, VStack } from '@chakra-ui/react';
+import { Box, BoxProps, Flex, Grid, Text, VStack } from '@chakra-ui/react';
 import { ConfigIcon } from '../atoms/icons/selectToken/ConfigIcon';
 
 type Props = {
@@ -8,7 +8,7 @@ type Props = {
   secondSubtitle?: string;
   onConfigClick?: () => void;
   children: React.ReactNode;
-};
+} & BoxProps;
 
 export const SwappingTemplate = ({
   title,
@@ -17,6 +17,7 @@ export const SwappingTemplate = ({
   secondSubtitle,
   onConfigClick,
   children,
+  ...props
 }: Props) => {
   return (
     <VStack
@@ -28,13 +29,14 @@ export const SwappingTemplate = ({
       margin="24px 0px 16px"
       alignItems={'flex-start'}
       borderColor="brand.border.primary"
+      {...props}
     >
-      <Grid
-        gridTemplateColumns={secondTitle ? '1fr 1fr' : '1fr'}
-        gap="16px"
-        w={'100%'}
-      >
-        {title && (
+      {title && (
+        <Grid
+          gridTemplateColumns={secondTitle ? '1fr 1fr' : '1fr'}
+          gap="16px"
+          w={'100%'}
+        >
           <Flex justifyContent="space-between" alignItems="center">
             <VStack alignItems="left">
               <Text color="white" textStyle={'bold.0'}>
@@ -56,27 +58,30 @@ export const SwappingTemplate = ({
               </Box>
             )}
           </Flex>
-        )}
-        {secondTitle && (
-          <Flex
-            justifyContent="space-between"
-            flexDir={'column'}
-            alignItems="left"
-          >
-            <Text color="white" fontSize="24px" fontWeight="bold">
-              {secondTitle}
-            </Text>
-            <Text
-              fontSize={'14px'}
-              fontWeight={'normal'}
-              color="brand.secondary.2"
+          {secondTitle && (
+            <Flex
+              justifyContent="space-between"
+              flexDir={'column'}
+              alignItems="left"
             >
-              {secondSubtitle}
-            </Text>
-          </Flex>
-        )}
-      </Grid>
-      <Box w={'100%'}>{children}</Box>
+              <Text color="white" fontSize="24px" fontWeight="bold">
+                {secondTitle}
+              </Text>
+              <Text
+                fontSize={'14px'}
+                fontWeight={'normal'}
+                color="brand.secondary.2"
+              >
+                {secondSubtitle}
+              </Text>
+            </Flex>
+          )}
+        </Grid>
+      )}
+
+      <Box w={'100%'} h={'100%'}>
+        {children}
+      </Box>
     </VStack>
   );
 };

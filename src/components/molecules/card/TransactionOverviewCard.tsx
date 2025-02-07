@@ -23,7 +23,7 @@ export const TransactionOverviewCard = ({ requestId, to, from }: Props) => {
       borderColor="brand.border.primary"
     >
       <VStack w="100%" gap={'16px'} alignItems="flex-start">
-        <Text color="white" fontSize="24px" fontWeight="bold">
+        <Text color="white" textStyle={'bold.0'}>
           Transaction Overview
         </Text>
         <HStack justifyContent={'space-between'} w="100%">

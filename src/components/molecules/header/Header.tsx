@@ -1,4 +1,4 @@
-import { Button, Flex, Text } from '@chakra-ui/react';
+import { Button, HStack, Text } from '@chakra-ui/react';
 import { BackIcon } from '../../atoms/icons/transaction/BackIcon';
 
 type Props = {
@@ -10,7 +10,7 @@ export const Header = ({ activeStep, onBackClick }: Props) => {
   if (activeStep === 3) return null;
 
   return (
-    <Flex color="white" gap={'5px'}>
+    <HStack alignItems={'center'} color="white" gap={'5px'}>
       {activeStep == 2 && (
         <Button variant="ghost" onClick={onBackClick}>
           <BackIcon />
@@ -19,6 +19,6 @@ export const Header = ({ activeStep, onBackClick }: Props) => {
       <Text textStyle={'bold.0'}>
         {activeStep === 2 ? 'Transaction' : 'Start Transaction'}
       </Text>
-    </Flex>
+    </HStack>
   );
 };
