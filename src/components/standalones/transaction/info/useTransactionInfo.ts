@@ -1,11 +1,12 @@
 import { useAtomValue } from 'jotai';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ExecuteResponse, Token, WalletConnector } from '../../../..';
 import {
   activeOperationIdAtom,
   anyaltInstanceAtom,
   bestRouteAtom,
   currentStepAtom,
+  finalTokenEstimateAtom,
   slippageAtom,
   transactionsListAtom,
 } from '../../../../store/stateStore';
@@ -28,6 +29,7 @@ export const useTransactionInfo = ({
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
   const activeOperationId = useAtomValue(activeOperationIdAtom);
   const transactionsList = useAtomValue(transactionsListAtom);
+  const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
 
   const { executeSwap } = useHandleTransaction(externalEvmWalletConnector);
 
@@ -50,6 +52,29 @@ export const useTransactionInfo = ({
     }
   };
 
+  const estimatedTime = useMemo(() => {
+    if (!bestRoute) return 0;
+    if (currentStep > bestRoute.swaps.length)
+      return finalTokenEstimate?.estimatedTimeInSeconds || 0;
+    return bestRoute.swaps[currentStep - 1]?.estimatedTimeInSeconds || 0;
+  }, [bestRoute, currentStep, finalTokenEstimate]);
+
+  const fees = useMemo(() => {
+    if (!bestRoute) return '0';
+    if (currentStep > bestRoute.swaps.length)
+      return finalTokenEstimate?.estimatedFeeInUSD || '0';
+    return (
+      bestRoute.swaps[currentStep - 1]?.fee
+        .reduce((acc, fee) => {
+          const amount = parseFloat(fee?.amount);
+          const price = fee.price || 0;
+          return acc + amount * price;
+        }, 0)
+        .toFixed(2)
+        .toString() || '0'
+    );
+  }, [bestRoute, currentStep, finalTokenEstimate]);
+
   return {
     bestRoute,
     runTx,
@@ -57,16 +82,7 @@ export const useTransactionInfo = ({
     isLoading,
     transactionsList,
     recentTransaction: transactionsList?.steps?.[currentStep - 1],
-    estimatedTime:
-      bestRoute?.swaps[currentStep - 1]?.estimatedTimeInSeconds || 0,
-    fees:
-      bestRoute?.swaps[currentStep - 1]?.fee
-        .reduce((acc, fee) => {
-          const amount = parseFloat(fee?.amount);
-          const price = fee.price || 0;
-          return acc + amount * price;
-        }, 0)
-        .toFixed(2)
-        .toString() || '0',
+    estimatedTime,
+    fees,
   };
 };

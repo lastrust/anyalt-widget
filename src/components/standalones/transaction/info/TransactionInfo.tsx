@@ -46,7 +46,7 @@ export const TransactionInfo: FC<Props> = ({
                 {bestRoute?.swaps?.length &&
                 bestRoute?.swaps?.length >= currentStep
                   ? `Swap tokens using ${bestRoute?.swaps[currentStep - 1]?.swapperId}`
-                  : `Depositing tokens to ${recentTransaction?.to.tokenName}`}
+                  : `Getting ${recentTransaction?.to.tokenName}`}
               </Text>
 
               <TransactionInfoCard estimatedTime={estimatedTime} fees={fees} />

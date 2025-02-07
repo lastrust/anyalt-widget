@@ -1,6 +1,8 @@
 import { PublicKey } from '@solana/web3.js';
+import { getBalance } from '@wagmi/core';
 import { ethers } from 'ethers';
-import { zeroAddress } from 'viem';
+import { formatUnits, zeroAddress } from 'viem';
+import { walletConfig } from '../constants/configs';
 
 export function isValidEthereumAddress(address: string): boolean {
   return ethers.isAddress(address);
@@ -17,30 +19,30 @@ export function isValidSolanaAddress(address: string): boolean {
 }
 
 export const getEvmTokenBalance = async (
-  rpcURL: string,
+  chainId: number,
   tokenAddress: string,
   walletAddress: string,
-): Promise<string> => {
-  const client = await new ethers.JsonRpcProvider(rpcURL);
+) => {
   if (
+    tokenAddress === '' ||
+    tokenAddress === 'Unknown' ||
     tokenAddress === zeroAddress ||
     tokenAddress.toLowerCase() === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
   ) {
-    const balance = await client.getBalance(walletAddress);
-    const balanceInEth = ethers.formatEther(balance);
-
-    return balanceInEth;
+    const res = await getBalance(walletConfig, {
+      chainId: chainId,
+      address: walletAddress as `0x${string}`,
+    });
+    const balance = formatUnits(res.value, res.decimals);
+    return balance;
   }
 
-  const ERC20_ABI = [
-    'function decimals() view returns (uint8)',
-    'function balanceOf(address) view returns (uint256)',
-  ];
+  const res = await getBalance(walletConfig, {
+    chainId: chainId,
+    token: tokenAddress as `0x${string}`,
+    address: walletAddress as `0x${string}`,
+  });
 
-  const erc20Contract = new ethers.Contract(tokenAddress, ERC20_ABI, client);
-  const decimals = await erc20Contract.decimals!();
-  const balance = await erc20Contract.balanceOf!(walletAddress);
-
-  const balanceInToken = ethers.formatUnits(balance, decimals || 18);
-  return balanceInToken;
+  const balance = formatUnits(res.value, res.decimals);
+  return balance;
 };

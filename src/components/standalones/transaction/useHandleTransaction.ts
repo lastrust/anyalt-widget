@@ -245,9 +245,7 @@ export const useHandleTransaction = (
     // Update the progress for the current step
     setStepsProgress((prev) => {
       const newSteps = prev?.steps ? [...prev.steps] : [];
-      console.log('newSteps: ', newSteps);
       const index = progress.details.currentStep - 1;
-      console.log('index: ', index);
 
       // Determine if this is an approval or swap transaction
       const progressKey = progress.isApproval ? 'approve' : 'swap';
@@ -256,7 +254,6 @@ export const useHandleTransaction = (
         ...newSteps[index],
         [progressKey]: progress,
       };
-      console.log('newSteps: ', newSteps);
       return { steps: newSteps };
     });
   };
@@ -483,7 +480,6 @@ export const useHandleTransaction = (
             symbol: lastSwap?.to.symbol || '',
             chainType: isEvm ? ChainType.EVM : ChainType.SOLANA,
           });
-          console.log('executeResponse: ', executeResponse);
           setFinalTokenAmount(executeResponse.amountOut);
           if (executeResponse.approvalTxHash) {
             updateStepProgress({
