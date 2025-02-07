@@ -84,9 +84,9 @@ export const TokenInputBox: FC<Props> = ({
         display={readonly ? 'none' : 'flex'}
         justifyContent="space-between"
         alignItems="center"
-        mb="16px"
+        mb="12px"
       >
-        <Text color="white" fontSize="14px" fontWeight="bold" opacity={0.32}>
+        <Text color={'brand.secondary.3'} textStyle={'bold.2'}>
           Choose Your Deposit
         </Text>
         <Box
@@ -95,7 +95,7 @@ export const TokenInputBox: FC<Props> = ({
           alignItems="center"
           gap="4px"
         >
-          <Text color="white" fontSize="12px" opacity={0.4}>
+          <Text color={'brand.secondary.3'} textStyle={'bold.3'} opacity={0.4}>
             Balance: {balance ? balance : ''}
           </Text>
           <Button
@@ -117,7 +117,7 @@ export const TokenInputBox: FC<Props> = ({
         flexDirection="column"
         justifyContent="space-between"
         alignItems="center"
-        gap="34px"
+        gap="16px"
         bgColor="brand.secondary.4"
         padding="16px"
         borderRadius="8px"
@@ -127,7 +127,6 @@ export const TokenInputBox: FC<Props> = ({
             ? 'brand.quinary.100'
             : 'transparent'
         }
-        mb="8px"
       >
         <Box
           display="flex"

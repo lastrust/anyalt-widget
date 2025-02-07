@@ -63,7 +63,7 @@ export const SelectToken = ({
     isEvmConnected || isSolanaConnected || walletConnector?.isConnected;
 
   return (
-    <Flex flexDirection="column" gap="16px" mb="16px" {...props}>
+    <Flex flexDirection="column" gap="16px" {...props}>
       <TokenInputBox
         openTokenSelectModal={() => setOpenTokenSelect(true)}
         loading={loading}
@@ -72,43 +72,48 @@ export const SelectToken = ({
         failedToFetchRoute={failedToFetchRoute}
         readonly={false}
       />
-      <TokenQuoteBox
-        loading={loading}
-        headerText="Vault Is Expecting"
-        tokenName={protocolInputToken?.symbol ?? ''}
-        tokenLogo={protocolInputToken?.logoUrl ?? ''}
-        chainName={protocolInputToken?.chain?.displayName ?? ''}
-        chainLogo={protocolInputToken?.chain?.logoUrl ?? ''}
-        amount={parseFloat(activeRoute?.outputAmount ?? '0').toFixed(2)}
-        price={outTokenPrice}
-      />
-      <Divider w="100%" h="1px" bgColor="brand.secondary.12" />
-      <TokenQuoteBox
-        loading={loading}
-        headerText="What You Are Getting"
-        tokenName={protocolFinalToken?.symbol ?? ''}
-        tokenLogo={protocolFinalToken?.logoUrl ?? ''}
-        chainName={protocolInputToken?.chain?.displayName ?? ''}
-        chainLogo={protocolInputToken?.chain?.logoUrl ?? ''}
-        amount={finalTokenEstimate?.amountOut ?? ''}
-        price={finalTokenEstimate?.priceInUSD ?? ''}
-      />
+      <VStack gap="12px" w="full" alignItems="flex-start">
+        <TokenQuoteBox
+          loading={loading}
+          headerText="Vault Is Expecting"
+          tokenName={protocolInputToken?.symbol ?? ''}
+          tokenLogo={protocolInputToken?.logoUrl ?? ''}
+          chainName={protocolInputToken?.chain?.displayName ?? ''}
+          chainLogo={protocolInputToken?.chain?.logoUrl ?? ''}
+          amount={parseFloat(activeRoute?.outputAmount ?? '0').toFixed(2)}
+          price={outTokenPrice}
+        />
+        <Divider w="100%" h="1px" bgColor="brand.secondary.12" />
+        <TokenQuoteBox
+          loading={loading}
+          headerText="What You Are Getting"
+          tokenName={protocolFinalToken?.symbol ?? ''}
+          tokenLogo={protocolFinalToken?.logoUrl ?? ''}
+          chainName={protocolInputToken?.chain?.displayName ?? ''}
+          chainLogo={protocolInputToken?.chain?.logoUrl ?? ''}
+          amount={finalTokenEstimate?.amountOut ?? ''}
+          price={finalTokenEstimate?.priceInUSD ?? ''}
+        />
+      </VStack>
+
       <Button
+        p={'16px 20px'}
         width="100%"
+        color="white"
+        borderRadius="8px"
         bg="brand.tertiary.100"
+        isLoading={loading}
+        isDisabled={failedToFetchRoute}
+        fontSize="16px"
+        fontWeight="700"
+        lineHeight="120%"
+        height={'unset'}
         _hover={{
           bg: 'brand.tertiary.90',
         }}
-        color="white"
-        fontSize="16px"
-        fontWeight="bold"
-        borderRadius="8px"
-        h="64px"
-        isDisabled={failedToFetchRoute}
         onClick={() => {
           onButtonClick();
         }}
-        isLoading={loading}
       >
         {buttonText}
       </Button>

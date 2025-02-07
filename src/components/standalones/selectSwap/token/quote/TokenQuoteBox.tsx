@@ -1,4 +1,4 @@
-import { Box, BoxProps, Skeleton, Text } from '@chakra-ui/react';
+import { Box, BoxProps, Skeleton, Text, VStack } from '@chakra-ui/react';
 import { FC } from 'react';
 import { TokenIconBox } from '../../../../molecules/TokenIconBox';
 import { TokenInfoBox } from '../../../../molecules/TokenInfoBox';
@@ -26,10 +26,16 @@ export const TokenQuoteBox: FC<Props> = ({
   ...props
 }) => {
   return (
-    <Box padding="4px 16px" {...props}>
+    <VStack
+      gap={'12px'}
+      alignItems={'flex-start'}
+      padding="0px 16px"
+      w={'full'}
+      {...props}
+    >
       {headerText && (
-        <Box mb="16px">
-          <Text textStyle={'bold.4'} color="white" opacity={0.32}>
+        <Box>
+          <Text textStyle={'bold.5'} color="brand.secondary.3">
             {headerText}
           </Text>
         </Box>
@@ -62,7 +68,12 @@ export const TokenQuoteBox: FC<Props> = ({
           gap={'2px'}
         >
           {loading ? (
-            <Skeleton width="70px" height="30px" borderRadius="10px" mb="6px" />
+            <Skeleton
+              width="70px"
+              height="25px"
+              borderRadius="10px"
+              mb="10px"
+            />
           ) : (
             <Text fontSize="24px" fontWeight="bold">
               {amount}
@@ -77,6 +88,6 @@ export const TokenQuoteBox: FC<Props> = ({
           )}
         </Box>
       </Box>
-    </Box>
+    </VStack>
   );
 };
