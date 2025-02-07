@@ -1,14 +1,5 @@
-import {
-  Box,
-  CircularProgress,
-  HStack,
-  Link,
-  Text,
-  VStack,
-} from '@chakra-ui/react';
+import { Box, CircularProgress, HStack, Text, VStack } from '@chakra-ui/react';
 import { FC } from 'react';
-import { chainExplorers } from '../../utils/chains';
-import { CopyIcon } from '../atoms/icons/CopyIcon';
 import { CheckIcon } from '../atoms/icons/transaction/CheckIcon';
 import { FailIcon } from '../atoms/icons/transaction/FailIcon';
 import { TransactionProgress } from '../standalones/transaction/useHandleTransaction';
