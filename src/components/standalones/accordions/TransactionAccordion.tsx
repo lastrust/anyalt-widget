@@ -116,7 +116,7 @@ export const TransactionAccordion = () => {
                     fromToken={{
                       name: internalSwap.from.symbol,
                       amount: String(
-                        Number(internalSwap.fromAmount).toFixed(2) || '0',
+                        Number(internalSwap.fromAmount).toFixed(4) || '0',
                       ),
                       chainName: internalSwap.from.blockchain,
                       chainLogo: internalSwap.from.blockchainLogo,
@@ -124,7 +124,7 @@ export const TransactionAccordion = () => {
                     toToken={{
                       name: internalSwap.to.symbol,
                       amount: String(
-                        Number(internalSwap.toAmount).toFixed(2) || '0',
+                        Number(internalSwap.toAmount).toFixed(4) || '0',
                       ),
                       chainName: internalSwap.to.blockchain,
                       chainLogo: internalSwap.to.blockchainLogo,
@@ -232,7 +232,7 @@ export const TransactionAccordion = () => {
                 amount: String(
                   Number(
                     bestRoute.swaps[bestRoute.swaps.length - 1].toAmount,
-                  ).toFixed(2) || '0',
+                  ).toFixed(4) || '0',
                 ),
                 chainName: protocolInputToken?.chain?.displayName || '',
                 chainLogo: protocolInputToken?.chain?.logoUrl || '',

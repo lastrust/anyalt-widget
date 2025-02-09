@@ -23,7 +23,7 @@ export const protocolInputTokenAtom = atom<SupportedToken | undefined>(
 
 export const protocolFinalTokenAtom = atom<Token | undefined>(undefined);
 
-export const slippageAtom = atom<string>('0.5');
+export const slippageAtom = atom<string>('3');
 
 export const inTokenAmountAtom = atom<string | undefined>('');
 

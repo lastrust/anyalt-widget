@@ -1,12 +1,11 @@
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { useConnection } from '@solana/wallet-adapter-react';
 import { PublicKey } from '@solana/web3.js';
-import { useMemo } from 'react';
-import { getSolana } from '../utils/solana';
 
 // Solana Token Balance Hook
 export const useSolana = () => {
   // Create a Solana connection to the mainnet-beta by default
-  const connection = useMemo(() => getSolana(), []);
+  const { connection } = useConnection();
 
   const getSolanaTokenBalance = async (
     tokenAddress: string,

@@ -1,4 +1,3 @@
-import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import {
   ConnectionProvider,
   WalletProvider,
@@ -8,12 +7,13 @@ import {
   PhantomWalletAdapter,
   SolflareWalletAdapter,
 } from '@solana/wallet-adapter-wallets';
-import { clusterApiUrl } from '@solana/web3.js';
 import { FC, ReactNode, useMemo } from 'react';
 
-export const SolanaProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  const network = WalletAdapterNetwork.Mainnet; // Change to Devnet/Testnet if needed
-  const endpoint = useMemo(() => clusterApiUrl(network), [network]);
+export const SolanaProvider: FC<{
+  children: ReactNode;
+  solanaRpcUrl?: string;
+}> = ({ children, solanaRpcUrl }) => {
+  const endpoint = solanaRpcUrl || 'https://api.mainnet-beta.solana.com';
 
   const wallets = useMemo(
     () => [new PhantomWalletAdapter(), new SolflareWalletAdapter()],
