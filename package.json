@@ -12,9 +12,9 @@
   "module": "dist/src/index.mjs",
   "types": "dist/src/index.d.ts",
   "peerDependencies": {
+    "@tanstack/react-query": ">=5.0.0",
     "react": "^18 || ^19",
-    "react-dom": "^18 || ^19",
-    "@tanstack/react-query": ">=5.0.0"
+    "react-dom": "^18 || ^19"
   },
   "scripts": {
     "dev": "vite",
@@ -38,6 +38,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@ant-design/web3": "^1.20.0",
+    "@ant-design/web3-bitcoin": "^1.5.0",
     "@anyalt/sdk": "1.0.5-canary.3",
     "@chakra-ui/react": "2.10.4",
     "@emotion/react": "^11.14.0",
@@ -63,9 +65,9 @@
     "wagmi": "^2.14.8"
   },
   "devDependencies": {
-    "@tanstack/react-query": ">=5.0.0",
     "@swc/cli": "^0.6.0",
     "@swc/core": "^1.10.12",
+    "@tanstack/react-query": ">=5.0.0",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.0",
     "@typescript-eslint/eslint-plugin": "^8.14.0",

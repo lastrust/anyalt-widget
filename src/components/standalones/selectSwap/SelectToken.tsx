@@ -1,3 +1,4 @@
+import { useBitcoinWallet } from '@ant-design/web3-bitcoin';
 import {
   BoxProps,
   Button,
@@ -58,9 +59,13 @@ export const SelectToken = ({
   const { publicKey: solanaAddress, connected: isSolanaConnected } =
     useWallet();
   const { address: evmAddress, isConnected: isEvmConnected } = useAccount();
+  const { account: bitcoinAccount } = useBitcoinWallet();
 
   const isConnected =
-    isEvmConnected || isSolanaConnected || walletConnector?.isConnected;
+    isEvmConnected ||
+    isSolanaConnected ||
+    walletConnector?.isConnected ||
+    bitcoinAccount;
 
   return (
     <Flex flexDirection="column" gap="16px" mb="16px" {...props}>
@@ -104,7 +109,7 @@ export const SelectToken = ({
         fontWeight="bold"
         borderRadius="8px"
         h="64px"
-        isDisabled={failedToFetchRoute}
+        isDisabled={showConnectedWallets && failedToFetchRoute}
         onClick={() => {
           onButtonClick();
         }}
@@ -160,6 +165,27 @@ export const SelectToken = ({
                   noOfLines={1}
                 >
                   {solanaAddress?.toBase58()}
+                </Text>
+              </HStack>
+            )}
+            {showConnectedWallets && bitcoinAccount && (
+              <HStack>
+                <Image
+                  src={
+                    'https://s2.coinmarketcap.com/static/img/coins/64x64/1.png'
+                  }
+                  w={'16px'}
+                  h={'16px'}
+                  alt="BTC"
+                />
+                <Text
+                  cursor={'pointer'}
+                  textStyle={'regular.3'}
+                  color="brand.secondary.3"
+                  noOfLines={1}
+                  onClick={connectWalletsOpen}
+                >
+                  {bitcoinAccount.address}
                 </Text>
               </HStack>
             )}

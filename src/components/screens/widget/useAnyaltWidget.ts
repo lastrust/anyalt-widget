@@ -1,3 +1,4 @@
+import { useBitcoinWallet } from '@ant-design/web3-bitcoin';
 import { AnyAlt } from '@anyalt/sdk';
 import { useDisclosure, useSteps } from '@chakra-ui/react';
 import { useWallet } from '@solana/wallet-adapter-react';
@@ -47,6 +48,7 @@ export const useAnyaltWidget = ({
   const { address: evmAddress, isConnected: isEvmConnected } = useAccount();
   const { publicKey: solanaAddress, connected: isSolanaConnected } =
     useWallet();
+  const { account: bitcoinAccount } = useBitcoinWallet();
   const { activeStep, setActiveStep, goToNext, goToPrevious } = useSteps({
     index: 0,
   });
@@ -241,9 +243,14 @@ export const useAnyaltWidget = ({
         const toBlockchain = swap.to.blockchain;
         const isSolanaFrom = fromBlockchain === 'SOLANA';
         const isSolanaTo = toBlockchain === 'SOLANA';
+        const isBitcoinFrom = fromBlockchain === 'BTC';
+        const isBitcoinTo = toBlockchain === 'BTC';
 
         if (isSolanaFrom || isSolanaTo) {
           selectedWallets['SOLANA'] = solanaAddress?.toString() || '';
+        }
+        if (isBitcoinFrom || isBitcoinTo) {
+          selectedWallets['BTC'] = bitcoinAccount?.address || '';
         }
 
         const fromChain = getChain(fromBlockchain);
@@ -316,6 +323,7 @@ export const useAnyaltWidget = ({
   const areWalletsConnected = useMemo(() => {
     let isSolanaRequired = false;
     let isEvmRequired = false;
+    let isBitcoinRequired = false;
 
     if (walletConnector && walletConnector.isConnected) {
       return walletConnector.isConnected;
@@ -326,8 +334,11 @@ export const useAnyaltWidget = ({
       const toBlockchain = swap.to.blockchain;
       const isSolanaFrom = fromBlockchain === 'SOLANA';
       const isSolanaTo = toBlockchain === 'SOLANA';
+      const isBitcoinFrom = fromBlockchain === 'BTC';
+      const isBitcoinTo = toBlockchain === 'BTC';
 
       if (isSolanaFrom || isSolanaTo) isSolanaRequired = true;
+      if (isBitcoinFrom || isBitcoinTo) isBitcoinRequired = true;
 
       const fromChain = getChain(fromBlockchain);
       const toChain = getChain(toBlockchain);
@@ -346,8 +357,11 @@ export const useAnyaltWidget = ({
     if (isEvmRequired && !isEvmConnected) {
       isWalletConnected = false;
     }
+    if (isBitcoinRequired && !bitcoinAccount) {
+      isWalletConnected = false;
+    }
     return isWalletConnected;
-  }, [isSolanaConnected, isEvmConnected, bestRoute]);
+  }, [isSolanaConnected, isEvmConnected, bestRoute, bitcoinAccount]);
 
   return {
     loading,
