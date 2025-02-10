@@ -38,7 +38,7 @@ export const TransactionStep = ({
   return (
     <Flex w={'full'}>
       <HStack gap={'20px'}>
-        <HStack>
+        <HStack mr="5px" gap="5px">
           <Image
             src={exchangeLogo}
             alt={`${exchangeLogo} Icon`}
@@ -51,14 +51,12 @@ export const TransactionStep = ({
             color="brand.secondary.3"
             textStyle={'bold.3'}
             fontSize={'12px'}
-            noOfLines={1}
-            minW={'100px'}
           >
             {exchangeName}:
           </Text>
         </HStack>
         <HStack alignItems={'center'} gap="3px">
-          <HStack gap={'2px'}>
+          <HStack gap={'5px'}>
             <Box position="relative" minW={'20px'} minH={'20px'}>
               <Image
                 src={fromToken.tokenLogo}
@@ -93,6 +91,7 @@ export const TransactionStep = ({
               fontSize="12px"
               fontWeight="regular"
               noOfLines={1}
+              maxW={'105px'}
             >
               {textFirst}
             </Text>
@@ -100,7 +99,7 @@ export const TransactionStep = ({
           <Box>
             <ArrowRightIcon />
           </Box>
-          <HStack gap={'2px'}>
+          <HStack gap={'5px'}>
             <Box position="relative" minW={'20px'} minH={'20px'}>
               <Image
                 src={toToken.tokenLogo}
@@ -135,6 +134,7 @@ export const TransactionStep = ({
                 color="brand.secondary.3"
                 textStyle={'regular.3'}
                 noOfLines={1}
+                maxW={'105px'}
               >
                 {textSecond}
               </Text>

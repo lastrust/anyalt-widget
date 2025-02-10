@@ -26,6 +26,7 @@ import { GasIcon } from '../../atoms/icons/transaction/GasIcon';
 import { TimeIcon } from '../../atoms/icons/transaction/TimeIcon';
 import { TransactionStep } from '../../molecules/steps/TransactionStep';
 import { TransactionHash } from '../../molecules/text/TransactionHash';
+import { truncateToDecimals } from './BestRouteAccordion';
 
 export const TransactionAccordion = () => {
   const [isLastMileExpanded, setIsLastMileExpanded] = useState(false);
@@ -115,18 +116,16 @@ export const TransactionAccordion = () => {
                     exchangeName={internalSwap.swapperId}
                     fromToken={{
                       name: internalSwap.from.symbol,
-                      amount: String(
-                        Number(internalSwap.fromAmount).toFixed(2) || '0',
-                      ),
+                      amount:
+                        truncateToDecimals(internalSwap.fromAmount, 5) || '0',
                       tokenLogo: internalSwap.from.logo,
                       chainName: internalSwap.from.blockchain,
                       chainLogo: internalSwap.from.blockchainLogo,
                     }}
                     toToken={{
                       name: internalSwap.to.symbol,
-                      amount: String(
-                        Number(internalSwap.toAmount).toFixed(2) || '0',
-                      ),
+                      amount:
+                        truncateToDecimals(internalSwap.toAmount, 5) || '0',
                       chainName: internalSwap.to.blockchain,
                       tokenLogo: internalSwap.to.logo,
                       chainLogo: internalSwap.to.blockchainLogo,

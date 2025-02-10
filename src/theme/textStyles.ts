@@ -25,12 +25,12 @@ export const textStyles = {
     1: {
       fontSize: '24px',
       fontWeight: '600', // bold
-      lineHeight: '32px',
+      lineHeight: '120%',
     },
     2: {
       fontSize: '20px',
       fontWeight: '600', // bold
-      lineHeight: '26px',
+      lineHeight: '120%',
     },
   },
   extraBold: {
