@@ -12,6 +12,7 @@ import {
 import { getEvmTokenBalance } from '../../../../../utils';
 import { TokenIconBox } from '../../../../molecules/TokenIconBox';
 import { TokenInfoBox } from '../../../../molecules/TokenInfoBox';
+import { truncateToDecimals } from '../../../accordions/BestRouteAccordion';
 
 type Props = BoxProps & {
   price: string;
@@ -78,15 +79,21 @@ export const TokenInputBox: FC<Props> = ({
     getBalance();
   }, [inToken, evmAddress, publicKey]);
 
+  useEffect(() => {
+    if (inTokenAmount) {
+      setInTokenAmount(inTokenAmount.toString());
+    }
+  }, [inTokenAmount]);
+
   return (
     <Box {...props}>
       <Box
         display={readonly ? 'none' : 'flex'}
         justifyContent="space-between"
         alignItems="center"
-        mb="16px"
+        mb="12px"
       >
-        <Text color="white" fontSize="14px" fontWeight="bold" opacity={0.32}>
+        <Text color={'brand.secondary.3'} textStyle={'bold.2'}>
           Choose Your Deposit
         </Text>
         <Box
@@ -95,8 +102,8 @@ export const TokenInputBox: FC<Props> = ({
           alignItems="center"
           gap="4px"
         >
-          <Text color="white" fontSize="12px" opacity={0.4}>
-            Balance: {balance ? parseFloat(balance).toFixed(6) : ''}
+          <Text color={'brand.secondary.3'} textStyle={'bold.3'} opacity={0.4}>
+            Balance: {balance ? truncateToDecimals(balance, 6) : ''}
           </Text>
           <Button
             bg="brand.tertiary.20"
@@ -117,7 +124,7 @@ export const TokenInputBox: FC<Props> = ({
         flexDirection="column"
         justifyContent="space-between"
         alignItems="center"
-        gap="34px"
+        gap="16px"
         bgColor="brand.secondary.4"
         padding="16px"
         borderRadius="8px"
@@ -127,7 +134,6 @@ export const TokenInputBox: FC<Props> = ({
             ? 'brand.quinary.100'
             : 'transparent'
         }
-        mb="8px"
       >
         <Box
           display="flex"
@@ -198,7 +204,7 @@ export const TokenInputBox: FC<Props> = ({
               textAlign="right"
               maxWidth="150px"
               padding="0px"
-              value={inTokenAmount}
+              value={inTokenAmount?.replace(',', '.')}
               onChange={(e) => {
                 setInTokenAmount(e.target.value);
               }}

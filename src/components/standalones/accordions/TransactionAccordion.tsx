@@ -24,8 +24,9 @@ import { CheckIcon } from '../../atoms/icons/transaction/CheckIcon';
 import { DividerIcon } from '../../atoms/icons/transaction/DividerIcon';
 import { GasIcon } from '../../atoms/icons/transaction/GasIcon';
 import { TimeIcon } from '../../atoms/icons/transaction/TimeIcon';
-import { ProgressItem } from '../../molecules/ProgressItem';
 import { TransactionStep } from '../../molecules/steps/TransactionStep';
+import { TransactionHash } from '../../molecules/text/TransactionHash';
+import { truncateToDecimals } from './BestRouteAccordion';
 
 export const TransactionAccordion = () => {
   const [isLastMileExpanded, setIsLastMileExpanded] = useState(false);
@@ -83,7 +84,7 @@ export const TransactionAccordion = () => {
             p={'0px'}
           >
             <HStack justifyContent={'flex-start'}>
-              <Text textStyle={'bold.0'} mr="8px">
+              <Text textStyle={'bold.1'} mr="8px">
                 Transaction {index + 1}
               </Text>
               {currentStep - 1 > index && <CheckIcon />}
@@ -115,18 +116,18 @@ export const TransactionAccordion = () => {
                     exchangeName={internalSwap.swapperId}
                     fromToken={{
                       name: internalSwap.from.symbol,
-                      amount: String(
-                        Number(internalSwap.fromAmount).toFixed(2) || '0',
-                      ),
+                      amount:
+                        truncateToDecimals(internalSwap.fromAmount, 5) || '0',
+                      tokenLogo: internalSwap.from.logo,
                       chainName: internalSwap.from.blockchain,
                       chainLogo: internalSwap.from.blockchainLogo,
                     }}
                     toToken={{
                       name: internalSwap.to.symbol,
-                      amount: String(
-                        Number(internalSwap.toAmount).toFixed(2) || '0',
-                      ),
+                      amount:
+                        truncateToDecimals(internalSwap.toAmount, 5) || '0',
                       chainName: internalSwap.to.blockchain,
+                      tokenLogo: internalSwap.to.logo,
                       chainLogo: internalSwap.to.blockchainLogo,
                     }}
                   />
@@ -163,20 +164,20 @@ export const TransactionAccordion = () => {
                   </Text>
                 </HStack>
               </HStack>
-              <VStack w={'100%'}>
+              <Box w={'100%'}>
                 {stepsProgress?.steps[index].approve && (
-                  <ProgressItem
-                    isApprove={true}
-                    progress={stepsProgress.steps[index].approve}
+                  <TransactionHash
+                    type="Approval"
+                    progress={stepsProgress?.steps[index].approve}
                   />
                 )}
                 {stepsProgress?.steps[index].swap && (
-                  <ProgressItem
-                    isApprove={false}
-                    progress={stepsProgress.steps[index].swap}
+                  <TransactionHash
+                    type="Swap"
+                    progress={stepsProgress?.steps[index].swap}
                   />
                 )}
-              </VStack>
+              </Box>
             </VStack>
           </AccordionPanel>
         </AccordionItem>
@@ -204,7 +205,7 @@ export const TransactionAccordion = () => {
           p={'0px'}
         >
           <HStack justifyContent={'flex-start'}>
-            <Text textStyle={'bold.0'} mr="8px">
+            <Text textStyle={'bold.1'} mr="8px">
               Transaction {bestRoute.swaps.length + 1}
             </Text>
             {currentStep === bestRoute.swaps.length + 1 && (
@@ -229,19 +230,16 @@ export const TransactionAccordion = () => {
               exchangeName={'Last mile transaction'}
               fromToken={{
                 name: protocolInputToken?.symbol || '',
-                amount: String(
-                  Number(
-                    bestRoute.swaps[bestRoute.swaps.length - 1].toAmount,
-                  ).toFixed(2) || '0',
-                ),
+                amount:
+                  bestRoute.swaps[bestRoute.swaps.length - 1].toAmount || '0',
+                tokenLogo: protocolInputToken?.logoUrl || '',
                 chainName: protocolInputToken?.chain?.displayName || '',
                 chainLogo: protocolInputToken?.chain?.logoUrl || '',
               }}
               toToken={{
                 name: protocolFinalToken?.symbol || '',
-                amount: String(
-                  Number(finalTokenEstimate?.amountOut).toFixed(4) || '0',
-                ),
+                amount: finalTokenEstimate?.amountOut || '0',
+                tokenLogo: protocolInputToken?.logoUrl || '',
                 chainName: protocolInputToken?.chain?.displayName || '',
                 chainLogo: protocolInputToken?.chain?.logoUrl || '',
               }}
@@ -269,21 +267,22 @@ export const TransactionAccordion = () => {
                 </Text>
               </HStack>
             </HStack>
-            <VStack w={'100%'}>
-              {stepsProgress?.steps[bestRoute.swaps.length].approve && (
-                <ProgressItem
-                  isApprove={true}
-                  progress={stepsProgress.steps[bestRoute.swaps.length].approve}
-                />
-              )}
-              {stepsProgress?.steps[bestRoute.swaps.length].swap && (
-                <ProgressItem
-                  isApprove={false}
-                  progress={stepsProgress.steps[bestRoute.swaps.length].swap}
-                />
-              )}
-            </VStack>
           </VStack>
+
+          <Box>
+            {stepsProgress?.steps[bestRoute.swaps.length].approve && (
+              <TransactionHash
+                type="Approval"
+                progress={stepsProgress?.steps[bestRoute.swaps.length].approve}
+              />
+            )}
+            {stepsProgress?.steps[bestRoute.swaps.length].swap && (
+              <TransactionHash
+                type="Swap"
+                progress={stepsProgress?.steps[bestRoute.swaps.length].swap}
+              />
+            )}
+          </Box>
         </AccordionPanel>
       </AccordionItem>
     </Accordion>

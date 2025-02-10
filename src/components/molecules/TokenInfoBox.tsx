@@ -17,10 +17,10 @@ export const TokenInfoBox: FC<Props> = ({ tokenName, subText, ...props }) => {
       maxW="100px"
       {...props}
     >
-      <Text color="white" fontSize="16px" fontWeight="extrabold">
+      <Text color="white" textStyle={'extraBold.3'}>
         {tokenName}
       </Text>
-      <Text color="white" fontSize="12px" fontWeight="regular" opacity={0.4}>
+      <Text color="white" textStyle={'regular.3'} opacity={0.4}>
         {subText}
       </Text>
     </Box>

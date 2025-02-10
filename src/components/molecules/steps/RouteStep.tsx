@@ -1,4 +1,13 @@
-import { Flex, HStack, Image, Skeleton, Text, VStack } from '@chakra-ui/react';
+import {
+  Box,
+  Flex,
+  HStack,
+  Image,
+  Skeleton,
+  Text,
+  VStack,
+} from '@chakra-ui/react';
+import { ArrowRightIcon } from '../../atoms/icons/transaction/ArrowRightIcon';
 
 type Props = {
   loading: boolean;
@@ -35,18 +44,20 @@ export const RouteStep = ({
           marginRight={'8px'}
           width="16px"
           height="16px"
+          borderRadius={'50%'}
+          border="1px solid white"
         />
       )}
       <VStack justifyContent={'start'} alignItems={'start'} gap={'4px'}>
         {loading ? (
-          <Skeleton w={'180px'} h={'18px'} />
+          <Skeleton w={'180px'} h={'18px'} borderRadius="12px" />
         ) : (
           <Text color="brand.secondary.3" textStyle={'regular.3'}>
             Swap token using {exchangeName}
           </Text>
         )}
         {loading ? (
-          <Skeleton w={'250px'} h={'18px'} />
+          <Skeleton w={'250px'} h={'18px'} borderRadius="12px" />
         ) : (
           <HStack>
             <Text
@@ -54,7 +65,16 @@ export const RouteStep = ({
               fontSize="12px"
               fontWeight="regular"
             >
-              {fromToken.amount} {fromToken.name}.{fromToken.chainName} -{' '}
+              {fromToken.amount} {fromToken.name}.{fromToken.chainName}{' '}
+            </Text>
+            <Box>
+              <ArrowRightIcon />
+            </Box>
+            <Text
+              color="brand.secondary.3"
+              fontSize="12px"
+              fontWeight="regular"
+            >
               {toToken.amount} {toToken.name}.{toToken.chainName}
             </Text>
           </HStack>
