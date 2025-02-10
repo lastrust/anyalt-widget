@@ -1,4 +1,13 @@
-import { Flex, HStack, Image, Skeleton, Text, VStack } from '@chakra-ui/react';
+import {
+  Box,
+  Flex,
+  HStack,
+  Image,
+  Skeleton,
+  Text,
+  VStack,
+} from '@chakra-ui/react';
+import { ArrowRightIcon } from '../../atoms/icons/transaction/ArrowRightIcon';
 
 type Props = {
   loading: boolean;
@@ -54,7 +63,16 @@ export const RouteStep = ({
               fontSize="12px"
               fontWeight="regular"
             >
-              {fromToken.amount} {fromToken.name}.{fromToken.chainName} -{' '}
+              {fromToken.amount} {fromToken.name}.{fromToken.chainName}{' '}
+            </Text>
+            <Box>
+              <ArrowRightIcon />
+            </Box>
+            <Text
+              color="brand.secondary.3"
+              fontSize="12px"
+              fontWeight="regular"
+            >
               {toToken.amount} {toToken.name}.{toToken.chainName}
             </Text>
           </HStack>

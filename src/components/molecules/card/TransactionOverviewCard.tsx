@@ -1,6 +1,7 @@
 import { SwapResultAsset } from '@anyalt/sdk/dist/adapter/api/api';
 import { Box, Divider, HStack, Text, VStack } from '@chakra-ui/react';
 import { CopyIcon } from '../../atoms/icons/CopyIcon';
+import { ArrowRightIcon } from '../../atoms/icons/transaction/ArrowRightIcon';
 import { TokenCard } from './TokenCard';
 
 type SwapResultAssetWithAmount = SwapResultAsset & { amount: string };
@@ -34,6 +35,9 @@ export const TransactionOverviewCard = ({ requestId, to, from }: Props) => {
             chainIcon={from?.blockchainLogo || ''}
             amount={from?.amount || ''}
           />
+          <Box>
+            <ArrowRightIcon />
+          </Box>
           <TokenCard
             tokenName={to?.symbol || ''}
             tokenIcon={to?.logo || ''}

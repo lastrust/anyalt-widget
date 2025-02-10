@@ -78,6 +78,12 @@ export const TokenInputBox: FC<Props> = ({
     getBalance();
   }, [inToken, evmAddress, publicKey]);
 
+  useEffect(() => {
+    if (inTokenAmount) {
+      setInTokenAmount(inTokenAmount.toString());
+    }
+  }, [inTokenAmount]);
+
   return (
     <Box {...props}>
       <Box
@@ -197,7 +203,7 @@ export const TokenInputBox: FC<Props> = ({
               textAlign="right"
               maxWidth="150px"
               padding="0px"
-              value={inTokenAmount}
+              value={inTokenAmount?.replace(',', '.')}
               onChange={(e) => {
                 setInTokenAmount(e.target.value);
               }}

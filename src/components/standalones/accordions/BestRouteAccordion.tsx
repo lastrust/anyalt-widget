@@ -12,12 +12,14 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { useAtom, useAtomValue } from 'jotai';
+import { useEffect, useState } from 'react';
 import {
   bestRouteAtom,
   currentStepAtom,
   protocolFinalTokenAtom,
   selectedRouteAtom,
 } from '../../../store/stateStore';
+import { TransactionDetailsType } from '../../../types/transaction';
 import { getTransactionGroupData } from '../../../utils/getTransactionGroupData';
 import { GasIcon } from '../../atoms/icons/GasIcon';
 import { StepsIcon } from '../../atoms/icons/StepsIcon';
@@ -32,18 +34,38 @@ type Props = {
   failedToFetchRoute: boolean;
 };
 
+const truncateToDecimals = (value: string, decimals?: number) => {
+  if (!value) return ''; // Handle empty or invalid values
+
+  if (!decimals) decimals = 6;
+
+  const [integerPart, decimalPart] = value.toString().split('.');
+  if (!decimalPart) return integerPart; // No decimals, return as is
+  return `${integerPart}.${decimalPart.slice(0, decimals)}`; // Keep only the first 5 decimal places
+};
+
 export const BestRouteAccordion = ({
   loading,
   failedToFetchRoute,
   isButtonHidden = true,
 }: Props) => {
-  const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
+  const [swaps, setSwaps] = useState<TransactionDetailsType[]>([]);
+
   const [bestRoute] = useAtom(bestRouteAtom);
-  const [selectedRoute, setSelectedRoute] = useAtom(selectedRouteAtom);
   const currentStep = useAtomValue(currentStepAtom);
+  const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
+  const [selectedRoute, setSelectedRoute] = useAtom(selectedRouteAtom);
 
   if (!bestRoute) return <></>;
-  const swaps = getTransactionGroupData(bestRoute);
+
+  useEffect(() => {
+    if (bestRoute) {
+      console.log('bestRoute', bestRoute);
+      const swaps = getTransactionGroupData(bestRoute);
+      console.log('swaps', swaps);
+      setSwaps(swaps);
+    }
+  }, [bestRoute]);
 
   const handleRouteSelect = () => {
     setSelectedRoute(bestRoute);
@@ -68,7 +90,7 @@ export const BestRouteAccordion = ({
           cursor={'pointer'}
           onClick={handleRouteSelect}
           bg={
-            selectedRoute?.swaps[0].swapperId === swaps[0].swapperName
+            selectedRoute?.swaps[0].swapperId === swaps[0]?.swapperName
               ? 'brand.secondary.12'
               : 'transparent'
           }
@@ -146,7 +168,7 @@ export const BestRouteAccordion = ({
               amount={Number(bestRoute.outputAmount)}
               price={Number(bestRoute.outputAmount)}
               difference={0.5}
-              network={`${swaps[0].swapperName}`}
+              network={`${swaps[0]?.swapperName}`}
             />
           </AccordionButton>
           <AccordionPanel p={'0px'} mt="12px">
@@ -165,7 +187,7 @@ export const BestRouteAccordion = ({
               ) : (
                 <Text textStyle={'bold.3'} ml={'24px'} lineHeight={'120%'}>
                   Transaction {currentStep}:{' '}
-                  {swaps[currentStep - 1].swapperName}
+                  {swaps[currentStep - 1]?.swapperName}
                 </Text>
               )}
               {swaps?.map((step, index) => {
@@ -178,12 +200,12 @@ export const BestRouteAccordion = ({
                     exchangeName={step.swapperName}
                     fromToken={{
                       name: step.from.name,
-                      amount: String(Number(step.fromAmount).toFixed(4) || '0'),
+                      amount: truncateToDecimals(step.from.amount) || '0',
                       chainName: step.from.chainName || '',
                     }}
                     toToken={{
                       name: step.to.name,
-                      amount: String(Number(step.toAmount).toFixed(4) || '0'),
+                      amount: truncateToDecimals(step.to.amount) || '0',
                       chainName: step.to.chainName || '',
                     }}
                   />

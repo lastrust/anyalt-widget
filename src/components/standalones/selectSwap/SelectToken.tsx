@@ -80,7 +80,7 @@ export const SelectToken = ({
           tokenLogo={protocolInputToken?.logoUrl ?? ''}
           chainName={protocolInputToken?.chain?.displayName ?? ''}
           chainLogo={protocolInputToken?.chain?.logoUrl ?? ''}
-          amount={parseFloat(activeRoute?.outputAmount ?? '0').toFixed(2)}
+          amount={activeRoute?.outputAmount ?? '0.00'}
           price={outTokenPrice}
         />
         <Divider w="100%" h="1px" bgColor="brand.secondary.12" />

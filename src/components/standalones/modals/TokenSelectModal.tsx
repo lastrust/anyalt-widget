@@ -40,6 +40,7 @@ export const TokenSelectModal: FC<Props> = ({ onClose, onTokenSelect }) => {
       justifyContent="flex-end"
       bgColor="rgba(0, 0, 0, 0.5)"
       backdropFilter="blur(10px)"
+      zIndex="2000"
       _hover={{
         backdropFilter: 'blur(11px)',
       }}
