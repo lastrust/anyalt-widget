@@ -44,6 +44,8 @@ export const RouteStep = ({
           marginRight={'8px'}
           width="16px"
           height="16px"
+          borderRadius={'50%'}
+          border="1px solid white"
         />
       )}
       <VStack justifyContent={'start'} alignItems={'start'} gap={'4px'}>

@@ -118,6 +118,7 @@ export const TransactionAccordion = () => {
                       amount: String(
                         Number(internalSwap.fromAmount).toFixed(2) || '0',
                       ),
+                      tokenLogo: internalSwap.from.logo,
                       chainName: internalSwap.from.blockchain,
                       chainLogo: internalSwap.from.blockchainLogo,
                     }}
@@ -127,6 +128,7 @@ export const TransactionAccordion = () => {
                         Number(internalSwap.toAmount).toFixed(2) || '0',
                       ),
                       chainName: internalSwap.to.blockchain,
+                      tokenLogo: internalSwap.to.logo,
                       chainLogo: internalSwap.to.blockchainLogo,
                     }}
                   />
@@ -231,19 +233,16 @@ export const TransactionAccordion = () => {
               exchangeName={'Last mile transaction'}
               fromToken={{
                 name: protocolInputToken?.symbol || '',
-                amount: String(
-                  Number(
-                    bestRoute.swaps[bestRoute.swaps.length - 1].toAmount,
-                  ).toFixed(2) || '0',
-                ),
+                amount:
+                  bestRoute.swaps[bestRoute.swaps.length - 1].toAmount || '0',
+                tokenLogo: protocolInputToken?.logoUrl || '',
                 chainName: protocolInputToken?.chain?.displayName || '',
                 chainLogo: protocolInputToken?.chain?.logoUrl || '',
               }}
               toToken={{
                 name: protocolFinalToken?.symbol || '',
-                amount: String(
-                  Number(finalTokenEstimate?.amountOut).toFixed(4) || '0',
-                ),
+                amount: finalTokenEstimate?.amountOut || '0',
+                tokenLogo: protocolInputToken?.logoUrl || '',
                 chainName: protocolInputToken?.chain?.displayName || '',
                 chainLogo: protocolInputToken?.chain?.logoUrl || '',
               }}

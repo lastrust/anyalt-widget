@@ -1,4 +1,26 @@
 export const textStyles = {
+  poppins: {
+    regular: {
+      1: {
+        fontFamily: 'Poppins',
+        fontSize: '16px',
+        fontWeight: '400', // regular
+        lineHeight: '120%',
+      },
+      2: {
+        fontFamily: 'Poppins',
+        fontSize: '14px',
+        fontWeight: '400', // regular
+        lineHeight: '120%',
+      },
+      3: {
+        fontFamily: 'Poppins',
+        fontSize: '12px',
+        fontWeight: '400', // regular
+        lineHeight: '120%',
+      },
+    },
+  },
   heading: {
     1: {
       fontSize: '24px',

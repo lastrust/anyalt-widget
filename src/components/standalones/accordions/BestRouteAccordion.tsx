@@ -54,7 +54,7 @@ export const BestRouteAccordion = ({
   const [bestRoute] = useAtom(bestRouteAtom);
   const currentStep = useAtomValue(currentStepAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
-  const [selectedRoute, setSelectedRoute] = useAtom(selectedRouteAtom);
+  const [, setSelectedRoute] = useAtom(selectedRouteAtom);
 
   if (!bestRoute) return <></>;
 
@@ -89,11 +89,7 @@ export const BestRouteAccordion = ({
           p={'16px'}
           cursor={'pointer'}
           onClick={handleRouteSelect}
-          bg={
-            selectedRoute?.swaps[0].swapperId === swaps[0]?.swapperName
-              ? 'brand.secondary.12'
-              : 'transparent'
-          }
+          bg={'brand.secondary.6'}
           _hover={{
             bgColor: 'bg.secondary.1',
           }}
