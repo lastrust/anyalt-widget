@@ -43,7 +43,7 @@ export interface TransactionProgress {
   chainName?: string;
   txHash?: string;
   error?: string;
-  details?: TransactionProgressDetails;
+  details: TransactionProgressDetails;
 }
 
 export interface StepProgress {
@@ -245,16 +245,15 @@ export const useHandleTransaction = (
     // Update the progress for the current step
     setStepsProgress((prev) => {
       const newSteps = prev?.steps ? [...prev.steps] : [];
-      const stepIndex = currentStep - 1;
+      const index = progress.details.currentStep - 1;
 
       // Determine if this is an approval or swap transaction
       const progressKey = progress.isApproval ? 'approve' : 'swap';
 
-      newSteps[stepIndex] = {
-        ...newSteps[stepIndex],
+      newSteps[index] = {
+        ...newSteps[index],
         [progressKey]: progress,
       };
-
       return { steps: newSteps };
     });
   };
@@ -269,7 +268,8 @@ export const useHandleTransaction = (
     ) => {
       let swapIsFinished = false;
       let crosschainSwapOutputAmount = '0';
-      setCurrentStep(1);
+      let stepIndex = 1;
+      setCurrentStep(stepIndex);
       const totalSteps = swaps.length + 1;
 
       // Initialize steps progress array if not already set
@@ -302,7 +302,7 @@ export const useHandleTransaction = (
             status: 'signing',
             message: 'Please sign the transaction in your wallet...',
             details: {
-              currentStep,
+              currentStep: stepIndex,
               totalSteps,
               stepDescription:
                 transactionData.type === 'EVM' &&
@@ -322,7 +322,7 @@ export const useHandleTransaction = (
             chainName,
             txHash,
             details: {
-              currentStep,
+              currentStep: stepIndex,
               totalSteps,
               stepDescription:
                 transactionData.type === 'EVM' &&
@@ -355,7 +355,7 @@ export const useHandleTransaction = (
             chainName,
             txHash,
             details: {
-              currentStep,
+              currentStep: stepIndex,
               totalSteps,
               stepDescription:
                 transactionData.type === 'EVM' &&
@@ -380,7 +380,7 @@ export const useHandleTransaction = (
               chainName,
               txHash,
               details: {
-                currentStep: totalSteps,
+                currentStep: stepIndex,
                 totalSteps,
                 stepDescription: 'Complete',
               },
@@ -401,7 +401,7 @@ export const useHandleTransaction = (
             chainName,
             txHash,
             details: {
-              currentStep: totalSteps,
+              currentStep: stepIndex,
               totalSteps,
               stepDescription: 'Complete',
             },
@@ -414,8 +414,9 @@ export const useHandleTransaction = (
             console.log('approvalTx');
             continue;
           } else {
-            setCurrentStep(currentStep + 1);
-            console.log('currentStep increased ', currentStep + 1);
+            stepIndex++;
+            setCurrentStep(stepIndex);
+            console.log('currentStep increased ', stepIndex);
           }
         } catch (error) {
           console.error('Error during swap execution:', error);
@@ -431,7 +432,7 @@ export const useHandleTransaction = (
             chainName,
             txHash,
             details: {
-              currentStep,
+              currentStep: stepIndex,
               totalSteps,
               stepDescription: 'Failed',
             },
@@ -445,7 +446,8 @@ export const useHandleTransaction = (
       } else {
         // Execute last mile transaction
         try {
-          setCurrentStep(currentStep + 1);
+          stepIndex++;
+          setCurrentStep(stepIndex);
           const lastSwap = bestRoute?.swaps[bestRoute.swaps.length - 1];
           const chain = allChains.find(
             (chain) => chain.name === lastSwap?.to.blockchain,
@@ -460,6 +462,16 @@ export const useHandleTransaction = (
             'crosschainSwapOutputAmount: ',
             crosschainSwapOutputAmount,
           );
+          updateStepProgress({
+            isApproval: false,
+            status: 'pending',
+            message: 'Waiting for transaction to complete...',
+            details: {
+              currentStep: stepIndex,
+              totalSteps,
+              stepDescription: 'Pending',
+            },
+          });
           const executeResponse = await executeCallBack({
             amount: crosschainSwapOutputAmount,
             address: lastSwap?.to.address || '',
@@ -477,7 +489,7 @@ export const useHandleTransaction = (
               txHash: executeResponse.approvalTxHash,
               chainName: lastSwap?.to.blockchain,
               details: {
-                currentStep: totalSteps,
+                currentStep: stepIndex,
                 totalSteps,
                 stepDescription: 'Complete',
               },
@@ -491,7 +503,7 @@ export const useHandleTransaction = (
               txHash: executeResponse.executeTxHash,
               chainName: lastSwap?.to.blockchain,
               details: {
-                currentStep: totalSteps,
+                currentStep: stepIndex,
                 totalSteps,
                 stepDescription: 'Complete',
               },

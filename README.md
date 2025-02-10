@@ -107,6 +107,8 @@ const Widget = () => {
     return {
       amountOut: '0.95',
       priceInUSD: '150',
+      estimatedTimeInSeconds: 10,
+      estimatedFeeInUSD: '0.01',
     };
   };
 
@@ -192,6 +194,8 @@ export interface Token {
 export interface EstimateResponse {
   amountOut: string;
   priceInUSD: string;
+  estimatedTimeInSeconds?: number;
+  estimatedFeeInUSD?: string;
 }
 ```
 

@@ -227,9 +227,7 @@ export const TransactionAccordion = () => {
         <AccordionPanel p={'0px'} mt="12px">
           <VStack gap={'12px'}>
             <TransactionStep
-              exchangeLogo={
-                bestRoute.swaps[bestRoute.swaps.length - 1].swapperLogo
-              }
+              exchangeLogo={protocolFinalToken?.logoUrl || ''}
               exchangeName={'Last mile transaction'}
               fromToken={{
                 name: protocolInputToken?.symbol || '',
@@ -247,6 +245,29 @@ export const TransactionAccordion = () => {
                 chainLogo: protocolInputToken?.chain?.logoUrl || '',
               }}
             />
+            <HStack w={'100%'}>
+              <HStack>
+                <TimeIcon />
+                <Text
+                  color={'brand.secondary.3'}
+                  lineHeight={'120%'}
+                  textStyle={'regular.3'}
+                >
+                  {finalTokenEstimate?.estimatedTimeInSeconds}s
+                </Text>
+              </HStack>
+              <DividerIcon />
+              <HStack>
+                <GasIcon />
+                <Text
+                  color={'brand.secondary.3'}
+                  lineHeight={'120%'}
+                  textStyle={'regular.3'}
+                >
+                  ${finalTokenEstimate?.estimatedFeeInUSD}
+                </Text>
+              </HStack>
+            </HStack>
           </VStack>
 
           <Box>

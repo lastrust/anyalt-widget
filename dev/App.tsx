@@ -28,17 +28,17 @@ const App = () => {
   const { isOpen, onOpen, onClose } = useModal();
 
   const estimateCallback = async (token: Token): Promise<EstimateResponse> => {
-    console.log('token: ');
     return {
       amountOut: '10.19',
       priceInUSD: '2423.53',
+      estimatedTimeInSeconds: 10,
+      estimatedFeeInUSD: '0.01',
     };
   };
 
   const executeCallBack = async (token: Token): Promise<ExecuteResponse> => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        // reject(new Error('Error'));
         resolve({
           approvalTxHash: '0x123',
           executeTxHash: '0x123',
