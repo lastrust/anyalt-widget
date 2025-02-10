@@ -41,7 +41,7 @@ export const useTransactionInfo = ({
         anyaltInstance,
         activeOperationId,
         slippage,
-        bestRoute?.swaps || [],
+        bestRoute?.swapSteps || [],
         executeCallBack,
       );
       onTxComplete();
@@ -54,17 +54,17 @@ export const useTransactionInfo = ({
 
   const estimatedTime = useMemo(() => {
     if (!bestRoute) return 0;
-    if (currentStep > bestRoute.swaps.length)
+    if (currentStep > bestRoute.swapSteps.length)
       return finalTokenEstimate?.estimatedTimeInSeconds || 0;
-    return bestRoute.swaps[currentStep - 1]?.estimatedTimeInSeconds || 0;
+    return bestRoute.swapSteps[currentStep - 1]?.estimatedTimeInSeconds || 0;
   }, [bestRoute, currentStep, finalTokenEstimate]);
 
   const fees = useMemo(() => {
     if (!bestRoute) return '0';
-    if (currentStep > bestRoute.swaps.length)
+    if (currentStep > bestRoute.swapSteps.length)
       return finalTokenEstimate?.estimatedFeeInUSD || '0';
     return (
-      bestRoute.swaps[currentStep - 1]?.fee
+      bestRoute.swapSteps[currentStep - 1]?.fees
         .reduce((acc, fee) => {
           const amount = parseFloat(fee?.amount);
           const price = fee.price || 0;

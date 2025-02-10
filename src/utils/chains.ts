@@ -23,3 +23,27 @@ export const chainIds = {
   BLAST: 534352,
   SOLANA: 101,
 };
+
+export const CHAIN_ETHEREUM = 'ETH';
+export const CHAIN_ARBITRUM = 'ARBITRUM';
+export const CHAIN_AVALANCHE = 'AVAX_CCHAIN';
+export const CHAIN_BASE = 'BASE';
+export const CHAIN_BNB = 'BSC';
+export const CHAIN_FANTOM = 'FANTOM';
+export const CHAIN_GNOSIS = 'GNOSIS';
+export const CHAIN_OPTIMISM = 'OPTIMISM';
+export const CHAIN_POLYGON = 'POLYGON';
+export const CHAIN_ZKSYNC = 'ZKSYNC';
+
+export const ChainIdToChainConstant = {
+  1: CHAIN_ETHEREUM,
+  42161: CHAIN_ARBITRUM,
+  43114: CHAIN_AVALANCHE,
+  8453: CHAIN_BASE,
+  56: CHAIN_BNB,
+  250: CHAIN_FANTOM,
+  100: CHAIN_GNOSIS,
+  10: CHAIN_OPTIMISM,
+  137: CHAIN_POLYGON,
+  324: CHAIN_ZKSYNC,
+} as const;

@@ -62,9 +62,9 @@ export const TransactionAccordion = () => {
       display={'flex'}
       flexDir={'column'}
     >
-      {bestRoute?.swaps.map((swap, index) => (
+      {bestRoute?.swapSteps.map((swapStep, index) => (
         <AccordionItem
-          key={`${swap.swapperId}-${index}`}
+          key={`${swapStep.executionOrder}-${index}`}
           p={'16px'}
           cursor={'pointer'}
           bg="brand.secondary.6"
@@ -123,53 +123,54 @@ export const TransactionAccordion = () => {
           <AccordionPanel p={'0px'} mt="12px">
             <VStack gap={'12px'} alignItems={'flex-start'}>
               <Text textStyle={'regular.1'} color="brand.secondary.3">
-                {swap.swapperType === 'BRIDGE' ? 'Bridge' : 'Swap'} tokens using{' '}
-                {swap.swapperId}
+                {swapStep.swapperType === 'BRIDGE' ? 'Bridge' : 'Swap'} tokens
+                using {swapStep.swapperName}
               </Text>
-              {swap.internalSwaps?.length && swap.internalSwaps?.length > 0 ? (
-                swap.internalSwaps?.map((internalSwap, index) => {
+              {swapStep.internalSwapSteps?.length &&
+              swapStep.internalSwapSteps?.length > 0 ? (
+                swapStep.internalSwapSteps?.map((internalSwap, index) => {
                   return (
                     <TransactionStep
-                      key={`${internalSwap.swapperId}-${index}`}
-                      exchangeLogo={internalSwap.swapperLogo}
-                      exchangeName={internalSwap.swapperId}
+                      key={`${internalSwap.swapperName}-${index}`}
+                      exchangeLogo={internalSwap.swapperLogoUrl}
+                      exchangeName={internalSwap.swapperName}
                       fromToken={{
-                        name: internalSwap.from.symbol,
+                        name: internalSwap.sourceToken.symbol,
                         amount:
-                          truncateToDecimals(internalSwap.fromAmount, 3) || '0',
-                        tokenLogo: internalSwap.from.logo,
-                        chainName: internalSwap.from.blockchain,
-                        chainLogo: internalSwap.from.blockchainLogo,
+                          truncateToDecimals(internalSwap.amount, 3) || '0',
+                        tokenLogo: internalSwap.sourceToken.logo,
+                        chainName: internalSwap.sourceToken.blockchain,
+                        chainLogo: internalSwap.sourceToken.blockchainLogo,
                       }}
                       toToken={{
-                        name: internalSwap.to.symbol,
+                        name: internalSwap.destinationToken.symbol,
                         amount:
-                          truncateToDecimals(internalSwap.toAmount, 3) || '0',
-                        chainName: internalSwap.to.blockchain,
-                        tokenLogo: internalSwap.to.logo,
-                        chainLogo: internalSwap.to.blockchainLogo,
+                          truncateToDecimals(internalSwap.payout, 3) || '0',
+                        chainName: internalSwap.destinationToken.blockchain,
+                        tokenLogo: internalSwap.destinationToken.logo,
+                        chainLogo: internalSwap.destinationToken.blockchainLogo,
                       }}
                     />
                   );
                 })
               ) : (
                 <TransactionStep
-                  key={`${swap.swapperId}-${index}`}
-                  exchangeLogo={swap.swapperLogo}
-                  exchangeName={swap.swapperId}
+                  key={`${swapStep.swapperName}-${index}`}
+                  exchangeLogo={swapStep.swapperLogoUrl}
+                  exchangeName={swapStep.swapperName}
                   fromToken={{
-                    name: swap.from.symbol,
-                    amount: truncateToDecimals(swap.fromAmount, 3) || '0',
-                    tokenLogo: swap.from.logo,
-                    chainName: swap.from.blockchain,
-                    chainLogo: swap.from.blockchainLogo,
+                    name: swapStep.sourceToken.symbol,
+                    amount: truncateToDecimals(swapStep.amount, 3) || '0',
+                    tokenLogo: swapStep.sourceToken.logo,
+                    chainName: swapStep.sourceToken.blockchain,
+                    chainLogo: swapStep.sourceToken.blockchainLogo,
                   }}
                   toToken={{
-                    name: swap.to.symbol,
-                    amount: truncateToDecimals(swap.toAmount, 3) || '0',
-                    chainName: swap.to.blockchain,
-                    tokenLogo: swap.to.logo,
-                    chainLogo: swap.to.blockchainLogo,
+                    name: swapStep.destinationToken.symbol,
+                    amount: truncateToDecimals(swapStep.payout, 3) || '0',
+                    chainName: swapStep.destinationToken.blockchain,
+                    tokenLogo: swapStep.destinationToken.logo,
+                    chainLogo: swapStep.destinationToken.blockchainLogo,
                   }}
                 />
               )}
@@ -181,7 +182,8 @@ export const TransactionAccordion = () => {
                     lineHeight={'120%'}
                     textStyle={'regular.3'}
                   >
-                    {swap.estimatedTimeInSeconds}s
+                    {/* // TODO: Readd this to `BestRouteResponse` */}
+                    {swapStep.estimatedTimeInSeconds}s
                   </Text>
                 </HStack>
                 <DividerIcon />
@@ -193,7 +195,7 @@ export const TransactionAccordion = () => {
                     textStyle={'regular.3'}
                   >
                     ${' '}
-                    {swap.fee
+                    {swapStep.fees
                       .reduce((acc, fee) => {
                         const amount = parseFloat(fee.amount);
                         const price = fee.price || 0;

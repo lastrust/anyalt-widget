@@ -63,9 +63,9 @@ export const LastMileTxAccordion = ({
       >
         <HStack justifyContent={'flex-start'}>
           <Text textStyle={'bold.1'} mr="8px">
-            Transaction {bestRoute.swaps.length + 1}
+            Transaction {bestRoute.swapSteps.length + 1}
           </Text>
-          {currentStep === bestRoute.swaps.length + 1 && (
+          {currentStep === bestRoute.swapSteps.length + 1 && (
             <Text textStyle={'bold.1'} color="brand.tertiary.100">
               In Progress
             </Text>
@@ -94,7 +94,8 @@ export const LastMileTxAccordion = ({
             fromToken={{
               name: protocolInputToken?.symbol || '',
               amount: truncateToDecimals(
-                bestRoute.swaps[bestRoute.swaps.length - 1].toAmount || '0',
+                bestRoute.swapSteps[bestRoute.swapSteps.length - 1].payout ||
+                  '0',
                 3,
               ),
               tokenLogo: protocolInputToken?.logoUrl || '',
@@ -141,16 +142,18 @@ export const LastMileTxAccordion = ({
         </VStack>
 
         <Box>
-          {stepsProgress?.steps[bestRoute.swaps.length].approve && (
+          {stepsProgress?.steps[bestRoute.swapSteps.length].approve && (
             <TransactionHash
               type="Approval"
-              progress={stepsProgress?.steps[bestRoute.swaps.length].approve}
+              progress={
+                stepsProgress?.steps[bestRoute.swapSteps.length].approve
+              }
             />
           )}
-          {stepsProgress?.steps[bestRoute.swaps.length].swap && (
+          {stepsProgress?.steps[bestRoute.swapSteps.length].swap && (
             <TransactionHash
               type="Swap"
-              progress={stepsProgress?.steps[bestRoute.swaps.length].swap}
+              progress={stepsProgress?.steps[bestRoute.swapSteps.length].swap}
             />
           )}
         </Box>

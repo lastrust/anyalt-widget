@@ -49,9 +49,9 @@ export const TransactionInfo: FC<Props> = ({
         <Box w={'100%'}>
           <VStack alignItems="flex-start" spacing="16px" w={'100%'}>
             <Text textStyle={'regular.1'} color="brand.secondary.3">
-              {bestRoute?.swaps?.length &&
-              bestRoute?.swaps?.length >= currentStep
-                ? `${bestRoute.swaps[currentStep - 1].swapperType === 'BRIDGE' ? 'Bridge' : 'Swap'} tokens using ${bestRoute.swaps[currentStep - 1].swapperId}`
+              {bestRoute?.swapSteps?.length &&
+              bestRoute?.swapSteps?.length >= currentStep
+                ? `${bestRoute.swapSteps[currentStep - 1].swapperType === 'BRIDGE' ? 'Bridge' : 'Swap'} tokens using ${bestRoute.swapSteps[currentStep - 1].swapperName}`
                 : `Depositing tokens to ${recentTransaction?.to.tokenName}`}
             </Text>
             <ProgressList

@@ -25,7 +25,10 @@ export const useTransactionList = () => {
         blockchainLogo: protocolInputToken?.chain?.logoUrl || '',
         decimals: protocolInputToken?.decimals || 0,
         usdPrice:
-          Number(bestRoute?.swaps[bestRoute.swaps.length - 1].to.usdPrice) || 0,
+          Number(
+            bestRoute?.swapSteps[bestRoute.swapSteps.length - 1]
+              .destinationToken.tokenUsdPrice,
+          ) || 0,
       };
     }
 
@@ -45,14 +48,15 @@ export const useTransactionList = () => {
     bestRoute,
     tokens: {
       from: {
-        address: bestRoute?.swaps[0].from.address || '',
-        symbol: bestRoute?.swaps[0].from.symbol || '',
-        logo: bestRoute?.swaps[0].from.logo || '',
-        blockchain: bestRoute?.swaps[0].from.blockchain || '',
-        amount: Number(bestRoute?.swaps[0].fromAmount).toFixed(4) || '',
-        blockchainLogo: bestRoute?.swaps[0].from.blockchainLogo || '',
-        decimals: bestRoute?.swaps[0].from.decimals || 0,
-        usdPrice: bestRoute?.swaps[0].from.usdPrice || 0,
+        address: bestRoute?.swapSteps[0].sourceToken.contractAddress || '',
+        symbol: bestRoute?.swapSteps[0].sourceToken.symbol || '',
+        logo: bestRoute?.swapSteps[0].sourceToken.logo || '',
+        blockchain: bestRoute?.swapSteps[0].sourceToken.blockchain || '',
+        amount: Number(bestRoute?.swapSteps[0].amount).toFixed(4) || '',
+        blockchainLogo:
+          bestRoute?.swapSteps[0].sourceToken.blockchainLogo || '',
+        decimals: bestRoute?.swapSteps[0].sourceToken.decimals || 0,
+        usdPrice: bestRoute?.swapSteps[0].sourceToken.tokenUsdPrice || 0,
       },
       to: {
         ...getToTokenDetails(),
