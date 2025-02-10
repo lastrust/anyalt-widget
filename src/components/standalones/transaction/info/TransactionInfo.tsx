@@ -110,7 +110,7 @@ export const TransactionInfo: FC<Props> = ({
           width={'100%'}
           bg="brand.tertiary.100"
           _hover={{
-            bg: 'brand.tertiary.20',
+            bg: 'brand.tertiary.90',
           }}
           color="white"
           borderRadius="8px"
