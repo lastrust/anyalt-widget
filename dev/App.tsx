@@ -18,6 +18,7 @@ import {
 import '@fontsource/rethink-sans/400.css';
 import '@fontsource/rethink-sans/500.css';
 import '@fontsource/rethink-sans/600.css';
+
 import '@rainbow-me/rainbowkit/styles.css';
 import '@solana/wallet-adapter-react-ui/styles.css';
 

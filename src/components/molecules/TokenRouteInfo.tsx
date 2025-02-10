@@ -49,7 +49,7 @@ export const TokenRouteInfo: FC<Props> = ({
       )}
       <VStack justifyContent={'start'} alignItems={'start'} gap={'4px'}>
         {loading ? (
-          <Skeleton w={'100px'} h={'16px'} />
+          <Skeleton w={'100px'} h={'16px'} borderRadius="12px" />
         ) : (
           <Text color="white" fontSize="16px" fontWeight="extrabold">
             {amount}
@@ -57,7 +57,7 @@ export const TokenRouteInfo: FC<Props> = ({
         )}
         <HStack>
           {loading ? (
-            <Skeleton w={'100px'} h={'16px'} />
+            <Skeleton w={'100px'} h={'16px'} borderRadius="12px" />
           ) : (
             <Text
               color="white"
@@ -69,7 +69,7 @@ export const TokenRouteInfo: FC<Props> = ({
             </Text>
           )}
           {loading ? (
-            <Skeleton w={'30px'} h={'16px'} />
+            <Skeleton w={'30px'} h={'16px'} borderRadius="12px" />
           ) : (
             <Text
               color="white"
@@ -81,7 +81,7 @@ export const TokenRouteInfo: FC<Props> = ({
             </Text>
           )}
           {loading ? (
-            <Skeleton w={'100px'} h={'16px'} />
+            <Skeleton w={'100px'} h={'16px'} borderRadius="12px" />
           ) : (
             <Text
               color="white"

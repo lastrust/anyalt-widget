@@ -25,10 +25,8 @@ export const TokenCard = ({
         chainIcon={chainIcon}
       />
       <VStack alignItems={'flex-start'} gap={'4px'}>
-        <Text fontSize="16px" fontWeight="bold">
-          {amount}
-        </Text>
-        <Text fontSize="12px" color="brand.secondary.3">
+        <Text textStyle={'bold.1'}>{amount}</Text>
+        <Text textStyle={'regular.3'} color="brand.secondary.3">
           {tokenName} On {chainName}
         </Text>
       </VStack>
