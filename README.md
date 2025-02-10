@@ -134,6 +134,7 @@ const Widget = () => {
           estimateCallback={estimateCallback}
           executeCallBack={executeCallBack}
           minDepositAmount={10}
+          solanaRpcUrl="YOUR_SOLANA_RPC_URL"
         />
       </WidgetProvider>
     </QueryClientProvider>
@@ -175,6 +176,9 @@ export const ClientWidgetWrapper = dynamic(
 | `executeCallBack`   | `(token: Token) => Promise<ExecuteResponse>`  | Function to execute token swap           |
 | `walletConnector?`  | `WalletConnector`                             | Optional custom wallet connector         |
 | `minDepositAmount?` | `number`                                      | Minimum deposit amount in USD equivalent |
+| `solanaRpcUrl?`     | `string`                                      | Solana RPC URL                           |
+
+We recommend you to provide `solanaRpcUrl`. Otherwise, we use public RPC URL which is not stable.
 
 ### `Token`
 
