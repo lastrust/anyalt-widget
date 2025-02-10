@@ -1,6 +1,6 @@
 {
   "name": "@anyalt/widget",
-  "version": "1.0.2-canary.45",
+  "version": "1.0.2-canary.46",
   "description": "Anyalt Widget",
   "private": false,
   "files": [
@@ -38,7 +38,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@anyalt/sdk": "1.0.5-canary.3",
+    "@anyalt/sdk": "1.0.5-canary.5",
     "@chakra-ui/react": "2.10.4",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
