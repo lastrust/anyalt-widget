@@ -12,6 +12,7 @@ import {
 import { getEvmTokenBalance } from '../../../../../utils';
 import { TokenIconBox } from '../../../../molecules/TokenIconBox';
 import { TokenInfoBox } from '../../../../molecules/TokenInfoBox';
+import { truncateToDecimals } from '../../../accordions/BestRouteAccordion';
 
 type Props = BoxProps & {
   price: string;
@@ -102,7 +103,7 @@ export const TokenInputBox: FC<Props> = ({
           gap="4px"
         >
           <Text color={'brand.secondary.3'} textStyle={'bold.3'} opacity={0.4}>
-            Balance: {balance ? parseFloat(balance).toFixed(6) : ''}
+            Balance: {balance ? truncateToDecimals(balance, 6) : ''}
           </Text>
           <Button
             bg="brand.tertiary.20"

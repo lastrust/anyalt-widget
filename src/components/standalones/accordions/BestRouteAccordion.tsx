@@ -34,7 +34,7 @@ type Props = {
   failedToFetchRoute: boolean;
 };
 
-const truncateToDecimals = (value: string, decimals?: number) => {
+export const truncateToDecimals = (value: string, decimals?: number) => {
   if (!value) return ''; // Handle empty or invalid values
 
   if (!decimals) decimals = 6;
