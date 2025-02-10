@@ -4,12 +4,13 @@ import { SolanaProvider } from './SolanaProvider';
 
 type Props = {
   children: ReactNode;
+  solanaRpcUrl?: string;
 };
 
-export const WalletsProviders = ({ children }: Props) => {
+export const WalletsProviders = ({ children, solanaRpcUrl }: Props) => {
   return (
     <AppKitProvider>
-      <SolanaProvider>{children}</SolanaProvider>
+      <SolanaProvider solanaRpcUrl={solanaRpcUrl}>{children}</SolanaProvider>
     </AppKitProvider>
   );
 };

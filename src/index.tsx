@@ -58,6 +58,7 @@ export type AnyaltWidgetProps = {
   executeCallBack: (token: Token) => Promise<ExecuteResponse>;
   walletConnector?: WalletConnector;
   minDepositAmount?: number;
+  solanaRpcUrl?: string;
 };
 
 export const AnyaltWidget = (props: AnyaltWidgetProps) => {

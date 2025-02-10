@@ -50,39 +50,37 @@ const App = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <WidgetProvider theme={defaultTheme}>
-        <WalletsProviders>
-          <Center h={'100vh'}>
-            <Box maxW={'600px'}>
-              <OpenModalButton onOpen={onOpen} />
-              <AnyaltWidget
-                inputToken={{
-                  symbol: 'USDT',
-                  address: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
-                  chainId: 42161,
-                  chainType: ChainType.EVM,
-                  name: 'USDT',
-                  decimals: 18,
-                }}
-                finalToken={{
-                  symbol: 'Aarnâ Afi802',
-                  address: '0x123',
-                  chainId: 1,
-                  chainType: ChainType.EVM,
-                  logoUrl: 'https://engine.aarna.ai/static/logo-only.svg',
-                  name: 'Aarna Afi802',
-                  decimals: 18,
-                }}
-                apiKey={'pk_0xCYxjM8dFF0Vii7syrgpR6U4'}
-                isOpen={isOpen}
-                onClose={onClose}
-                estimateCallback={estimateCallback}
-                executeCallBack={executeCallBack}
-                minDepositAmount={0}
-              />
-            </Box>
-          </Center>
-        </WalletsProviders>
+      <WidgetProvider theme={defaultTheme} solanaRpcUrl="https://mainnet.helius-rpc.com/?api-key=42e325d6-1ddd-4c32-a729-d83c2dc49e0e">
+        <Center h={'100vh'}>
+          <Box maxW={'600px'}>
+            <OpenModalButton onOpen={onOpen} />
+            <AnyaltWidget
+              inputToken={{
+                symbol: 'USDT',
+                address: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
+                chainId: 42161,
+                chainType: ChainType.EVM,
+                name: 'USDT',
+                decimals: 18,
+              }}
+              finalToken={{
+                symbol: 'Aarnâ Afi802',
+                address: '0x123',
+                chainId: 1,
+                chainType: ChainType.EVM,
+                logoUrl: 'https://engine.aarna.ai/static/logo-only.svg',
+                name: 'Aarna Afi802',
+                decimals: 18,
+              }}
+              apiKey={'pk_0xCYxjM8dFF0Vii7syrgpR6U4'}
+              isOpen={isOpen}
+              onClose={onClose}
+              estimateCallback={estimateCallback}
+              executeCallBack={executeCallBack}
+              minDepositAmount={0}
+            />
+          </Box>
+        </Center>
       </WidgetProvider>
     </QueryClientProvider>
   );
