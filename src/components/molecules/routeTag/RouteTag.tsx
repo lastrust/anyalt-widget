@@ -31,8 +31,9 @@ export const RouteTag = ({
           borderRadius={'32px'}
           bgColor={bgColor}
           border={withBorder ? '1px solid #008080' : 'none'}
+          borderColor={withBorder ? 'brand.border.tag' : 'transparent'}
         >
-          {icon && <Icon as={icon} w={'14px'} h={'14px'} />}
+          {icon && <Icon as={icon} color={textColor} w={'14px'} h={'14px'} />}
           <Text textStyle="bold.5" color={textColor}>
             {text}
           </Text>

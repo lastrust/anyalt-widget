@@ -40,7 +40,7 @@ export const TransactionList = () => {
           usdPrice: Number(finalTokenEstimate?.priceInUSD) || 0,
         }}
       />
-      <Text color="white" textStyle={'bold.0'} lineHeight={'130%'}>
+      <Text color="brand.text.primary" textStyle={'bold.0'} lineHeight={'130%'}>
         Swap Steps
       </Text>
       <TransactionAccordion />

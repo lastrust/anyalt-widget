@@ -47,10 +47,14 @@ export const TokenItem: FC<Props> = ({
           alignItems="flex-start"
           gap="6px"
         >
-          <Text color="white" textStyle="bold.0">
+          <Text color="brand.text.primary" textStyle="bold.0">
             {tokenSymbol}
           </Text>
-          <Text color="white" textStyle={'regular.1'} opacity={0.4}>
+          <Text
+            color="brand.text.primary"
+            textStyle={'regular.1'}
+            opacity={0.4}
+          >
             {chainName}
           </Text>
         </Box>

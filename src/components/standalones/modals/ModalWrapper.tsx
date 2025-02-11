@@ -33,7 +33,7 @@ const ModalWrapper: FC<ModalWrapperProps> = ({
         maxW={maxWidthCustom || '1000px'}
         containerProps={{ zIndex: 1000 }}
       >
-        <ModalCloseButton color="white" />
+        <ModalCloseButton color="brand.buttons.close.primary" />
         <Box padding="32px">{children}</Box>
       </ModalContent>
     </Modal>

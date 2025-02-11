@@ -9,7 +9,7 @@ export const Footer = () => {
       justifyContent="center"
       alignItems="center"
     >
-      <Text fontSize="12px" color="#fff6" mr="8px">
+      <Text fontSize="12px" color="brand.tertiary.100" mr="8px">
         Powered by
       </Text>
       <AnyaltLogo width="84px" height="24px" />

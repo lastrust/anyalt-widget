@@ -6,6 +6,7 @@ import {
 } from './components/screens/widget/AnyaltWidget';
 import { WalletsProviders } from './providers/WalletsProviders';
 import { WidgetProvider } from './providers/WidgetProvider';
+import { whiteTheme } from './theme/whiteTheme';
 
 export enum ChainType {
   EVM = 'EVM',
@@ -46,7 +47,7 @@ export interface WalletConnector {
   switchChain: (chainId: number) => Promise<void>;
 }
 
-export { defaultTheme, useModal, WalletsProviders, WidgetProvider };
+export { defaultTheme, useModal, WalletsProviders, whiteTheme, WidgetProvider };
 
 export type AnyaltWidgetProps = {
   isOpen: boolean;

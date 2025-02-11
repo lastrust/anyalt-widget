@@ -51,7 +51,11 @@ export const TokenRouteInfo: FC<Props> = ({
         {loading ? (
           <Skeleton w={'100px'} h={'16px'} borderRadius="12px" />
         ) : (
-          <Text color="white" fontSize="16px" fontWeight="extrabold">
+          <Text
+            color="brand.text.primary"
+            fontSize="16px"
+            fontWeight="extrabold"
+          >
             {amount}
           </Text>
         )}
@@ -60,7 +64,7 @@ export const TokenRouteInfo: FC<Props> = ({
             <Skeleton w={'100px'} h={'16px'} borderRadius="12px" />
           ) : (
             <Text
-              color="white"
+              color="brand.text.primary"
               fontSize="12px"
               fontWeight="regular"
               opacity={0.4}
@@ -72,7 +76,7 @@ export const TokenRouteInfo: FC<Props> = ({
             <Skeleton w={'30px'} h={'16px'} borderRadius="12px" />
           ) : (
             <Text
-              color="white"
+              color="brand.text.primary"
               fontSize="12px"
               fontWeight="regular"
               opacity={0.4}
@@ -84,7 +88,7 @@ export const TokenRouteInfo: FC<Props> = ({
             <Skeleton w={'100px'} h={'16px'} borderRadius="12px" />
           ) : (
             <Text
-              color="white"
+              color="brand.text.primary"
               fontSize="12px"
               fontWeight="regular"
               opacity={0.4}

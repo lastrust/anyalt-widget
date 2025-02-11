@@ -1,4 +1,4 @@
-import { Box, BoxProps, Flex, Grid, Text, VStack } from '@chakra-ui/react';
+import { Box, BoxProps, Flex, Grid, Icon, Text, VStack } from '@chakra-ui/react';
 import { ConfigIcon } from '../atoms/icons/selectToken/ConfigIcon';
 
 type Props = {
@@ -39,7 +39,7 @@ export const SwappingTemplate = ({
         >
           <Flex justifyContent="space-between" alignItems="center">
             <VStack alignItems="left">
-              <Text color="white" textStyle={'bold.0'}>
+              <Text color="brand.text.primary" textStyle={'bold.0'}>
                 {title}
               </Text>
               {subtitle && (
@@ -54,7 +54,7 @@ export const SwappingTemplate = ({
             </VStack>
             {onConfigClick && (
               <Box cursor="pointer" onClick={onConfigClick}>
-                <ConfigIcon />
+                <Icon as={ConfigIcon} color="brand.tertiary.100" />
               </Box>
             )}
           </Flex>
@@ -64,7 +64,11 @@ export const SwappingTemplate = ({
               flexDir={'column'}
               alignItems="left"
             >
-              <Text color="white" fontSize="24px" fontWeight="bold">
+              <Text
+                color="brand.text.primary"
+                fontSize="24px"
+                fontWeight="bold"
+              >
                 {secondTitle}
               </Text>
               <Text

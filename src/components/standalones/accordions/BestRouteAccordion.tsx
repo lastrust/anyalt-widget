@@ -127,9 +127,6 @@ export const BestRouteAccordion = ({
           cursor={'pointer'}
           onClick={handleRouteSelect}
           bg={'brand.secondary.6'}
-          _hover={{
-            bgColor: 'bg.secondary.1',
-          }}
         >
           <AccordionButton
             display={'flex'}
@@ -138,6 +135,9 @@ export const BestRouteAccordion = ({
             gap="12px"
             p={'0px'}
             w={'100%'}
+            _hover={{
+              bgColor: 'transparent',
+            }}
           >
             <Flex
               flexDirection="row"
@@ -159,6 +159,7 @@ export const BestRouteAccordion = ({
                   text={`${bestRoute.swaps.reduce((acc, swap) => acc + swap.estimatedTimeInSeconds, 0)}s`}
                   icon={TimeIcon}
                   textColor="brand.tertiary.100"
+                  bgColor="brand.bg.tag"
                 />
                 <RouteTag
                   loading={loading}
@@ -174,12 +175,14 @@ export const BestRouteAccordion = ({
                   }
                   icon={GasIcon}
                   textColor="brand.tertiary.100"
+                  bgColor="brand.bg.tag"
                 />
                 <RouteTag
                   loading={loading}
                   text={`${bestRoute.swaps.reduce((acc, swap) => acc + swap.maxRequiredSign, 0)}`}
                   icon={StepsIcon}
                   textColor="brand.tertiary.100"
+                  bgColor="brand.bg.tag"
                 />
               </Flex>
               {!isButtonHidden && (

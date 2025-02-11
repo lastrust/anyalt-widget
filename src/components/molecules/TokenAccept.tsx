@@ -18,11 +18,11 @@ export const TokenAccept: FC<Props> = ({ onClick, ...props }) => {
     >
       <Box display="flex" flexDir="row" alignItems="center" gap="8px" mb="8px">
         <WarningIcon />
-        <Text color="brand.white" fontSize="16px" fontWeight="bold">
+        <Text color="brand.text.primary" fontSize="16px" fontWeight="bold">
           Warning
         </Text>
       </Box>
-      <Text color="brand.white" fontSize="14px" opacity={0.4} mb="12px">
+      <Text color="brand.text.primary" fontSize="14px" opacity={0.4} mb="12px">
         Anyone can create any token, including fake versions of the existing
         tokens. Take due care. Some tokens and their technical parameters may be
         incompatible with AnyAlt services. By importing this custom token you
@@ -30,7 +30,7 @@ export const TokenAccept: FC<Props> = ({ onClick, ...props }) => {
       </Text>
       <Button
         bg="brand.tertiary.100"
-        color="brand.white"
+        color="brand.text.primary"
         fontSize="16px"
         fontWeight="bold"
         borderRadius="8px"
