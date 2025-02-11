@@ -19,6 +19,7 @@ import {
   bestRouteAtom,
   currentStepAtom,
   finalTokenAmountAtom,
+  isTokenBuyTemplateAtom,
   stepsProgressAtom,
 } from '../../../store/stateStore';
 
@@ -100,6 +101,7 @@ export const useHandleTransaction = (
   const [, setFinalTokenAmount] = useAtom(finalTokenAmountAtom);
   const [currentStep, setCurrentStep] = useAtom(currentStepAtom);
   const [stepsProgress, setStepsProgress] = useAtom(stepsProgressAtom);
+  const isTokenBuyTemplate = useAtomValue(isTokenBuyTemplateAtom);
 
   const allChains = useAtomValue(allChainsAtom);
   const bestRoute = useAtomValue(bestRouteAtom);
@@ -440,6 +442,9 @@ export const useHandleTransaction = (
           break;
         }
       } while (!swapIsFinished);
+
+      // If the template is token buy, we don't need to execute the last mile transaction
+      if (isTokenBuyTemplate) return;
 
       if (isCrosschainSwapError) {
         throw new TransactionError('Transaction failed');
