@@ -8,6 +8,8 @@ type Props = BoxProps & {
   chainIcon: string;
   w?: string;
   h?: string;
+  networkWidth?: string;
+  networkHeight?: string;
   leftSmallImg?: string;
 };
 
@@ -18,6 +20,8 @@ export const TokenIconBox: FC<Props> = ({
   chainIcon,
   w = '32px',
   h = '32px',
+  networkWidth = '14px',
+  networkHeight = '14px',
   leftSmallImg = '19px',
   ...props
 }) => {
@@ -40,8 +44,8 @@ export const TokenIconBox: FC<Props> = ({
           <Image
             src={chainIcon}
             alt={`${chainName} Icon`}
-            width="14px"
-            height="14px"
+            width={networkWidth}
+            height={networkHeight}
             borderRadius="50%"
           />
         ) : (

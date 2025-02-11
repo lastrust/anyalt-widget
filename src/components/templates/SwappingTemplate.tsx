@@ -61,8 +61,12 @@ export const SwappingTemplate = ({
               )}
             </VStack>
             {onConfigClick && (
-              <Box cursor="pointer" onClick={onConfigClick}>
-                <Icon as={ConfigIcon} color="brand.tertiary.100" />
+              <Box
+                cursor="pointer"
+                color="brand.tertiary.100"
+                onClick={onConfigClick}
+              >
+                <Icon as={ConfigIcon} />
               </Box>
             )}
           </Flex>

@@ -48,6 +48,8 @@ export const TokenRouteInfo: FC<Props> = ({
           chainIcon={chainIcon}
           w={'40px'}
           h={'40px'}
+          networkWidth={'15px'}
+          networkHeight={'15px'}
           leftSmallImg={'24px'}
         />
       )}

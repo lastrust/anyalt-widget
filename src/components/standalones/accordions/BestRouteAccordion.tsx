@@ -58,7 +58,7 @@ export const BestRouteAccordion = ({
   const isTokenBuyTemplate = useAtomValue(isTokenBuyTemplateAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
-  const [, setSelectedRoute] = useAtom(selectedRouteAtom);
+  const [selectedRoute, setSelectedRoute] = useAtom(selectedRouteAtom);
 
   if (!bestRoute) return <></>;
 
@@ -82,7 +82,11 @@ export const BestRouteAccordion = ({
       <Accordion defaultIndex={[0]} allowMultiple>
         <AccordionItem
           border="1px solid"
-          borderColor="brand.border.primary"
+          borderColor={
+            selectedRoute?.requestId === bestRoute?.requestId
+              ? 'brand.border.bestRoute'
+              : 'transparent'
+          }
           borderRadius={'10px'}
           p={'16px'}
           cursor={'pointer'}

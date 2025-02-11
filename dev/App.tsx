@@ -7,10 +7,10 @@ import { useModal } from '../src/hooks/useModal';
 import {
   AnyaltWidget,
   ChainType,
+  defaultTheme,
   EstimateResponse,
   ExecuteResponse,
   Token,
-  whiteTheme,
   WidgetProvider,
 } from '../src/index';
 
@@ -50,7 +50,7 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <WidgetProvider
-        theme={whiteTheme}
+        theme={defaultTheme}
         solanaRpcUrl="https://mainnet.helius-rpc.com/?api-key=42e325d6-1ddd-4c32-a729-d83c2dc49e0e"
       >
         <Center h={'100vh'}>

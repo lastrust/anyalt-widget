@@ -53,6 +53,7 @@ export const whiteTheme = extendTheme({
       border: {
         primary: 'rgba(145, 158, 171, 0.12)',
         tag: 'transparent',
+        bestRoute: '#333',
       },
       bg: {
         tag: '#fff',

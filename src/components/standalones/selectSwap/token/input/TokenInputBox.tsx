@@ -122,8 +122,8 @@ export const TokenInputBox: FC<Props> = ({
               }
               mr="12px"
             />
-            <Box cursor="pointer">
-              <Icon as={SelectTokenIcon} color={'brand.tertiary.100'} />
+            <Box cursor="pointer" color={'brand.tertiary.100'}>
+              <Icon as={SelectTokenIcon} />
             </Box>
           </Box>
           <Box>
