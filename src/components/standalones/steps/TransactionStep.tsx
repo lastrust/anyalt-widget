@@ -4,7 +4,7 @@ import { ExecuteResponse, Token, WalletConnector } from '../../..';
 import { currentStepAtom } from '../../../store/stateStore';
 import { SwappingTemplate } from '../../templates/SwappingTemplate';
 import { TransactionInfo } from '../transaction/info/TransactionInfo';
-import { TransactionList } from '../transaction/TransactionsList';
+import { TransactionList } from '../transaction/transactionList/TransactionsList';
 
 type Props = {
   walletConnector?: WalletConnector;

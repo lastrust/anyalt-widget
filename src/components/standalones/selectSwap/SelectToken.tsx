@@ -44,11 +44,12 @@ export const SelectToken = ({
   ...props
 }: Props) => {
   const {
-    finalTokenEstimate,
     inTokenPrice,
     outTokenPrice,
     onTokenSelect,
     openTokenSelect,
+    isTokenBuyTemplate,
+    finalTokenEstimate,
     setOpenTokenSelect,
     protocolInputToken,
     protocolFinalToken,
@@ -75,7 +76,9 @@ export const SelectToken = ({
       <VStack gap="12px" w="full" alignItems="flex-start">
         <TokenQuoteBox
           loading={loading}
-          headerText="Vault Is Expecting"
+          headerText={
+            isTokenBuyTemplate ? 'What You Are Getting' : 'Vault Is Expecting'
+          }
           tokenName={protocolInputToken?.symbol ?? ''}
           tokenLogo={protocolInputToken?.logoUrl ?? ''}
           chainName={protocolInputToken?.chain?.displayName ?? ''}
@@ -83,17 +86,21 @@ export const SelectToken = ({
           amount={activeRoute?.outputAmount ?? '0.00'}
           price={outTokenPrice}
         />
-        <Divider w="100%" h="1px" bgColor="brand.secondary.12" />
-        <TokenQuoteBox
-          loading={loading}
-          headerText="What You Are Getting"
-          tokenName={protocolFinalToken?.symbol ?? ''}
-          tokenLogo={protocolFinalToken?.logoUrl ?? ''}
-          chainName={protocolInputToken?.chain?.displayName ?? ''}
-          chainLogo={protocolInputToken?.chain?.logoUrl ?? ''}
-          amount={finalTokenEstimate?.amountOut ?? '0.00'}
-          price={finalTokenEstimate?.priceInUSD ?? '0.00'}
-        />
+        {!isTokenBuyTemplate && (
+          <>
+            <Divider w="100%" h="1px" bgColor="brand.secondary.12" />
+            <TokenQuoteBox
+              loading={loading}
+              headerText="What You Are Getting"
+              tokenName={protocolFinalToken?.symbol ?? ''}
+              tokenLogo={protocolFinalToken?.logoUrl ?? ''}
+              chainName={protocolInputToken?.chain?.displayName ?? ''}
+              chainLogo={protocolInputToken?.chain?.logoUrl ?? ''}
+              amount={finalTokenEstimate?.amountOut ?? '0.00'}
+              price={finalTokenEstimate?.priceInUSD ?? '0.00'}
+            />
+          </>
+        )}
       </VStack>
 
       <Button

@@ -6,6 +6,9 @@ type Props = BoxProps & {
   tokenIcon: string;
   chainName: string;
   chainIcon: string;
+  w?: string;
+  h?: string;
+  leftSmallImg?: string;
 };
 
 export const TokenIconBox: FC<Props> = ({
@@ -13,6 +16,9 @@ export const TokenIconBox: FC<Props> = ({
   tokenIcon,
   chainName,
   chainIcon,
+  w = '32px',
+  h = '32px',
+  leftSmallImg = '19px',
   ...props
 }) => {
   return (
@@ -22,14 +28,14 @@ export const TokenIconBox: FC<Props> = ({
           src={tokenIcon}
           alt={`${tokenName} Icon`}
           marginRight={'8px'}
-          width="32px"
-          height="32px"
+          width={w}
+          height={h}
           borderRadius="50%"
         />
       ) : (
         <SkeletonCircle size="32px" bgColor="brand.secondary.4" />
       )}
-      <Box position="absolute" bottom="0px" left="19px">
+      <Box position="absolute" bottom="0px" left={leftSmallImg}>
         {chainIcon !== '' ? (
           <Image
             src={chainIcon}

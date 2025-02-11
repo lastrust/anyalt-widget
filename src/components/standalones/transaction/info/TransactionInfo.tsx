@@ -1,9 +1,10 @@
 import { Box, Button, Divider, Text, VStack } from '@chakra-ui/react';
 import { useAtomValue } from 'jotai';
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import { ExecuteResponse, Token, WalletConnector } from '../../../..';
 import { stepsProgressAtom } from '../../../../store/stateStore';
 import { TransactionInfoCard } from '../../../molecules/card/TransactionInfoCard';
+import { truncateToDecimals } from '../../accordions/BestRouteAccordion';
 import { TokenQuoteBox } from '../../selectSwap/token/quote/TokenQuoteBox';
 import { ProgressList } from '../ProgressList';
 import { useTransactionInfo } from './useTransactionInfo';
@@ -33,10 +34,6 @@ export const TransactionInfo: FC<Props> = ({
     executeCallBack,
   });
   const stepsProgress = useAtomValue(stepsProgressAtom);
-
-  useEffect(() => {
-    console.log(stepsProgress);
-  }, [stepsProgress]);
 
   return (
     <VStack
@@ -94,7 +91,10 @@ export const TransactionInfo: FC<Props> = ({
             tokenLogo={recentTransaction?.to.tokenLogo || ''}
             chainName={recentTransaction?.to.blockchain || ''}
             chainLogo={recentTransaction?.to.blockchainLogo || ''}
-            amount={Number(recentTransaction?.to.tokenAmount).toFixed(2)}
+            amount={truncateToDecimals(
+              recentTransaction?.to.tokenAmount || '',
+              4,
+            )}
             price={(
               Number(recentTransaction?.to.tokenUsdPrice) *
               Number(recentTransaction?.to.tokenAmount)

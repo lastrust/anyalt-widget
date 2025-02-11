@@ -2,16 +2,17 @@ import {
   BoxProps,
   Flex,
   HStack,
-  Image,
   Skeleton,
   Text,
   VStack,
 } from '@chakra-ui/react';
 import { FC } from 'react';
+import { TokenIconBox } from './TokenIconBox';
 
 type Props = BoxProps & {
   amount: number;
   price: number;
+  chainIcon: string;
   tokenName: string;
   difference: number;
   network: string;
@@ -22,6 +23,7 @@ type Props = BoxProps & {
 export const TokenRouteInfo: FC<Props> = ({
   amount,
   price,
+  chainIcon,
   tokenName,
   tokenIcon,
   network,
@@ -39,12 +41,14 @@ export const TokenRouteInfo: FC<Props> = ({
           marginRight={'8px'}
         />
       ) : (
-        <Image
-          src={tokenIcon}
-          alt={`${tokenName} Icon`}
-          marginRight={'8px'}
-          width="40px"
-          height="40px"
+        <TokenIconBox
+          tokenName={tokenName}
+          tokenIcon={tokenIcon}
+          chainName={'chainName'}
+          chainIcon={chainIcon}
+          w={'40px'}
+          h={'40px'}
+          leftSmallImg={'24px'}
         />
       )}
       <VStack justifyContent={'start'} alignItems={'start'} gap={'4px'}>

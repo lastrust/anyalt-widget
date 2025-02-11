@@ -25,6 +25,7 @@ export const AnyaltWidgetWrapper = ({
   estimateCallback,
   executeCallBack,
   walletConnector,
+  isTokenBuyTemplate = false,
   minDepositAmount = 0,
 }: AnyaltWidgetProps) => {
   const {
@@ -52,6 +53,7 @@ export const AnyaltWidgetWrapper = ({
     minDepositAmount,
     estimateCallback,
     walletConnector,
+    isTokenBuyTemplate,
   });
 
   return (
