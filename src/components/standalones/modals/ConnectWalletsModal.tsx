@@ -71,7 +71,7 @@ export const ConnectWalletsModal: FC<Props> = ({
         containerProps={{ zIndex: 1000 }}
       >
         <ModalHeader
-          color="white"
+          color="brand.text.primary"
           p="0"
           mb="24px"
           display="flex"
@@ -79,7 +79,7 @@ export const ConnectWalletsModal: FC<Props> = ({
           alignItems="center"
         >
           {title}
-          <CloseButton onClick={onClose} />
+          <CloseButton onClick={onClose} color="brand.secondary.100" />
         </ModalHeader>
         <ModalBody p="0">
           <Text color="brand.secondary.2" mb="16px">

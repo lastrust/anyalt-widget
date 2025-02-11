@@ -1,7 +1,8 @@
-import { Box, Input, Text } from '@chakra-ui/react';
+import { Box, Icon, Input, Text } from '@chakra-ui/react';
 import { useAtom } from 'jotai';
 import { FC, useRef } from 'react';
 import { slippageAtom } from '../../../store/stateStore';
+import { CloseIcon } from '../../atoms/icons/modals/CloseIcon';
 import { InfoIcon } from '../../atoms/icons/modals/InfoIcon';
 import { SlippageItem } from '../../molecules/SlippageItem';
 
@@ -33,7 +34,7 @@ export const SlippageModal: FC<Props> = ({ onClose }) => {
         padding="24px"
         borderRadius="16px 16px 12px 12px"
         bgColor="brand.quaternary"
-        color="white"
+        color="brand.text.primary"
         overflow="hidden"
         position="relative"
         border="1px solid"
@@ -48,28 +49,7 @@ export const SlippageModal: FC<Props> = ({ onClose }) => {
           right="16px"
           onClick={onClose}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none"
-          >
-            <path
-              d="M14.375 14.3748L5.625 5.62482"
-              stroke="#919EAB"
-              strokeWidth="1.25"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M14.375 5.62482L5.625 14.3748"
-              stroke="#919EAB"
-              strokeWidth="1.25"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <Icon as={CloseIcon} color="brand.secondary.100" />
         </Box>
         <Box
           display="flex"
