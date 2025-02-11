@@ -1,4 +1,12 @@
-import { Box, BoxProps, Flex, Grid, Icon, Text, VStack } from '@chakra-ui/react';
+import {
+  Box,
+  BoxProps,
+  Flex,
+  Grid,
+  Icon,
+  Text,
+  VStack,
+} from '@chakra-ui/react';
 import { ConfigIcon } from '../atoms/icons/selectToken/ConfigIcon';
 
 type Props = {
