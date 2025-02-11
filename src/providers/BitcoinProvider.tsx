@@ -5,13 +5,16 @@ import {
   UnisatWallet,
   XverseWallet,
 } from '@ant-design/web3-bitcoin';
+import { ConfigProvider, theme } from 'antd';
 
 export function BitcoinProvider({ children }: { children: React.ReactNode }) {
   return (
-    <BitcoinWeb3ConfigProvider
-      wallets={[XverseWallet(), UnisatWallet(), OkxWallet(), PhantomWallet()]}
-    >
-      {children}
-    </BitcoinWeb3ConfigProvider>
+    <ConfigProvider theme={{ algorithm: theme.darkAlgorithm }}>
+      <BitcoinWeb3ConfigProvider
+        wallets={[XverseWallet(), UnisatWallet(), OkxWallet(), PhantomWallet()]}
+      >
+        {children}
+      </BitcoinWeb3ConfigProvider>
+    </ConfigProvider>
   );
 }
