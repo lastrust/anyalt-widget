@@ -96,7 +96,7 @@ export const WalletButton: FC<WalletButtonProps> = ({
       <Flex w="100%" justify="space-between" align="center">
         <Flex direction="column" align="flex-start" gap="4px">
           <Flex align="center" gap="8px">
-            <Text color="brand.tertiary.100" fontSize="16px">
+            <Text color="brand.text.primary" fontSize="16px">
               {getButtonStatus()}
             </Text>
             {isWalletConnected && <Circle size="8px" bg="brand.tertiary.100" />}

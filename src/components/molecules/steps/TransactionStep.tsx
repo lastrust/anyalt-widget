@@ -64,7 +64,8 @@ export const TransactionStep = ({
                 width="20px"
                 height="20px"
                 borderRadius={'50%'}
-                border="1px solid white"
+                border="1px solid"
+                borderColor="brand.border.primary"
               />
               <Box
                 position="absolute"
@@ -107,7 +108,8 @@ export const TransactionStep = ({
                 width="20px"
                 height="20px"
                 borderRadius={'50%'}
-                border="1px solid white"
+                border="1px solid"
+                borderColor="brand.border.primary"
               />
               <Box
                 position="absolute"

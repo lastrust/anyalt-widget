@@ -99,6 +99,7 @@ export const TransactionAccordion = () => {
               borderRadius={'50%'}
               w={'24px'}
               h={'24px'}
+              color="brand.primary"
             >
               <AccordionIcon w={'24px'} h={'24px'} />
             </Box>
@@ -220,7 +221,7 @@ export const TransactionAccordion = () => {
             w={'24px'}
             h={'24px'}
           >
-            <AccordionIcon w={'24px'} h={'24px'} />
+            <AccordionIcon w={'24px'} h={'24px'} color="brand.primary" />
           </Box>
         </AccordionButton>
         <AccordionPanel p={'0px'} mt="12px">
