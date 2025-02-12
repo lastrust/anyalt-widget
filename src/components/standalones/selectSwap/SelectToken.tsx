@@ -1,6 +1,5 @@
 import {
   BoxProps,
-  Button,
   Divider,
   Flex,
   HStack,
@@ -11,6 +10,7 @@ import {
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useAccount } from 'wagmi';
 import { WalletConnector } from '../../..';
+import { CustomButton } from '../../atoms/buttons/CustomButton';
 import { SlippageModal } from '../modals/SlippageModal';
 import { TokenSelectModal } from '../modals/TokenSelectModal';
 import { TokenInputBox } from './token/input/TokenInputBox';
@@ -103,27 +103,13 @@ export const SelectToken = ({
         )}
       </VStack>
 
-      <Button
-        p={'16px 20px'}
-        width="100%"
-        color="white"
-        borderRadius="8px"
-        bg="brand.tertiary.100"
+      <CustomButton
         isLoading={loading}
-        isDisabled={failedToFetchRoute}
-        fontSize="16px"
-        fontWeight="700"
-        lineHeight="120%"
-        height={'unset'}
-        _hover={{
-          bg: 'brand.tertiary.90',
-        }}
-        onClick={() => {
-          onButtonClick();
-        }}
+        isDisabled={failedToFetchRoute ?? false}
+        onButtonClick={onButtonClick}
       >
         {buttonText}
-      </Button>
+      </CustomButton>
       {showConnectedWallets && (
         <HStack alignItems={'center'}>
           {isConnected && (

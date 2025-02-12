@@ -1,8 +1,9 @@
-import { Box, Button, Divider, Text, VStack } from '@chakra-ui/react';
+import { Box, Divider, Text, VStack } from '@chakra-ui/react';
 import { useAtomValue } from 'jotai';
 import { FC } from 'react';
 import { ExecuteResponse, Token, WalletConnector } from '../../../..';
 import { stepsProgressAtom } from '../../../../store/stateStore';
+import { CustomButton } from '../../../atoms/buttons/CustomButton';
 import { TransactionInfoCard } from '../../../molecules/card/TransactionInfoCard';
 import { truncateToDecimals } from '../../accordions/BestRouteAccordion';
 import { TokenQuoteBox } from '../../selectSwap/token/quote/TokenQuoteBox';
@@ -106,24 +107,13 @@ export const TransactionInfo: FC<Props> = ({
         </VStack>
       </VStack>
       <VStack w="100%" alignItems={'center'} gap={'16px'}>
-        <Button
-          width={'100%'}
-          bg="brand.tertiary.100"
-          _hover={{
-            bg: 'brand.tertiary.90',
-          }}
-          color="white"
-          borderRadius="8px"
-          fontSize="16px"
-          fontWeight="700"
-          lineHeight="120%"
-          height={'unset'}
-          p={'16px 20px'}
-          onClick={runTx}
+        <CustomButton
           isLoading={isLoading}
+          isDisabled={false}
+          onButtonClick={runTx}
         >
           Run Transaction
-        </Button>
+        </CustomButton>
         <Text textDecoration={'underline'} color="#999" cursor={'pointer'}>
           Cancel Transaction
         </Text>
