@@ -1,7 +1,9 @@
+import { useBitcoinWallet } from '@ant-design/web3-bitcoin';
 import { Box, BoxProps, Button, Input, Skeleton, Text } from '@chakra-ui/react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useAtom, useAtomValue } from 'jotai';
 import { FC, useEffect, useState } from 'react';
+import { formatUnits } from 'viem';
 import { useAccount } from 'wagmi';
 import { useSolana } from '../../../../../providers/useSolana';
 import {
@@ -40,9 +42,12 @@ export const TokenInputBox: FC<Props> = ({
   const { address: evmAddress } = useAccount();
   const { publicKey } = useWallet();
   const [balance, setBalance] = useState<string | undefined>(undefined);
+  const { account: bitcoinAccount, getBalance: getBitcoinBalance } =
+    useBitcoinWallet();
 
   const getBalance = async () => {
     if (inToken) {
+      console.log(inToken);
       if (inToken?.chain?.chainType === 'SOLANA' && publicKey) {
         const balance = await getSolanaTokenBalance(
           inToken.tokenAddress ?? '',
@@ -56,6 +61,12 @@ export const TokenInputBox: FC<Props> = ({
           evmAddress,
         );
         setBalance(balance);
+      } else if (inToken?.chain?.name === 'BTC' && bitcoinAccount) {
+        console.log('BTC balance');
+        const balance = await getBitcoinBalance();
+        if (balance.value && balance.decimals) {
+          setBalance(formatUnits(balance.value, balance.decimals));
+        }
       }
     }
   };
@@ -77,7 +88,7 @@ export const TokenInputBox: FC<Props> = ({
 
   useEffect(() => {
     getBalance();
-  }, [inToken, evmAddress, publicKey]);
+  }, [inToken, evmAddress, publicKey, bitcoinAccount]);
 
   useEffect(() => {
     if (inTokenAmount) {
