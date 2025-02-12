@@ -144,6 +144,7 @@ export const SelectToken = ({
                     textStyle={'regular.3'}
                     color="brand.secondary.3"
                     noOfLines={1}
+                    maxW={'300px'}
                     onClick={
                       walletConnector?.isConnected
                         ? () => walletConnector.disconnect()
@@ -168,6 +169,7 @@ export const SelectToken = ({
                   color="brand.secondary.3"
                   onClick={connectWalletsOpen}
                   noOfLines={1}
+                  maxW={'300px'}
                 >
                   {solanaAddress?.toBase58()}
                 </Text>
@@ -188,6 +190,7 @@ export const SelectToken = ({
                   textStyle={'regular.3'}
                   color="brand.secondary.3"
                   noOfLines={1}
+                  maxW={'300px'}
                   onClick={connectWalletsOpen}
                 >
                   {bitcoinAccount.address}
