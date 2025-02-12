@@ -69,6 +69,7 @@ const App = () => {
                 chainType: ChainType.EVM,
                 name: 'USDT',
                 decimals: 18,
+                amount: '100',
               }}
               finalToken={{
                 symbol: 'Aarnâ Afi802',
@@ -84,7 +85,7 @@ const App = () => {
               onClose={onClose}
               estimateCallback={estimateCallback}
               executeCallBack={executeCallBack}
-              minDepositAmount={0}
+              minDepositAmount={100}
             />
           </Box>
         </Center>

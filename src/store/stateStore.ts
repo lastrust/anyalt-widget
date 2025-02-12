@@ -50,3 +50,5 @@ export const transactionsListAtom = atom<TransactionStatusList | undefined>(
 );
 
 export const isTokenBuyTemplateAtom = atom<boolean>(false);
+
+export const minDepositAmountAtom = atom<number>(0);
