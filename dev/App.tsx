@@ -32,8 +32,8 @@ const App = () => {
 
   const estimateCallback = async (token: Token): Promise<EstimateResponse> => {
     return {
-      amountOut: '10.19',
-      priceInUSD: '2423.53',
+      amountOut: '10.19000000000',
+      priceInUSD: '2423.530000000',
       estimatedTimeInSeconds: 10,
       estimatedFeeInUSD: '0.01',
     };
