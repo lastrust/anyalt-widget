@@ -15,7 +15,6 @@ import {
   inTokenAmountAtom,
   inTokenAtom,
   isTokenBuyTemplateAtom,
-  minDepositAmountAtom,
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
   selectedRouteAtom,
@@ -66,7 +65,6 @@ export const useAnyaltWidget = ({
 
   const [, setCurrentUiStep] = useAtom(currentUiStepAtom);
   const [, setIsTokenBuy] = useAtom(isTokenBuyTemplateAtom);
-  const [minDeposit, setMinDepositAmount] = useAtom(minDepositAmountAtom);
   const [, setActiveOperationId] = useAtom(activeOperationIdAtom);
   const [finalEstimateToken, setFinalTokenEstimate] = useAtom(
     finalTokenEstimateAtom,
@@ -130,8 +128,6 @@ export const useAnyaltWidget = ({
   }, [allChains, anyaltInstance]);
 
   const onGetQuote = async (withGoNext: boolean = true) => {
-    if (!minDeposit) setMinDepositAmount(minDepositAmount);
-
     if (!inToken || !protocolInputToken || !inTokenAmount) return;
 
     try {
@@ -199,9 +195,7 @@ export const useAnyaltWidget = ({
         ],
       });
 
-      const tokensOut = parseFloat(
-        route?.swaps[route?.swaps.length - 1].to.usdPrice?.toString() || '0',
-      );
+      const tokensOut = parseFloat(route?.outputAmount || '0');
       const isEnoughDepositTokens = tokensOut > minDepositAmount;
 
       setIsValidAmountIn(isEnoughDepositTokens);

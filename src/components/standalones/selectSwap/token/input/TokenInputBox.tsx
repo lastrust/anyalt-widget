@@ -7,9 +7,7 @@ import {
   Skeleton,
   Text,
 } from '@chakra-ui/react';
-import { useAtomValue } from 'jotai';
 import { FC } from 'react';
-import { minDepositAmountAtom } from '../../../../../store/stateStore';
 import { SelectTokenIcon } from '../../../../atoms/icons/selectToken/SelectTokenIcon';
 import { TokenIconBox } from '../../../../molecules/TokenIconBox';
 import { TokenInfoBox } from '../../../../molecules/TokenInfoBox';
@@ -43,8 +41,6 @@ export const TokenInputBox: FC<Props> = ({
     balance,
     currentStep,
   } = useTokenInputBox();
-
-  const minDepositAmount = useAtomValue(minDepositAmountAtom);
 
   return (
     <Box {...props}>
@@ -189,7 +185,7 @@ export const TokenInputBox: FC<Props> = ({
           width="100%"
         >
           <Text color="brand.quinary.100" fontSize="14px" fontWeight="bold">
-            Minimum deposit should be equal or greater than {minDepositAmount}$
+            Amount not supported. Please try different amount.
           </Text>
         </Box>
       )}
