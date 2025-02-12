@@ -70,7 +70,7 @@ export const TransactionAccordion = () => {
           bg="brand.secondary.6"
           onClick={handleRouteSelect}
           borderRadius={'10px'}
-          borderWidth={'3px'}
+          borderWidth={'3px!important'}
           borderColor={
             currentStep - 1 === index ? 'brand.tertiary.100' : 'transparent'
           }
@@ -104,7 +104,11 @@ export const TransactionAccordion = () => {
               h={'24px'}
               color="brand.primary"
             >
-              <AccordionIcon w={'24px'} h={'24px'} />
+              <AccordionIcon
+                w={'24px'}
+                h={'24px'}
+                color="brand.buttons.accordion.primary"
+              />
             </Box>
           </AccordionButton>
           <AccordionPanel p={'0px'} mt="12px">

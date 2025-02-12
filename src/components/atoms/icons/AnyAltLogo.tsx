@@ -1,4 +1,4 @@
-import { Image } from '@chakra-ui/react';
+import { Image, useTheme } from '@chakra-ui/react';
 import { type FC } from 'react';
 
 type Props = {
@@ -7,12 +7,10 @@ type Props = {
 };
 
 export const AnyaltLogo: FC<Props> = ({ width = '84px', height = '24px' }) => {
+  const theme = useTheme();
+  const logoUrl = theme.images.logo;
+
   return (
-    <Image
-      src={'https://www.anyalt.finance/anyalt-logo.png'}
-      alt="Anyalt Logo"
-      width={width}
-      height={height}
-    />
+    <Image src={logoUrl} alt="Anyalt Logo" width={width} height={height} />
   );
 };

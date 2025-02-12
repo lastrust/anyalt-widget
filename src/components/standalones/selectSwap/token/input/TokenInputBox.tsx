@@ -122,7 +122,13 @@ export const TokenInputBox: FC<Props> = ({
               }
               mr="12px"
             />
-            <Box cursor="pointer" color={'brand.tertiary.100'}>
+            <Box
+              cursor="pointer"
+              color={'brand.tertiary.100'}
+              _hover={{
+                color: 'brand.tertiary.90',
+              }}
+            >
               <Icon as={SelectTokenIcon} />
             </Box>
           </Box>
@@ -142,6 +148,7 @@ export const TokenInputBox: FC<Props> = ({
               padding="0px"
               _placeholder={{
                 color: 'brand.text.primary',
+                opacity: 0.4,
               }}
               value={inTokenAmount?.replace(',', '.')}
               onChange={(e) => {

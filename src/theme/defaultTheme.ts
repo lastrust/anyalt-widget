@@ -11,8 +11,8 @@ export const defaultTheme = extendTheme({
   colorScheme: 'dark',
   theme: 'dark',
   fonts: {
-    heading: '"Rethink Sans", sans-serif',
-    body: '"Rethink Sans", sans-serif',
+    heading: '"Rethink Sans", "Poppins", sans-serif',
+    body: '"Rethink Sans", "Poppins", sans-serif',
   },
   textStyles,
   styles: {
@@ -20,9 +20,12 @@ export const defaultTheme = extendTheme({
       body: {
         bg: '#121212',
         color: 'white',
-        fontFamily: '"Rethink Sans", sans-serif',
+        fontFamily: '"Rethink Sans", "Poppins", sans-serif',
       },
     },
+  },
+  images: {
+    logo: 'https://www.anyalt.finance/anyalt-logo.png',
   },
   colors: {
     brand: {
@@ -63,6 +66,12 @@ export const defaultTheme = extendTheme({
       },
       buttons: {
         close: {
+          primary: '#fff',
+        },
+        back: {
+          primary: '#fff',
+        },
+        accordion: {
           primary: '#fff',
         },
       },

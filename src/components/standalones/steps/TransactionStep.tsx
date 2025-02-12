@@ -8,6 +8,7 @@ import { TransactionList } from '../transaction/transactionList/TransactionsList
 
 type Props = {
   walletConnector?: WalletConnector;
+  onBackClick: () => void;
   executeCallBack: (amount: Token) => Promise<ExecuteResponse>;
   onTxComplete: () => void;
 };
@@ -15,12 +16,18 @@ type Props = {
 export const TransactionStep = ({
   walletConnector,
   executeCallBack,
+  onBackClick,
   onTxComplete,
 }: Props) => {
   const currentStep = useAtomValue(currentStepAtom);
   return (
     <Grid templateColumns="1fr 1fr" gap="16px" m="24px 0px 16px">
-      <SwappingTemplate title={`Transaction ${currentStep}`} m="0" h="100%">
+      <SwappingTemplate
+        title={`Transaction ${currentStep}`}
+        m="0"
+        h="100%"
+        onBackClick={onBackClick}
+      >
         <TransactionInfo
           externalEvmWalletConnector={walletConnector}
           executeCallBack={executeCallBack}

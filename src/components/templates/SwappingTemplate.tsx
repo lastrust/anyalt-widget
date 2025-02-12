@@ -3,11 +3,13 @@ import {
   BoxProps,
   Flex,
   Grid,
+  HStack,
   Icon,
   Text,
   VStack,
 } from '@chakra-ui/react';
 import { ConfigIcon } from '../atoms/icons/selectToken/ConfigIcon';
+import { SelectTokenIcon } from '../atoms/icons/selectToken/SelectTokenIcon';
 
 type Props = {
   title?: string;
@@ -15,6 +17,7 @@ type Props = {
   subtitle?: string;
   secondSubtitle?: string;
   onConfigClick?: () => void;
+  onBackClick?: () => void;
   children: React.ReactNode;
 } & BoxProps;
 
@@ -24,6 +27,7 @@ export const SwappingTemplate = ({
   secondTitle,
   secondSubtitle,
   onConfigClick,
+  onBackClick,
   children,
   ...props
 }: Props) => {
@@ -47,9 +51,24 @@ export const SwappingTemplate = ({
         >
           <Flex justifyContent="space-between" alignItems="center">
             <VStack alignItems="left">
-              <Text color="brand.text.primary" textStyle={'bold.0'}>
-                {title}
-              </Text>
+              <HStack>
+                {onBackClick && (
+                  <Box
+                    cursor="pointer"
+                    color={'brand.tertiary.100'}
+                    _hover={{
+                      color: 'brand.tertiary.90',
+                    }}
+                    onClick={onBackClick}
+                    transform={'rotate(180deg)'}
+                  >
+                    <Icon as={SelectTokenIcon} w={'24px'} h={'24px'} />
+                  </Box>
+                )}
+                <Text color="brand.text.primary" textStyle={'bold.0'}>
+                  {title}
+                </Text>
+              </HStack>
               {subtitle && (
                 <Text
                   fontSize={'14px'}

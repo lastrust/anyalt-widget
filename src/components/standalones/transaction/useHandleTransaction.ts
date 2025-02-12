@@ -443,97 +443,93 @@ export const useHandleTransaction = (
         }
       } while (!swapIsFinished);
 
+      if (isCrosschainSwapError) {
+        throw new TransactionError('Transaction failed');
+      }
       // If the template is token buy, we don't need to execute the last mile transaction
       if (isTokenBuyTemplate) return;
 
-      if (isCrosschainSwapError) {
-        throw new TransactionError('Transaction failed');
-      } else {
-        // Execute last mile transaction
-        try {
-          stepIndex++;
-          setCurrentStep(stepIndex);
-          const lastSwap = bestRoute?.swaps[bestRoute.swaps.length - 1];
-          const chain = allChains.find(
-            (chain) => chain.name === lastSwap?.to.blockchain,
-          );
-          const isEvm = chain?.chainType === ChainType.EVM;
-          if (isEvm && chain?.chainId) {
-            await switchChain(walletConfig, {
-              chainId: chain.chainId,
-            });
-          }
-          console.log(
-            'crosschainSwapOutputAmount: ',
-            crosschainSwapOutputAmount,
-          );
+      // Execute last mile transaction
+      try {
+        stepIndex++;
+        setCurrentStep(stepIndex);
+        const lastSwap = bestRoute?.swaps[bestRoute.swaps.length - 1];
+        const chain = allChains.find(
+          (chain) => chain.name === lastSwap?.to.blockchain,
+        );
+        const isEvm = chain?.chainType === ChainType.EVM;
+        if (isEvm && chain?.chainId) {
+          await switchChain(walletConfig, {
+            chainId: chain.chainId,
+          });
+        }
+        console.log('crosschainSwapOutputAmount: ', crosschainSwapOutputAmount);
+        updateStepProgress({
+          isApproval: false,
+          status: 'pending',
+          message: 'Waiting for transaction to complete...',
+          details: {
+            currentStep: stepIndex,
+            totalSteps,
+            stepDescription: 'Pending',
+          },
+        });
+        const executeResponse = await executeCallBack({
+          amount: crosschainSwapOutputAmount,
+          address: lastSwap?.to.address || '',
+          decimals: lastSwap?.to.decimals || 0,
+          name: lastSwap?.to.symbol || '',
+          symbol: lastSwap?.to.symbol || '',
+          chainType: isEvm ? ChainType.EVM : ChainType.SOLANA,
+        });
+        setFinalTokenAmount(executeResponse.amountOut);
+        if (executeResponse.approvalTxHash) {
           updateStepProgress({
-            isApproval: false,
-            status: 'pending',
-            message: 'Waiting for transaction to complete...',
+            isApproval: true,
+            status: 'confirmed',
+            message: 'Transaction confirmed successfully!',
+            txHash: executeResponse.approvalTxHash,
+            chainName: lastSwap?.to.blockchain,
             details: {
               currentStep: stepIndex,
               totalSteps,
-              stepDescription: 'Pending',
+              stepDescription: 'Complete',
             },
           });
-          const executeResponse = await executeCallBack({
-            amount: crosschainSwapOutputAmount,
-            address: lastSwap?.to.address || '',
-            decimals: lastSwap?.to.decimals || 0,
-            name: lastSwap?.to.symbol || '',
-            symbol: lastSwap?.to.symbol || '',
-            chainType: isEvm ? ChainType.EVM : ChainType.SOLANA,
-          });
-          setFinalTokenAmount(executeResponse.amountOut);
-          if (executeResponse.approvalTxHash) {
-            updateStepProgress({
-              isApproval: true,
-              status: 'confirmed',
-              message: 'Transaction confirmed successfully!',
-              txHash: executeResponse.approvalTxHash,
-              chainName: lastSwap?.to.blockchain,
-              details: {
-                currentStep: stepIndex,
-                totalSteps,
-                stepDescription: 'Complete',
-              },
-            });
-          }
-          if (executeResponse.executeTxHash) {
-            updateStepProgress({
-              isApproval: false,
-              status: 'confirmed',
-              message: 'Transaction confirmed successfully!',
-              txHash: executeResponse.executeTxHash,
-              chainName: lastSwap?.to.blockchain,
-              details: {
-                currentStep: stepIndex,
-                totalSteps,
-                stepDescription: 'Complete',
-              },
-            });
-          }
-        } catch (error) {
+        }
+        if (executeResponse.executeTxHash) {
           updateStepProgress({
             isApproval: false,
-            status: 'failed',
-            message:
-              error instanceof TransactionError
-                ? error.message
-                : 'Transaction failed',
-            error: error instanceof Error ? error.message : String(error),
+            status: 'confirmed',
+            message: 'Transaction confirmed successfully!',
+            txHash: executeResponse.executeTxHash,
+            chainName: lastSwap?.to.blockchain,
             details: {
-              currentStep,
+              currentStep: stepIndex,
               totalSteps,
-              stepDescription: 'Failed',
+              stepDescription: 'Complete',
             },
           });
-          throw new TransactionError(
-            'Failed to execute last mile transaction',
-            error,
-          );
         }
+      } catch (error) {
+        updateStepProgress({
+          isApproval: false,
+          status: 'failed',
+          message:
+            error instanceof TransactionError
+              ? error.message
+              : 'Transaction failed',
+          error: error instanceof Error ? error.message : String(error),
+          details: {
+            currentStep,
+            totalSteps,
+            stepDescription: 'Failed',
+          },
+        });
+        throw new TransactionError(
+          'Failed to execute last mile transaction',
+          error,
+        );
       }
     },
     [

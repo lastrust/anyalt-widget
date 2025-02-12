@@ -24,6 +24,9 @@ export const whiteTheme = extendTheme({
       },
     },
   },
+  images: {
+    logo: 'https://www.anyalt.finance/anyalt-logo-black.png',
+  },
   colors: {
     brand: {
       primary: '#ffffff',
@@ -64,6 +67,9 @@ export const whiteTheme = extendTheme({
       buttons: {
         close: {
           primary: '#000000',
+        },
+        accordion: {
+          primary: '#fff',
         },
       },
     },

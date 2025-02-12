@@ -7,16 +7,20 @@ import { useModal } from '../src/hooks/useModal';
 import {
   AnyaltWidget,
   ChainType,
-  defaultTheme,
   EstimateResponse,
   ExecuteResponse,
   Token,
+  whiteTheme,
   WidgetProvider,
 } from '../src/index';
 
 import '@fontsource/rethink-sans/400.css';
 import '@fontsource/rethink-sans/500.css';
 import '@fontsource/rethink-sans/600.css';
+
+// import '@fontsource/poppins/400.css';
+// import '@fontsource/poppins/500.css';
+// import '@fontsource/poppins/600.css';
 
 import '@rainbow-me/rainbowkit/styles.css';
 import '@solana/wallet-adapter-react-ui/styles.css';
@@ -50,7 +54,7 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <WidgetProvider
-        theme={defaultTheme}
+        theme={whiteTheme}
         solanaRpcUrl="https://mainnet.helius-rpc.com/?api-key=42e325d6-1ddd-4c32-a729-d83c2dc49e0e"
       >
         <Center h={'100vh'}>
