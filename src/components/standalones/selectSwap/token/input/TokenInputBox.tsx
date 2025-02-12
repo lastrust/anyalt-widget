@@ -1,11 +1,4 @@
 import { useBitcoinWallet } from '@ant-design/web3-bitcoin';
-import { Box, BoxProps, Button, Input, Skeleton, Text } from '@chakra-ui/react';
-import { useWallet } from '@solana/wallet-adapter-react';
-import { useAtom, useAtomValue } from 'jotai';
-import { FC, useEffect, useState } from 'react';
-import { formatUnits } from 'viem';
-import { useAccount } from 'wagmi';
-import { useSolana } from '../../../../../providers/useSolana';
 import {
   Box,
   BoxProps,
@@ -15,12 +8,22 @@ import {
   Skeleton,
   Text,
 } from '@chakra-ui/react';
-import { FC } from 'react';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { useAtom, useAtomValue } from 'jotai';
+import { FC, useEffect, useState } from 'react';
+import { formatUnits } from 'viem';
+import { useAccount } from 'wagmi';
+import { useSolana } from '../../../../../providers/useSolana';
+import {
+  currentUiStepAtom,
+  inTokenAmountAtom,
+  inTokenAtom,
+} from '../../../../../store/stateStore';
+import { getEvmTokenBalance } from '../../../../../utils';
 import { SelectTokenIcon } from '../../../../atoms/icons/selectToken/SelectTokenIcon';
 import { TokenIconBox } from '../../../../molecules/TokenIconBox';
 import { TokenInfoBox } from '../../../../molecules/TokenInfoBox';
 import { truncateToDecimals } from '../../../accordions/BestRouteAccordion';
-import { useTokenInputBox } from './useTokenInputBox';
 
 type Props = BoxProps & {
   price: string;
@@ -101,14 +104,6 @@ export const TokenInputBox: FC<Props> = ({
       setInTokenAmount(inTokenAmount.toString());
     }
   }, [inTokenAmount]);
-  const {
-    inToken,
-    inTokenAmount,
-    setInTokenAmount,
-    maxButtonClick,
-    balance,
-    currentStep,
-  } = useTokenInputBox();
 
   return (
     <Box {...props}>
