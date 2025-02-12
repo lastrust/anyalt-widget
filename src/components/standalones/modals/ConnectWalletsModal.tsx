@@ -1,3 +1,4 @@
+import { Connector } from '@ant-design/web3';
 import {
   CloseButton,
   Modal,
@@ -10,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui'; // Import the wallet modal hook
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { WalletConnector } from '../../..';
 import { WalletButton } from '../../molecules/buttons/WalletButton';
 
@@ -33,6 +34,11 @@ const WALLETS = [
     network: 'solana',
     isDisabled: false,
   },
+  {
+    walletType: 'Bitcoin wallets',
+    network: 'bitcoin',
+    isDisabled: false,
+  },
 ];
 
 export const ConnectWalletsModal: FC<Props> = ({
@@ -44,6 +50,7 @@ export const ConnectWalletsModal: FC<Props> = ({
 }) => {
   const { openConnectModal } = useConnectModal();
   const { setVisible } = useWalletModal(); // Hook to control the Solana wallet modal
+  const [isBitcoinModalOpen, setIsBitcoinModalOpen] = useState(false);
 
   // Function to handle wallet type click
   const handleWalletClick = (walletType: string) => {
@@ -59,7 +66,13 @@ export const ConnectWalletsModal: FC<Props> = ({
       openConnectModal?.();
     } else if (walletType === 'Solana wallets') {
       setVisible(true); // Open Solana wallet modal
+    } else if (walletType === 'Bitcoin wallets') {
+      setIsBitcoinModalOpen(true); // Open Bitcoin wallet modal
     }
+  };
+
+  const onBitcoinConnected = () => {
+    setIsBitcoinModalOpen(false);
   };
 
   return (
@@ -99,6 +112,16 @@ export const ConnectWalletsModal: FC<Props> = ({
               />
             ))}
           </VStack>
+          <Connector
+            children={<></>}
+            modalProps={{
+              open: isBitcoinModalOpen,
+              onCancel: () => setIsBitcoinModalOpen(false),
+              group: false,
+              mode: 'simple',
+            }}
+            onConnected={onBitcoinConnected}
+          />
         </ModalBody>
       </ModalContent>
     </Modal>

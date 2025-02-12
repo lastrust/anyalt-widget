@@ -1,3 +1,4 @@
+import { useProvider } from '@ant-design/web3';
 import { Button, Circle, Flex, Text } from '@chakra-ui/react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { FC } from 'react';
@@ -23,6 +24,8 @@ export const WalletButton: FC<WalletButtonProps> = ({
     return null;
   }
 
+  const { account: bitcoinAccount, disconnect: disconnectBitcoin } =
+    useProvider();
   const { isConnected: isEvmConnected, address: evmAddress } = useAccount();
   const { disconnect: disconnectEvm } = useDisconnect();
   const {
@@ -33,9 +36,12 @@ export const WalletButton: FC<WalletButtonProps> = ({
 
   const isEvmWallet = walletType === 'EVM wallets';
   const isSolanaWallet = walletType === 'Solana wallets';
+  const isBitcoinWallet = walletType === 'Bitcoin wallets';
 
   const isWalletConnected =
-    (isEvmWallet && isEvmConnected) || (isSolanaWallet && isSolanaConnected);
+    (isEvmWallet && isEvmConnected) ||
+    (isSolanaWallet && isSolanaConnected) ||
+    (isBitcoinWallet && bitcoinAccount != undefined);
 
   const formatAddress = (address: string) => {
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
@@ -55,6 +61,8 @@ export const WalletButton: FC<WalletButtonProps> = ({
         disconnectEvm();
       } else if (isSolanaWallet) {
         disconnectSolana();
+      } else if (isBitcoinWallet) {
+        disconnectBitcoin?.();
       }
     } else {
       onConnect();
@@ -68,6 +76,9 @@ export const WalletButton: FC<WalletButtonProps> = ({
     if (isSolanaWallet && publicKey) {
       return formatAddress(publicKey.toString());
     }
+    if (isBitcoinWallet && bitcoinAccount) {
+      return formatAddress(bitcoinAccount.address);
+    }
     return network;
   };
 
@@ -80,6 +91,9 @@ export const WalletButton: FC<WalletButtonProps> = ({
     }
     if (isSolanaWallet) {
       return 'Connect Solana Wallet';
+    }
+    if (isBitcoinWallet) {
+      return 'Connect Bitcoin Wallet';
     }
     return 'Connect';
   };

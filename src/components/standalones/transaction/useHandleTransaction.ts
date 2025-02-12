@@ -1,3 +1,4 @@
+import { useBitcoinWallet } from '@ant-design/web3-bitcoin';
 import {
   AnyAlt,
   BitcoinTransactionDataResponse,
@@ -97,6 +98,8 @@ export const useHandleTransaction = (
   const { connection } = useConnection();
   const { publicKey, signTransaction } = useWallet();
   const { isConnected: isEvmConnected, chain: evmChain } = useAccount();
+  const { sendTransfer: sendBitcoinTransfer, account: bitcoinAccount } =
+    useBitcoinWallet();
 
   const [, setFinalTokenAmount] = useAtom(finalTokenAmountAtom);
   const [currentStep, setCurrentStep] = useAtom(currentStepAtom);
@@ -124,6 +127,11 @@ export const useHandleTransaction = (
       case 'SOLANA':
         txHash = await handleSolanaTransaction(
           transactionData as SolanaTransactionDataResponse,
+        );
+        break;
+      case 'TRANSFER':
+        txHash = await handleBitcoinTransaction(
+          transactionData as BitcoinTransactionDataResponse,
         );
         break;
       default:
@@ -241,6 +249,41 @@ export const useHandleTransaction = (
       }
     },
     [connection, publicKey, signTransaction],
+  );
+
+  const handleBitcoinTransaction = useCallback(
+    async (
+      transactionDetails: BitcoinTransactionDataResponse,
+    ): Promise<string> => {
+      try {
+        if (!bitcoinAccount) {
+          throw new TransactionError(
+            'No Bitcoin accounts found. Please connect your wallet.',
+          );
+        }
+
+        console.log('amountInSats: ', transactionDetails.amount);
+
+        const amount = Number(transactionDetails.amount);
+        if (!Number.isFinite(amount) || amount <= 0) {
+          throw new Error('Amount must be a positive number.');
+        }
+
+        const res = await sendBitcoinTransfer({
+          to: transactionDetails.recipientAddress,
+          sats: amount,
+        });
+
+        return res;
+      } catch (error) {
+        console.error('Error processing Bitcoin transaction:', error);
+        throw new TransactionError(
+          'Failed to process Bitcoin transaction',
+          error instanceof Error ? error.message : String(error),
+        );
+      }
+    },
+    [bitcoinAccount, sendBitcoinTransfer],
   );
 
   const updateStepProgress = (progress: TransactionProgress) => {
@@ -545,6 +588,7 @@ export const useHandleTransaction = (
     executeSwap,
     handleEvmTransaction,
     handleSolanaTransaction,
+    handleBitcoinTransaction,
   };
 };
 
