@@ -1,14 +1,5 @@
-import {
-  Box,
-  CircularProgress,
-  HStack,
-  Link,
-  Text,
-  VStack,
-} from '@chakra-ui/react';
+import { Box, CircularProgress, HStack, Text, VStack } from '@chakra-ui/react';
 import { FC } from 'react';
-import { chainExplorers } from '../../utils/chains';
-import { CopyIcon } from '../atoms/icons/CopyIcon';
 import { CheckIcon } from '../atoms/icons/transaction/CheckIcon';
 import { FailIcon } from '../atoms/icons/transaction/FailIcon';
 import { TransactionProgress } from '../standalones/transaction/useHandleTransaction';
@@ -48,7 +39,7 @@ export const ProgressItem: FC<Props> = ({ isApprove, progress }) => {
           {isApprove ? 'Approve' : 'Swap'}: {progress.message}
         </Text>
       </HStack>
-      {progress.txHash && progress.chainName && (
+      {/* {progress.txHash && progress.chainName && (
         <HStack justifyContent={'space-between'} w="100%">
           <HStack>
             <Text textStyle={'regular.3'} color="brand.secondary.3">
@@ -70,7 +61,7 @@ export const ProgressItem: FC<Props> = ({ isApprove, progress }) => {
             <CopyIcon />
           </Box>
         </HStack>
-      )}
+      )} */}
     </VStack>
   );
 };

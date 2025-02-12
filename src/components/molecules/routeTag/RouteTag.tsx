@@ -5,6 +5,7 @@ type RouteTagProps = {
   text: string;
   textColor?: string;
   bgColor?: string;
+  withBorder?: boolean;
   icon?: ElementType;
   loading: boolean;
 };
@@ -15,6 +16,7 @@ export const RouteTag = ({
   textColor,
   bgColor,
   loading,
+  withBorder = true,
 }: RouteTagProps) => {
   return (
     <>
@@ -28,15 +30,10 @@ export const RouteTag = ({
           p="7px 12px"
           borderRadius={'32px'}
           bgColor={bgColor}
-          border="1px solid #008080"
+          border={withBorder ? '1px solid #008080' : 'none'}
         >
           {icon && <Icon as={icon} w={'14px'} h={'14px'} />}
-          <Text
-            fontSize="14px"
-            fontWeight="bold"
-            color={textColor}
-            lineHeight={'16px'}
-          >
+          <Text textStyle="bold.5" color={textColor}>
             {text}
           </Text>
         </Box>

@@ -34,7 +34,7 @@ const ModalWrapper: FC<ModalWrapperProps> = ({
         containerProps={{ zIndex: 1000 }}
       >
         <ModalCloseButton color="white" />
-        <Box padding="40px">{children}</Box>
+        <Box padding="32px">{children}</Box>
       </ModalContent>
     </Modal>
   );

@@ -13,9 +13,9 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { useAccount } from 'wagmi';
 import { WalletConnector } from '../../..';
 import { SlippageModal } from '../modals/SlippageModal';
+import { TokenSelectModal } from '../modals/TokenSelectModal';
 import { TokenInputBox } from './token/input/TokenInputBox';
 import { TokenQuoteBox } from './token/quote/TokenQuoteBox';
-import { TokenSelectBox } from './token/select/TokenSelectBox';
 import { useSelectToken } from './useSelectToken';
 
 type Props = {
@@ -68,7 +68,7 @@ export const SelectToken = ({
     bitcoinAccount;
 
   return (
-    <Flex flexDirection="column" gap="16px" mb="16px" {...props}>
+    <Flex flexDirection="column" gap="16px" {...props}>
       <TokenInputBox
         openTokenSelectModal={() => setOpenTokenSelect(true)}
         loading={loading}
@@ -77,43 +77,48 @@ export const SelectToken = ({
         failedToFetchRoute={failedToFetchRoute}
         readonly={false}
       />
-      <TokenQuoteBox
-        loading={loading}
-        headerText="Vault Is Expecting"
-        tokenName={protocolInputToken?.symbol ?? ''}
-        tokenLogo={protocolInputToken?.logoUrl ?? ''}
-        chainName={protocolInputToken?.chain?.displayName ?? ''}
-        chainLogo={protocolInputToken?.chain?.logoUrl ?? ''}
-        amount={parseFloat(activeRoute?.outputAmount ?? '0').toFixed(2)}
-        price={outTokenPrice}
-      />
-      <Divider w="100%" h="1px" bgColor="brand.secondary.12" />
-      <TokenQuoteBox
-        loading={loading}
-        headerText="What You Are Getting"
-        tokenName={protocolFinalToken?.symbol ?? ''}
-        tokenLogo={protocolFinalToken?.logoUrl ?? ''}
-        chainName={protocolInputToken?.chain?.displayName ?? ''}
-        chainLogo={protocolInputToken?.chain?.logoUrl ?? ''}
-        amount={finalTokenEstimate?.amountOut ?? ''}
-        price={finalTokenEstimate?.priceInUSD ?? ''}
-      />
+      <VStack gap="12px" w="full" alignItems="flex-start">
+        <TokenQuoteBox
+          loading={loading}
+          headerText="Vault Is Expecting"
+          tokenName={protocolInputToken?.symbol ?? ''}
+          tokenLogo={protocolInputToken?.logoUrl ?? ''}
+          chainName={protocolInputToken?.chain?.displayName ?? ''}
+          chainLogo={protocolInputToken?.chain?.logoUrl ?? ''}
+          amount={activeRoute?.outputAmount ?? '0.00'}
+          price={outTokenPrice}
+        />
+        <Divider w="100%" h="1px" bgColor="brand.secondary.12" />
+        <TokenQuoteBox
+          loading={loading}
+          headerText="What You Are Getting"
+          tokenName={protocolFinalToken?.symbol ?? ''}
+          tokenLogo={protocolFinalToken?.logoUrl ?? ''}
+          chainName={protocolInputToken?.chain?.displayName ?? ''}
+          chainLogo={protocolInputToken?.chain?.logoUrl ?? ''}
+          amount={finalTokenEstimate?.amountOut ?? '0.00'}
+          price={finalTokenEstimate?.priceInUSD ?? '0.00'}
+        />
+      </VStack>
+
       <Button
+        p={'16px 20px'}
         width="100%"
+        color="white"
+        borderRadius="8px"
         bg="brand.tertiary.100"
+        isLoading={loading}
+        fontSize="16px"
+        fontWeight="700"
+        lineHeight="120%"
+        height={'unset'}
         _hover={{
           bg: 'brand.tertiary.90',
         }}
-        color="white"
-        fontSize="16px"
-        fontWeight="bold"
-        borderRadius="8px"
-        h="64px"
         isDisabled={showConnectedWallets && failedToFetchRoute}
         onClick={() => {
           onButtonClick();
         }}
-        isLoading={loading}
       >
         {buttonText}
       </Button>
@@ -194,7 +199,7 @@ export const SelectToken = ({
       )}
 
       {openTokenSelect && (
-        <TokenSelectBox
+        <TokenSelectModal
           onClose={() => setOpenTokenSelect(false)}
           onTokenSelect={(token) =>
             onTokenSelect(token, () => {

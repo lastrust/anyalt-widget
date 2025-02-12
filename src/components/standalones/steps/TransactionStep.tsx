@@ -19,15 +19,15 @@ export const TransactionStep = ({
 }: Props) => {
   const currentStep = useAtomValue(currentStepAtom);
   return (
-    <Grid templateColumns="1fr 1fr" gap="16px">
-      <SwappingTemplate title={`Transaction ${currentStep}`}>
+    <Grid templateColumns="1fr 1fr" gap="16px" m="24px 0px 16px">
+      <SwappingTemplate title={`Transaction ${currentStep}`} m="0" h="100%">
         <TransactionInfo
           externalEvmWalletConnector={walletConnector}
           executeCallBack={executeCallBack}
           onTxComplete={onTxComplete}
         />
       </SwappingTemplate>
-      <SwappingTemplate>
+      <SwappingTemplate m="0">
         <TransactionList />
       </SwappingTemplate>
     </Grid>
