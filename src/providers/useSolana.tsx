@@ -1,16 +1,36 @@
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { useConnection } from '@solana/wallet-adapter-react';
-import { PublicKey } from '@solana/web3.js';
+import { Connection, PublicKey } from '@solana/web3.js';
+import { useAtomValue } from 'jotai';
+import { useEffect, useState } from 'react';
+import { ChainType } from '..';
+import { allChainsAtom } from '../store/stateStore';
 
 // Solana Token Balance Hook
 export const useSolana = () => {
   // Create a Solana connection to the mainnet-beta by default
-  const { connection } = useConnection();
+  const allChains = useAtomValue(allChainsAtom);
+  const [connection, setConnection] = useState<Connection | null>(null);
+
+  useEffect(() => {
+    let endpoint = allChains.find(
+      (chain) => chain.chainType === ChainType.SOLANA,
+    )?.rpcUrl;
+    if (!endpoint || endpoint === '') {
+      endpoint = 'https://api.mainnet-beta.solana.com';
+    }
+
+    console.log('Solana endpoint: ', endpoint);
+    setConnection(new Connection(endpoint));
+  }, [allChains]);
 
   const getSolanaTokenBalance = async (
     tokenAddress: string,
     walletAddress: string,
   ): Promise<string> => {
+    if (!connection) {
+      throw new Error('Solana connection not found');
+    }
+
     // Create PublicKey objects for the token and wallet
     const tokenPublicKey = new PublicKey(tokenAddress);
     const walletPublicKey = new PublicKey(walletAddress);
@@ -55,6 +75,7 @@ export const useSolana = () => {
   };
 
   return {
+    connection,
     getSolanaTokenBalance,
   };
 };

@@ -68,8 +68,6 @@ const App = () => {
 
 > **_NOTE:_** Via `WidgetProvider`, you can customize the widget's appearance by modifying `defaultTheme`.
 
-> **_NOTE:_** Via `WidgetProvider`, we recommend you to provide `solanaRpcUrl` to use a custom Solana RPC URL. Otherwise, we use public RPC URL which is not stable.
-
 ## Example Usage
 
 ```tsx
@@ -125,7 +123,7 @@ const Widget = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <WidgetProvider theme={defaultTheme} solanaRpcUrl="YOUR_SOLANA_RPC_URL">
+      <WidgetProvider theme={defaultTheme}>
         <button onClick={() => setIsOpen(true)}>Open Widget</button>
         <AnyaltWidget
           isOpen={isOpen}

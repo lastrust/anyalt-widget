@@ -54,7 +54,6 @@ export type AnyaltWidgetProps = {
   apiKey: string;
   inputToken: Token;
   finalToken: Token;
-  solanaRpcUrl?: string;
   minDepositAmount?: number;
   isTokenBuyTemplate?: boolean;
   walletConnector?: WalletConnector;

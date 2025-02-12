@@ -7,7 +7,7 @@ import {
   SolanaTransactionDataResponse,
 } from '@anyalt/sdk';
 import { SwapResult } from '@anyalt/sdk/src/adapter/api/api';
-import { useConnection, useWallet } from '@solana/wallet-adapter-react';
+import { useWallet } from '@solana/wallet-adapter-react';
 import { VersionedTransaction } from '@solana/web3.js';
 import { getChainId, sendTransaction, switchChain } from '@wagmi/core';
 import { useAtom, useAtomValue } from 'jotai';
@@ -15,6 +15,7 @@ import { useCallback } from 'react';
 import { useAccount } from 'wagmi';
 import { ChainType, ExecuteResponse, Token, WalletConnector } from '../../..';
 import { walletConfig } from '../../../constants/configs';
+import { useSolana } from '../../../providers/useSolana';
 import {
   allChainsAtom,
   bestRouteAtom,
@@ -95,7 +96,7 @@ class TransactionError extends Error {
 export const useHandleTransaction = (
   externalEvmWalletConnector?: WalletConnector,
 ) => {
-  const { connection } = useConnection();
+  const { connection } = useSolana();
   const { publicKey, signTransaction } = useWallet();
   const { isConnected: isEvmConnected, chain: evmChain } = useAccount();
   const { sendTransfer: sendBitcoinTransfer, account: bitcoinAccount } =
@@ -218,9 +219,9 @@ export const useHandleTransaction = (
     async (
       transactionDetails: SolanaTransactionDataResponse,
     ): Promise<string | undefined> => {
-      if (!publicKey) {
+      if (!publicKey || !connection) {
         throw new TransactionError(
-          'No public key found. Please connect your wallet.',
+          'No public key or connection found. Please connect your wallet.',
         );
       }
 

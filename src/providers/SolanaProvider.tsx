@@ -11,9 +11,8 @@ import { FC, ReactNode, useMemo } from 'react';
 
 export const SolanaProvider: FC<{
   children: ReactNode;
-  solanaRpcUrl?: string;
-}> = ({ children, solanaRpcUrl }) => {
-  const endpoint = solanaRpcUrl || 'https://api.mainnet-beta.solana.com';
+}> = ({ children }) => {
+  const endpoint = 'https://api.mainnet-beta.solana.com';
 
   const wallets = useMemo(
     () => [new PhantomWalletAdapter(), new SolflareWalletAdapter()],
