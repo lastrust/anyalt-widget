@@ -61,7 +61,7 @@ const App = () => {
           <Box maxW={'600px'}>
             <OpenModalButton onOpen={onOpen} />
             <AnyaltWidget
-              isTokenBuyTemplate
+              // isTokenBuyTemplate
               inputToken={{
                 symbol: 'USDT',
                 address: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',

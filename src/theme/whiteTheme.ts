@@ -64,6 +64,9 @@ export const whiteTheme = extendTheme({
       text: {
         primary: '#000000',
       },
+      footer: {
+        text: '#333',
+      },
       buttons: {
         close: {
           primary: '#000000',

@@ -64,6 +64,9 @@ export const defaultTheme = extendTheme({
       text: {
         primary: '#fff',
       },
+      footer: {
+        text: '#fff',
+      },
       buttons: {
         close: {
           primary: '#fff',
