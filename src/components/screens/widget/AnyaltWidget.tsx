@@ -25,6 +25,7 @@ export const AnyaltWidgetWrapper = ({
   estimateCallback,
   executeCallBack,
   walletConnector,
+  isTokenBuyTemplate = false,
   minDepositAmount = 0,
 }: AnyaltWidgetProps) => {
   const {
@@ -52,6 +53,7 @@ export const AnyaltWidgetWrapper = ({
     minDepositAmount,
     estimateCallback,
     walletConnector,
+    isTokenBuyTemplate,
   });
 
   return (
@@ -60,7 +62,7 @@ export const AnyaltWidgetWrapper = ({
       onClose={onClose}
       maxWidthCustom={activeStep === 0 || activeStep === 3 ? '512px' : '976px'}
     >
-      <Header activeStep={activeStep} onBackClick={onBackClick} />
+      <Header activeStep={activeStep} />
       <Stepper activeStep={activeStep}>
         <SelectTokenStep
           loading={loading}
@@ -84,6 +86,7 @@ export const AnyaltWidgetWrapper = ({
           onChooseRouteButtonClick={onChooseRouteButtonClick}
         />
         <TransactionStep
+          onBackClick={onBackClick}
           walletConnector={walletConnector}
           executeCallBack={executeCallBack}
           onTxComplete={onTxComplete}
@@ -95,6 +98,7 @@ export const AnyaltWidgetWrapper = ({
         />
       </Stepper>
       <Footer />
+
       <ConnectWalletsModal
         title="Connect Wallet's"
         isOpen={isConnectWalletsOpen}

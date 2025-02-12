@@ -1,7 +1,8 @@
 import { SupportedToken } from '@anyalt/sdk';
-import { Box, Image, Input, Text } from '@chakra-ui/react';
+import { Box, Icon, Image, Input, Text } from '@chakra-ui/react';
 import { FC } from 'react';
 
+import { CloseIcon } from '../../atoms/icons/modals/CloseIcon';
 import { SearchIcon } from '../../atoms/icons/selectToken/SearchIcon';
 import { TokenAccept } from '../../molecules/TokenAccept';
 import { TokenItem } from '../../molecules/TokenItem';
@@ -38,7 +39,7 @@ export const TokenSelectModal: FC<Props> = ({ onClose, onTokenSelect }) => {
       display="flex"
       flexDir="column"
       justifyContent="flex-end"
-      bgColor="rgba(0, 0, 0, 0.5)"
+      bgColor="brand.secondary.7"
       backdropFilter="blur(10px)"
       zIndex="2000"
       _hover={{
@@ -65,7 +66,7 @@ export const TokenSelectModal: FC<Props> = ({ onClose, onTokenSelect }) => {
         padding="24px"
         borderRadius="16px 16px 12px 12px"
         bgColor="brand.quaternary"
-        color="white"
+        color="brand.text.primary"
         overflow="hidden"
         position="relative"
         border="1px solid"
@@ -80,28 +81,7 @@ export const TokenSelectModal: FC<Props> = ({ onClose, onTokenSelect }) => {
           right="16px"
           onClick={onClose}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none"
-          >
-            <path
-              d="M14.375 14.3748L5.625 5.62482"
-              stroke="#919EAB"
-              strokeWidth="1.25"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M14.375 5.62482L5.625 14.3748"
-              stroke="#919EAB"
-              strokeWidth="1.25"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <Icon as={CloseIcon} color="brand.secondary.100" />
         </Box>
         <Box mb="16px">
           <Text fontSize="20px" fontWeight="bold" mb="16px">
@@ -134,7 +114,7 @@ export const TokenSelectModal: FC<Props> = ({ onClose, onTokenSelect }) => {
                   width="24px"
                   height="24px"
                 />
-                <Text fontSize="16px" color="white" opacity="0.6">
+                <Text fontSize="16px" color="brand.text.primary" opacity="0.6">
                   {chain.displayName}
                 </Text>
               </Box>
@@ -177,14 +157,14 @@ export const TokenSelectModal: FC<Props> = ({ onClose, onTokenSelect }) => {
               outline="none"
               border="none"
               bgColor="transparent"
-              color="white"
+              color="brand.text.primary"
               fontSize="16px"
               fontWeight="regular"
               lineHeight="120%"
               focusBorderColor="transparent"
               padding="0"
               _placeholder={{
-                color: 'white',
+                color: 'brand.text.primary',
               }}
             />
           </Box>

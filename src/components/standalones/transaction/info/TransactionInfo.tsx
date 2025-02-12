@@ -1,9 +1,11 @@
-import { Box, Button, Divider, Text, VStack } from '@chakra-ui/react';
+import { Box, Divider, Text, VStack } from '@chakra-ui/react';
 import { useAtomValue } from 'jotai';
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import { ExecuteResponse, Token, WalletConnector } from '../../../..';
 import { stepsProgressAtom } from '../../../../store/stateStore';
+import { CustomButton } from '../../../atoms/buttons/CustomButton';
 import { TransactionInfoCard } from '../../../molecules/card/TransactionInfoCard';
+import { truncateToDecimals } from '../../accordions/BestRouteAccordion';
 import { TokenQuoteBox } from '../../selectSwap/token/quote/TokenQuoteBox';
 import { ProgressList } from '../ProgressList';
 import { useTransactionInfo } from './useTransactionInfo';
@@ -33,10 +35,6 @@ export const TransactionInfo: FC<Props> = ({
     executeCallBack,
   });
   const stepsProgress = useAtomValue(stepsProgressAtom);
-
-  useEffect(() => {
-    console.log(stepsProgress);
-  }, [stepsProgress]);
 
   return (
     <VStack
@@ -94,7 +92,10 @@ export const TransactionInfo: FC<Props> = ({
             tokenLogo={recentTransaction?.to.tokenLogo || ''}
             chainName={recentTransaction?.to.blockchain || ''}
             chainLogo={recentTransaction?.to.blockchainLogo || ''}
-            amount={Number(recentTransaction?.to.tokenAmount).toFixed(2)}
+            amount={truncateToDecimals(
+              recentTransaction?.to.tokenAmount || '',
+              4,
+            )}
             price={(
               Number(recentTransaction?.to.tokenUsdPrice) *
               Number(recentTransaction?.to.tokenAmount)
@@ -106,24 +107,13 @@ export const TransactionInfo: FC<Props> = ({
         </VStack>
       </VStack>
       <VStack w="100%" alignItems={'center'} gap={'16px'}>
-        <Button
-          width={'100%'}
-          bg="brand.tertiary.100"
-          _hover={{
-            bg: 'brand.tertiary.90',
-          }}
-          color="white"
-          borderRadius="8px"
-          fontSize="16px"
-          fontWeight="700"
-          lineHeight="120%"
-          height={'unset'}
-          p={'16px 20px'}
-          onClick={runTx}
+        <CustomButton
           isLoading={isLoading}
+          isDisabled={false}
+          onButtonClick={runTx}
         >
           Run Transaction
-        </Button>
+        </CustomButton>
         <Text textDecoration={'underline'} color="#999" cursor={'pointer'}>
           Cancel Transaction
         </Text>

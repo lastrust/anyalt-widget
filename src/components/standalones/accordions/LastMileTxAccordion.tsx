@@ -1,0 +1,140 @@
+import { BestRouteResponse, SupportedToken } from '@anyalt/sdk';
+import {
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  Box,
+  HStack,
+  Text,
+  VStack,
+} from '@chakra-ui/react';
+import { EstimateResponse, Token } from '../../..';
+import { GasIcon } from '../../atoms/icons/GasIcon';
+import { TimeIcon } from '../../atoms/icons/TimeIcon';
+import { DividerIcon } from '../../atoms/icons/transaction/DividerIcon';
+import { TransactionStep } from '../../molecules/steps/TransactionStep';
+import { TransactionHash } from '../../molecules/text/TransactionHash';
+import { StepsProgress } from '../transaction/useHandleTransaction';
+
+type Props = {
+  onLastMileClick: () => void;
+  isLastMileExpanded: boolean;
+  bestRoute: BestRouteResponse;
+  currentStep: number;
+  stepsProgress: StepsProgress | undefined;
+  protocolFinalToken: Token | undefined;
+  finalTokenEstimate: EstimateResponse | undefined;
+  protocolInputToken: SupportedToken | undefined;
+};
+
+export const LastMileTxAccordion = ({
+  onLastMileClick,
+  isLastMileExpanded,
+  bestRoute,
+  currentStep,
+  stepsProgress,
+  protocolFinalToken,
+  protocolInputToken,
+  finalTokenEstimate,
+}: Props) => {
+  return (
+    <AccordionItem
+      key={'last mile tx'}
+      border="1px solid"
+      borderColor="brand.border.primary"
+      borderRadius={'10px'}
+      p={'16px'}
+      cursor={'pointer'}
+      onClick={onLastMileClick}
+      bg={isLastMileExpanded ? 'brand.secondary.12' : 'transparent'}
+      _hover={{
+        bgColor: 'bg.secondary.1',
+      }}
+      w={'100%'}
+    >
+      <AccordionButton
+        display={'flex'}
+        flexDir={'row'}
+        justifyContent={'space-between'}
+        gap="12px"
+        p={'0px'}
+      >
+        <HStack justifyContent={'flex-start'}>
+          <Text textStyle={'bold.1'} mr="8px">
+            Transaction {bestRoute.swaps.length + 1}
+          </Text>
+          {currentStep === bestRoute.swaps.length + 1 && (
+            <Text textStyle={'bold.1'} color="brand.tertiary.100">
+              In Progress
+            </Text>
+          )}
+        </HStack>
+        <Box bg="brand.tertiary.100" borderRadius={'50%'} w={'24px'} h={'24px'}>
+          <AccordionIcon w={'24px'} h={'24px'} color="brand.primary" />
+        </Box>
+      </AccordionButton>
+      <AccordionPanel p={'0px'} mt="12px">
+        <VStack gap={'12px'}>
+          <TransactionStep
+            exchangeLogo={protocolFinalToken?.logoUrl || ''}
+            exchangeName={'Last mile transaction'}
+            fromToken={{
+              name: protocolInputToken?.symbol || '',
+              amount:
+                bestRoute.swaps[bestRoute.swaps.length - 1].toAmount || '0',
+              tokenLogo: protocolInputToken?.logoUrl || '',
+              chainName: protocolInputToken?.chain?.displayName || '',
+              chainLogo: protocolInputToken?.chain?.logoUrl || '',
+            }}
+            toToken={{
+              name: protocolFinalToken?.symbol || '',
+              amount: finalTokenEstimate?.amountOut || '0',
+              tokenLogo: protocolInputToken?.logoUrl || '',
+              chainName: protocolInputToken?.chain?.displayName || '',
+              chainLogo: protocolInputToken?.chain?.logoUrl || '',
+            }}
+          />
+          <HStack w={'100%'}>
+            <HStack>
+              <TimeIcon />
+              <Text
+                color={'brand.secondary.3'}
+                lineHeight={'120%'}
+                textStyle={'regular.3'}
+              >
+                {finalTokenEstimate?.estimatedTimeInSeconds}s
+              </Text>
+            </HStack>
+            <DividerIcon />
+            <HStack>
+              <GasIcon />
+              <Text
+                color={'brand.secondary.3'}
+                lineHeight={'120%'}
+                textStyle={'regular.3'}
+              >
+                ${finalTokenEstimate?.estimatedFeeInUSD}
+              </Text>
+            </HStack>
+          </HStack>
+        </VStack>
+
+        <Box>
+          {stepsProgress?.steps[bestRoute.swaps.length].approve && (
+            <TransactionHash
+              type="Approval"
+              progress={stepsProgress?.steps[bestRoute.swaps.length].approve}
+            />
+          )}
+          {stepsProgress?.steps[bestRoute.swaps.length].swap && (
+            <TransactionHash
+              type="Swap"
+              progress={stepsProgress?.steps[bestRoute.swaps.length].swap}
+            />
+          )}
+        </Box>
+      </AccordionPanel>
+    </AccordionItem>
+  );
+};

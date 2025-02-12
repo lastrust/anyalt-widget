@@ -2,16 +2,17 @@ import {
   BoxProps,
   Flex,
   HStack,
-  Image,
   Skeleton,
   Text,
   VStack,
 } from '@chakra-ui/react';
 import { FC } from 'react';
+import { TokenIconBox } from './TokenIconBox';
 
 type Props = BoxProps & {
   amount: number;
   price: number;
+  chainIcon: string;
   tokenName: string;
   difference: number;
   network: string;
@@ -22,6 +23,7 @@ type Props = BoxProps & {
 export const TokenRouteInfo: FC<Props> = ({
   amount,
   price,
+  chainIcon,
   tokenName,
   tokenIcon,
   network,
@@ -39,19 +41,27 @@ export const TokenRouteInfo: FC<Props> = ({
           marginRight={'8px'}
         />
       ) : (
-        <Image
-          src={tokenIcon}
-          alt={`${tokenName} Icon`}
-          marginRight={'8px'}
-          width="40px"
-          height="40px"
+        <TokenIconBox
+          tokenName={tokenName}
+          tokenIcon={tokenIcon}
+          chainName={'chainName'}
+          chainIcon={chainIcon}
+          w={'40px'}
+          h={'40px'}
+          networkWidth={'15px'}
+          networkHeight={'15px'}
+          leftSmallImg={'24px'}
         />
       )}
       <VStack justifyContent={'start'} alignItems={'start'} gap={'4px'}>
         {loading ? (
           <Skeleton w={'100px'} h={'16px'} borderRadius="12px" />
         ) : (
-          <Text color="white" fontSize="16px" fontWeight="extrabold">
+          <Text
+            color="brand.text.primary"
+            fontSize="16px"
+            fontWeight="extrabold"
+          >
             {amount}
           </Text>
         )}
@@ -60,7 +70,7 @@ export const TokenRouteInfo: FC<Props> = ({
             <Skeleton w={'100px'} h={'16px'} borderRadius="12px" />
           ) : (
             <Text
-              color="white"
+              color="brand.text.primary"
               fontSize="12px"
               fontWeight="regular"
               opacity={0.4}
@@ -72,7 +82,7 @@ export const TokenRouteInfo: FC<Props> = ({
             <Skeleton w={'30px'} h={'16px'} borderRadius="12px" />
           ) : (
             <Text
-              color="white"
+              color="brand.text.primary"
               fontSize="12px"
               fontWeight="regular"
               opacity={0.4}
@@ -84,7 +94,7 @@ export const TokenRouteInfo: FC<Props> = ({
             <Skeleton w={'100px'} h={'16px'} borderRadius="12px" />
           ) : (
             <Text
-              color="white"
+              color="brand.text.primary"
               fontSize="12px"
               fontWeight="regular"
               opacity={0.4}

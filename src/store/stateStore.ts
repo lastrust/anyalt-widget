@@ -48,3 +48,7 @@ export const currentUiStepAtom = atom<number>(0);
 export const transactionsListAtom = atom<TransactionStatusList | undefined>(
   undefined,
 );
+
+export const isTokenBuyTemplateAtom = atom<boolean>(false);
+
+export const minDepositAmountAtom = atom<number>(0);

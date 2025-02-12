@@ -6,48 +6,48 @@ const config: ThemeConfig = {
   useSystemColorMode: false,
 };
 
-export const defaultTheme = extendTheme({
+export const whiteTheme = extendTheme({
   config,
   colorScheme: 'dark',
   theme: 'dark',
   fonts: {
-    heading: '"Rethink Sans", "Poppins", sans-serif',
-    body: '"Rethink Sans", "Poppins", sans-serif',
+    heading: '"Rethink Sans", sans-serif',
+    body: '"Rethink Sans", sans-serif',
   },
   textStyles,
   styles: {
     global: {
       body: {
-        bg: '#121212',
-        color: 'white',
-        fontFamily: '"Rethink Sans", "Poppins", sans-serif',
+        bg: '#ffffff',
+        color: 'black',
+        fontFamily: '"Rethink Sans", sans-serif',
       },
     },
   },
   images: {
-    logo: 'https://www.anyalt.finance/anyalt-logo.png',
+    logo: 'https://www.anyalt.finance/anyalt-logo-black.png',
   },
   colors: {
     brand: {
-      primary: '#121212',
+      primary: '#ffffff',
       secondary: {
         100: '#919eab',
         1: '#000000',
-        2: 'rgba(255, 255, 255, 0.80)',
-        3: 'rgba(255, 255, 255, 0.40)',
-        4: '#919eab0a',
+        2: '#999',
+        3: '#999',
+        4: '#F2F3F4',
         5: '#ffffff',
-        6: 'rgba(255, 255, 255, 0.08)',
+        6: '#F2F3F4',
         7: 'rgba(0, 0, 0, 0.5)',
         12: '#919eab1f',
       },
       tertiary: {
-        100: '#008080',
-        90: '#006666',
+        100: '#333',
+        90: '#999',
         20: '#00808033',
         30: '#0080801a',
       },
-      quaternary: '#0C0600',
+      quaternary: '#fff',
       quinary: {
         100: '#E53030',
         10: '#E530301a',
@@ -55,24 +55,21 @@ export const defaultTheme = extendTheme({
       white: '#FFFFFF',
       border: {
         primary: 'rgba(145, 158, 171, 0.12)',
-        tag: '#008080',
-        bestRoute: 'rgba(145, 158, 171, 0.12)',
+        tag: 'transparent',
+        bestRoute: '#333',
       },
       bg: {
-        tag: 'transparent',
+        tag: '#fff',
       },
       text: {
-        primary: '#fff',
+        primary: '#000000',
       },
       footer: {
-        text: '#fff',
+        text: '#333',
       },
       buttons: {
         close: {
-          primary: '#fff',
-        },
-        back: {
-          primary: '#fff',
+          primary: '#000000',
         },
         accordion: {
           primary: '#fff',

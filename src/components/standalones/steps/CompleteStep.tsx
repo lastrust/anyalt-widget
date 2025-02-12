@@ -38,7 +38,7 @@ export const CompleteStep = ({
         <Text
           fontSize="32px"
           fontWeight="bold"
-          color="brand.white"
+          color="brand.text.primary"
           textAlign="center"
           mb="24px"
         >
@@ -61,7 +61,12 @@ export const CompleteStep = ({
             chainIcon={protocolInputToken?.chain?.logoUrl || ''}
             mr="8px"
           />
-          <Text fontSize="24px" fontWeight="bold" color="brand.white" mr="4px">
+          <Text
+            fontSize="24px"
+            fontWeight="bold"
+            color="brand.text.primary"
+            mr="4px"
+          >
             {finalTokenAmount}
           </Text>
           <Text fontSize="16px" fontWeight="400" color="brand.secondary.100">
@@ -73,7 +78,7 @@ export const CompleteStep = ({
           width={'100%'}
           bg="brand.tertiary.100"
           _hover={{
-            bg: 'brand.tertiary.20',
+            bg: 'brand.tertiary.90',
           }}
           color="brand.white"
           fontSize="16px"

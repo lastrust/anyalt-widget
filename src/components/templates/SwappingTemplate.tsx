@@ -1,5 +1,15 @@
-import { Box, BoxProps, Flex, Grid, Text, VStack } from '@chakra-ui/react';
+import {
+  Box,
+  BoxProps,
+  Flex,
+  Grid,
+  HStack,
+  Icon,
+  Text,
+  VStack,
+} from '@chakra-ui/react';
 import { ConfigIcon } from '../atoms/icons/selectToken/ConfigIcon';
+import { SelectTokenIcon } from '../atoms/icons/selectToken/SelectTokenIcon';
 
 type Props = {
   title?: string;
@@ -7,6 +17,7 @@ type Props = {
   subtitle?: string;
   secondSubtitle?: string;
   onConfigClick?: () => void;
+  onBackClick?: () => void;
   children: React.ReactNode;
 } & BoxProps;
 
@@ -16,6 +27,7 @@ export const SwappingTemplate = ({
   secondTitle,
   secondSubtitle,
   onConfigClick,
+  onBackClick,
   children,
   ...props
 }: Props) => {
@@ -39,9 +51,24 @@ export const SwappingTemplate = ({
         >
           <Flex justifyContent="space-between" alignItems="center">
             <VStack alignItems="left">
-              <Text color="white" textStyle={'bold.0'}>
-                {title}
-              </Text>
+              <HStack>
+                {onBackClick && (
+                  <Box
+                    cursor="pointer"
+                    color={'brand.tertiary.100'}
+                    _hover={{
+                      color: 'brand.tertiary.90',
+                    }}
+                    onClick={onBackClick}
+                    transform={'rotate(180deg)'}
+                  >
+                    <Icon as={SelectTokenIcon} w={'24px'} h={'24px'} />
+                  </Box>
+                )}
+                <Text color="brand.text.primary" textStyle={'bold.0'}>
+                  {title}
+                </Text>
+              </HStack>
               {subtitle && (
                 <Text
                   fontSize={'14px'}
@@ -53,8 +80,12 @@ export const SwappingTemplate = ({
               )}
             </VStack>
             {onConfigClick && (
-              <Box cursor="pointer" onClick={onConfigClick}>
-                <ConfigIcon />
+              <Box
+                cursor="pointer"
+                color="brand.tertiary.100"
+                onClick={onConfigClick}
+              >
+                <Icon as={ConfigIcon} />
               </Box>
             )}
           </Flex>
@@ -64,7 +95,11 @@ export const SwappingTemplate = ({
               flexDir={'column'}
               alignItems="left"
             >
-              <Text color="white" fontSize="24px" fontWeight="bold">
+              <Text
+                color="brand.text.primary"
+                fontSize="24px"
+                fontWeight="bold"
+              >
                 {secondTitle}
               </Text>
               <Text

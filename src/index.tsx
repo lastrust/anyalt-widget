@@ -6,6 +6,7 @@ import {
 } from './components/screens/widget/AnyaltWidget';
 import { WalletsProviders } from './providers/WalletsProviders';
 import { WidgetProvider } from './providers/WidgetProvider';
+import { whiteTheme } from './theme/whiteTheme';
 
 export enum ChainType {
   EVM = 'EVM',
@@ -46,19 +47,20 @@ export interface WalletConnector {
   switchChain: (chainId: number) => Promise<void>;
 }
 
-export { defaultTheme, useModal, WalletsProviders, WidgetProvider };
+export { defaultTheme, useModal, WalletsProviders, whiteTheme, WidgetProvider };
 
 export type AnyaltWidgetProps = {
   isOpen: boolean;
+  apiKey: string;
   inputToken: Token;
   finalToken: Token;
-  apiKey: string;
+  solanaRpcUrl?: string;
+  minDepositAmount?: number;
+  isTokenBuyTemplate?: boolean;
+  walletConnector?: WalletConnector;
   onClose: () => void;
   estimateCallback: (token: Token) => Promise<EstimateResponse>;
   executeCallBack: (token: Token) => Promise<ExecuteResponse>;
-  walletConnector?: WalletConnector;
-  minDepositAmount?: number;
-  solanaRpcUrl?: string;
 };
 
 export const AnyaltWidget = (props: AnyaltWidgetProps) => {

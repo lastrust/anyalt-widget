@@ -7,17 +7,20 @@ import { useModal } from '../src/hooks/useModal';
 import {
   AnyaltWidget,
   ChainType,
-  defaultTheme,
   EstimateResponse,
   ExecuteResponse,
   Token,
-  WalletsProviders,
+  whiteTheme,
   WidgetProvider,
 } from '../src/index';
 
 import '@fontsource/rethink-sans/400.css';
 import '@fontsource/rethink-sans/500.css';
 import '@fontsource/rethink-sans/600.css';
+
+// import '@fontsource/poppins/400.css';
+// import '@fontsource/poppins/500.css';
+// import '@fontsource/poppins/600.css';
 
 import '@rainbow-me/rainbowkit/styles.css';
 import '@solana/wallet-adapter-react-ui/styles.css';
@@ -29,8 +32,8 @@ const App = () => {
 
   const estimateCallback = async (token: Token): Promise<EstimateResponse> => {
     return {
-      amountOut: '10.19',
-      priceInUSD: '2423.53',
+      amountOut: '10.19000000000',
+      priceInUSD: '2423.530000000',
       estimatedTimeInSeconds: 10,
       estimatedFeeInUSD: '0.01',
     };
@@ -50,11 +53,12 @@ const App = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <WidgetProvider theme={defaultTheme} solanaRpcUrl="https://mainnet.helius-rpc.com/?api-key=42e325d6-1ddd-4c32-a729-d83c2dc49e0e">
+      <WidgetProvider theme={whiteTheme}>
         <Center h={'100vh'}>
           <Box maxW={'600px'}>
             <OpenModalButton onOpen={onOpen} />
             <AnyaltWidget
+              // isTokenBuyTemplate
               inputToken={{
                 symbol: 'USDT',
                 address: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
@@ -62,6 +66,7 @@ const App = () => {
                 chainType: ChainType.EVM,
                 name: 'USDT',
                 decimals: 18,
+                amount: '100',
               }}
               finalToken={{
                 symbol: 'Aarnâ Afi802',
@@ -77,7 +82,7 @@ const App = () => {
               onClose={onClose}
               estimateCallback={estimateCallback}
               executeCallBack={executeCallBack}
-              minDepositAmount={0}
+              minDepositAmount={1}
             />
           </Box>
         </Center>

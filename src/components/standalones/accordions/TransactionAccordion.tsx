@@ -15,6 +15,7 @@ import {
   bestRouteAtom,
   currentStepAtom,
   finalTokenEstimateAtom,
+  isTokenBuyTemplateAtom,
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
   selectedRouteAtom,
@@ -27,6 +28,7 @@ import { TimeIcon } from '../../atoms/icons/transaction/TimeIcon';
 import { TransactionStep } from '../../molecules/steps/TransactionStep';
 import { TransactionHash } from '../../molecules/text/TransactionHash';
 import { truncateToDecimals } from './BestRouteAccordion';
+import { LastMileTxAccordion } from './LastMileTxAccordion';
 
 export const TransactionAccordion = () => {
   const [isLastMileExpanded, setIsLastMileExpanded] = useState(false);
@@ -34,6 +36,7 @@ export const TransactionAccordion = () => {
   const bestRoute = useAtomValue(bestRouteAtom);
   const currentStep = useAtomValue(currentStepAtom);
   const stepsProgress = useAtomValue(stepsProgressAtom);
+  const isTokenBuyTemplate = useAtomValue(isTokenBuyTemplateAtom);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
   const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
@@ -67,7 +70,7 @@ export const TransactionAccordion = () => {
           bg="brand.secondary.6"
           onClick={handleRouteSelect}
           borderRadius={'10px'}
-          borderWidth={'3px'}
+          borderWidth={'3px!important'}
           borderColor={
             currentStep - 1 === index ? 'brand.tertiary.100' : 'transparent'
           }
@@ -99,8 +102,13 @@ export const TransactionAccordion = () => {
               borderRadius={'50%'}
               w={'24px'}
               h={'24px'}
+              color="brand.primary"
             >
-              <AccordionIcon w={'24px'} h={'24px'} />
+              <AccordionIcon
+                w={'24px'}
+                h={'24px'}
+                color="brand.buttons.accordion.primary"
+              />
             </Box>
           </AccordionButton>
           <AccordionPanel p={'0px'} mt="12px">
@@ -183,108 +191,18 @@ export const TransactionAccordion = () => {
         </AccordionItem>
       ))}
 
-      <AccordionItem
-        key={'last mile tx'}
-        border="1px solid"
-        borderColor="brand.border.primary"
-        borderRadius={'10px'}
-        p={'16px'}
-        cursor={'pointer'}
-        onClick={onLastMileClick}
-        bg={isLastMileExpanded ? 'brand.secondary.12' : 'transparent'}
-        _hover={{
-          bgColor: 'bg.secondary.1',
-        }}
-        w={'100%'}
-      >
-        <AccordionButton
-          display={'flex'}
-          flexDir={'row'}
-          justifyContent={'space-between'}
-          gap="12px"
-          p={'0px'}
-        >
-          <HStack justifyContent={'flex-start'}>
-            <Text textStyle={'bold.1'} mr="8px">
-              Transaction {bestRoute.swaps.length + 1}
-            </Text>
-            {currentStep === bestRoute.swaps.length + 1 && (
-              <Text textStyle={'bold.1'} color="brand.tertiary.100">
-                In Progress
-              </Text>
-            )}
-          </HStack>
-          <Box
-            bg="brand.tertiary.100"
-            borderRadius={'50%'}
-            w={'24px'}
-            h={'24px'}
-          >
-            <AccordionIcon w={'24px'} h={'24px'} />
-          </Box>
-        </AccordionButton>
-        <AccordionPanel p={'0px'} mt="12px">
-          <VStack gap={'12px'}>
-            <TransactionStep
-              exchangeLogo={protocolFinalToken?.logoUrl || ''}
-              exchangeName={'Last mile transaction'}
-              fromToken={{
-                name: protocolInputToken?.symbol || '',
-                amount:
-                  bestRoute.swaps[bestRoute.swaps.length - 1].toAmount || '0',
-                tokenLogo: protocolInputToken?.logoUrl || '',
-                chainName: protocolInputToken?.chain?.displayName || '',
-                chainLogo: protocolInputToken?.chain?.logoUrl || '',
-              }}
-              toToken={{
-                name: protocolFinalToken?.symbol || '',
-                amount: finalTokenEstimate?.amountOut || '0',
-                tokenLogo: protocolInputToken?.logoUrl || '',
-                chainName: protocolInputToken?.chain?.displayName || '',
-                chainLogo: protocolInputToken?.chain?.logoUrl || '',
-              }}
-            />
-            <HStack w={'100%'}>
-              <HStack>
-                <TimeIcon />
-                <Text
-                  color={'brand.secondary.3'}
-                  lineHeight={'120%'}
-                  textStyle={'regular.3'}
-                >
-                  {finalTokenEstimate?.estimatedTimeInSeconds}s
-                </Text>
-              </HStack>
-              <DividerIcon />
-              <HStack>
-                <GasIcon />
-                <Text
-                  color={'brand.secondary.3'}
-                  lineHeight={'120%'}
-                  textStyle={'regular.3'}
-                >
-                  ${finalTokenEstimate?.estimatedFeeInUSD}
-                </Text>
-              </HStack>
-            </HStack>
-          </VStack>
-
-          <Box>
-            {stepsProgress?.steps[bestRoute.swaps.length].approve && (
-              <TransactionHash
-                type="Approval"
-                progress={stepsProgress?.steps[bestRoute.swaps.length].approve}
-              />
-            )}
-            {stepsProgress?.steps[bestRoute.swaps.length].swap && (
-              <TransactionHash
-                type="Swap"
-                progress={stepsProgress?.steps[bestRoute.swaps.length].swap}
-              />
-            )}
-          </Box>
-        </AccordionPanel>
-      </AccordionItem>
+      {!isTokenBuyTemplate && (
+        <LastMileTxAccordion
+          onLastMileClick={onLastMileClick}
+          isLastMileExpanded={isLastMileExpanded}
+          bestRoute={bestRoute}
+          currentStep={currentStep}
+          stepsProgress={stepsProgress}
+          protocolFinalToken={protocolFinalToken}
+          protocolInputToken={protocolInputToken}
+          finalTokenEstimate={finalTokenEstimate}
+        />
+      )}
     </Accordion>
   );
 };

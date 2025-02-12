@@ -1,4 +1,8 @@
-export const BackIcon = () => {
+type Props = {
+  color?: string;
+};
+
+export const BackIcon = ({ color = 'black' }: Props) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -9,7 +13,7 @@ export const BackIcon = () => {
     >
       <path
         d="M5.5 1L1.5 5L5.5 9"
-        stroke="white"
+        stroke={color}
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"

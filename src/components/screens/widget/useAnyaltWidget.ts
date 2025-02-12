@@ -15,6 +15,7 @@ import {
   finalTokenEstimateAtom,
   inTokenAmountAtom,
   inTokenAtom,
+  isTokenBuyTemplateAtom,
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
   selectedRouteAtom,
@@ -25,17 +26,19 @@ import {
 const REFRESH_INTERVAL = 20000;
 
 export const useAnyaltWidget = ({
-  estimateCallback,
+  apiKey,
   inputToken,
   finalToken,
-  apiKey,
-  minDepositAmount,
   walletConnector,
+  minDepositAmount,
+  isTokenBuyTemplate: isTokenBuy = false,
+  estimateCallback,
 }: {
   estimateCallback: (token: Token) => Promise<EstimateResponse>;
+  apiKey: string;
   inputToken: Token;
   finalToken: Token;
-  apiKey: string;
+  isTokenBuyTemplate: boolean;
   minDepositAmount: number;
   walletConnector?: WalletConnector;
 }) => {
@@ -43,7 +46,6 @@ export const useAnyaltWidget = ({
   const [isValidAmountIn, setIsValidAmountIn] = useState(true);
   const [openSlippageModal, setOpenSlippageModal] = useState(false);
   const [failedToFetchRoute, setFailedToFetchRoute] = useState(false);
-  const [, setCurrentUiStep] = useAtom(currentUiStepAtom);
 
   const { address: evmAddress, isConnected: isEvmConnected } = useAccount();
   const { publicKey: solanaAddress, connected: isSolanaConnected } =
@@ -63,6 +65,8 @@ export const useAnyaltWidget = ({
   const inTokenAmount = useAtomValue(inTokenAmountAtom);
   const selectedRoute = useAtomValue(selectedRouteAtom);
 
+  const [, setCurrentUiStep] = useAtom(currentUiStepAtom);
+  const [, setIsTokenBuy] = useAtom(isTokenBuyTemplateAtom);
   const [, setActiveOperationId] = useAtom(activeOperationIdAtom);
   const [finalEstimateToken, setFinalTokenEstimate] = useAtom(
     finalTokenEstimateAtom,
@@ -102,6 +106,7 @@ export const useAnyaltWidget = ({
       });
 
     setProtocolFinalToken(finalToken);
+    setIsTokenBuy(isTokenBuy);
   }, []);
 
   useEffect(() => {

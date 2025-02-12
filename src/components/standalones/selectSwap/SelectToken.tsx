@@ -1,7 +1,6 @@
 import { useBitcoinWallet } from '@ant-design/web3-bitcoin';
 import {
   BoxProps,
-  Button,
   Divider,
   Flex,
   HStack,
@@ -12,6 +11,8 @@ import {
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useAccount } from 'wagmi';
 import { WalletConnector } from '../../..';
+import { CustomButton } from '../../atoms/buttons/CustomButton';
+import { truncateToDecimals } from '../accordions/BestRouteAccordion';
 import { SlippageModal } from '../modals/SlippageModal';
 import { TokenSelectModal } from '../modals/TokenSelectModal';
 import { TokenInputBox } from './token/input/TokenInputBox';
@@ -45,11 +46,12 @@ export const SelectToken = ({
   ...props
 }: Props) => {
   const {
-    finalTokenEstimate,
     inTokenPrice,
     outTokenPrice,
     onTokenSelect,
     openTokenSelect,
+    isTokenBuyTemplate,
+    finalTokenEstimate,
     setOpenTokenSelect,
     protocolInputToken,
     protocolFinalToken,
@@ -80,7 +82,9 @@ export const SelectToken = ({
       <VStack gap="12px" w="full" alignItems="flex-start">
         <TokenQuoteBox
           loading={loading}
-          headerText="Vault Is Expecting"
+          headerText={
+            isTokenBuyTemplate ? 'What You Are Getting' : 'Vault Is Expecting'
+          }
           tokenName={protocolInputToken?.symbol ?? ''}
           tokenLogo={protocolInputToken?.logoUrl ?? ''}
           chainName={protocolInputToken?.chain?.displayName ?? ''}
@@ -88,40 +92,36 @@ export const SelectToken = ({
           amount={activeRoute?.outputAmount ?? '0.00'}
           price={outTokenPrice}
         />
-        <Divider w="100%" h="1px" bgColor="brand.secondary.12" />
-        <TokenQuoteBox
-          loading={loading}
-          headerText="What You Are Getting"
-          tokenName={protocolFinalToken?.symbol ?? ''}
-          tokenLogo={protocolFinalToken?.logoUrl ?? ''}
-          chainName={protocolInputToken?.chain?.displayName ?? ''}
-          chainLogo={protocolInputToken?.chain?.logoUrl ?? ''}
-          amount={finalTokenEstimate?.amountOut ?? '0.00'}
-          price={finalTokenEstimate?.priceInUSD ?? '0.00'}
-        />
+        {!isTokenBuyTemplate && (
+          <>
+            <Divider w="100%" h="1px" bgColor="brand.secondary.12" />
+            <TokenQuoteBox
+              loading={loading}
+              headerText="What You Are Getting"
+              tokenName={protocolFinalToken?.symbol ?? ''}
+              tokenLogo={protocolFinalToken?.logoUrl ?? ''}
+              chainName={protocolInputToken?.chain?.displayName ?? ''}
+              chainLogo={protocolInputToken?.chain?.logoUrl ?? ''}
+              amount={truncateToDecimals(
+                finalTokenEstimate?.amountOut ?? '0.00',
+                4,
+              )}
+              price={truncateToDecimals(
+                finalTokenEstimate?.priceInUSD ?? '0.00',
+                4,
+              )}
+            />
+          </>
+        )}
       </VStack>
 
-      <Button
-        p={'16px 20px'}
-        width="100%"
-        color="white"
-        borderRadius="8px"
-        bg="brand.tertiary.100"
+      <CustomButton
         isLoading={loading}
-        fontSize="16px"
-        fontWeight="700"
-        lineHeight="120%"
-        height={'unset'}
-        _hover={{
-          bg: 'brand.tertiary.90',
-        }}
         isDisabled={showConnectedWallets && failedToFetchRoute}
-        onClick={() => {
-          onButtonClick();
-        }}
+        onButtonClick={onButtonClick}
       >
         {buttonText}
-      </Button>
+      </CustomButton>
       {showConnectedWallets && (
         <HStack alignItems={'center'}>
           {isConnected && (
@@ -144,6 +144,7 @@ export const SelectToken = ({
                     textStyle={'regular.3'}
                     color="brand.secondary.3"
                     noOfLines={1}
+                    maxW={'300px'}
                     onClick={
                       walletConnector?.isConnected
                         ? () => walletConnector.disconnect()
@@ -168,6 +169,7 @@ export const SelectToken = ({
                   color="brand.secondary.3"
                   onClick={connectWalletsOpen}
                   noOfLines={1}
+                  maxW={'300px'}
                 >
                   {solanaAddress?.toBase58()}
                 </Text>
@@ -188,6 +190,7 @@ export const SelectToken = ({
                   textStyle={'regular.3'}
                   color="brand.secondary.3"
                   noOfLines={1}
+                  maxW={'300px'}
                   onClick={connectWalletsOpen}
                 >
                   {bitcoinAccount.address}
