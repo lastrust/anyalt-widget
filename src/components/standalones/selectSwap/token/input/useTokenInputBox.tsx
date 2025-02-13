@@ -27,7 +27,6 @@ export const useTokenInputBox = () => {
 
   const getBalance = async () => {
     if (inToken) {
-      console.log(inToken);
       if (inToken?.chain?.chainType === 'SOLANA' && publicKey) {
         const balance = await getSolanaTokenBalance(
           inToken.tokenAddress ?? '',
@@ -42,7 +41,6 @@ export const useTokenInputBox = () => {
         );
         setBalance(balance);
       } else if (inToken?.chain?.name === 'BTC' && bitcoinAccount) {
-        console.log('BTC balance');
         const balance = await getBitcoinBalance();
         if (balance.value && balance.decimals) {
           setBalance(formatUnits(balance.value, balance.decimals));

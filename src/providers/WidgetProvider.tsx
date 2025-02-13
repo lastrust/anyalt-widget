@@ -6,21 +6,14 @@ import { WalletsProviders } from './WalletsProviders';
 type Props = {
   theme?: Partial<Theme>;
   children: ReactNode;
-  solanaRpcUrl?: string;
 };
 
 const chakraTheme = extendTheme(defaultTheme);
 
-export const WidgetProvider = ({
-  children,
-  theme = chakraTheme,
-  solanaRpcUrl,
-}: Props) => {
+export const WidgetProvider = ({ children, theme = chakraTheme }: Props) => {
   return (
     <ChakraProvider theme={theme}>
-      <WalletsProviders solanaRpcUrl={solanaRpcUrl}>
-        {children}
-      </WalletsProviders>
+      <WalletsProviders>{children}</WalletsProviders>
     </ChakraProvider>
   );
 };

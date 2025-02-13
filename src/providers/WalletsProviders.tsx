@@ -5,13 +5,12 @@ import { SolanaProvider } from './SolanaProvider';
 
 type Props = {
   children: ReactNode;
-  solanaRpcUrl?: string;
 };
 
-export const WalletsProviders = ({ children, solanaRpcUrl }: Props) => {
+export const WalletsProviders = ({ children }: Props) => {
   return (
     <AppKitProvider>
-      <SolanaProvider solanaRpcUrl={solanaRpcUrl}>
+      <SolanaProvider>
         <BitcoinProvider>{children}</BitcoinProvider>
       </SolanaProvider>
     </AppKitProvider>
