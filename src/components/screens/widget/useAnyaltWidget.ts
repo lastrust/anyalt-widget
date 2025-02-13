@@ -201,7 +201,7 @@ export const useAnyaltWidget = ({
 
       const tokensOut = parseFloat(route?.outputAmount || '0');
       const isEnoughDepositTokens = tokensOut > minDepositAmount;
-      
+
       setTokenFetchError({
         isError: !isEnoughDepositTokens,
         errorMessage: `Amount should be equal or greater than ${minDepositAmount} ${inputToken?.symbol}`,
