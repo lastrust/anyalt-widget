@@ -20,7 +20,7 @@ export const useTokenInputBox = () => {
   const [inTokenAmount, setInTokenAmount] = useAtom(inTokenAmountAtom);
 
   const { publicKey } = useWallet();
-  const { getSolanaTokenBalance } = useSolana();
+  const { getSolanaTokenBalance, connection: solanaConnection } = useSolana();
   const { address: evmAddress } = useAccount();
   const { account: bitcoinAccount, getBalance: getBitcoinBalance } =
     useBitcoinWallet();
@@ -66,7 +66,7 @@ export const useTokenInputBox = () => {
 
   useEffect(() => {
     getBalance();
-  }, [inToken, evmAddress, publicKey, bitcoinAccount]);
+  }, [inToken, evmAddress, publicKey, bitcoinAccount, solanaConnection]);
 
   useEffect(() => {
     if (inTokenAmount) {
