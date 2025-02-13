@@ -8,12 +8,11 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { FC } from 'react';
+import { truncateToDecimals } from '../../../../../utils/truncateToDecimals';
 import { SelectTokenIcon } from '../../../../atoms/icons/selectToken/SelectTokenIcon';
 import { TokenIconBox } from '../../../../molecules/TokenIconBox';
 import { TokenInfoBox } from '../../../../molecules/TokenInfoBox';
-import { truncateToDecimals } from '../../../accordions/BestRouteAccordion';
 import { useTokenInputBox } from './useTokenInputBox';
-
 type Props = BoxProps & {
   price: string;
   loading: boolean;

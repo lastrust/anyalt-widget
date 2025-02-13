@@ -11,8 +11,8 @@ import {
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useAccount } from 'wagmi';
 import { WalletConnector } from '../../..';
+import { truncateToDecimals } from '../../../utils/truncateToDecimals';
 import { CustomButton } from '../../atoms/buttons/CustomButton';
-import { truncateToDecimals } from '../accordions/BestRouteAccordion';
 import { SlippageModal } from '../modals/SlippageModal';
 import { TokenSelectModal } from '../modals/TokenSelectModal';
 import { TokenInputBox } from './token/input/TokenInputBox';
@@ -89,8 +89,8 @@ export const SelectToken = ({
           tokenLogo={protocolInputToken?.logoUrl ?? ''}
           chainName={protocolInputToken?.chain?.displayName ?? ''}
           chainLogo={protocolInputToken?.chain?.logoUrl ?? ''}
-          amount={activeRoute?.outputAmount ?? '0.00'}
-          price={outTokenPrice}
+          amount={truncateToDecimals(activeRoute?.outputAmount ?? '0.00', 4)}
+          price={truncateToDecimals(outTokenPrice ?? '0.00', 4)}
         />
         {!isTokenBuyTemplate && (
           <>

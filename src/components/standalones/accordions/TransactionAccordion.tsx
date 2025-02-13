@@ -21,15 +21,14 @@ import {
   selectedRouteAtom,
   stepsProgressAtom,
 } from '../../../store/stateStore';
+import { truncateToDecimals } from '../../../utils/truncateToDecimals';
 import { CheckIcon } from '../../atoms/icons/transaction/CheckIcon';
 import { DividerIcon } from '../../atoms/icons/transaction/DividerIcon';
 import { GasIcon } from '../../atoms/icons/transaction/GasIcon';
 import { TimeIcon } from '../../atoms/icons/transaction/TimeIcon';
 import { TransactionStep } from '../../molecules/steps/TransactionStep';
 import { TransactionHash } from '../../molecules/text/TransactionHash';
-import { truncateToDecimals } from './BestRouteAccordion';
 import { LastMileTxAccordion } from './LastMileTxAccordion';
-
 export const TransactionAccordion = () => {
   const [isLastMileExpanded, setIsLastMileExpanded] = useState(false);
 

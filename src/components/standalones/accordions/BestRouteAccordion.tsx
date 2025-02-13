@@ -22,6 +22,7 @@ import {
 } from '../../../store/stateStore';
 import { TransactionDetailsType } from '../../../types/transaction';
 import { getTransactionGroupData } from '../../../utils/getTransactionGroupData';
+import { truncateToDecimals } from '../../../utils/truncateToDecimals';
 import { GasIcon } from '../../atoms/icons/GasIcon';
 import { StepsIcon } from '../../atoms/icons/StepsIcon';
 import { TimeIcon } from '../../atoms/icons/TimeIcon';
@@ -34,16 +35,6 @@ type Props = {
   loading: boolean;
   isButtonHidden?: boolean;
   failedToFetchRoute: boolean;
-};
-
-export const truncateToDecimals = (value: string, decimals?: number) => {
-  if (!value) return ''; // Handle empty or invalid values
-
-  if (!decimals) decimals = 6;
-
-  const [integerPart, decimalPart] = value.toString().split('.');
-  if (!decimalPart) return integerPart; // No decimals, return as is
-  return `${integerPart}.${decimalPart.slice(0, decimals)}`; // Keep only the first 5 decimal places
 };
 
 export const BestRouteAccordion = ({
