@@ -158,7 +158,7 @@ export const BestRouteAccordion = ({
               chainIcon={
                 isTokenBuyTemplate
                   ? protocolInputToken?.chain?.logoUrl || ''
-                  : ''
+                  : protocolInputToken?.chain?.logoUrl || ''
               }
               tokenName={
                 isTokenBuyTemplate

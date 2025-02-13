@@ -7,10 +7,10 @@ import { useModal } from '../src/hooks/useModal';
 import {
   AnyaltWidget,
   ChainType,
+  defaultTheme,
   EstimateResponse,
   ExecuteResponse,
   Token,
-  whiteTheme,
   WidgetProvider,
 } from '../src/index';
 
@@ -53,7 +53,7 @@ const App = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <WidgetProvider theme={whiteTheme}>
+      <WidgetProvider theme={defaultTheme}>
         <Center h={'100vh'}>
           <Box maxW={'600px'}>
             <OpenModalButton onOpen={onOpen} />

@@ -62,7 +62,7 @@ export const TokenSelectModal: FC<Props> = ({ onClose, onTokenSelect }) => {
       <Box
         id="token-select-box"
         width="100%"
-        maxH="504px"
+        maxH="554px"
         padding="24px"
         borderRadius="16px 16px 12px 12px"
         bgColor="brand.quaternary"

@@ -71,11 +71,11 @@ export const useAnyaltWidget = ({
   const [finalEstimateToken, setFinalTokenEstimate] = useAtom(
     finalTokenEstimateAtom,
   );
-  const [, setProtocolFinalToken] = useAtom(protocolFinalTokenAtom);
+  const [, setTransactionsList] = useAtom(transactionsListAtom);
   const [allChains, setAllChains] = useAtom(allChainsAtom);
   const [bestRoute, setBestRoute] = useAtom(bestRouteAtom);
+  const [, setProtocolFinalToken] = useAtom(protocolFinalTokenAtom);
   const [anyaltInstance, setAnyaltInstance] = useAtom(anyaltInstanceAtom);
-  const [, setTransactionsList] = useAtom(transactionsListAtom);
   const [protocolInputToken, setProtocolInputToken] = useAtom(
     protocolInputTokenAtom,
   );

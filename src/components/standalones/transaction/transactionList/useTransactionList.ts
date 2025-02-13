@@ -33,9 +33,9 @@ export const useTransactionList = () => {
       address: protocolFinalToken?.address || '',
       symbol: protocolFinalToken?.symbol || '',
       logo: protocolFinalToken?.logoUrl || '',
-      blockchain: protocolFinalToken?.name || '',
+      blockchain: protocolInputToken?.chain?.displayName || '',
       amount: Number(finalTokenEstimate?.amountOut).toFixed(4) || '',
-      blockchainLogo: protocolFinalToken?.logoUrl || '',
+      blockchainLogo: protocolInputToken?.chain?.logoUrl || '',
       decimals: protocolFinalToken?.decimals || 0,
       usdPrice: Number(finalTokenEstimate?.priceInUSD) || 0,
     };

@@ -30,7 +30,10 @@ export const TokenAccept: FC<Props> = ({ onClick, ...props }) => {
       </Text>
       <Button
         bg="brand.tertiary.100"
-        color="brand.text.primary"
+        _hover={{
+          bg: 'brand.tertiary.90',
+        }}
+        color="white"
         fontSize="16px"
         fontWeight="bold"
         borderRadius="8px"

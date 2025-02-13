@@ -10,9 +10,9 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { EstimateResponse, Token } from '../../..';
-import { GasIcon } from '../../atoms/icons/GasIcon';
-import { TimeIcon } from '../../atoms/icons/TimeIcon';
 import { DividerIcon } from '../../atoms/icons/transaction/DividerIcon';
+import { GasIcon } from '../../atoms/icons/transaction/GasIcon';
+import { TimeIcon } from '../../atoms/icons/transaction/TimeIcon';
 import { TransactionStep } from '../../molecules/steps/TransactionStep';
 import { TransactionHash } from '../../molecules/text/TransactionHash';
 import { StepsProgress } from '../transaction/useHandleTransaction';
@@ -70,8 +70,18 @@ export const LastMileTxAccordion = ({
             </Text>
           )}
         </HStack>
-        <Box bg="brand.tertiary.100" borderRadius={'50%'} w={'24px'} h={'24px'}>
-          <AccordionIcon w={'24px'} h={'24px'} color="brand.primary" />
+        <Box
+          bg="brand.tertiary.100"
+          borderRadius={'50%'}
+          w={'24px'}
+          h={'24px'}
+          color="brand.primary"
+        >
+          <AccordionIcon
+            w={'24px'}
+            h={'24px'}
+            color="brand.buttons.accordion.primary"
+          />
         </Box>
       </AccordionButton>
       <AccordionPanel p={'0px'} mt="12px">
@@ -90,7 +100,7 @@ export const LastMileTxAccordion = ({
             toToken={{
               name: protocolFinalToken?.symbol || '',
               amount: finalTokenEstimate?.amountOut || '0',
-              tokenLogo: protocolInputToken?.logoUrl || '',
+              tokenLogo: protocolFinalToken?.logoUrl || '',
               chainName: protocolInputToken?.chain?.displayName || '',
               chainLogo: protocolInputToken?.chain?.logoUrl || '',
             }}
