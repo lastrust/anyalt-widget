@@ -210,7 +210,11 @@ export const useAnyaltWidget = ({
         errorMessage: `Amount should be equal or greater than ${minDepositAmount} ${inputToken?.symbol}`,
       });
 
-      if (balance && parseFloat(balance) < parseFloat(inTokenAmount)) {
+      if (
+        activeStep !== 0 &&
+        balance &&
+        parseFloat(balance) < parseFloat(inTokenAmount)
+      ) {
         setTokenFetchError({
           isError: true,
           errorMessage: `You don't have enough tokens in your wallet.`,
