@@ -62,7 +62,6 @@ export const SelectToken = ({
     useWallet();
   const { address: evmAddress, isConnected: isEvmConnected } = useAccount();
   const { account: bitcoinAccount } = useBitcoinWallet();
-
   const isConnected =
     isEvmConnected ||
     isSolanaConnected ||

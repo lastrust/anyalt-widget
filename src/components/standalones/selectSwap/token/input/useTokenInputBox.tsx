@@ -9,6 +9,7 @@ import {
   currentUiStepAtom,
   inTokenAmountAtom,
   inTokenAtom,
+  tokenFetchErrorAtom,
 } from '../../../../../store/stateStore';
 import { getEvmTokenBalance } from '../../../../../utils';
 
@@ -16,6 +17,7 @@ export const useTokenInputBox = () => {
   const [balance, setBalance] = useState<string | undefined>(undefined);
 
   const inToken = useAtomValue(inTokenAtom);
+  const tokenFetchError = useAtomValue(tokenFetchErrorAtom);
   const currentStep = useAtomValue(currentUiStepAtom);
   const [inTokenAmount, setInTokenAmount] = useAtom(inTokenAmountAtom);
 
@@ -79,6 +81,7 @@ export const useTokenInputBox = () => {
     inToken,
     inTokenAmount,
     setInTokenAmount,
+    tokenFetchError,
     maxButtonClick,
     balance,
   };
