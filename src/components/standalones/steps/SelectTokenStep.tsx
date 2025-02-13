@@ -6,6 +6,7 @@ type Props = {
   loading: boolean;
   openSlippageModal: boolean;
   isValidAmountIn: boolean;
+  isTokenBuyTemplate: boolean;
   onConfigClick: () => void;
   onGetQuote: (withGoNext: boolean) => void;
   setOpenSlippageModal: (open: boolean) => void;
@@ -19,10 +20,11 @@ export const SelectTokenStep = ({
   openSlippageModal,
   setOpenSlippageModal,
   isValidAmountIn,
+  isTokenBuyTemplate,
 }: Props) => {
   return (
     <SwappingTemplate
-      title={'Select Deposit Token'}
+      title={isTokenBuyTemplate ? 'Calculation' : 'Select Deposit Token'}
       onConfigClick={onConfigClick}
     >
       <SelectToken

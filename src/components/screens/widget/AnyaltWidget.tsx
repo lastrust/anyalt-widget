@@ -67,6 +67,7 @@ export const AnyaltWidgetWrapper = ({
         <SelectTokenStep
           loading={loading}
           onGetQuote={onGetQuote}
+          isTokenBuyTemplate={isTokenBuyTemplate}
           isValidAmountIn={isValidAmountIn}
           onConfigClick={onConfigClick}
           failedToFetchRoute={failedToFetchRoute}

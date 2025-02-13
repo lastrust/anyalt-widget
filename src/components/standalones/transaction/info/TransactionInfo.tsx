@@ -112,7 +112,7 @@ export const TransactionInfo: FC<Props> = ({
           isDisabled={false}
           onButtonClick={runTx}
         >
-          Run Transaction
+          Execute Transaction
         </CustomButton>
         <Text textDecoration={'underline'} color="#999" cursor={'pointer'}>
           Cancel Transaction
