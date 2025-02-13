@@ -30,7 +30,6 @@ import { TransactionStep } from '../../molecules/steps/TransactionStep';
 import { TransactionHash } from '../../molecules/text/TransactionHash';
 import { LastMileTxAccordion } from './LastMileTxAccordion';
 
-
 export const TransactionAccordion = () => {
   const [isLastMileExpanded, setIsLastMileExpanded] = useState(false);
 
@@ -106,6 +105,7 @@ export const TransactionAccordion = () => {
               color="brand.primary"
             >
               <AccordionIcon
+                pt={'2px'}
                 w={'24px'}
                 h={'24px'}
                 color="brand.buttons.accordion.primary"
@@ -126,7 +126,7 @@ export const TransactionAccordion = () => {
                     fromToken={{
                       name: internalSwap.from.symbol,
                       amount:
-                        truncateToDecimals(internalSwap.fromAmount, 5) || '0',
+                        truncateToDecimals(internalSwap.fromAmount, 3) || '0',
                       tokenLogo: internalSwap.from.logo,
                       chainName: internalSwap.from.blockchain,
                       chainLogo: internalSwap.from.blockchainLogo,
@@ -134,7 +134,7 @@ export const TransactionAccordion = () => {
                     toToken={{
                       name: internalSwap.to.symbol,
                       amount:
-                        truncateToDecimals(internalSwap.toAmount, 5) || '0',
+                        truncateToDecimals(internalSwap.toAmount, 3) || '0',
                       chainName: internalSwap.to.blockchain,
                       tokenLogo: internalSwap.to.logo,
                       chainLogo: internalSwap.to.blockchainLogo,

@@ -10,6 +10,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { EstimateResponse, Token } from '../../..';
+import { truncateToDecimals } from '../../../utils/truncateToDecimals';
 import { DividerIcon } from '../../atoms/icons/transaction/DividerIcon';
 import { GasIcon } from '../../atoms/icons/transaction/GasIcon';
 import { TimeIcon } from '../../atoms/icons/transaction/TimeIcon';
@@ -78,6 +79,7 @@ export const LastMileTxAccordion = ({
           color="brand.primary"
         >
           <AccordionIcon
+            pt={'2px'}
             w={'24px'}
             h={'24px'}
             color="brand.buttons.accordion.primary"
@@ -91,15 +93,20 @@ export const LastMileTxAccordion = ({
             exchangeName={'Last mile transaction'}
             fromToken={{
               name: protocolInputToken?.symbol || '',
-              amount:
+              amount: truncateToDecimals(
                 bestRoute.swaps[bestRoute.swaps.length - 1].toAmount || '0',
+                3,
+              ),
               tokenLogo: protocolInputToken?.logoUrl || '',
               chainName: protocolInputToken?.chain?.displayName || '',
               chainLogo: protocolInputToken?.chain?.logoUrl || '',
             }}
             toToken={{
               name: protocolFinalToken?.symbol || '',
-              amount: finalTokenEstimate?.amountOut || '0',
+              amount: truncateToDecimals(
+                finalTokenEstimate?.amountOut || '0',
+                3,
+              ),
               tokenLogo: protocolFinalToken?.logoUrl || '',
               chainName: protocolInputToken?.chain?.displayName || '',
               chainLogo: protocolInputToken?.chain?.logoUrl || '',
