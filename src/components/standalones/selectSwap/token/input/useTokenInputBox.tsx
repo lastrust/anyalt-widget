@@ -29,21 +29,28 @@ export const useTokenInputBox = () => {
     useBitcoinWallet();
 
   const getBalance = async () => {
+    const tokenType = inToken?.chain?.chainType;
+    const isEvmWallet = tokenType === 'EVM' && evmAddress;
+    const isSolanaWallet = tokenType === 'SOLANA' && publicKey;
+    const isBtcWallet = tokenType === 'BTC' && bitcoinAccount;
+
     if (inToken) {
-      if (inToken?.chain?.chainType === 'SOLANA' && publicKey) {
+      if (isSolanaWallet) {
         const balance = await getSolanaTokenBalance(
           inToken.tokenAddress ?? '',
           publicKey.toString(),
         );
+
         setBalance(balance);
-      } else if (inToken?.chain?.chainType === 'EVM' && evmAddress) {
+      } else if (isEvmWallet) {
         const balance = await getEvmTokenBalance(
           inToken.chain?.chainId ?? 1,
           inToken.tokenAddress ?? '',
           evmAddress,
         );
+
         setBalance(balance);
-      } else if (inToken?.chain?.name === 'BTC' && bitcoinAccount) {
+      } else if (isBtcWallet) {
         const balance = await getBitcoinBalance();
         if (balance.value && balance.decimals) {
           setBalance(formatUnits(balance.value, balance.decimals));
