@@ -87,7 +87,7 @@ export const useAnyaltWidget = ({
   useEffect(() => {
     if (bestRoute) {
       const token = {
-        ...finalToken,
+        ...inputToken,
         amount: bestRoute.outputAmount.toString(),
       };
       estimateCallback(token).then((res) => {
