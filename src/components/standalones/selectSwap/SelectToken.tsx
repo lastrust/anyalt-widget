@@ -9,8 +9,10 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { useAtomValue } from 'jotai';
 import { useAccount } from 'wagmi';
 import { WalletConnector } from '../../..';
+import { tokenFetchErrorAtom } from '../../../store/stateStore';
 import { truncateToDecimals } from '../../../utils/truncateToDecimals';
 import { CustomButton } from '../../atoms/buttons/CustomButton';
 import { SlippageModal } from '../modals/SlippageModal';
@@ -58,11 +60,12 @@ export const SelectToken = ({
     activeRoute,
   } = useSelectToken();
 
+  const tokenFetchError = useAtomValue(tokenFetchErrorAtom);
+
   const { publicKey: solanaAddress, connected: isSolanaConnected } =
     useWallet();
   const { address: evmAddress, isConnected: isEvmConnected } = useAccount();
   const { account: bitcoinAccount } = useBitcoinWallet();
-
   const isConnected =
     isEvmConnected ||
     isSolanaConnected ||
@@ -117,7 +120,10 @@ export const SelectToken = ({
 
       <CustomButton
         isLoading={loading}
-        isDisabled={showConnectedWallets && failedToFetchRoute}
+        isDisabled={
+          (showConnectedWallets && failedToFetchRoute) ||
+          tokenFetchError.isError
+        }
         onButtonClick={onButtonClick}
       >
         {buttonText}

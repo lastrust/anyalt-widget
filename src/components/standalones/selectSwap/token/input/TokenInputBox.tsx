@@ -34,11 +34,12 @@ export const TokenInputBox: FC<Props> = ({
 }) => {
   const {
     inToken,
-    inTokenAmount,
-    setInTokenAmount,
-    maxButtonClick,
     balance,
     currentStep,
+    inTokenAmount,
+    tokenFetchError,
+    setInTokenAmount,
+    maxButtonClick,
   } = useTokenInputBox();
 
   return (
@@ -176,7 +177,7 @@ export const TokenInputBox: FC<Props> = ({
           )}
         </Box>
       </Box>
-      {!isValidAmountIn && (
+      {tokenFetchError.isError && (
         <Box
           padding="4px"
           bgColor="brand.quinary.10"
@@ -184,20 +185,7 @@ export const TokenInputBox: FC<Props> = ({
           width="100%"
         >
           <Text color="brand.quinary.100" fontSize="14px" fontWeight="bold">
-            Amount not supported. Please try different amount.
-          </Text>
-        </Box>
-      )}
-      {failedToFetchRoute && (
-        <Box
-          mt="4px"
-          padding="4px"
-          bgColor="brand.quinary.10"
-          borderRadius="8px"
-          width="100%"
-        >
-          <Text color="brand.quinary.100" fontSize="14px" fontWeight="bold">
-            No Available Route
+            {tokenFetchError.errorMessage}
           </Text>
         </Box>
       )}

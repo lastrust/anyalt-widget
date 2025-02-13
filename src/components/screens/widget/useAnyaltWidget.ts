@@ -20,8 +20,10 @@ import {
   protocolInputTokenAtom,
   selectedRouteAtom,
   slippageAtom,
+  tokenFetchErrorAtom,
   transactionsListAtom,
 } from '../../../store/stateStore';
+import { useTokenInputBox } from '../../standalones/selectSwap/token/input/useTokenInputBox';
 
 const REFRESH_INTERVAL = 20000;
 
@@ -72,6 +74,7 @@ export const useAnyaltWidget = ({
     finalTokenEstimateAtom,
   );
   const [, setTransactionsList] = useAtom(transactionsListAtom);
+  const [, setTokenFetchError] = useAtom(tokenFetchErrorAtom);
   const [allChains, setAllChains] = useAtom(allChainsAtom);
   const [bestRoute, setBestRoute] = useAtom(bestRouteAtom);
   const [, setProtocolFinalToken] = useAtom(protocolFinalTokenAtom);
@@ -79,6 +82,8 @@ export const useAnyaltWidget = ({
   const [protocolInputToken, setProtocolInputToken] = useAtom(
     protocolInputTokenAtom,
   );
+
+  const { balance } = useTokenInputBox();
 
   useEffect(() => {
     setCurrentUiStep(activeStep);
@@ -200,11 +205,27 @@ export const useAnyaltWidget = ({
       const tokensOut = parseFloat(route?.outputAmount || '0');
       const isEnoughDepositTokens = tokensOut > minDepositAmount;
 
+      setTokenFetchError({
+        isError: !isEnoughDepositTokens,
+        errorMessage: `Amount should be equal or greater than ${minDepositAmount} ${inputToken?.symbol}`,
+      });
+
+      if (balance && parseFloat(balance) < parseFloat(inTokenAmount)) {
+        setTokenFetchError({
+          isError: true,
+          errorMessage: `You don't have enough tokens in your wallet.`,
+        });
+      }
+
       setIsValidAmountIn(isEnoughDepositTokens);
       setFailedToFetchRoute(false);
       if (withGoNext && isEnoughDepositTokens) goToNext();
     } catch (error) {
       console.error(error);
+      setTokenFetchError({
+        isError: true,
+        errorMessage: 'No Available Route',
+      });
       setFailedToFetchRoute(true);
     } finally {
       setLoading(false);
