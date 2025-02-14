@@ -7,7 +7,6 @@ import { isValidEthereumAddress, isValidSolanaAddress } from '../../../utils';
 export const useTokenSelectModal = () => {
   const allChains = useAtomValue(allChainsAtom);
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
-  const [showAllChains, setShowAllChains] = useState<boolean>(false);
   const [chains, setChains] = useState<SupportedChain[]>(allChains.slice(0, 8));
   const [activeChain, setActiveChain] = useState<SupportedChain | null>(null);
   const [allTokens, setAllTokens] = useState<SupportedToken[]>([]);
@@ -16,15 +15,11 @@ export const useTokenSelectModal = () => {
   const [showAccept, setShowAccept] = useState<boolean>(false);
 
   useEffect(() => {
-    if (showAllChains) {
-      setChains(allChains);
-    } else {
-      setChains(allChains.slice(0, 8));
-    }
+    setChains(allChains);
     if (allChains.length > 0) {
       setActiveChain(allChains[0]);
     }
-  }, [showAllChains, allChains]);
+  }, [allChains]);
 
   useEffect(() => {
     if (activeChain) {
@@ -81,8 +76,6 @@ export const useTokenSelectModal = () => {
     allTokens,
     activeChain,
     setActiveChain,
-    showAllChains,
-    setShowAllChains,
     searchInputValue,
   };
 };
