@@ -15,10 +15,12 @@ import { useEffect, useState } from 'react';
 import {
   bestRouteAtom,
   currentStepAtom,
+  finalTokenEstimateAtom,
   isTokenBuyTemplateAtom,
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
   selectedRouteAtom,
+  slippageAtom,
 } from '../../../store/stateStore';
 import { TransactionDetailsType } from '../../../types/transaction';
 import { getTransactionGroupData } from '../../../utils/getTransactionGroupData';
@@ -44,6 +46,8 @@ export const BestRouteAccordion = ({
 }: Props) => {
   const [swaps, setSwaps] = useState<TransactionDetailsType[]>([]);
 
+  const slippage = useAtomValue(slippageAtom);
+  const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
   const [bestRoute] = useAtom(bestRouteAtom);
   const currentStep = useAtomValue(currentStepAtom);
   const isTokenBuyTemplate = useAtomValue(isTokenBuyTemplateAtom);
@@ -170,9 +174,11 @@ export const BestRouteAccordion = ({
                   ? protocolInputToken?.logoUrl || ''
                   : protocolFinalToken?.logoUrl || ''
               }
-              amount={Number(bestRoute.outputAmount)}
-              price={Number(bestRoute.outputAmount)}
-              difference={0.5}
+              amount={Number(
+                truncateToDecimals(finalTokenEstimate?.amountOut ?? '0.00', 4),
+              )}
+              price={Number(finalTokenEstimate?.priceInUSD ?? '0.00')}
+              slippage={slippage}
               network={`${swaps[0]?.swapperName}`}
             />
           </AccordionButton>
