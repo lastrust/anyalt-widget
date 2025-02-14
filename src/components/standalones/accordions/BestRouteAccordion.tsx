@@ -174,9 +174,7 @@ export const BestRouteAccordion = ({
                   ? protocolInputToken?.logoUrl || ''
                   : protocolFinalToken?.logoUrl || ''
               }
-              amount={Number(
-                truncateToDecimals(finalTokenEstimate?.amountOut ?? '0.00', 4),
-              )}
+              amount={Number(finalTokenEstimate?.amountOut ?? '0.00')}
               price={Number(finalTokenEstimate?.priceInUSD ?? '0.00')}
               slippage={slippage}
               network={`${swaps[0]?.swapperName}`}
@@ -223,6 +221,45 @@ export const BestRouteAccordion = ({
                   />
                 );
               })}
+              {!isTokenBuyTemplate && swaps.length && (
+                <>
+                  {loading ? (
+                    <Skeleton
+                      w={'180px'}
+                      h={'18px'}
+                      ml="24px"
+                      borderRadius="12px"
+                    />
+                  ) : (
+                    <Text textStyle={'bold.3'} ml={'24px'} lineHeight={'120%'}>
+                      Transaction {swaps.length + 1}: Last Mile Transaction
+                    </Text>
+                  )}
+                  <RouteStep
+                    loading={loading}
+                    key={`last-mile-transaction-${swaps.length}`}
+                    stepNumber={swaps.length}
+                    exchangeIcon={protocolFinalToken?.logoUrl || ''}
+                    exchangeName={'Last Mile TX'}
+                    exchangeType={'LAST_MILE'}
+                    fromToken={{
+                      name: swaps[swaps.length - 1].to.name,
+                      amount:
+                        truncateToDecimals(swaps[swaps.length - 1].to.amount) ||
+                        '0',
+                      chainName: swaps[swaps.length - 1].to.chainName || '',
+                    }}
+                    toToken={{
+                      name: protocolFinalToken?.name || '',
+                      amount: truncateToDecimals(
+                        finalTokenEstimate?.amountOut ?? '0.00',
+                        4,
+                      ),
+                      chainName: protocolInputToken?.chain?.displayName || '',
+                    }}
+                  />
+                </>
+              )}
             </VStack>
           </AccordionPanel>
         </AccordionItem>
