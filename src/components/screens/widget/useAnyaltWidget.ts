@@ -237,10 +237,16 @@ export const useAnyaltWidget = ({
   };
 
   useEffect(() => {
-    if (inTokenAmount) {
-      onGetQuote(false);
-    }
-  }, [inTokenAmount, inToken]);
+    const debounceTimeout = setTimeout(() => {
+      if (inTokenAmount) {
+        onGetQuote(false);
+      }
+    }, 300);
+
+    return () => {
+      clearTimeout(debounceTimeout);
+    };
+  }, [inTokenAmount]);
 
   const onConfigClick = () => {
     setOpenSlippageModal(true);
