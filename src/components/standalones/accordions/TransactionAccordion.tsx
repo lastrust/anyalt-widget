@@ -91,7 +91,11 @@ export const TransactionAccordion = () => {
                 Transaction {index + 1}
               </Text>
               {currentStep - 1 > index && <CheckIcon />}
-              {currentStep - 1 === index && (
+              {Boolean(
+                (currentStep - 1 === index &&
+                  stepsProgress?.steps[index].approve) ||
+                  stepsProgress?.steps[index].swap,
+              ) && (
                 <Text textStyle={'bold.2'} color="brand.tertiary.100">
                   In Progress
                 </Text>
@@ -173,20 +177,19 @@ export const TransactionAccordion = () => {
                   </Text>
                 </HStack>
               </HStack>
-              <Box w={'100%'}>
-                {stepsProgress?.steps[index].approve && (
-                  <TransactionHash
-                    type="Approval"
-                    progress={stepsProgress?.steps[index].approve}
-                  />
-                )}
-                {stepsProgress?.steps[index].swap && (
-                  <TransactionHash
-                    type="Swap"
-                    progress={stepsProgress?.steps[index].swap}
-                  />
-                )}
-              </Box>
+
+              {stepsProgress?.steps[index].approve && (
+                <TransactionHash
+                  type="Approval"
+                  progress={stepsProgress?.steps[index].approve}
+                />
+              )}
+              {stepsProgress?.steps[index].swap && (
+                <TransactionHash
+                  type="Swap"
+                  progress={stepsProgress?.steps[index].swap}
+                />
+              )}
             </VStack>
           </AccordionPanel>
         </AccordionItem>
