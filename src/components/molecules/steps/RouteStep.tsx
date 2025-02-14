@@ -13,6 +13,7 @@ type Props = {
   loading: boolean;
   exchangeIcon: string;
   exchangeName: string;
+  exchangeType: 'BRIDGE' | 'DEX' | 'AGGREGATOR' | 'OFF_CHAIN';
   stepNumber: number;
   fromToken: {
     name: string;
@@ -29,6 +30,7 @@ type Props = {
 export const RouteStep = ({
   exchangeIcon,
   exchangeName,
+  exchangeType,
   fromToken,
   toToken,
   loading,
@@ -53,7 +55,8 @@ export const RouteStep = ({
           <Skeleton w={'180px'} h={'18px'} borderRadius="12px" />
         ) : (
           <Text color="brand.secondary.3" textStyle={'regular.3'}>
-            Swap token using {exchangeName}
+            {exchangeType === 'BRIDGE' ? 'Bridge' : 'Swap'} token using{' '}
+            {exchangeName}
           </Text>
         )}
         {loading ? (

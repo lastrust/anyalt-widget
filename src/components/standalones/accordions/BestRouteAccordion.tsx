@@ -203,6 +203,7 @@ export const BestRouteAccordion = ({
                     stepNumber={index + 1}
                     exchangeIcon={step.swapperLogo}
                     exchangeName={step.swapperName}
+                    exchangeType={step.swapperType}
                     fromToken={{
                       name: step.from.name,
                       amount: truncateToDecimals(step.from.amount) || '0',

@@ -51,7 +51,7 @@ export const TransactionInfo: FC<Props> = ({
             <Text textStyle={'regular.1'} color="brand.secondary.3">
               {bestRoute?.swaps?.length &&
               bestRoute?.swaps?.length >= currentStep
-                ? `Swap tokens using ${bestRoute?.swaps[currentStep - 1]?.swapperId}`
+                ? `${bestRoute.swaps[currentStep - 1].swapperType === 'BRIDGE' ? 'Bridge' : 'Swap'} tokens using ${bestRoute.swaps[currentStep - 1].swapperId}`
                 : `Depositing tokens to ${recentTransaction?.to.tokenName}`}
             </Text>
             <ProgressList
