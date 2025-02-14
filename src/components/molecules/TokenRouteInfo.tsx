@@ -31,6 +31,10 @@ export const TokenRouteInfo: FC<Props> = ({
   loading,
   ...props
 }) => {
+  // useEffect(() => {
+  //   console.log('~slippage', slippage);
+  // }, [slippage]);
+
   return (
     <Flex justifyContent={'start'} w={'full'} alignItems={'center'} {...props}>
       {loading ? (

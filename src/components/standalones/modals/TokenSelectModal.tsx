@@ -172,7 +172,7 @@ export const TokenSelectModal: FC<Props> = ({ onClose, onTokenSelect }) => {
                   <TokenItem
                     tokenSymbol={customToken.symbol}
                     tokenIcon={customToken.logoUrl}
-                    chainName={customToken.chain?.displayName ?? ''}
+                    tokenAddress={customToken.tokenAddress ?? ''}
                     onClick={() => {
                       setShowAccept(true);
                     }}
@@ -185,7 +185,7 @@ export const TokenSelectModal: FC<Props> = ({ onClose, onTokenSelect }) => {
                   key={token.id}
                   tokenSymbol={token.symbol}
                   tokenIcon={token.logoUrl}
-                  chainName={token.chain?.displayName ?? ''}
+                  tokenAddress={token.tokenAddress ?? ''}
                   onClick={() => {
                     onTokenSelect(token);
                   }}
