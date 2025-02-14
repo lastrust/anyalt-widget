@@ -24,6 +24,10 @@ export const CustomButton = ({ onButtonClick, children, ...props }: Props) => {
       onClick={() => {
         onButtonClick();
       }}
+      _disabled={{
+        bg: 'gray.500',
+        cursor: 'default',
+      }}
       {...props}
     >
       {children}
