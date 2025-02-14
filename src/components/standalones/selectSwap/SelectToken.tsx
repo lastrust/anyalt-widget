@@ -29,6 +29,7 @@ type Props = {
   showConnectedWallets?: boolean;
   walletConnector?: WalletConnector;
   onButtonClick: () => void;
+  isButtonDisabled?: boolean;
   handleWalletsOpen?: () => void;
   setOpenSlippageModal: (open: boolean) => void;
   failedToFetchRoute?: boolean;
@@ -42,6 +43,7 @@ export const SelectToken = ({
   isValidAmountIn = true,
   walletConnector,
   onButtonClick,
+  isButtonDisabled,
   failedToFetchRoute,
   handleWalletsOpen: connectWalletsOpen,
   buttonText = 'Start Transaction',
@@ -120,7 +122,8 @@ export const SelectToken = ({
 
       <CustomButton
         isLoading={loading}
-        isDisabled={
+        disabled={
+          isButtonDisabled ||
           (showConnectedWallets && failedToFetchRoute) ||
           (tokenFetchError.isError && !!isConnected)
         }

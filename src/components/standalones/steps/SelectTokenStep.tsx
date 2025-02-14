@@ -10,6 +10,7 @@ type Props = {
   onConfigClick: () => void;
   onGetQuote: (withGoNext: boolean) => void;
   setOpenSlippageModal: (open: boolean) => void;
+  isButtonDisabled: boolean;
 };
 
 export const SelectTokenStep = ({
@@ -21,6 +22,7 @@ export const SelectTokenStep = ({
   setOpenSlippageModal,
   isValidAmountIn,
   isTokenBuyTemplate,
+  isButtonDisabled,
 }: Props) => {
   return (
     <SwappingTemplate
@@ -35,6 +37,7 @@ export const SelectTokenStep = ({
         setOpenSlippageModal={setOpenSlippageModal}
         isValidAmountIn={isValidAmountIn}
         failedToFetchRoute={failedToFetchRoute}
+        isButtonDisabled={isButtonDisabled}
       />
     </SwappingTemplate>
   );
