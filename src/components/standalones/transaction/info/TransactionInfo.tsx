@@ -1,10 +1,11 @@
-import { Box, Divider, Text, VStack } from '@chakra-ui/react';
+import { Box, Center, Divider, Text, VStack } from '@chakra-ui/react';
 import { useAtomValue } from 'jotai';
 import { FC } from 'react';
 import { ExecuteResponse, Token, WalletConnector } from '../../../..';
 import { stepsProgressAtom } from '../../../../store/stateStore';
 import { truncateToDecimals } from '../../../../utils/truncateToDecimals';
 import { CustomButton } from '../../../atoms/buttons/CustomButton';
+import { ChevronDownIcon } from '../../../atoms/icons/transaction/ChevronDownIcon';
 import { TransactionInfoCard } from '../../../molecules/card/TransactionInfoCard';
 import { TokenQuoteBox } from '../../selectSwap/token/quote/TokenQuoteBox';
 import { ProgressList } from '../ProgressList';
@@ -84,7 +85,19 @@ export const TransactionInfo: FC<Props> = ({
             p={'0'}
             m={'0'}
           />
-          <Divider w="100%" h="1px" bgColor="brand.secondary.12" />
+
+          <Box position="relative" w="100%">
+            <Divider w="100%" h="1px" bgColor="brand.secondary.12" />
+            <Center
+              position="absolute"
+              top="50%"
+              left="50%"
+              transform="translate(-50%, -50%)"
+            >
+              <ChevronDownIcon />
+            </Center>
+          </Box>
+
           <TokenQuoteBox
             loading={false}
             headerText=""

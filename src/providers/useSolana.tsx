@@ -18,8 +18,6 @@ export const useSolana = () => {
     if (!endpoint || endpoint === '') {
       endpoint = 'https://api.mainnet-beta.solana.com';
     }
-
-    console.log('Solana endpoint: ', endpoint);
     setConnection(new Connection(endpoint));
   }, [allChains]);
 

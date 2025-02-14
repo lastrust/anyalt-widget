@@ -412,5 +412,6 @@ export const useAnyaltWidget = ({
     onTxComplete,
     areWalletsConnected,
     setActiveStep,
+    getChain,
   };
 };

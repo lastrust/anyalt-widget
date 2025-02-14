@@ -34,9 +34,9 @@ export const WalletButton: FC<WalletButtonProps> = ({
     disconnect: disconnectSolana,
   } = useWallet();
 
-  const isEvmWallet = walletType === 'EVM wallets';
-  const isSolanaWallet = walletType === 'Solana wallets';
-  const isBitcoinWallet = walletType === 'Bitcoin wallets';
+  const isEvmWallet = walletType === 'EVM';
+  const isSolanaWallet = walletType === 'Solana';
+  const isBitcoinWallet = walletType === 'Bitcoin';
 
   const isWalletConnected =
     (isEvmWallet && isEvmConnected) ||
@@ -71,13 +71,13 @@ export const WalletButton: FC<WalletButtonProps> = ({
 
   const getDisplayAddress = () => {
     if (isEvmWallet && evmAddress) {
-      return formatAddress(evmAddress);
+      return 'EVM: ' + formatAddress(evmAddress);
     }
     if (isSolanaWallet && publicKey) {
-      return formatAddress(publicKey.toString());
+      return 'Solana: ' + formatAddress(publicKey.toString());
     }
     if (isBitcoinWallet && bitcoinAccount) {
-      return formatAddress(bitcoinAccount.address);
+      return 'Bitcoin: ' + formatAddress(bitcoinAccount.address);
     }
     return network;
   };
