@@ -86,6 +86,10 @@ export const useAnyaltWidget = ({
     protocolInputTokenAtom,
   );
 
+  useEffect(() => {
+    onGetQuote(false);
+  }, [inToken]);
+
   const { balance } = useTokenInputBox();
 
   // const resetState = useCallback(() => {
