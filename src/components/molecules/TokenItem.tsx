@@ -32,7 +32,7 @@ export const TokenItem: FC<Props> = ({
         display="flex"
         flexDir="row"
         alignItems="center"
-        pb="8px"
+        py="8px"
         gap="16px"
         _last={{
           borderBottom: 'none',
@@ -63,7 +63,11 @@ export const TokenItem: FC<Props> = ({
           <Text color="brand.text.primary" textStyle="bold.0">
             {tokenSymbol}
           </Text>
-          <Flex width="100%" justifyContent="space-between">
+          <Flex
+            width="100%"
+            justifyContent="space-between"
+            display={tokenAddress === 'Unknown' ? 'none' : 'flex'}
+          >
             <Text
               color="brand.text.primary"
               textStyle={'regular.2'}
