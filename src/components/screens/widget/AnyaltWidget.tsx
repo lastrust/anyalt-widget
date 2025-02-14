@@ -1,4 +1,7 @@
+import { useAtomValue } from 'jotai';
+import { useMemo } from 'react';
 import { AnyaltWidgetProps } from '../../..';
+import { inTokenAmountAtom, inTokenAtom } from '../../../store/stateStore';
 import { Footer } from '../../molecules/footer/Footer';
 import { Header } from '../../molecules/header/Header';
 import { ConnectWalletsModal } from '../../standalones/modals/ConnectWalletsModal';
@@ -55,6 +58,12 @@ export const AnyaltWidgetWrapper = ({
     walletConnector,
     isTokenBuyTemplate,
   });
+  const inTokenAmount = useAtomValue(inTokenAmountAtom);
+  const inToken = useAtomValue(inTokenAtom);
+
+  const isButtonDisabled = useMemo(() => {
+    return Number(inTokenAmount ?? 0) == 0 || inToken == null;
+  }, [inTokenAmount, inToken]);
 
   return (
     <ModalWrapper
@@ -73,6 +82,7 @@ export const AnyaltWidgetWrapper = ({
           failedToFetchRoute={failedToFetchRoute}
           openSlippageModal={openSlippageModal}
           setOpenSlippageModal={setOpenSlippageModal}
+          isButtonDisabled={isButtonDisabled}
         />
         <ChoosingRouteStep
           loading={loading}
