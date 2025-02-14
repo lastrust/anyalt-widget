@@ -24,8 +24,6 @@ export const TokenSelectModal: FC<Props> = ({ onClose, onTokenSelect }) => {
     allTokens,
     activeChain,
     setActiveChain,
-    showAllChains,
-    setShowAllChains,
     searchInputValue,
   } = useTokenSelectModal();
 
@@ -62,8 +60,10 @@ export const TokenSelectModal: FC<Props> = ({ onClose, onTokenSelect }) => {
       <Box
         id="token-select-box"
         width="100%"
+        maxW="512px"
         maxH="554px"
         padding="24px"
+        margin="0 auto"
         borderRadius="16px 16px 12px 12px"
         bgColor="brand.quaternary"
         color="brand.text.primary"
@@ -120,16 +120,6 @@ export const TokenSelectModal: FC<Props> = ({ onClose, onTokenSelect }) => {
               </Box>
             ))}
           </Box>
-          <Text
-            fontSize="14px"
-            cursor="pointer!important"
-            color="brand.secondary.100"
-            textDecoration="underline"
-            textAlign="center"
-            onClick={() => setShowAllChains(!showAllChains)}
-          >
-            {showAllChains ? 'Show less chains' : 'Show more chains'}
-          </Text>
         </Box>
         <Box overflow="auto">
           <Text fontSize="20px" fontWeight="bold" mb="16px">
@@ -182,7 +172,7 @@ export const TokenSelectModal: FC<Props> = ({ onClose, onTokenSelect }) => {
                   <TokenItem
                     tokenSymbol={customToken.symbol}
                     tokenIcon={customToken.logoUrl}
-                    chainName={customToken.chain?.displayName ?? ''}
+                    tokenAddress={customToken.tokenAddress ?? ''}
                     onClick={() => {
                       setShowAccept(true);
                     }}
@@ -195,7 +185,7 @@ export const TokenSelectModal: FC<Props> = ({ onClose, onTokenSelect }) => {
                   key={token.id}
                   tokenSymbol={token.symbol}
                   tokenIcon={token.logoUrl}
-                  chainName={token.chain?.displayName ?? ''}
+                  tokenAddress={token.tokenAddress ?? ''}
                   onClick={() => {
                     onTokenSelect(token);
                   }}

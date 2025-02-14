@@ -13,6 +13,7 @@ type Props = {
   loading: boolean;
   exchangeIcon: string;
   exchangeName: string;
+  exchangeType: 'BRIDGE' | 'DEX' | 'AGGREGATOR' | 'OFF_CHAIN' | 'LAST_MILE';
   stepNumber: number;
   fromToken: {
     name: string;
@@ -29,6 +30,7 @@ type Props = {
 export const RouteStep = ({
   exchangeIcon,
   exchangeName,
+  exchangeType,
   fromToken,
   toToken,
   loading,
@@ -48,12 +50,13 @@ export const RouteStep = ({
           border="1px solid white"
         />
       )}
-      <VStack justifyContent={'start'} alignItems={'start'} gap={'4px'}>
+      <VStack justifyContent={'space-between'} alignItems={'start'} gap={'4px'}>
         {loading ? (
           <Skeleton w={'180px'} h={'18px'} borderRadius="12px" />
         ) : (
           <Text color="brand.secondary.3" textStyle={'regular.3'}>
-            Swap token using {exchangeName}
+            {exchangeType === 'BRIDGE' ? 'Bridge' : 'Swap'} token using{' '}
+            {exchangeName}
           </Text>
         )}
         {loading ? (
@@ -65,7 +68,7 @@ export const RouteStep = ({
               fontSize="12px"
               fontWeight="regular"
             >
-              {fromToken.amount} {fromToken.name}.{fromToken.chainName}{' '}
+              {`${fromToken.amount} ${fromToken.name}.${fromToken.chainName} `.toUpperCase()}
             </Text>
             <Box>
               <ArrowRightIcon />
@@ -75,7 +78,7 @@ export const RouteStep = ({
               fontSize="12px"
               fontWeight="regular"
             >
-              {toToken.amount} {toToken.name}.{toToken.chainName}
+              {`${toToken.amount} ${toToken.name}.${toToken.chainName}`.toUpperCase()}
             </Text>
           </HStack>
         )}

@@ -5,7 +5,8 @@ export interface TransactionDetailsType {
   profit: string;
   swapperLogo: string;
   swapperName: string;
-  swapperType: string;
+  swapperType: 'BRIDGE' | 'DEX' | 'AGGREGATOR' | 'OFF_CHAIN';
+  swapChainType: 'INTER_CHAIN' | 'INTRA_CHAIN';
   fromAmount: string;
   toAmount: string;
   requiredSings: number;

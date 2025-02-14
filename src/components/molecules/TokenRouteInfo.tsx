@@ -14,7 +14,7 @@ type Props = BoxProps & {
   price: number;
   chainIcon: string;
   tokenName: string;
-  difference: number;
+  slippage: string;
   network: string;
   tokenIcon: string;
   loading: boolean;
@@ -27,10 +27,14 @@ export const TokenRouteInfo: FC<Props> = ({
   tokenName,
   tokenIcon,
   network,
-  difference,
+  slippage,
   loading,
   ...props
 }) => {
+  // useEffect(() => {
+  //   console.log('~slippage', slippage);
+  // }, [slippage]);
+
   return (
     <Flex justifyContent={'start'} w={'full'} alignItems={'center'} {...props}>
       {loading ? (
@@ -87,7 +91,8 @@ export const TokenRouteInfo: FC<Props> = ({
               fontWeight="regular"
               opacity={0.4}
             >
-              {difference}%
+              {slippage}
+              {isNaN(Number(slippage)) ? '' : '%'}
             </Text>
           )}
           {loading ? (

@@ -119,7 +119,8 @@ export const TransactionAccordion = () => {
           <AccordionPanel p={'0px'} mt="12px">
             <VStack gap={'12px'} alignItems={'flex-start'}>
               <Text textStyle={'regular.1'} color="brand.secondary.3">
-                Swap tokens using {swap.swapperId}
+                {swap.swapperType === 'BRIDGE' ? 'Bridge' : 'Swap'} tokens using{' '}
+                {swap.swapperId}
               </Text>
               {swap.internalSwaps?.map((internalSwap, index) => {
                 return (

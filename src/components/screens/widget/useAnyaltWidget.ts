@@ -20,6 +20,7 @@ import {
   protocolInputTokenAtom,
   selectedRouteAtom,
   slippageAtom,
+  stepsProgressAtom,
   tokenFetchErrorAtom,
   transactionsListAtom,
 } from '../../../store/stateStore';
@@ -56,12 +57,14 @@ export const useAnyaltWidget = ({
   const { activeStep, setActiveStep, goToNext, goToPrevious } = useSteps({
     index: 0,
   });
+
   const {
     isOpen: isConnectWalletsOpen,
     onClose: connectWalletsClose,
     onOpen: connectWalletsOpen,
   } = useDisclosure();
 
+  const [, setStepsProgress] = useAtom(stepsProgressAtom);
   const inToken = useAtomValue(inTokenAtom);
   const slippage = useAtomValue(slippageAtom);
   const inTokenAmount = useAtomValue(inTokenAmountAtom);
@@ -84,6 +87,30 @@ export const useAnyaltWidget = ({
   );
 
   const { balance } = useTokenInputBox();
+
+  // const resetState = useCallback(() => {
+  //   setInTokenAmount('');
+  //   setActiveOperationId(undefined);
+  //   setFinalTokenEstimate(undefined);
+  //   setTransactionsList(undefined);
+  //   setTokenFetchError({ isError: false, errorMessage: '' });
+  //   setSelectedRoute(undefined);
+  //   setBestRoute(undefined);
+  // }, [
+  //   setInTokenAmount,
+  //   setActiveOperationId,
+  //   setFinalTokenEstimate,
+  //   setTransactionsList,
+  //   setTokenFetchError,
+  //   setSelectedRoute,
+  //   setBestRoute,
+  // ]);
+
+  // useEffect(() => {
+  //   if (activeStep === 0) {
+  //     resetState();
+  //   }
+  // }, [activeStep]);
 
   useEffect(() => {
     setCurrentUiStep(activeStep);
@@ -255,7 +282,8 @@ export const useAnyaltWidget = ({
   const onChooseRouteButtonClick = async () => {
     if (areWalletsConnected) {
       await onGetQuote(false);
-      connectWalletsConfirm();
+      await connectWalletsConfirm();
+      setStepsProgress(undefined);
     } else {
       if (walletConnector) {
         walletConnector.connect();
