@@ -29,16 +29,20 @@ export const useSolana = () => {
       throw new Error('Solana connection not found');
     }
 
-    // Create PublicKey objects for the token and wallet
-    const tokenPublicKey = new PublicKey(tokenAddress);
     const walletPublicKey = new PublicKey(walletAddress);
-
-    if (tokenAddress === 'So11111111111111111111111111111111111111112') {
+    if (
+      tokenAddress === 'So11111111111111111111111111111111111111112' ||
+      tokenAddress === 'Unknown' ||
+      tokenAddress === ''
+    ) {
       // Get the SOL balance
       const solBalanceLamports = await connection.getBalance(walletPublicKey);
       const solBalance = (solBalanceLamports / 1e9).toString(); // Convert lamports to SOL
       return solBalance;
     }
+
+    // Create PublicKey objects for the token and wallet
+    const tokenPublicKey = new PublicKey(tokenAddress);
 
     // Get all token accounts owned by the wallet
     const tokenAccounts = await connection.getParsedTokenAccountsByOwner(
