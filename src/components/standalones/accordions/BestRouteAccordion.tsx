@@ -232,7 +232,8 @@ export const BestRouteAccordion = ({
                     />
                   ) : (
                     <Text textStyle={'bold.3'} ml={'24px'} lineHeight={'120%'}>
-                      Transaction {swaps.length + 1}: Last Mile Transaction
+                      Transaction {(bestRoute.swaps?.length ?? 0) + 1}: Last
+                      Mile Transaction
                     </Text>
                   )}
                   <RouteStep
