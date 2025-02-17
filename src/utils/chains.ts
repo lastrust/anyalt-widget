@@ -10,3 +10,16 @@ export const chainExplorers = {
   BLAST: 'https://blastscan.io/tx/',
   SOLANA: 'https://solscan.io/tx/',
 };
+
+export const chainIds = {
+  ETH: 1,
+  ARBITRUM: 42161,
+  POLYGON: 137,
+  OPTIMISM: 10,
+  BASE: 8453,
+  LINEA: 59144,
+  BTC: 0,
+  SCROLL: 534351,
+  BLAST: 534352,
+  SOLANA: 101,
+};

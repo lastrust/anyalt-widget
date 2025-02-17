@@ -24,6 +24,7 @@ import {
   isTokenBuyTemplateAtom,
   stepsProgressAtom,
 } from '../../../store/stateStore';
+import { chainIds } from '../../../utils/chains';
 
 // Types moved to top
 export type TransactionStatus =
@@ -497,6 +498,7 @@ export const useHandleTransaction = (
       try {
         stepIndex++;
         setCurrentStep(stepIndex);
+        console.log('stepIndex: ', stepIndex);
         const lastSwap = bestRoute?.swaps[bestRoute.swaps.length - 1];
         const chain = allChains.find(
           (chain) => chain.name === lastSwap?.to.blockchain,
@@ -518,14 +520,18 @@ export const useHandleTransaction = (
             stepDescription: 'Pending',
           },
         });
+
         const executeResponse = await executeCallBack({
           amount: crosschainSwapOutputAmount,
           address: lastSwap?.to.address || '',
           decimals: lastSwap?.to.decimals || 0,
+          chainId:
+            chainIds[lastSwap?.to.blockchain as keyof typeof chainIds] || 1,
           name: lastSwap?.to.symbol || '',
           symbol: lastSwap?.to.symbol || '',
           chainType: isEvm ? ChainType.EVM : ChainType.SOLANA,
         });
+
         setFinalTokenAmount(executeResponse.amountOut);
         if (executeResponse.approvalTxHash) {
           updateStepProgress({
@@ -556,20 +562,29 @@ export const useHandleTransaction = (
           });
         }
       } catch (error) {
-        updateStepProgress({
-          isApproval: false,
-          status: 'failed',
-          message:
-            error instanceof TransactionError
-              ? error.message
-              : 'Transaction failed',
-          error: error instanceof Error ? error.message : String(error),
-          details: {
-            currentStep,
-            totalSteps,
-            stepDescription: 'Failed',
-          },
-        });
+        console.log('stepIndex: ', stepIndex);
+        console.log('error: ', error);
+        try {
+          console.log('stepIndex: ', stepIndex);
+          updateStepProgress({
+            isApproval: false,
+            status: 'failed',
+            message:
+              error instanceof TransactionError
+                ? error.message
+                : 'Transaction failed',
+            error: error instanceof Error ? error.message : String(error),
+            details: {
+              currentStep: stepIndex, // Ensure stepIndex is used
+              totalSteps,
+              stepDescription: 'Failed',
+            },
+          });
+        } catch (updateError) {
+          console.error('Failed to update step progress:', updateError);
+        }
+        console.log('Update step progress failed');
+
         throw new TransactionError(
           'Failed to execute last mile transaction',
           error,

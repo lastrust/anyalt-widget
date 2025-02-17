@@ -92,14 +92,14 @@ export const TransactionAccordion = () => {
               </Text>
               {currentStep - 1 > index && <CheckIcon />}
               {Boolean(
-                (currentStep - 1 === index &&
-                  stepsProgress?.steps[index].approve) ||
+                stepsProgress?.steps[index].approve ||
                   stepsProgress?.steps[index].swap,
-              ) && (
-                <Text textStyle={'bold.2'} color="brand.tertiary.100">
-                  In Progress
-                </Text>
-              )}
+              ) &&
+                Boolean(currentStep - 1 === index) && (
+                  <Text textStyle={'bold.2'} color="brand.tertiary.100">
+                    In Progress
+                  </Text>
+                )}
             </HStack>
             <Box
               bg="brand.tertiary.100"

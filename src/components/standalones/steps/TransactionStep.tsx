@@ -34,7 +34,7 @@ export const TransactionStep = ({
           onTxComplete={onTxComplete}
         />
       </SwappingTemplate>
-      <SwappingTemplate m="0">
+      <SwappingTemplate m="0" maxH={'520px'} overflow={'scroll'}>
         <TransactionList />
       </SwappingTemplate>
     </Grid>
