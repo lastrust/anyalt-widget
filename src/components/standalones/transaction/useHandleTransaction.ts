@@ -498,6 +498,7 @@ export const useHandleTransaction = (
       try {
         stepIndex++;
         setCurrentStep(stepIndex);
+        console.log('stepIndex: ', stepIndex);
         const lastSwap = bestRoute?.swaps[bestRoute.swaps.length - 1];
         const chain = allChains.find(
           (chain) => chain.name === lastSwap?.to.blockchain,
@@ -519,6 +520,7 @@ export const useHandleTransaction = (
             stepDescription: 'Pending',
           },
         });
+
         const executeResponse = await executeCallBack({
           amount: crosschainSwapOutputAmount,
           address: lastSwap?.to.address || '',
@@ -529,6 +531,7 @@ export const useHandleTransaction = (
           symbol: lastSwap?.to.symbol || '',
           chainType: isEvm ? ChainType.EVM : ChainType.SOLANA,
         });
+
         setFinalTokenAmount(executeResponse.amountOut);
         if (executeResponse.approvalTxHash) {
           updateStepProgress({
@@ -559,20 +562,29 @@ export const useHandleTransaction = (
           });
         }
       } catch (error) {
-        updateStepProgress({
-          isApproval: false,
-          status: 'failed',
-          message:
-            error instanceof TransactionError
-              ? error.message
-              : 'Transaction failed',
-          error: error instanceof Error ? error.message : String(error),
-          details: {
-            currentStep,
-            totalSteps,
-            stepDescription: 'Failed',
-          },
-        });
+        console.log('stepIndex: ', stepIndex);
+        console.log('error: ', error);
+        try {
+          console.log('stepIndex: ', stepIndex);
+          updateStepProgress({
+            isApproval: false,
+            status: 'failed',
+            message:
+              error instanceof TransactionError
+                ? error.message
+                : 'Transaction failed',
+            error: error instanceof Error ? error.message : String(error),
+            details: {
+              currentStep: stepIndex, // Ensure stepIndex is used
+              totalSteps,
+              stepDescription: 'Failed',
+            },
+          });
+        } catch (updateError) {
+          console.error('Failed to update step progress:', updateError);
+        }
+        console.log('Update step progress failed');
+
         throw new TransactionError(
           'Failed to execute last mile transaction',
           error,
