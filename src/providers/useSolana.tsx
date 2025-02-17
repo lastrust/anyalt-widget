@@ -30,11 +30,7 @@ export const useSolana = () => {
     }
 
     const walletPublicKey = new PublicKey(walletAddress);
-    if (
-      tokenAddress === 'So11111111111111111111111111111111111111112' ||
-      tokenAddress === 'Unknown' ||
-      tokenAddress === ''
-    ) {
+    if (tokenAddress === 'Unknown' || tokenAddress === '') {
       // Get the SOL balance
       const solBalanceLamports = await connection.getBalance(walletPublicKey);
       const solBalance = (solBalanceLamports / 1e9).toString(); // Convert lamports to SOL
