@@ -38,13 +38,13 @@ export const TransactionHash = ({ type, progress }: Props) => {
             isExternal
           >
             {isCopied
-              ? 'tx hash copied!'
+              ? 'Tx Hash Copied!'
               : `${progress?.txHash?.slice(0, 10)}...${progress?.txHash?.slice(
                   -4,
                 )}`}
           </Link>
         </HStack>
-        <Box cursor={'pointer'} onClick={() => handleCopy()}>
+        <Box cursor={'pointer'} onClick={handleCopy}>
           <CopyIcon />
         </Box>
       </HStack>
