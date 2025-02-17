@@ -272,7 +272,7 @@ export const useAnyaltWidget = ({
       if (inTokenAmount) {
         onGetQuote(false);
       }
-    }, 300);
+    }, 500);
 
     return () => {
       clearTimeout(debounceTimeout);

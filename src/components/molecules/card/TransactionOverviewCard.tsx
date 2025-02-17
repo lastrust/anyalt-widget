@@ -1,5 +1,6 @@
 import { SwapResultAsset } from '@anyalt/sdk/dist/adapter/api/api';
 import { Box, Divider, HStack, Text, VStack } from '@chakra-ui/react';
+import { useCallback, useState } from 'react';
 import { CopyIcon } from '../../atoms/icons/CopyIcon';
 import { ArrowRightIcon } from '../../atoms/icons/transaction/ArrowRightIcon';
 import { TokenCard } from './TokenCard';
@@ -13,6 +14,16 @@ type Props = {
 };
 
 export const TransactionOverviewCard = ({ requestId, to, from }: Props) => {
+  const [isCopied, setIsCopied] = useState(false);
+
+  const handleCopy = useCallback(() => {
+    setIsCopied(true);
+
+    setTimeout(() => {
+      setIsCopied(false);
+    }, 2000);
+  }, []);
+
   return (
     <VStack
       w="100%"
@@ -50,9 +61,9 @@ export const TransactionOverviewCard = ({ requestId, to, from }: Props) => {
       <Divider w="100%" h="1px" bgColor="brand.secondary.12" />
       <HStack justifyContent={'space-between'} w="100%">
         <Text textStyle={'regular.3'} color="brand.secondary.3">
-          RequestID: {requestId}
+          RequestID: {isCopied ? 'Copied' : requestId}
         </Text>
-        <Box cursor={'pointer'}>
+        <Box cursor={'pointer'} onClick={handleCopy}>
           <CopyIcon />
         </Box>
       </HStack>

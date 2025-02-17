@@ -24,6 +24,7 @@ import {
   isTokenBuyTemplateAtom,
   stepsProgressAtom,
 } from '../../../store/stateStore';
+import { chainIds } from '../../../utils/chains';
 
 // Types moved to top
 export type TransactionStatus =
@@ -522,6 +523,8 @@ export const useHandleTransaction = (
           amount: crosschainSwapOutputAmount,
           address: lastSwap?.to.address || '',
           decimals: lastSwap?.to.decimals || 0,
+          chainId:
+            chainIds[lastSwap?.to.blockchain as keyof typeof chainIds] || 1,
           name: lastSwap?.to.symbol || '',
           symbol: lastSwap?.to.symbol || '',
           chainType: isEvm ? ChainType.EVM : ChainType.SOLANA,
