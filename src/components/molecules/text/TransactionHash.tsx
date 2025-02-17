@@ -1,4 +1,5 @@
 import { Box, Divider, HStack, Link, Text } from '@chakra-ui/react';
+import { useCallback, useState } from 'react';
 import { chainExplorers } from '../../../utils/chains';
 import { CopyIcon } from '../../atoms/icons/CopyIcon';
 import { TransactionProgress } from '../../standalones/transaction/useHandleTransaction';
@@ -9,6 +10,17 @@ type Props = {
 };
 
 export const TransactionHash = ({ type, progress }: Props) => {
+  const [isCopied, setIsCopied] = useState(false);
+
+  const handleCopy = useCallback(() => {
+    setIsCopied(true);
+    navigator.clipboard.writeText(progress?.txHash ?? '');
+
+    setTimeout(() => {
+      setIsCopied(false);
+    }, 2000);
+  }, []);
+
   if (!progress || !progress.txHash || !progress.chainName) return null;
 
   return (
@@ -25,13 +37,14 @@ export const TransactionHash = ({ type, progress }: Props) => {
             href={`${chainExplorers[progress.chainName as keyof typeof chainExplorers]}${progress.txHash}`}
             isExternal
           >
-            {progress?.txHash?.slice(0, 10)}...{progress?.txHash?.slice(-4)}
+            {isCopied
+              ? 'tx hash copied!'
+              : `${progress?.txHash?.slice(0, 10)}...${progress?.txHash?.slice(
+                  -4,
+                )}`}
           </Link>
         </HStack>
-        <Box
-          cursor={'pointer'}
-          onClick={() => navigator.clipboard.writeText(progress.txHash ?? '')}
-        >
+        <Box cursor={'pointer'} onClick={() => handleCopy()}>
           <CopyIcon />
         </Box>
       </HStack>

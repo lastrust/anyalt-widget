@@ -18,6 +18,7 @@ export const TransactionOverviewCard = ({ requestId, to, from }: Props) => {
 
   const handleCopy = useCallback(() => {
     setIsCopied(true);
+    navigator.clipboard.writeText(requestId);
 
     setTimeout(() => {
       setIsCopied(false);
