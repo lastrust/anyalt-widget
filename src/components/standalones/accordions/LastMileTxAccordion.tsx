@@ -112,29 +112,32 @@ export const LastMileTxAccordion = ({
               chainLogo: protocolInputToken?.chain?.logoUrl || '',
             }}
           />
-          <HStack w={'100%'}>
-            <HStack>
-              <TimeIcon />
-              <Text
-                color={'brand.secondary.3'}
-                lineHeight={'120%'}
-                textStyle={'regular.3'}
-              >
-                {finalTokenEstimate?.estimatedTimeInSeconds}s
-              </Text>
-            </HStack>
-            <DividerIcon />
-            <HStack>
-              <GasIcon />
-              <Text
-                color={'brand.secondary.3'}
-                lineHeight={'120%'}
-                textStyle={'regular.3'}
-              >
-                ${finalTokenEstimate?.estimatedFeeInUSD}
-              </Text>
-            </HStack>
-          </HStack>
+          {finalTokenEstimate?.estimatedTimeInSeconds &&
+            finalTokenEstimate?.estimatedFeeInUSD && (
+              <HStack w={'100%'}>
+                <HStack>
+                  <TimeIcon />
+                  <Text
+                    color={'brand.secondary.3'}
+                    lineHeight={'120%'}
+                    textStyle={'regular.3'}
+                  >
+                    {finalTokenEstimate?.estimatedTimeInSeconds}s
+                  </Text>
+                </HStack>
+                <DividerIcon />
+                <HStack>
+                  <GasIcon />
+                  <Text
+                    color={'brand.secondary.3'}
+                    lineHeight={'120%'}
+                    textStyle={'regular.3'}
+                  >
+                    ${finalTokenEstimate?.estimatedFeeInUSD}
+                  </Text>
+                </HStack>
+              </HStack>
+            )}
         </VStack>
 
         <Box>

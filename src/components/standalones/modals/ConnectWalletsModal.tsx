@@ -70,7 +70,13 @@ export const ConnectWalletsModal: FC<Props> = ({
       }
       return false;
     });
-  }, [bestRoute, allChains]);
+  }, [
+    bestRoute,
+    allChains,
+    isEvmRequired,
+    isSolanaRequired,
+    isBitcoinRequired,
+  ]);
 
   useEffect(() => {
     bestRoute?.swaps.forEach((swap) => {

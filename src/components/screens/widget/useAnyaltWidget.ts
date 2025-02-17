@@ -152,8 +152,10 @@ export const useAnyaltWidget = ({
   useEffect(() => {
     const inputTokenChain = allChains.find(
       (chain) =>
-        chain.chainId === inputToken.chainId &&
-        chain.chainType === inputToken.chainType,
+        (inputToken.chainId &&
+          chain.chainId === inputToken.chainId &&
+          chain.chainType === inputToken.chainType) ||
+        (!inputToken.chainId && chain.chainType === inputToken.chainType),
     );
 
     if (inputTokenChain) {
