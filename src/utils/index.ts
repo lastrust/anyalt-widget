@@ -1,3 +1,4 @@
+import { BestRouteResponse } from '@anyalt/sdk';
 import { PublicKey } from '@solana/web3.js';
 import { getBalance } from '@wagmi/core';
 import { ethers } from 'ethers';
@@ -45,4 +46,45 @@ export const getEvmTokenBalance = async (
 
   const balance = formatUnits(res.value, res.decimals);
   return balance;
+};
+
+export const calculateWorstOutput = (
+  route: BestRouteResponse,
+  slippage: string,
+) => {
+  const decimals = route.swaps[route.swaps.length - 1].to.decimals;
+
+  const outputAmountFloat = parseFloat(route.outputAmount);
+  const outputAmountBigInt = ethers.parseUnits(
+    outputAmountFloat.toFixed(decimals),
+    decimals,
+  );
+
+  const slippageNo = Number(slippage) / 100;
+  if (isNaN(slippageNo) || slippageNo < 0 || slippageNo > 1) {
+    throw new Error('Invalid slippage');
+  }
+
+  const PRECISION = BigInt(1000000);
+  const halfSlippageFactor =
+    PRECISION - BigInt(Math.floor(slippageNo * 500000));
+  const fullSlippageFactor =
+    PRECISION - BigInt(Math.floor(slippageNo * 1000000));
+
+  let worstOutput = outputAmountBigInt;
+  for (let i = 0; i < route.swaps.length; i++) {
+    if (i === 0) {
+      // In Rango, the first swap applies half the slippage
+      // This is done to balance the possibility of financial loss due to the slippage being applied on each swap
+      // With the possibility of the transaction not going through due to the slippage protection being too low
+      worstOutput = (worstOutput * halfSlippageFactor) / PRECISION;
+    } else {
+      worstOutput = (worstOutput * fullSlippageFactor) / PRECISION;
+    }
+  }
+
+  return {
+    humanReadable: ethers.formatUnits(worstOutput, decimals),
+    raw: worstOutput,
+  };
 };

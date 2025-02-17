@@ -24,6 +24,7 @@ import {
   tokenFetchErrorAtom,
   transactionsListAtom,
 } from '../../../store/stateStore';
+import { calculateWorstOutput } from '../../../utils';
 import { useTokenInputBox } from '../../standalones/selectSwap/token/input/useTokenInputBox';
 
 const REFRESH_INTERVAL = 20000;
@@ -88,7 +89,7 @@ export const useAnyaltWidget = ({
 
   useEffect(() => {
     onGetQuote(false);
-  }, [inToken]);
+  }, [inToken, slippage]);
 
   const { balance } = useTokenInputBox();
 
@@ -236,12 +237,27 @@ export const useAnyaltWidget = ({
       });
 
       const tokensOut = parseFloat(route?.outputAmount || '0');
-      const isEnoughDepositTokens = tokensOut > minDepositAmount;
+      let isEnoughDepositTokens = tokensOut > minDepositAmount;
 
       setTokenFetchError({
         isError: !isEnoughDepositTokens,
         errorMessage: `Amount should be equal or greater than ${minDepositAmount} ${inputToken?.symbol}`,
       });
+
+      if (isEnoughDepositTokens && route) {
+        const { humanReadable: worstCaseOutput } = calculateWorstOutput(
+          route,
+          slippage,
+        );
+
+        if (parseFloat(worstCaseOutput) < minDepositAmount) {
+          isEnoughDepositTokens = false;
+          setTokenFetchError({
+            isError: true,
+            errorMessage: `Output possibly low, the transaction might not get executed due to slippage. The protocol expects a minimum of ${minDepositAmount} ${inputToken?.symbol} please increase the input amount.`,
+          });
+        }
+      }
 
       if (
         activeStep !== 0 &&
