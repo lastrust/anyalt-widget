@@ -26,7 +26,7 @@ export const useSolana = () => {
     walletAddress: string,
   ): Promise<string> => {
     if (!connection) {
-      throw new Error('Solana connection not found');
+      return '0.00';
     }
 
     const walletPublicKey = new PublicKey(walletAddress);
@@ -60,7 +60,7 @@ export const useSolana = () => {
     });
 
     if (!tokenAccountInfo) {
-      throw new Error('Token account not found');
+      return '0.00';
     }
 
     // Extract the token balance

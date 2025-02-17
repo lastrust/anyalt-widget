@@ -71,20 +71,26 @@ export const WalletButton: FC<WalletButtonProps> = ({
 
   const getDisplayAddress = () => {
     if (isEvmWallet && evmAddress) {
-      return 'EVM: ' + formatAddress(evmAddress);
+      return formatAddress(evmAddress);
     }
     if (isSolanaWallet && publicKey) {
-      return 'Solana: ' + formatAddress(publicKey.toString());
+      return formatAddress(publicKey.toString());
     }
     if (isBitcoinWallet && bitcoinAccount) {
-      return 'Bitcoin: ' + formatAddress(bitcoinAccount.address);
+      return formatAddress(bitcoinAccount.address);
     }
     return network;
   };
 
   const getButtonStatus = () => {
-    if (isWalletConnected) {
-      return 'Disconnect';
+    if (isEvmWallet && evmAddress) {
+      return 'Disconnect EVM Wallet';
+    }
+    if (isSolanaWallet && publicKey) {
+      return 'Disconnect Solana Wallet';
+    }
+    if (isBitcoinWallet && bitcoinAccount) {
+      return 'Disconnect Bitcoin Wallet';
     }
     if (isEvmWallet) {
       return 'Connect EVM Wallet';
