@@ -6,6 +6,11 @@ import { useCallback } from 'react';
 import { ChainType, ExecuteResponse, Token, WalletConnector } from '../../..';
 import { walletConfig } from '../../../constants/configs';
 import {
+  STEP_DESCR,
+  TX_MESSAGE,
+  TX_STATUS,
+} from '../../../constants/transaction';
+import {
   allChainsAtom,
   bestRouteAtom,
   currentStepAtom,
@@ -46,7 +51,9 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
       const newSteps = prev?.steps ? [...prev.steps] : [];
       const index = progress.details.currentStep - 1;
 
-      const progressKey = progress.isApproval ? 'approve' : 'swap';
+      const progressKey = progress.isApproval
+        ? STEP_DESCR.approval
+        : STEP_DESCR.swap;
 
       newSteps[index] = {
         ...newSteps[index],
@@ -80,6 +87,7 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
         let isApproval = false;
         let chainName: string | undefined;
         let txHash: string | undefined;
+
         try {
           const transactionData = await getTransactionData(
             aaInstance,
@@ -87,56 +95,40 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
             slippage,
           );
 
+          chainName = transactionData.blockChain;
           isApproval =
             transactionData.type === 'EVM' &&
             (transactionData as EVMTransactionDataResponse).isApprovalTx;
 
-          console.log('isApproval: ', isApproval);
-
-          chainName = transactionData.blockChain;
+          const stepText = isApproval ? STEP_DESCR.approval : STEP_DESCR.swap;
+          const signerAddress = handleSignerAddress(transactionData);
+          const transactionType = isApproval ? 'APPROVE' : 'MAIN';
 
           updateStepProgress({
             isApproval,
-            status: 'signing',
-            message: 'Please sign the transaction in your wallet...',
+            status: TX_STATUS.signing,
+            message: TX_MESSAGE.signing,
             details: {
               currentStep: stepIndex,
               totalSteps,
-              stepDescription:
-                transactionData.type === 'EVM' &&
-                (transactionData as EVMTransactionDataResponse).isApprovalTx
-                  ? 'Token Approval'
-                  : 'Swap Transaction',
+              stepDescription: stepText,
             },
           });
 
           txHash = await handleTransaction(transactionData);
-          console.log('txHash: ', txHash);
 
           updateStepProgress({
             isApproval,
-            status: 'broadcasting',
-            message: 'Broadcasting transaction...',
+            status: TX_STATUS.broadcasting,
+            message: TX_MESSAGE.broadcasting,
             chainName,
             txHash,
             details: {
               currentStep: stepIndex,
               totalSteps,
-              stepDescription:
-                transactionData.type === 'EVM' &&
-                (transactionData as EVMTransactionDataResponse).isApprovalTx
-                  ? 'Token Approval'
-                  : 'Swap Transaction',
+              stepDescription: stepText,
             },
           });
-
-          const signerAddress = handleSignerAddress(transactionData);
-
-          const transactionType =
-            transactionData.type === 'EVM' &&
-            (transactionData as EVMTransactionDataResponse).isApprovalTx
-              ? 'APPROVE'
-              : 'MAIN';
 
           await submitPendingTransaction(aaInstance, {
             operationId,
@@ -147,19 +139,14 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
 
           updateStepProgress({
             isApproval,
-            status: 'pending',
-            message:
-              'Waiting for confirmation on source and destination chains...',
+            status: TX_STATUS.pending,
+            message: TX_MESSAGE.pending,
             chainName,
             txHash,
             details: {
               currentStep: stepIndex,
               totalSteps,
-              stepDescription:
-                transactionData.type === 'EVM' &&
-                (transactionData as EVMTransactionDataResponse).isApprovalTx
-                  ? 'Token Approval'
-                  : 'Swap Transaction',
+              stepDescription: stepText,
             },
           });
 
@@ -170,17 +157,16 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
           crosschainSwapOutputAmount = waitForTxResponse?.outputAmount || '0';
 
           if (swapIsFinished) {
-            console.log('swapIsFinished: ', swapIsFinished);
             updateStepProgress({
               isApproval,
-              status: 'confirmed',
-              message: 'Transaction confirmed successfully!',
+              status: TX_STATUS.confirmed,
+              message: TX_MESSAGE.confirmed,
               chainName,
               txHash,
               details: {
                 currentStep: stepIndex,
                 totalSteps,
-                stepDescription: 'Complete',
+                stepDescription: STEP_DESCR.complete,
               },
             });
             break;
@@ -194,21 +180,18 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
 
           updateStepProgress({
             isApproval,
-            status: 'confirmed',
-            message: 'Transaction confirmed successfully!',
+            status: TX_STATUS.confirmed,
+            message: TX_MESSAGE.confirmed,
             chainName,
             txHash,
             details: {
               currentStep: stepIndex,
               totalSteps,
-              stepDescription: 'Complete',
+              stepDescription: STEP_DESCR.complete,
             },
           });
 
-          if (
-            transactionData.type === 'EVM' &&
-            (transactionData as EVMTransactionDataResponse).isApprovalTx
-          ) {
+          if (isApproval) {
             console.log('approvalTx');
             continue;
           } else {
@@ -219,21 +202,25 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
         } catch (error) {
           console.error('Error during swap execution:', error);
           isCrosschainSwapError = true;
+          const isErrorInstance = error instanceof Error;
+          const isTxErrorInstance = error instanceof TransactionError;
+
+          const errorStatus = isErrorInstance ? error.message : String(error);
+          const errorMessage = isTxErrorInstance
+            ? error.message
+            : TX_MESSAGE.failed;
 
           updateStepProgress({
             isApproval,
-            status: 'failed',
-            message:
-              error instanceof TransactionError
-                ? error.message
-                : 'Transaction failed',
-            error: error instanceof Error ? error.message : String(error),
+            status: TX_STATUS.failed,
+            message: errorMessage,
+            error: errorStatus,
             chainName,
             txHash,
             details: {
               currentStep: stepIndex,
               totalSteps,
-              stepDescription: 'Failed',
+              stepDescription: STEP_DESCR.failed,
             },
           });
           break;
@@ -255,6 +242,7 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
           (chain) => chain.name === lastSwap?.to.blockchain,
         );
         const isEvm = chain?.chainType === ChainType.EVM;
+
         if (isEvm && chain?.chainId) {
           await switchChain(walletConfig, {
             chainId: chain.chainId,
@@ -262,12 +250,12 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
         }
         updateStepProgress({
           isApproval: false,
-          status: 'pending',
-          message: 'Waiting for transaction to complete...',
+          status: TX_STATUS.pending,
+          message: TX_MESSAGE.pending,
           details: {
             currentStep: stepIndex,
             totalSteps,
-            stepDescription: 'Pending',
+            stepDescription: STEP_DESCR.pending,
           },
         });
 
@@ -286,45 +274,43 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
         if (executeResponse.approvalTxHash) {
           updateStepProgress({
             isApproval: true,
-            status: 'confirmed',
-            message: 'Transaction confirmed successfully!',
+            status: TX_STATUS.confirmed,
+            message: TX_MESSAGE.confirmed,
             txHash: executeResponse.approvalTxHash,
             chainName: lastSwap?.to.blockchain,
             details: {
               currentStep: stepIndex,
               totalSteps,
-              stepDescription: 'Complete',
+              stepDescription: STEP_DESCR.complete,
             },
           });
         }
         if (executeResponse.executeTxHash) {
           updateStepProgress({
             isApproval: false,
-            status: 'confirmed',
-            message: 'Transaction confirmed successfully!',
+            status: TX_STATUS.confirmed,
+            message: TX_MESSAGE.confirmed,
             txHash: executeResponse.executeTxHash,
             chainName: lastSwap?.to.blockchain,
             details: {
               currentStep: stepIndex,
               totalSteps,
-              stepDescription: 'Complete',
+              stepDescription: STEP_DESCR.complete,
             },
           });
         }
       } catch (error) {
         try {
+          const isErrorInstance = error instanceof Error;
           updateStepProgress({
             isApproval: false,
-            status: 'failed',
-            message:
-              error instanceof TransactionError
-                ? error.message
-                : 'Transaction failed',
-            error: error instanceof Error ? error.message : String(error),
+            status: TX_STATUS.failed,
+            message: isErrorInstance ? error.message : TX_MESSAGE.failed,
+            error: isErrorInstance ? error.message : String(error),
             details: {
               currentStep: stepIndex, // Ensure stepIndex is used
               totalSteps,
-              stepDescription: 'Failed',
+              stepDescription: STEP_DESCR.failed,
             },
           });
         } catch (updateError) {
