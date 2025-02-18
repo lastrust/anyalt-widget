@@ -92,7 +92,7 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
       }
 
       do {
-        if (!swapData.swapIsFinished) break;
+        if (swapData.swapIsFinished) break;
 
         let isApproval = false;
         let chainName: string | undefined;
