@@ -3,7 +3,6 @@ import {
   EVMTransactionDataResponse,
   SolanaTransactionDataResponse,
 } from '@anyalt/sdk';
-import { useState } from 'react';
 import { WalletConnector } from '../../../..';
 import { useBitcoinHandler } from './useBitcoinHandler';
 import { useEvmHandler } from './useEvmHandler';
