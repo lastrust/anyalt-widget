@@ -70,7 +70,7 @@ export const useAnyaltWidget = ({
   const slippage = useAtomValue(slippageAtom);
   const inTokenAmount = useAtomValue(inTokenAmountAtom);
   const selectedRoute = useAtomValue(selectedRouteAtom);
-  
+
   const [swapData, setSwapData] = useAtom(swapDataAtom);
   const [, setStepsProgress] = useAtom(stepsProgressAtom);
   const [, setCurrentUiStep] = useAtom(currentUiStepAtom);
