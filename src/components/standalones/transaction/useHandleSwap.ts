@@ -51,13 +51,11 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
       const newSteps = prev?.steps ? [...prev.steps] : [];
       const index = progress.details.currentStep - 1;
 
-      const progressKey = progress.isApproval
-        ? STEP_DESCR.approval
-        : STEP_DESCR.swap;
+      const txType = progress.isApproval ? 'approve' : 'swap';
 
       newSteps[index] = {
         ...newSteps[index],
-        [progressKey]: progress,
+        [txType]: progress,
       };
       return { steps: newSteps };
     });
@@ -234,9 +232,33 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
       if (isTokenBuyTemplate) return;
 
       // Execute last mile transaction
+      stepIndex++;
+      setCurrentStep(stepIndex);
+
+      executeLastMileTransaction(
+        crosschainSwapOutputAmount,
+        stepIndex,
+        totalSteps,
+        executeCallBack,
+      );
+    },
+    [
+      handleEvmTransaction,
+      handleSolanaTransaction,
+      currentStep,
+      setCurrentStep,
+      setStepsProgress,
+    ],
+  );
+
+  const executeLastMileTransaction = useCallback(
+    async (
+      crosschainSwapOutputAmount: string,
+      stepIndex: number,
+      totalSteps: number,
+      executeCallBack: (token: Token) => Promise<ExecuteResponse>,
+    ) => {
       try {
-        stepIndex++;
-        setCurrentStep(stepIndex);
         const lastSwap = bestRoute?.swaps[bestRoute.swaps.length - 1];
         const chain = allChains.find(
           (chain) => chain.name === lastSwap?.to.blockchain,
@@ -271,6 +293,7 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
         });
 
         setFinalTokenAmount(executeResponse.amountOut);
+
         if (executeResponse.approvalTxHash) {
           updateStepProgress({
             isApproval: true,
@@ -323,13 +346,7 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
         );
       }
     },
-    [
-      handleEvmTransaction,
-      handleSolanaTransaction,
-      currentStep,
-      setCurrentStep,
-      setStepsProgress,
-    ],
+    [],
   );
 
   return {

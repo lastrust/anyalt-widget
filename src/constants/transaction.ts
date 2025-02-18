@@ -17,9 +17,9 @@ export const TX_STATUS: Record<string, TransactionStatus> = {
 };
 
 export const STEP_DESCR = {
-  pending: 'Pending',
-  approval: 'Token Approval',
-  swap: 'Swap Transaction',
-  complete: 'Complete',
-  failed: 'Failed',
+  pending: 'pending',
+  approval: 'approval',
+  swap: 'swap',
+  complete: 'complete',
+  failed: 'failed',
 };

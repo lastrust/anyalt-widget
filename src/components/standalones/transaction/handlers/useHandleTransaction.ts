@@ -16,8 +16,6 @@ type UseHandleTransactionProps = {
 export const useHandleTransaction = ({
   externalEvmWalletConnector,
 }: UseHandleTransactionProps) => {
-  const [txHash, setTxHash] = useState<string | undefined>(undefined);
-
   const { handleEvmTransaction } = useEvmHandler(externalEvmWalletConnector);
   const { handleSolanaTransaction } = useSolanaHandler();
   const { handleBitcoinTransaction } = useBitcoinHandler();
@@ -28,26 +26,22 @@ export const useHandleTransaction = ({
       | SolanaTransactionDataResponse
       | BitcoinTransactionDataResponse,
   ) => {
+    let txHash = '';
     switch (transactionData.type) {
       case 'EVM':
-        setTxHash(
-          await handleEvmTransaction(
-            transactionData as EVMTransactionDataResponse,
-          ),
+        txHash = await handleEvmTransaction(
+          transactionData as EVMTransactionDataResponse,
         );
         break;
       case 'SOLANA':
-        setTxHash(
+        txHash =
           (await handleSolanaTransaction(
             transactionData as SolanaTransactionDataResponse,
-          )) || '',
-        );
+          )) || '';
         break;
       case 'TRANSFER':
-        setTxHash(
-          await handleBitcoinTransaction(
-            transactionData as BitcoinTransactionDataResponse,
-          ),
+        txHash = await handleBitcoinTransaction(
+          transactionData as BitcoinTransactionDataResponse,
         );
         break;
       default:

@@ -22,15 +22,15 @@ export const ChevronDownIcon = () => {
         rx="15.3333"
         transform="matrix(-1 8.74228e-08 8.74228e-08 1 30.6667 5.82818e-08)"
         stroke="#919EAB"
-        stroke-opacity="0.12"
-        stroke-width="1.33333"
+        strokeOpacity="0.12"
+        strokeWidth="1.33333"
       />
       <path
         d="M21.333 14L15.9997 19.3333L10.6663 14"
         stroke="white"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
