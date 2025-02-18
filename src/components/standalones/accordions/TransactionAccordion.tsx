@@ -92,8 +92,8 @@ export const TransactionAccordion = () => {
               </Text>
               {currentStep - 1 > index && <CheckIcon />}
               {Boolean(
-                stepsProgress?.steps[index].approve ||
-                  stepsProgress?.steps[index].swap,
+                stepsProgress?.steps[index]?.approve ||
+                  stepsProgress?.steps[index]?.swap,
               ) &&
                 Boolean(currentStep - 1 === index) && (
                   <Text textStyle={'bold.2'} color="brand.tertiary.100">
