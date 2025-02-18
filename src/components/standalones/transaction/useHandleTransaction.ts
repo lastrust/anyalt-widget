@@ -9,7 +9,12 @@ import {
 import { SwapResult } from '@anyalt/sdk/src/adapter/api/api';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { VersionedTransaction } from '@solana/web3.js';
-import { getChainId, sendTransaction, switchChain } from '@wagmi/core';
+import {
+  getChainId,
+  sendTransaction,
+  switchChain,
+  waitForTransactionReceipt,
+} from '@wagmi/core';
 import { useAtom, useAtomValue } from 'jotai';
 import { useCallback } from 'react';
 import { useAccount } from 'wagmi';
@@ -195,16 +200,24 @@ export const useHandleTransaction = (
         console.log('res: ', res);
 
         if (transactionDetails.isApprovalTx) {
-          return await sendTransaction(walletConfig, {
+          const txHash = await sendTransaction(walletConfig, {
             to: transactionDetails.to as `0x${string}`,
             data: transactionDetails.data! as `0x${string}`,
           });
+          await waitForTransactionReceipt(walletConfig, {
+            hash: txHash,
+          });
+          return txHash;
         } else {
-          return await sendTransaction(walletConfig, {
+          const txHash = await sendTransaction(walletConfig, {
             to: transactionDetails.to as `0x${string}`,
             value: BigInt(transactionDetails.value!),
             data: transactionDetails.data! as `0x${string}`,
           });
+          await waitForTransactionReceipt(walletConfig, {
+            hash: txHash,
+          });
+          return txHash;
         }
       } catch (error) {
         throw new TransactionError(
@@ -234,7 +247,7 @@ export const useHandleTransaction = (
         const transaction = VersionedTransaction.deserialize(serializedMessage);
 
         const signedTransaction = await signTransaction!(transaction);
-        const response = await connection.sendRawTransaction(
+        const txHash = await connection.sendRawTransaction(
           signedTransaction.serialize(),
           {
             skipPreflight: true,
@@ -242,7 +255,35 @@ export const useHandleTransaction = (
           },
         );
 
-        return response;
+        const timeout = 60000;
+        const startTime = Date.now();
+
+        while (Date.now() - startTime < timeout) {
+          try {
+            const txStatus = await connection.getSignatureStatus(txHash);
+            console.log('txStatus: ', txStatus);
+
+            if (
+              txStatus.value?.confirmationStatus === 'finalized' ||
+              txStatus.value?.confirmationStatus === 'confirmed'
+            ) {
+              return txHash;
+            } else if (txStatus.value?.err) {
+              throw new TransactionError(
+                `Transaction failed: ${txStatus.value?.err}`,
+              );
+            }
+          } catch (error) {
+            throw new TransactionError(
+              'Failed to get transaction status',
+              error instanceof Error ? error.message : error,
+            );
+          }
+
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+        }
+
+        throw new TransactionError('Transaction confirmation timeout');
       } catch (error) {
         throw new TransactionError(
           'Failed to process Solana transaction',
