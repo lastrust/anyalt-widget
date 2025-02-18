@@ -166,13 +166,13 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
             operationId,
           });
           const swapIsFinished = waitForTxResponse.swapIsFinished;
-
+          const crosschainSwapOutputAmount =
+            waitForTxResponse?.outputAmount || '0';
           if (swapIsFinished) {
             setSwapData({
               ...swapData,
               swapIsFinished: waitForTxResponse.swapIsFinished,
-              crosschainSwapOutputAmount:
-                waitForTxResponse?.outputAmount || '0',
+              crosschainSwapOutputAmount: crosschainSwapOutputAmount,
               totalSteps,
             });
 
@@ -259,13 +259,14 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
       // Execute last mile transaction
 
       if (!isCrosschainSwapError) {
-        increaseTransactionIndex();
-        await executeLastMileTransaction(
-          swapData.crosschainSwapOutputAmount,
-          transactionIndex,
-          swapData.totalSteps,
-          executeCallBack,
-        );
+        if (totalSteps !== transactionIndex) increaseTransactionIndex();
+        setTimeout(async () => {
+          await executeLastMileTransaction(
+            transactionIndex,
+            swapData.totalSteps,
+            executeCallBack,
+          );
+        }, 1000);
       }
     },
     [
@@ -281,7 +282,6 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
 
   const executeLastMileTransaction = useCallback(
     async (
-      crosschainSwapOutputAmount: string,
       stepIndex: number,
       totalSteps: number,
       executeCallBack: (token: Token) => Promise<ExecuteResponse>,
@@ -311,7 +311,7 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
         });
 
         const executeResponse = await executeCallBack({
-          amount: crosschainSwapOutputAmount,
+          amount: swapData.crosschainSwapOutputAmount,
           address: lastSwap?.to.address || '',
           decimals: lastSwap?.to.decimals || 0,
           chainId:
@@ -364,7 +364,7 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
         );
       }
     },
-    [],
+    [swapData.crosschainSwapOutputAmount],
   );
 
   return {
