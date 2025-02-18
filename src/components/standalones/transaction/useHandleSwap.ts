@@ -82,6 +82,7 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
 
       setSwapData({
         ...swapData,
+        isCrosschainSwapError,
         totalSteps,
       });
 
