@@ -13,13 +13,13 @@ import { useAtom, useAtomValue } from 'jotai';
 import { useState } from 'react';
 import {
   bestRouteAtom,
-  currentStepAtom,
   finalTokenEstimateAtom,
   isTokenBuyTemplateAtom,
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
   selectedRouteAtom,
   stepsProgressAtom,
+  transactionIndexAtom,
 } from '../../../store/stateStore';
 import { truncateToDecimals } from '../../../utils/truncateToDecimals';
 import { CheckIcon } from '../../atoms/icons/transaction/CheckIcon';
@@ -34,7 +34,7 @@ export const TransactionAccordion = () => {
   const [isLastMileExpanded, setIsLastMileExpanded] = useState(false);
 
   const bestRoute = useAtomValue(bestRouteAtom);
-  const currentStep = useAtomValue(currentStepAtom);
+  const currentStep = useAtomValue(transactionIndexAtom);
   const stepsProgress = useAtomValue(stepsProgressAtom);
   const isTokenBuyTemplate = useAtomValue(isTokenBuyTemplateAtom);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);

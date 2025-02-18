@@ -5,9 +5,9 @@ import {
   activeOperationIdAtom,
   anyaltInstanceAtom,
   bestRouteAtom,
-  currentStepAtom,
   finalTokenEstimateAtom,
   slippageAtom,
+  transactionIndexAtom,
   transactionsListAtom,
 } from '../../../../store/stateStore';
 import { useHandleSwap } from '../useHandleSwap';
@@ -25,7 +25,7 @@ export const useTransactionInfo = ({
 
   const slippage = useAtomValue(slippageAtom);
   const bestRoute = useAtomValue(bestRouteAtom);
-  const currentStep = useAtomValue(currentStepAtom);
+  const currentStep = useAtomValue(transactionIndexAtom);
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
   const activeOperationId = useAtomValue(activeOperationIdAtom);
   const transactionsList = useAtomValue(transactionsListAtom);
