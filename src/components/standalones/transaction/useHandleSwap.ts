@@ -259,14 +259,12 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
       // Execute last mile transaction
 
       if (!isCrosschainSwapError) {
-        if (totalSteps !== transactionIndex) increaseTransactionIndex();
-        setTimeout(async () => {
-          await executeLastMileTransaction(
-            transactionIndex,
-            swapData.totalSteps,
-            executeCallBack,
-          );
-        }, 1000);
+        if (transactionIndex < swapData.totalSteps) increaseTransactionIndex();
+        await executeLastMileTransaction(
+          transactionIndex,
+          swapData.totalSteps,
+          executeCallBack,
+        );
       }
     },
     [
@@ -309,6 +307,8 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
             stepDescription: STEP_DESCR.pending,
           },
         });
+
+        console.log(swapData)
 
         const executeResponse = await executeCallBack({
           amount: swapData.crosschainSwapOutputAmount,
