@@ -76,6 +76,7 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
       swaps: SwapResult[],
       executeCallBack: (token: Token) => Promise<ExecuteResponse>,
     ) => {
+      let isCrosschainSwapError = false;
       const lastMileTxStep = 1;
       const totalSteps = swaps.length + lastMileTxStep;
 
@@ -215,6 +216,7 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
           }
         } catch (error) {
           console.error('Error during swap execution:', error);
+          isCrosschainSwapError = true;
           setSwapData({
             ...swapData,
             isCrosschainSwapError: true,
@@ -245,21 +247,23 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
         }
       } while (!swapData.swapIsFinished);
 
-      if (swapData.isCrosschainSwapError) {
+      if (isCrosschainSwapError) {
         throw new TransactionError('Transaction failed');
       }
       // If the template is token buy, we don't need to execute the last mile transaction
       if (isTokenBuyTemplate) return;
 
       // Execute last mile transaction
-      increaseTransactionIndex();
 
-      await executeLastMileTransaction(
-        swapData.crosschainSwapOutputAmount,
-        transactionIndex,
-        swapData.totalSteps,
-        executeCallBack,
-      );
+      if (!isCrosschainSwapError) {
+        increaseTransactionIndex();
+        await executeLastMileTransaction(
+          swapData.crosschainSwapOutputAmount,
+          transactionIndex,
+          swapData.totalSteps,
+          executeCallBack,
+        );
+      }
     },
     [
       handleEvmTransaction,
