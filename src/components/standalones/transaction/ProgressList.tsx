@@ -13,16 +13,16 @@ export const ProgressList = ({
 
   return (
     <VStack w={'100%'}>
-      {stepsProgress?.steps[index].approve && (
+      {stepsProgress?.steps[index]?.approve && (
         <ProgressItem
           isApprove={true}
-          progress={stepsProgress.steps[index].approve}
+          progress={stepsProgress.steps[index]?.approve}
         />
       )}
-      {stepsProgress?.steps[index].swap && (
+      {stepsProgress?.steps[index]?.swap && (
         <ProgressItem
           isApprove={false}
-          progress={stepsProgress.steps[index].swap}
+          progress={stepsProgress.steps[index]?.swap}
         />
       )}
     </VStack>

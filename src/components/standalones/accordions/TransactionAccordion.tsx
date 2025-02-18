@@ -201,16 +201,16 @@ export const TransactionAccordion = () => {
                 </HStack>
               </HStack>
 
-              {stepsProgress?.steps[index].approve && (
+              {stepsProgress?.steps[index]?.approve && (
                 <TransactionHash
                   type="Approval"
-                  progress={stepsProgress?.steps[index].approve}
+                  progress={stepsProgress?.steps[index]?.approve}
                 />
               )}
-              {stepsProgress?.steps[index].swap && (
+              {stepsProgress?.steps[index]?.swap && (
                 <TransactionHash
                   type="Swap"
-                  progress={stepsProgress?.steps[index].swap}
+                  progress={stepsProgress?.steps[index]?.swap}
                 />
               )}
             </VStack>
