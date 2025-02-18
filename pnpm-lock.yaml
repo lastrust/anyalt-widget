@@ -15,8 +15,8 @@ importers:
         specifier: ^1.5.0
         version: 1.5.0(antd@5.24.0(date-fns@2.30.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.7.3)
       '@anyalt/sdk':
-        specifier: 1.0.7
-        version: 1.0.7(@babel/core@7.26.7)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.26.7))(bufferutil@4.0.9)(jest@29.7.0(@types/node@22.13.0)(babel-plugin-macros@3.1.0))(openapi-types@12.1.3)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.22.4)
+        specifier: 1.0.10
+        version: 1.0.10(@babel/core@7.26.7)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.26.7))(bufferutil@4.0.9)(jest@29.7.0(@types/node@22.13.0)(babel-plugin-macros@3.1.0))(openapi-types@12.1.3)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.22.4)
       '@chakra-ui/react':
         specifier: 2.10.4
         version: 2.10.4(@emotion/react@11.14.0(@types/react@19.0.8)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.8)(react@19.0.0))(@types/react@19.0.8)(react@19.0.0))(@types/react@19.0.8)(framer-motion@11.18.2(@emotion/is-prop-valid@1.3.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -40,7 +40,7 @@ importers:
         version: 1.6.5(@react-native-async-storage/async-storage@1.24.0(react-native@0.77.0(@babel/core@7.26.7)(@babel/preset-env@7.26.7(@babel/core@7.26.7))(@types/react@19.0.8)(bufferutil@4.0.9)(react@19.0.0)(utf-8-validate@5.0.10)))(@types/react@19.0.8)(bufferutil@4.0.9)(react@19.0.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.22.4)
       '@reown/appkit-adapter-wagmi':
         specifier: ^1.6.4
-        version: 1.6.5(f7rrhjzxkealmw7kqct7qaz55q)
+        version: 1.6.5(@coinbase/wallet-sdk@4.2.3)(@react-native-async-storage/async-storage@1.24.0(react-native@0.77.0(@babel/core@7.26.7)(@babel/preset-env@7.26.7(@babel/core@7.26.7))(@types/react@19.0.8)(bufferutil@4.0.9)(react@19.0.0)(utf-8-validate@5.0.10)))(@types/react@19.0.8)(@wagmi/connectors@5.7.5(@react-native-async-storage/async-storage@1.24.0(react-native@0.77.0(@babel/core@7.26.7)(@babel/preset-env@7.26.7(@babel/core@7.26.7))(@types/react@19.0.8)(bufferutil@4.0.9)(react@19.0.0)(utf-8-validate@5.0.10)))(@types/react@19.0.8)(@wagmi/core@2.16.3(@tanstack/query-core@5.66.0)(@types/react@19.0.8)(immer@9.0.21)(react@19.0.0)(typescript@5.7.3)(use-sync-external-store@1.4.0(react@19.0.0))(viem@2.22.19(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.22.4)))(bufferutil@4.0.9)(react@19.0.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(viem@2.22.19(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.22.4))(zod@3.22.4))(@wagmi/core@2.16.3(@tanstack/query-core@5.66.0)(@types/react@19.0.8)(immer@9.0.21)(react@19.0.0)(typescript@5.7.3)(use-sync-external-store@1.4.0(react@19.0.0))(viem@2.22.19(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.22.4)))(bufferutil@4.0.9)(react@19.0.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(viem@2.22.19(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.22.4))(wagmi@2.14.9(@react-native-async-storage/async-storage@1.24.0(react-native@0.77.0(@babel/core@7.26.7)(@babel/preset-env@7.26.7(@babel/core@7.26.7))(@types/react@19.0.8)(bufferutil@4.0.9)(react@19.0.0)(utf-8-validate@5.0.10)))(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@19.0.0))(@types/react@19.0.8)(bufferutil@4.0.9)(immer@9.0.21)(react@19.0.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(viem@2.22.19(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.22.4))(zod@3.22.4))(zod@3.22.4)
       '@solana/spl-token':
         specifier: ^0.1.8
         version: 0.1.8(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -143,7 +143,7 @@ importers:
         version: 3.4.2
       prettier-plugin-organize-imports:
         specifier: ^4.1.0
-        version: 4.1.0(prettier@3.4.2)(typescript@5.7.3)
+        version: 4.1.0(prettier@3.4.2)(typescript@5.7.3)(vue-tsc@1.8.27(typescript@5.7.3))
       react:
         specifier: ^19.0.0
         version: 19.0.0
@@ -245,8 +245,8 @@ packages:
       react: '>=17.0.0'
       react-dom: '>=17.0.0'
 
-  '@anyalt/sdk@1.0.7':
-    resolution: {integrity: sha512-biOmfWGvzkQhAJlHAXRGJlc/wb4ZAoLMpNMZAica8NvSbomOXssrJPu7D8Wknv1FhGH7oq2PNcPMAT/YQRNMog==}
+  '@anyalt/sdk@1.0.10':
+    resolution: {integrity: sha512-ydFmQZDMLCQrCdLjhNhH2X7pBZWzuwQK4leqLJfI5AEfX1meEKNMayFJ8WickjGcGvMTWkRxantH8xGVbn4C+A==}
 
   '@apidevtools/json-schema-ref-parser@11.7.2':
     resolution: {integrity: sha512-4gY54eEGEstClvEkGnwVkTkrx0sqwemEFG5OSRRn3tD91XH0+Q8XIkYIfo7IwEWPpJZwILb9GUXeShtplRc/eA==}
@@ -1457,12 +1457,12 @@ packages:
     resolution: {integrity: sha512-93zYdMES/c1D69yZiKDBj0V24vqNzB/koF26KPaagAfd3P/4gUlh3Dys5ogAK+Exi9QyzlD8x/08Zt7wIKcDcA==}
     deprecated: Use @eslint/object-schema instead
 
-  '@ibm-cloud/openapi-ruleset-utilities@1.7.0':
-    resolution: {integrity: sha512-hwMfl2s638P4VNkgZWq0KesmLQr6VNlAL5yslncjEuXS5pzUG4/3UmyoN5127wzeAMpamDOItj8BB07rLBT2sQ==}
+  '@ibm-cloud/openapi-ruleset-utilities@1.7.1':
+    resolution: {integrity: sha512-+P8SxhkO9sygENTyw6vUBc5oV/DOKjr6mdf6ubgstE9TypxT+uG4D6GqPhoTeVvHntOjcQnPHthssasA7vYE3g==}
     engines: {node: '>=16.0.0'}
 
-  '@ibm-cloud/openapi-ruleset@1.28.4':
-    resolution: {integrity: sha512-n8SUYLGHE6EC60XcOtzDfGQ5huKzWY7hTZ1pguslHOKJMcr0VNS/DLJRp4sbUWcCjqIGnNhHvZ2mj7rCyvnUWA==}
+  '@ibm-cloud/openapi-ruleset@1.29.2':
+    resolution: {integrity: sha512-/2OCrpqItKPTBdu2pvknqjv0cz5WfzgJ+MrkVhnHAuWOkD8aY5tRCTy7Ick3zy3rdTM71aMGAX+tje04u5AfbA==}
     engines: {node: '>=16.0.0'}
 
   '@inline-svg-unique-id/react@1.2.3':
@@ -1909,32 +1909,32 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@orval/angular@7.4.1':
-    resolution: {integrity: sha512-ypqJk/WJ9tnMQv17ZRoB73xZrNTskaR1FXc1j5FyC19dQgmBgCtyJrJsXDSRVj747KA9qtdHpS0sIzofwOTx/A==}
+  '@orval/angular@7.5.0':
+    resolution: {integrity: sha512-9Q3JhewXhF0EsrGD+ZA0r16sVW1TnFUiHLM2A9Lv8KFQ7E9CHlwf4Ab2d9OOjw+kU9DaesBjs0Yhi1IOlAQYeQ==}
 
-  '@orval/axios@7.4.1':
-    resolution: {integrity: sha512-Izg99898tPutkvFUSDD9LROEul1Gh88yxgSHSDFuWZcImkdjeg30Sc6b/EXytjn5I/De/PtQPgEIFPCEsZ9O4A==}
+  '@orval/axios@7.5.0':
+    resolution: {integrity: sha512-P3eKnqHBC8pWMNN0jVhniANaeIIvWeDXMIVh35uht+DN3YU6fFoDEgdAs9qSe7U6g9BjB9PEmUtArQws2YXDXg==}
 
-  '@orval/core@7.4.1':
-    resolution: {integrity: sha512-puqyqfA7uolvd/cSy11Siq7UqrgzLAWeVUMxhsuql5KFn3Vi+5n3XUztzbtW0kuTb27vX8kcpnlOMQMf8Jf1Og==}
+  '@orval/core@7.5.0':
+    resolution: {integrity: sha512-EmHaes7uFQUZGRnb5OfXcV0FDRH7M9lZVFXswx1R9dZMOtkt7nKtvUF3b+sjBfmktQMfEnIakFxfuwM/T2r3/A==}
 
-  '@orval/fetch@7.4.1':
-    resolution: {integrity: sha512-EVirxs0ii0rt/Lsl5IO7ADAKdEWNnHB7GinbdvtfugZ8rENzNzOQLyBm5QP70kJM70FVLBxWGpeH6Jnqz0Fv8g==}
+  '@orval/fetch@7.5.0':
+    resolution: {integrity: sha512-5ip4b9NKjRn0yGj0F0PRarkJcBr0gD6ugFQ00/3ED5GO0UleBOL5AsOgpHR5OOWALnA0nSPA14pJFtQClfg1Kg==}
 
-  '@orval/hono@7.4.1':
-    resolution: {integrity: sha512-qzoOl2KvbxpBZKZB19+vn5iOZIwGcbdYY+/qNmSlJQ3jA7bbHNbn26ZfItDlAh3WFH+fTvme58ezRNP7HVc0rw==}
+  '@orval/hono@7.5.0':
+    resolution: {integrity: sha512-UMV/HQRFuaR6IzHuUhH6dbLdxxMV8o/IWpd62EP9dcIT2wbDI+tF9524f0nF9BNIdM58NMQz7M+so1avSU7Csg==}
 
-  '@orval/mock@7.4.1':
-    resolution: {integrity: sha512-ywKwcQaLIyZXKE6kHmdF3M3HGtlOKaZZ6+ciSEV1vbKMBr7ahFyv0m2pitUiwHyJ3ameKarMArX0hk31klZbtA==}
+  '@orval/mock@7.5.0':
+    resolution: {integrity: sha512-+MDK+7LZUXpRlphOFaeWFsTowtmx7ILQF/vfwW0uR8hnlogc2LumTA9oC96WWAAwXTG8V9WuWH4rEek1Gf6IEA==}
 
-  '@orval/query@7.4.1':
-    resolution: {integrity: sha512-zlkrdiK+Bas7xOYM36cfZKGGoslKqh1B9mKaGQKadkCj9+54PzI9CxIxtCGZWJhLXB8kqPxaenNxyYoV/JW02A==}
+  '@orval/query@7.5.0':
+    resolution: {integrity: sha512-888TDfl5z0ZRbTp34l51GvPKN11cDolF+jWRk6p6YifpuCB5qPPBDbGae0195lx2zmM+gf3XEX0QF8YXd0WRzg==}
 
-  '@orval/swr@7.4.1':
-    resolution: {integrity: sha512-OnmSjDiS4xZUrkJhbmEQjdY95gfRHdp9uU5q9fGM4Qg1VVaR/KcOG7FRNk4WHcQmCmi4KDvwbboE/KJjsDsF7Q==}
+  '@orval/swr@7.5.0':
+    resolution: {integrity: sha512-bVy5cEFEww03yIqPSBlIS5fdoZUVEHBDtfz5Or7zibRLf/hsIUlb0nNt4AOYKtc3PoEMSlGsHxZq+qRqWxHwBQ==}
 
-  '@orval/zod@7.4.1':
-    resolution: {integrity: sha512-TqFidfTx9OtjTeA48P43/Vw1OaWuEkhURsMQGy8hn8w8/AKIAN7j0e/m8eoMLV/C3BN1ErfLDC1lkQ52q7u6SQ==}
+  '@orval/zod@7.5.0':
+    resolution: {integrity: sha512-FvX1jPZOSQLCYA76te5qqN72B1K1nLjVF8rogJJqAXgU8zGNaYghl0o1X3B8w1LslKpHiatBS5bPGSVnypJbMw==}
 
   '@particle-network/analytics@1.0.2':
     resolution: {integrity: sha512-E4EpTRYcfNOkxj+bgNdQydBrvdLGo4HfVStZCuOr3967dYek30r6L7Nkaa9zJXRE2eGT4lPvcAXDV2WxDZl/Xg==}
@@ -2265,8 +2265,8 @@ packages:
   '@shikijs/types@1.29.2':
     resolution: {integrity: sha512-VJjK0eIijTZf0QSTODEXCqinjBn0joAHQ+aPSBzrv4O2d/QSbsMw+ZeSRx03kV34Hy7NzUvV/7NqfYGRLrASmw==}
 
-  '@shikijs/vscode-textmate@10.0.1':
-    resolution: {integrity: sha512-fTIQwLF+Qhuws31iw7Ncl1R3HUDtGwIipiJ9iU+UsDUwMhegFcQKQHd51nZjb7CArq0MvON8rbgCGQYWHUKAdg==}
+  '@shikijs/vscode-textmate@10.0.2':
+    resolution: {integrity: sha512-83yeghZ2xxin3Nj8z1NMd/NCuca+gsYXswywDy5bHvwlWL8tpTQmzGeUuHd9FC3E/SBEMvzJRwWEOz5gGes9Qg==}
 
   '@sinclair/typebox@0.27.8':
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
@@ -5834,6 +5834,9 @@ packages:
   jsonschema@1.2.2:
     resolution: {integrity: sha512-iX5OFQ6yx9NgbHCwse51ohhKgLuLL7Z5cNOeZOPIlDUtAMrxlruHLzVZxbltdHE5mEDXN+75oFOwq6Gn0MZwsA==}
 
+  jsonschema@1.5.0:
+    resolution: {integrity: sha512-K+A9hhqbn0f3pJX17Q/7H6yQfD/5OXgdrR5UE12gMXCiN9D5Xq2o5mddV2QEcX/bjla99ASsAAQUyMCCRWAEhw==}
+
   jsontokens@4.0.1:
     resolution: {integrity: sha512-+MO415LEN6M+3FGsRz4wU20g7N2JA+2j9d9+pGaNJHviG4L8N0qzavGyENw6fJqsq9CcrHOIL6iWX5yeTZ86+Q==}
 
@@ -6443,8 +6446,8 @@ packages:
     resolution: {integrity: sha512-6IpQ7mKUxRcZNLIObR0hz7lxsapSSIYNZJwXPGeF0mTVqGKFIXj1DQcMoT22S3ROcLyY/rz0PWaWZ9ayWmad9g==}
     engines: {node: '>= 0.8.0'}
 
-  orval@7.4.1:
-    resolution: {integrity: sha512-pXg5g5gdAzFqCUURZsMJoVeiWynSNSzqi6lXI1Opw08ILtmzDTdiU7PoSOf7pKVTB6oEf82zQzWeJMqSk8nzuQ==}
+  orval@7.5.0:
+    resolution: {integrity: sha512-YyD9EKXS51z2MYz1bYahZadcWrGrlbLUvDaTueUAAs6zIsv4R7xfPK3nPE6kHG5UCvdjZOUvHiAsV1ajj6fqSA==}
     hasBin: true
 
   own-keys@1.0.1:
@@ -8634,13 +8637,13 @@ snapshots:
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
 
-  '@anyalt/sdk@1.0.7(@babel/core@7.26.7)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.26.7))(bufferutil@4.0.9)(jest@29.7.0(@types/node@22.13.0)(babel-plugin-macros@3.1.0))(openapi-types@12.1.3)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.22.4)':
+  '@anyalt/sdk@1.0.10(@babel/core@7.26.7)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.26.7))(bufferutil@4.0.9)(jest@29.7.0(@types/node@22.13.0)(babel-plugin-macros@3.1.0))(openapi-types@12.1.3)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.22.4)':
     dependencies:
       '@solana/web3.js': 1.98.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       axios: 1.7.9
       dotenv: 16.4.7
       node-fetch: 3.3.2
-      orval: 7.4.1(openapi-types@12.1.3)
+      orval: 7.5.0(openapi-types@12.1.3)
       ts-jest: 29.2.5(@babel/core@7.26.7)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.26.7))(jest@29.7.0(@types/node@22.13.0)(babel-plugin-macros@3.1.0))(typescript@5.7.3)
       viem: 2.22.19(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.22.4)
     transitivePeerDependencies:
@@ -10037,15 +10040,16 @@ snapshots:
 
   '@humanwhocodes/object-schema@2.0.3': {}
 
-  '@ibm-cloud/openapi-ruleset-utilities@1.7.0': {}
+  '@ibm-cloud/openapi-ruleset-utilities@1.7.1': {}
 
-  '@ibm-cloud/openapi-ruleset@1.28.4':
+  '@ibm-cloud/openapi-ruleset@1.29.2':
     dependencies:
-      '@ibm-cloud/openapi-ruleset-utilities': 1.7.0
+      '@ibm-cloud/openapi-ruleset-utilities': 1.7.1
       '@stoplight/spectral-formats': 1.8.2
       '@stoplight/spectral-functions': 1.9.3
       '@stoplight/spectral-rulesets': 1.21.3
       chalk: 4.1.2
+      jsonschema: 1.5.0
       lodash: 4.17.21
       loglevel: 1.9.2
       loglevel-plugin-prefix: 0.8.4
@@ -10745,26 +10749,26 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.19.0
 
-  '@orval/angular@7.4.1(openapi-types@12.1.3)':
+  '@orval/angular@7.5.0(openapi-types@12.1.3)':
     dependencies:
-      '@orval/core': 7.4.1(openapi-types@12.1.3)
+      '@orval/core': 7.5.0(openapi-types@12.1.3)
     transitivePeerDependencies:
       - encoding
       - openapi-types
       - supports-color
 
-  '@orval/axios@7.4.1(openapi-types@12.1.3)':
+  '@orval/axios@7.5.0(openapi-types@12.1.3)':
     dependencies:
-      '@orval/core': 7.4.1(openapi-types@12.1.3)
+      '@orval/core': 7.5.0(openapi-types@12.1.3)
     transitivePeerDependencies:
       - encoding
       - openapi-types
       - supports-color
 
-  '@orval/core@7.4.1(openapi-types@12.1.3)':
+  '@orval/core@7.5.0(openapi-types@12.1.3)':
     dependencies:
       '@apidevtools/swagger-parser': 10.1.1(openapi-types@12.1.3)
-      '@ibm-cloud/openapi-ruleset': 1.28.4
+      '@ibm-cloud/openapi-ruleset': 1.29.2
       acorn: 8.14.0
       ajv: 8.17.1
       chalk: 4.1.2
@@ -10788,57 +10792,57 @@ snapshots:
       - openapi-types
       - supports-color
 
-  '@orval/fetch@7.4.1(openapi-types@12.1.3)':
+  '@orval/fetch@7.5.0(openapi-types@12.1.3)':
     dependencies:
-      '@orval/core': 7.4.1(openapi-types@12.1.3)
+      '@orval/core': 7.5.0(openapi-types@12.1.3)
     transitivePeerDependencies:
       - encoding
       - openapi-types
       - supports-color
 
-  '@orval/hono@7.4.1(openapi-types@12.1.3)':
+  '@orval/hono@7.5.0(openapi-types@12.1.3)':
     dependencies:
-      '@orval/core': 7.4.1(openapi-types@12.1.3)
-      '@orval/zod': 7.4.1(openapi-types@12.1.3)
+      '@orval/core': 7.5.0(openapi-types@12.1.3)
+      '@orval/zod': 7.5.0(openapi-types@12.1.3)
       lodash.uniq: 4.5.0
     transitivePeerDependencies:
       - encoding
       - openapi-types
       - supports-color
 
-  '@orval/mock@7.4.1(openapi-types@12.1.3)':
+  '@orval/mock@7.5.0(openapi-types@12.1.3)':
     dependencies:
-      '@orval/core': 7.4.1(openapi-types@12.1.3)
+      '@orval/core': 7.5.0(openapi-types@12.1.3)
       lodash.get: 4.4.2
       lodash.omit: 4.5.0
-      openapi3-ts: 4.4.0
+      openapi3-ts: 4.2.2
     transitivePeerDependencies:
       - encoding
       - openapi-types
       - supports-color
 
-  '@orval/query@7.4.1(openapi-types@12.1.3)':
+  '@orval/query@7.5.0(openapi-types@12.1.3)':
     dependencies:
-      '@orval/core': 7.4.1(openapi-types@12.1.3)
-      '@orval/fetch': 7.4.1(openapi-types@12.1.3)
+      '@orval/core': 7.5.0(openapi-types@12.1.3)
+      '@orval/fetch': 7.5.0(openapi-types@12.1.3)
       lodash.omitby: 4.6.0
     transitivePeerDependencies:
       - encoding
       - openapi-types
       - supports-color
 
-  '@orval/swr@7.4.1(openapi-types@12.1.3)':
+  '@orval/swr@7.5.0(openapi-types@12.1.3)':
     dependencies:
-      '@orval/core': 7.4.1(openapi-types@12.1.3)
-      '@orval/fetch': 7.4.1(openapi-types@12.1.3)
+      '@orval/core': 7.5.0(openapi-types@12.1.3)
+      '@orval/fetch': 7.5.0(openapi-types@12.1.3)
     transitivePeerDependencies:
       - encoding
       - openapi-types
       - supports-color
 
-  '@orval/zod@7.4.1(openapi-types@12.1.3)':
+  '@orval/zod@7.5.0(openapi-types@12.1.3)':
     dependencies:
-      '@orval/core': 7.4.1(openapi-types@12.1.3)
+      '@orval/core': 7.5.0(openapi-types@12.1.3)
       lodash.uniq: 4.5.0
     transitivePeerDependencies:
       - encoding
@@ -11137,8 +11141,8 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.0.8
 
-  '@reown/appkit-adapter-wagmi@1.6.5(f7rrhjzxkealmw7kqct7qaz55q)':
-    dependencies:
+  ? '@reown/appkit-adapter-wagmi@1.6.5(@coinbase/wallet-sdk@4.2.3)(@react-native-async-storage/async-storage@1.24.0(react-native@0.77.0(@babel/core@7.26.7)(@babel/preset-env@7.26.7(@babel/core@7.26.7))(@types/react@19.0.8)(bufferutil@4.0.9)(react@19.0.0)(utf-8-validate@5.0.10)))(@types/react@19.0.8)(@wagmi/connectors@5.7.5(@react-native-async-storage/async-storage@1.24.0(react-native@0.77.0(@babel/core@7.26.7)(@babel/preset-env@7.26.7(@babel/core@7.26.7))(@types/react@19.0.8)(bufferutil@4.0.9)(react@19.0.0)(utf-8-validate@5.0.10)))(@types/react@19.0.8)(@wagmi/core@2.16.3(@tanstack/query-core@5.66.0)(@types/react@19.0.8)(immer@9.0.21)(react@19.0.0)(typescript@5.7.3)(use-sync-external-store@1.4.0(react@19.0.0))(viem@2.22.19(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.22.4)))(bufferutil@4.0.9)(react@19.0.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(viem@2.22.19(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.22.4))(zod@3.22.4))(@wagmi/core@2.16.3(@tanstack/query-core@5.66.0)(@types/react@19.0.8)(immer@9.0.21)(react@19.0.0)(typescript@5.7.3)(use-sync-external-store@1.4.0(react@19.0.0))(viem@2.22.19(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.22.4)))(bufferutil@4.0.9)(react@19.0.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(viem@2.22.19(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.22.4))(wagmi@2.14.9(@react-native-async-storage/async-storage@1.24.0(react-native@0.77.0(@babel/core@7.26.7)(@babel/preset-env@7.26.7(@babel/core@7.26.7))(@types/react@19.0.8)(bufferutil@4.0.9)(react@19.0.0)(utf-8-validate@5.0.10)))(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@19.0.0))(@types/react@19.0.8)(bufferutil@4.0.9)(immer@9.0.21)(react@19.0.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(viem@2.22.19(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.22.4))(zod@3.22.4))(zod@3.22.4)'
+  : dependencies:
       '@coinbase/wallet-sdk': 4.2.3
       '@reown/appkit': 1.6.5(@react-native-async-storage/async-storage@1.24.0(react-native@0.77.0(@babel/core@7.26.7)(@babel/preset-env@7.26.7(@babel/core@7.26.7))(@types/react@19.0.8)(bufferutil@4.0.9)(react@19.0.0)(utf-8-validate@5.0.10)))(@types/react@19.0.8)(bufferutil@4.0.9)(react@19.0.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.22.4)
       '@reown/appkit-common': 1.6.5(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.22.4)
@@ -11514,20 +11518,20 @@ snapshots:
       '@shikijs/engine-javascript': 1.29.2
       '@shikijs/engine-oniguruma': 1.29.2
       '@shikijs/types': 1.29.2
-      '@shikijs/vscode-textmate': 10.0.1
+      '@shikijs/vscode-textmate': 10.0.2
       '@types/hast': 3.0.4
       hast-util-to-html: 9.0.4
 
   '@shikijs/engine-javascript@1.29.2':
     dependencies:
       '@shikijs/types': 1.29.2
-      '@shikijs/vscode-textmate': 10.0.1
+      '@shikijs/vscode-textmate': 10.0.2
       oniguruma-to-es: 2.3.0
 
   '@shikijs/engine-oniguruma@1.29.2':
     dependencies:
       '@shikijs/types': 1.29.2
-      '@shikijs/vscode-textmate': 10.0.1
+      '@shikijs/vscode-textmate': 10.0.2
 
   '@shikijs/langs@1.29.2':
     dependencies:
@@ -11539,10 +11543,10 @@ snapshots:
 
   '@shikijs/types@1.29.2':
     dependencies:
-      '@shikijs/vscode-textmate': 10.0.1
+      '@shikijs/vscode-textmate': 10.0.2
       '@types/hast': 3.0.4
 
-  '@shikijs/vscode-textmate@10.0.1': {}
+  '@shikijs/vscode-textmate@10.0.2': {}
 
   '@sinclair/typebox@0.27.8': {}
 
@@ -12529,7 +12533,7 @@ snapshots:
     dependencies:
       '@stoplight/json': 3.21.7
       '@stoplight/path': 1.3.2
-      '@stoplight/types': 13.20.0
+      '@stoplight/types': 13.6.0
       '@types/urijs': 1.19.25
       dependency-graph: 0.11.0
       fast-memoize: 2.5.2
@@ -16889,6 +16893,8 @@ snapshots:
 
   jsonschema@1.2.2: {}
 
+  jsonschema@1.5.0: {}
+
   jsontokens@4.0.1:
     dependencies:
       '@noble/hashes': 1.7.1
@@ -17612,18 +17618,18 @@ snapshots:
       type-check: 0.4.0
       word-wrap: 1.2.5
 
-  orval@7.4.1(openapi-types@12.1.3):
+  orval@7.5.0(openapi-types@12.1.3):
     dependencies:
       '@apidevtools/swagger-parser': 10.1.1(openapi-types@12.1.3)
-      '@orval/angular': 7.4.1(openapi-types@12.1.3)
-      '@orval/axios': 7.4.1(openapi-types@12.1.3)
-      '@orval/core': 7.4.1(openapi-types@12.1.3)
-      '@orval/fetch': 7.4.1(openapi-types@12.1.3)
-      '@orval/hono': 7.4.1(openapi-types@12.1.3)
-      '@orval/mock': 7.4.1(openapi-types@12.1.3)
-      '@orval/query': 7.4.1(openapi-types@12.1.3)
-      '@orval/swr': 7.4.1(openapi-types@12.1.3)
-      '@orval/zod': 7.4.1(openapi-types@12.1.3)
+      '@orval/angular': 7.5.0(openapi-types@12.1.3)
+      '@orval/axios': 7.5.0(openapi-types@12.1.3)
+      '@orval/core': 7.5.0(openapi-types@12.1.3)
+      '@orval/fetch': 7.5.0(openapi-types@12.1.3)
+      '@orval/hono': 7.5.0(openapi-types@12.1.3)
+      '@orval/mock': 7.5.0(openapi-types@12.1.3)
+      '@orval/query': 7.5.0(openapi-types@12.1.3)
+      '@orval/swr': 7.5.0(openapi-types@12.1.3)
+      '@orval/zod': 7.5.0(openapi-types@12.1.3)
       ajv: 8.17.1
       cac: 6.7.14
       chalk: 4.1.2
@@ -17831,10 +17837,12 @@ snapshots:
     dependencies:
       fast-diff: 1.3.0
 
-  prettier-plugin-organize-imports@4.1.0(prettier@3.4.2)(typescript@5.7.3):
+  prettier-plugin-organize-imports@4.1.0(prettier@3.4.2)(typescript@5.7.3)(vue-tsc@1.8.27(typescript@5.7.3)):
     dependencies:
       prettier: 3.4.2
       typescript: 5.7.3
+    optionalDependencies:
+      vue-tsc: 1.8.27(typescript@5.7.3)
 
   prettier@3.4.2: {}
 
@@ -18873,7 +18881,7 @@ snapshots:
       '@shikijs/langs': 1.29.2
       '@shikijs/themes': 1.29.2
       '@shikijs/types': 1.29.2
-      '@shikijs/vscode-textmate': 10.0.1
+      '@shikijs/vscode-textmate': 10.0.2
       '@types/hast': 3.0.4
 
   should-equal@2.0.0:

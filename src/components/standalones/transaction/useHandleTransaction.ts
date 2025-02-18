@@ -587,6 +587,14 @@ export const useHandleTransaction = (
               stepDescription: 'Complete',
             },
           });
+
+          await aaInstance.createLastMileTransaction({
+            vmType: isEvm ? 'EVM' : 'SOLANA',
+            operationId,
+            order: 0,
+            chainId: isEvm ? chain?.chainId || 1 : 101,
+            transactionHash: executeResponse.approvalTxHash,
+          });
         }
         if (executeResponse.executeTxHash) {
           updateStepProgress({
@@ -600,6 +608,14 @@ export const useHandleTransaction = (
               totalSteps,
               stepDescription: 'Complete',
             },
+          });
+
+          await aaInstance.createLastMileTransaction({
+            vmType: isEvm ? 'EVM' : 'SOLANA',
+            operationId,
+            order: 1,
+            chainId: isEvm ? chain?.chainId || 1 : 101,
+            transactionHash: executeResponse.executeTxHash,
           });
         }
       } catch (error) {

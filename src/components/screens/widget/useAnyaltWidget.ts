@@ -11,6 +11,7 @@ import {
   allChainsAtom,
   anyaltInstanceAtom,
   bestRouteAtom,
+  currentStepAtom,
   currentUiStepAtom,
   finalTokenEstimateAtom,
   inTokenAmountAtom,
@@ -37,6 +38,7 @@ export const useAnyaltWidget = ({
   minDepositAmount,
   isTokenBuyTemplate: isTokenBuy = false,
   estimateCallback,
+  onClose,
 }: {
   estimateCallback: (token: Token) => Promise<EstimateResponse>;
   apiKey: string;
@@ -45,6 +47,7 @@ export const useAnyaltWidget = ({
   isTokenBuyTemplate: boolean;
   minDepositAmount: number;
   walletConnector?: WalletConnector;
+  onClose: () => void;
 }) => {
   const [loading, setLoading] = useState(false);
   const [isValidAmountIn, setIsValidAmountIn] = useState(true);
@@ -86,6 +89,7 @@ export const useAnyaltWidget = ({
   const [protocolInputToken, setProtocolInputToken] = useAtom(
     protocolInputTokenAtom,
   );
+  const [, setCurrentStep] = useAtom(currentStepAtom);
 
   useEffect(() => {
     onGetQuote(false);
@@ -449,6 +453,12 @@ export const useAnyaltWidget = ({
     return isWalletConnected;
   }, [isSolanaConnected, isEvmConnected, bestRoute, bitcoinAccount]);
 
+  const onComplete = () => {
+    onClose();
+    setActiveStep(0);
+    setCurrentStep(1);
+  };
+
   return {
     loading,
     activeRoute: bestRoute,
@@ -469,5 +479,6 @@ export const useAnyaltWidget = ({
     areWalletsConnected,
     setActiveStep,
     getChain,
+    onComplete,
   };
 };

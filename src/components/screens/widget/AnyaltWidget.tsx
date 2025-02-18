@@ -48,7 +48,7 @@ export const AnyaltWidgetWrapper = ({
     onBackClick,
     onTxComplete,
     areWalletsConnected,
-    setActiveStep,
+    onComplete,
   } = useAnyaltWidget({
     apiKey,
     inputToken,
@@ -57,6 +57,7 @@ export const AnyaltWidgetWrapper = ({
     estimateCallback,
     walletConnector,
     isTokenBuyTemplate,
+    onClose,
   });
   const inTokenAmount = useAtomValue(inTokenAmountAtom);
   const inToken = useAtomValue(inTokenAtom);
@@ -102,11 +103,7 @@ export const AnyaltWidgetWrapper = ({
           executeCallBack={executeCallBack}
           onTxComplete={onTxComplete}
         />
-        <CompleteStep
-          onConfigClick={onConfigClick}
-          onClose={onClose}
-          setActiveStep={setActiveStep}
-        />
+        <CompleteStep onConfigClick={onConfigClick} onComplete={onComplete} />
       </Stepper>
       <Footer />
 
