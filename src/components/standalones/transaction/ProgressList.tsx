@@ -1,6 +1,6 @@
 import { VStack } from '@chakra-ui/react';
+import { StepsProgress } from '../../../types/transaction';
 import { ProgressItem } from '../../molecules/ProgressItem';
-import { StepsProgress } from './useHandleTransaction';
 
 export const ProgressList = ({
   stepsProgress,
