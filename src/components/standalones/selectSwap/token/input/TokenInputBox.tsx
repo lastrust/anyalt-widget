@@ -40,6 +40,7 @@ export const TokenInputBox: FC<Props> = ({
     tokenFetchError,
     setInTokenAmount,
     maxButtonClick,
+    isWalletConnected,
   } = useTokenInputBox();
 
   return (
@@ -71,6 +72,7 @@ export const TokenInputBox: FC<Props> = ({
             padding="4px 2px"
             maxH="16px"
             onClick={maxButtonClick}
+            isDisabled={!isWalletConnected}
           >
             Max
           </Button>

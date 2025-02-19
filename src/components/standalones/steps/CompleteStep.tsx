@@ -11,15 +11,10 @@ import { SwappingTemplate } from '../../templates/SwappingTemplate';
 
 type Props = {
   onConfigClick: () => void;
-  onClose: () => void;
-  setActiveStep: (step: number) => void;
+  onComplete: () => void;
 };
 
-export const CompleteStep = ({
-  onConfigClick,
-  onClose,
-  setActiveStep,
-}: Props) => {
+export const CompleteStep = ({ onConfigClick, onComplete }: Props) => {
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
   const finalTokenAmount = useAtomValue(finalTokenAmountAtom);
@@ -85,10 +80,7 @@ export const CompleteStep = ({
           fontWeight="bold"
           borderRadius="8px"
           h="64px"
-          onClick={() => {
-            onClose();
-            setActiveStep(0);
-          }}
+          onClick={onComplete}
         >
           Done
         </Button>
