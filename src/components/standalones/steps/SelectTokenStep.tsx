@@ -8,7 +8,7 @@ type Props = {
   isValidAmountIn: boolean;
   isTokenBuyTemplate: boolean;
   onConfigClick: () => void;
-  onGetQuote: (withGoNext: boolean) => void;
+  goToNext: () => void;
   setOpenSlippageModal: (open: boolean) => void;
   isButtonDisabled: boolean;
 };
@@ -16,7 +16,7 @@ type Props = {
 export const SelectTokenStep = ({
   onConfigClick,
   failedToFetchRoute,
-  onGetQuote,
+  goToNext,
   loading,
   openSlippageModal,
   setOpenSlippageModal,
@@ -31,7 +31,7 @@ export const SelectTokenStep = ({
     >
       <SelectToken
         buttonText={'Get Quote'}
-        onButtonClick={() => onGetQuote(true)}
+        onButtonClick={() => goToNext()}
         loading={loading}
         openSlippageModal={openSlippageModal}
         setOpenSlippageModal={setOpenSlippageModal}

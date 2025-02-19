@@ -35,7 +35,7 @@ export const AnyaltWidgetWrapper = ({
     loading,
     activeRoute,
     activeStep,
-    onGetQuote,
+    goToNext,
     onChooseRouteButtonClick,
     onConfigClick,
     openSlippageModal,
@@ -75,7 +75,7 @@ export const AnyaltWidgetWrapper = ({
       <Stepper activeStep={activeStep}>
         <SelectTokenStep
           loading={loading}
-          onGetQuote={onGetQuote}
+          goToNext={goToNext}
           isTokenBuyTemplate={isTokenBuyTemplate}
           isValidAmountIn={isValidAmountIn}
           onConfigClick={onConfigClick}

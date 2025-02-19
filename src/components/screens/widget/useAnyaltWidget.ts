@@ -305,8 +305,8 @@ export const useAnyaltWidget = ({
 
   const onChooseRouteButtonClick = async () => {
     if (areWalletsConnected) {
-      await onGetQuote(false);
-      await connectWalletsConfirm();
+      // await onGetQuote(false);
+      await connectWalletsAndConfirmRoute();
       setStepsProgress(undefined);
     } else {
       if (walletConnector) {
@@ -320,7 +320,7 @@ export const useAnyaltWidget = ({
   const getChain = (blockchain: string) =>
     allChains.find((chain) => chain.name === blockchain);
 
-  const connectWalletsConfirm = async () => {
+  const connectWalletsAndConfirmRoute = async () => {
     try {
       setLoading(true);
       if (!bestRoute?.requestId) return;
@@ -461,6 +461,7 @@ export const useAnyaltWidget = ({
     activeRoute: bestRoute,
     activeStep,
     onGetQuote,
+    goToNext,
     goToPrevious,
     onChooseRouteButtonClick,
     onConfigClick,
