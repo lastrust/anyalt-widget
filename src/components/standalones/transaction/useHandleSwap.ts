@@ -50,10 +50,10 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
 
     setSwapData((prev) => {
       {
-      const newData= {...prev,isCrosschainSwapError: false,
-        totalSteps,}
-      return newData;
-    }});
+        const newData = { ...prev, isCrosschainSwapError: false, totalSteps };
+        return newData;
+      }
+    });
 
     // Initialize steps progress array if not already set
     if (!stepsProgress?.steps || stepsProgress.steps.length === 0) {
@@ -90,7 +90,8 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
     stepIndex: number,
     executeCallBack: (token: Token) => Promise<ExecuteResponse>,
   ) => {
-    if (!swapData.swapIsFinished) throw new TransactionError('Swap is not finished');
+    if (!swapData.swapIsFinished)
+      throw new TransactionError('Swap is not finished');
 
     try {
       console.log(swapData);
