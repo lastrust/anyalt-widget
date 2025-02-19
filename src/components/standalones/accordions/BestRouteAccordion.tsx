@@ -177,7 +177,7 @@ export const BestRouteAccordion = ({
               amount={Number(finalTokenEstimate?.amountOut ?? '0.00')}
               price={Number(finalTokenEstimate?.priceInUSD ?? '0.00')}
               slippage={slippage}
-              network={`${swaps[0]?.swapperName}`}
+              network={`${bestRoute.swaps[0]?.swapperId}`}
             />
           </AccordionButton>
           <AccordionPanel p={'0px'} mt="12px">
