@@ -1,8 +1,8 @@
 import { Box, Divider, HStack, Link, Text } from '@chakra-ui/react';
 import { useCallback, useState } from 'react';
+import { TransactionProgress } from '../../../types/transaction';
 import { chainExplorers } from '../../../utils/chains';
 import { CopyIcon } from '../../atoms/icons/CopyIcon';
-import { TransactionProgress } from '../../standalones/transaction/useHandleTransaction';
 
 type Props = {
   type: 'Approval' | 'Swap';

@@ -5,12 +5,12 @@ import {
   activeOperationIdAtom,
   anyaltInstanceAtom,
   bestRouteAtom,
-  currentStepAtom,
   finalTokenEstimateAtom,
   slippageAtom,
+  transactionIndexAtom,
   transactionsListAtom,
 } from '../../../../store/stateStore';
-import { useHandleTransaction } from '../useHandleTransaction';
+import { useHandleSwap } from '../useHandleSwap';
 
 export const useTransactionInfo = ({
   externalEvmWalletConnector,
@@ -25,13 +25,13 @@ export const useTransactionInfo = ({
 
   const slippage = useAtomValue(slippageAtom);
   const bestRoute = useAtomValue(bestRouteAtom);
-  const currentStep = useAtomValue(currentStepAtom);
+  const currentStep = useAtomValue(transactionIndexAtom);
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
   const activeOperationId = useAtomValue(activeOperationIdAtom);
   const transactionsList = useAtomValue(transactionsListAtom);
   const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
 
-  const { executeSwap } = useHandleTransaction(externalEvmWalletConnector);
+  const { executeSwap } = useHandleSwap(externalEvmWalletConnector);
 
   const runTx = async () => {
     if (!anyaltInstance || !activeOperationId) return;

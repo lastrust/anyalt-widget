@@ -6,10 +6,7 @@ import {
 } from '@anyalt/sdk';
 import { atom } from 'jotai';
 import { EstimateResponse, Token } from '..';
-import {
-  StepsProgress,
-  TransactionStatusList,
-} from '../components/standalones/transaction/useHandleTransaction';
+import { StepsProgress, TransactionStatusList } from '../types/transaction';
 
 export const anyaltInstanceAtom = atom<AnyAlt | undefined>(undefined);
 
@@ -37,7 +34,7 @@ export const selectedRouteAtom = atom<BestRouteResponse | undefined>(undefined);
 
 export const activeOperationIdAtom = atom<string | undefined>(undefined);
 
-export const currentStepAtom = atom<number>(1);
+export const transactionIndexAtom = atom<number>(1);
 
 export const stepsProgressAtom = atom<StepsProgress | undefined>(undefined);
 
@@ -52,6 +49,18 @@ export const transactionsListAtom = atom<TransactionStatusList | undefined>(
 export const isTokenBuyTemplateAtom = atom<boolean>(false);
 
 export const minDepositAmountAtom = atom<number>(0);
+
+export const swapDataAtom = atom<{
+  swapIsFinished: boolean;
+  isCrosschainSwapError: boolean;
+  crosschainSwapOutputAmount: string;
+  totalSteps: number;
+}>({
+  swapIsFinished: false,
+  isCrosschainSwapError: false,
+  crosschainSwapOutputAmount: '0',
+  totalSteps: 0,
+});
 
 export const tokenFetchErrorAtom = atom<{
   isError: boolean;

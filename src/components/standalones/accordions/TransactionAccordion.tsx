@@ -13,13 +13,13 @@ import { useAtom, useAtomValue } from 'jotai';
 import { useState } from 'react';
 import {
   bestRouteAtom,
-  currentStepAtom,
   finalTokenEstimateAtom,
   isTokenBuyTemplateAtom,
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
   selectedRouteAtom,
   stepsProgressAtom,
+  transactionIndexAtom,
 } from '../../../store/stateStore';
 import { truncateToDecimals } from '../../../utils/truncateToDecimals';
 import { CheckIcon } from '../../atoms/icons/transaction/CheckIcon';
@@ -34,7 +34,7 @@ export const TransactionAccordion = () => {
   const [isLastMileExpanded, setIsLastMileExpanded] = useState(false);
 
   const bestRoute = useAtomValue(bestRouteAtom);
-  const currentStep = useAtomValue(currentStepAtom);
+  const currentStep = useAtomValue(transactionIndexAtom);
   const stepsProgress = useAtomValue(stepsProgressAtom);
   const isTokenBuyTemplate = useAtomValue(isTokenBuyTemplateAtom);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
@@ -92,10 +92,14 @@ export const TransactionAccordion = () => {
               </Text>
               {currentStep - 1 > index && <CheckIcon />}
               {Boolean(
-                stepsProgress?.steps[index].approve ||
-                  stepsProgress?.steps[index].swap,
+                stepsProgress?.steps[index]?.approve ||
+                  stepsProgress?.steps[index]?.swap,
               ) &&
-                Boolean(currentStep - 1 === index) && (
+                Boolean(
+                  currentStep - 1 === index &&
+                    stepsProgress?.steps[index]?.approve?.status !== 'failed' &&
+                    stepsProgress?.steps[index]?.swap?.status !== 'failed',
+                ) && (
                   <Text textStyle={'bold.2'} color="brand.tertiary.100">
                     In Progress
                   </Text>
@@ -201,16 +205,16 @@ export const TransactionAccordion = () => {
                 </HStack>
               </HStack>
 
-              {stepsProgress?.steps[index].approve && (
+              {stepsProgress?.steps[index]?.approve && (
                 <TransactionHash
                   type="Approval"
-                  progress={stepsProgress?.steps[index].approve}
+                  progress={stepsProgress?.steps[index]?.approve}
                 />
               )}
-              {stepsProgress?.steps[index].swap && (
+              {stepsProgress?.steps[index]?.swap && (
                 <TransactionHash
                   type="Swap"
-                  progress={stepsProgress?.steps[index].swap}
+                  progress={stepsProgress?.steps[index]?.swap}
                 />
               )}
             </VStack>

@@ -14,13 +14,13 @@ import { useAtom, useAtomValue } from 'jotai';
 import { useEffect, useState } from 'react';
 import {
   bestRouteAtom,
-  currentStepAtom,
   finalTokenEstimateAtom,
   isTokenBuyTemplateAtom,
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
   selectedRouteAtom,
   slippageAtom,
+  transactionIndexAtom,
 } from '../../../store/stateStore';
 import { TransactionDetailsType } from '../../../types/transaction';
 import { getTransactionGroupData } from '../../../utils/getTransactionGroupData';
@@ -49,7 +49,7 @@ export const BestRouteAccordion = ({
   const slippage = useAtomValue(slippageAtom);
   const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
   const [bestRoute] = useAtom(bestRouteAtom);
-  const currentStep = useAtomValue(currentStepAtom);
+  const currentStep = useAtomValue(transactionIndexAtom);
   const isTokenBuyTemplate = useAtomValue(isTokenBuyTemplateAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
@@ -177,7 +177,7 @@ export const BestRouteAccordion = ({
               amount={Number(finalTokenEstimate?.amountOut ?? '0.00')}
               price={Number(finalTokenEstimate?.priceInUSD ?? '0.00')}
               slippage={slippage}
-              network={`${swaps[0]?.swapperName}`}
+              network={`${bestRoute.swaps[0]?.swapperId}`}
             />
           </AccordionButton>
           <AccordionPanel p={'0px'} mt="12px">

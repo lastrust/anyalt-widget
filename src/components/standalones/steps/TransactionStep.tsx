@@ -1,7 +1,7 @@
 import { Grid } from '@chakra-ui/react';
 import { useAtomValue } from 'jotai';
 import { ExecuteResponse, Token, WalletConnector } from '../../..';
-import { currentStepAtom } from '../../../store/stateStore';
+import { transactionIndexAtom } from '../../../store/stateStore';
 import { SwappingTemplate } from '../../templates/SwappingTemplate';
 import { TransactionInfo } from '../transaction/info/TransactionInfo';
 import { TransactionList } from '../transaction/transactionList/TransactionsList';
@@ -19,7 +19,7 @@ export const TransactionStep = ({
   onBackClick,
   onTxComplete,
 }: Props) => {
-  const currentStep = useAtomValue(currentStepAtom);
+  const currentStep = useAtomValue(transactionIndexAtom);
   return (
     <Grid templateColumns="1fr 1fr" gap="16px" m="24px 0px 16px">
       <SwappingTemplate

@@ -10,13 +10,13 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { EstimateResponse, Token } from '../../..';
+import { StepsProgress } from '../../../types/transaction';
 import { truncateToDecimals } from '../../../utils/truncateToDecimals';
 import { DividerIcon } from '../../atoms/icons/transaction/DividerIcon';
 import { GasIcon } from '../../atoms/icons/transaction/GasIcon';
 import { TimeIcon } from '../../atoms/icons/transaction/TimeIcon';
 import { TransactionStep } from '../../molecules/steps/TransactionStep';
 import { TransactionHash } from '../../molecules/text/TransactionHash';
-import { StepsProgress } from '../transaction/useHandleTransaction';
 
 type Props = {
   onLastMileClick: () => void;
