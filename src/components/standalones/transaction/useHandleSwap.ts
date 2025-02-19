@@ -31,8 +31,13 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
   const allChains = useAtomValue(allChainsAtom);
   const bestRoute = useAtomValue(bestRouteAtom);
 
-  const { swapData, setSwapData, transactionIndex, updateTransactionIndex } =
-    useSwapState();
+  const {
+    swapData,
+    setSwapData,
+    swapDataRef,
+    transactionIndex,
+    updateTransactionIndex,
+  } = useSwapState();
   const { executeTokensSwap, updateStepProgress } = useExecuteTokensSwap(
     updateTransactionIndex,
     externalEvmWalletConnector,
@@ -65,18 +70,15 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
       operationId,
       slippage,
       totalSteps,
+      swapDataRef,
     );
 
-    if (isCrosschainSwapError) {
-      throw new TransactionError('Transaction failed');
-    }
+    if (isCrosschainSwapError) throw new TransactionError('Transaction failed');
+
     // If the template is token buy, we don't need to execute the last mile transaction
     if (isTokenBuyTemplate) return;
 
-    // Execute last mile transaction
-
     if (!isCrosschainSwapError) {
-      console.log(transactionIndex, totalSteps, swapData);
       if (transactionIndex !== swapData.totalSteps) updateTransactionIndex();
       await executeLastMileTransaction(transactionIndex, executeCallBack);
     }
@@ -90,11 +92,10 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
     stepIndex: number,
     executeCallBack: (token: Token) => Promise<ExecuteResponse>,
   ) => {
-    if (!swapData.swapIsFinished)
+    if (!swapDataRef.current.swapIsFinished)
       throw new TransactionError('Swap is not finished');
 
     try {
-      console.log(swapData);
       const lastSwap = bestRoute?.swaps[bestRoute.swaps.length - 1];
       const chain = allChains.find(
         (chain) => chain.name === lastSwap?.to.blockchain,
@@ -113,13 +114,13 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
         message: TX_MESSAGE.pending,
         details: {
           currentStep: stepIndex,
-          totalSteps: swapData.totalSteps,
+          totalSteps: swapDataRef.current.totalSteps,
           stepDescription: STEP_DESCR.pending,
         },
       });
 
       const executeResponse = await executeCallBack({
-        amount: swapData.crosschainSwapOutputAmount,
+        amount: swapDataRef.current.crosschainSwapOutputAmount,
         address: lastSwap?.to.address || '',
         decimals: lastSwap?.to.decimals || 0,
         chainId:
@@ -144,7 +145,7 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
         chainName: lastSwap?.to.blockchain,
         details: {
           currentStep: stepIndex,
-          totalSteps: swapData.totalSteps,
+          totalSteps: swapDataRef.current.totalSteps,
           stepDescription: STEP_DESCR.complete,
         },
       });
@@ -158,7 +159,7 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
           error: isErrorInstance ? error.message : String(error),
           details: {
             currentStep: stepIndex, // Ensure stepIndex is used
-            totalSteps: swapData.totalSteps,
+            totalSteps: swapDataRef.current.totalSteps,
             stepDescription: STEP_DESCR.failed,
           },
         });

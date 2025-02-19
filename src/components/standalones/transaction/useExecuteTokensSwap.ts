@@ -50,6 +50,12 @@ export const useExecuteTokensSwap = (
     operationId: string,
     slippage: string,
     totalSteps: number,
+    swapDataRef: React.RefObject<{
+      swapIsFinished: boolean;
+      isCrosschainSwapError: boolean;
+      crosschainSwapOutputAmount: string;
+      totalSteps: number;
+    }>,
   ) => {
     let isCrosschainSwapError = false;
     do {
@@ -137,6 +143,7 @@ export const useExecuteTokensSwap = (
               crosschainSwapOutputAmount: crosschainSwapOutputAmount,
               totalSteps,
             };
+            swapDataRef.current = newData;
             return newData;
           });
 
@@ -189,6 +196,7 @@ export const useExecuteTokensSwap = (
             ...prev,
             isCrosschainSwapError: true,
           };
+          swapDataRef.current = newData;
           return newData;
         });
 
@@ -221,6 +229,7 @@ export const useExecuteTokensSwap = (
       isCrosschainSwapError,
     };
   };
+
   return {
     executeTokensSwap,
     updateStepProgress,
