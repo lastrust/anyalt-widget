@@ -19,7 +19,7 @@ export const useTokenInputBox = () => {
   const inToken = useAtomValue(inTokenAtom);
   const currentStep = useAtomValue(currentUiStepAtom);
   const tokenFetchError = useAtomValue(tokenFetchErrorAtom);
-  const [, setTokenFetchError] = useAtom(tokenFetchErrorAtom);
+  // const [, setTokenFetchError] = useAtom(tokenFetchErrorAtom);
   const [inTokenAmount, setInTokenAmount] = useAtom(inTokenAmountAtom);
 
   const { publicKey } = useWallet();
@@ -63,19 +63,19 @@ export const useTokenInputBox = () => {
     setInTokenAmount(balance);
   };
 
-  useEffect(() => {
-    if (
-      currentStep === 1 &&
-      balance &&
-      inTokenAmount &&
-      parseFloat(balance) < parseFloat(inTokenAmount)
-    ) {
-      setTokenFetchError({
-        isError: true,
-        errorMessage: `Not enough balance.`,
-      });
-    }
-  }, [inTokenAmount, balance, currentStep]);
+  // useEffect(() => {
+  //   if (
+  //     currentStep === 1 &&
+  //     balance &&
+  //     inTokenAmount &&
+  //     parseFloat(balance) < parseFloat(inTokenAmount)
+  //   ) {
+  //     setTokenFetchError({
+  //       isError: true,
+  //       errorMessage: `Not enough balance.`,
+  //     });
+  //   }
+  // }, [inTokenAmount, balance, currentStep]);
 
   useEffect(() => {
     getBalance();

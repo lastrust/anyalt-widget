@@ -77,6 +77,7 @@ export const defaultTheme = extendTheme({
         accordion: {
           primary: '#fff',
         },
+        disabled: '#0B3E3E',
       },
     },
   },

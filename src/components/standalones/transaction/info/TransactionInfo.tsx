@@ -122,7 +122,7 @@ export const TransactionInfo: FC<Props> = ({
       <VStack w="100%" alignItems={'center'} gap={'16px'}>
         <CustomButton
           isLoading={isLoading}
-          isDisabled={false}
+          isDisabled={isLoading}
           onButtonClick={runTx}
         >
           Execute Transaction

@@ -88,12 +88,11 @@ export const useAnyaltWidget = ({
   const [protocolInputToken, setProtocolInputToken] = useAtom(
     protocolInputTokenAtom,
   );
+  const { balance } = useTokenInputBox();
 
   useEffect(() => {
     onGetQuote(false);
-  }, [inToken, slippage]);
-
-  const { balance } = useTokenInputBox();
+  }, [inToken, slippage, balance]);
 
   // const resetState = useCallback(() => {
   //   setInTokenAmount('');
@@ -261,11 +260,7 @@ export const useAnyaltWidget = ({
         }
       }
 
-      if (
-        activeStep !== 0 &&
-        balance &&
-        parseFloat(balance) < parseFloat(inTokenAmount)
-      ) {
+      if (balance && parseFloat(balance) < parseFloat(inTokenAmount)) {
         setTokenFetchError({
           isError: true,
           errorMessage: `You don't have enough tokens in your wallet.`,
@@ -274,6 +269,7 @@ export const useAnyaltWidget = ({
 
       setIsValidAmountIn(isEnoughDepositTokens);
       setFailedToFetchRoute(false);
+      if (activeStep === 0) goToNext();
       if (withGoNext && isEnoughDepositTokens) goToNext();
     } catch (error) {
       console.error(error);

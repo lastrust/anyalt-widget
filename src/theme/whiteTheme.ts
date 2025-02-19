@@ -74,6 +74,7 @@ export const whiteTheme = extendTheme({
         accordion: {
           primary: '#fff',
         },
+        disabled: 'rgba(255, 255, 255, 0.5)',
       },
     },
   },
