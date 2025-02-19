@@ -2,7 +2,6 @@ import { AnyAlt } from '@anyalt/sdk';
 import { SwapResult } from '@anyalt/sdk/src/adapter/api/api';
 import { switchChain } from '@wagmi/core';
 import { useAtom, useAtomValue } from 'jotai';
-import { useEffect } from 'react';
 import { ChainType, ExecuteResponse, Token, WalletConnector } from '../../..';
 import { walletConfig } from '../../../constants/configs';
 import {
@@ -84,7 +83,7 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
       await executeLastMileTransaction(transactionIndex, executeCallBack);
     }
   };
-  
+
   const executeLastMileTransaction = async (
     stepIndex: number,
     executeCallBack: (token: Token) => Promise<ExecuteResponse>,
