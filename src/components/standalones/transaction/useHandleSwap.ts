@@ -56,6 +56,7 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
     setSwapData((prev) => {
       {
         const newData = { ...prev, isCrosschainSwapError: false, totalSteps };
+        swapDataRef.current = newData;
         return newData;
       }
     });
