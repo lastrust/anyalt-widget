@@ -1,11 +1,11 @@
 import { useAtom } from 'jotai';
-import { swapDataAtom, transactionIndexAtom } from '../../../store/stateStore';
 import { useRef } from 'react';
+import { swapDataAtom, transactionIndexAtom } from '../../../store/stateStore';
 
 export const useSwapState = () => {
   const [swapData, setSwapData] = useAtom(swapDataAtom);
   const [transactionIndex, setTransactionIndex] = useAtom(transactionIndexAtom);
-  const swapDataRef = useRef(swapData); // ✅ Store latest state
+  const swapDataRef = useRef(swapData);
 
   const updateTransactionIndex = () => {
     setTransactionIndex((prev) => prev + 1);
