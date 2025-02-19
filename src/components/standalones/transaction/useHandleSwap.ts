@@ -84,11 +84,7 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
       await executeLastMileTransaction(transactionIndex, executeCallBack);
     }
   };
-
-  useEffect(() => {
-    console.log(swapData);
-  }, [swapData]);
-
+  
   const executeLastMileTransaction = async (
     stepIndex: number,
     executeCallBack: (token: Token) => Promise<ExecuteResponse>,

@@ -41,7 +41,6 @@ export const useSolanaHandler = () => {
         while (Date.now() - startTime < timeout) {
           try {
             const txStatus = await connection.getSignatureStatus(txHash);
-            console.log('txStatus: ', txStatus);
 
             if (
               txStatus.value?.confirmationStatus === 'finalized' ||

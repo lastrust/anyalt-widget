@@ -97,8 +97,8 @@ export const TransactionAccordion = () => {
               ) &&
                 Boolean(
                   currentStep - 1 === index &&
-                    stepsProgress?.steps[index]?.approve?.status !== 'failed' && 
-                    stepsProgress?.steps[index]?.swap?.status !== 'failed' 
+                    stepsProgress?.steps[index]?.approve?.status !== 'failed' &&
+                    stepsProgress?.steps[index]?.swap?.status !== 'failed',
                 ) && (
                   <Text textStyle={'bold.2'} color="brand.tertiary.100">
                     In Progress
