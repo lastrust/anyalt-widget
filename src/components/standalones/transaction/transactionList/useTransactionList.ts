@@ -17,14 +17,14 @@ export const useTransactionList = () => {
   const getToTokenDetails = () => {
     if (isTokenBuyTemplate) {
       return {
-        address: protocolInputToken?.tokenAddress || '',
+        contractAddress: protocolInputToken?.tokenAddress || '',
         symbol: protocolInputToken?.symbol || '',
         logo: protocolInputToken?.logoUrl || '',
         blockchain: protocolInputToken?.chain?.displayName || '',
         amount: Number(bestRoute?.outputAmount).toFixed(4) || '',
         blockchainLogo: protocolInputToken?.chain?.logoUrl || '',
         decimals: protocolInputToken?.decimals || 0,
-        usdPrice:
+        tokenUsdPrice:
           Number(
             bestRoute?.swapSteps[bestRoute.swapSteps.length - 1]
               .destinationToken.tokenUsdPrice,
@@ -33,14 +33,14 @@ export const useTransactionList = () => {
     }
 
     return {
-      address: protocolFinalToken?.address || '',
+      contractAddress: protocolFinalToken?.address || '',
       symbol: protocolFinalToken?.symbol || '',
       logo: protocolFinalToken?.logoUrl || '',
       blockchain: protocolInputToken?.chain?.displayName || '',
       amount: Number(finalTokenEstimate?.amountOut).toFixed(4) || '',
       blockchainLogo: protocolInputToken?.chain?.logoUrl || '',
       decimals: protocolFinalToken?.decimals || 0,
-      usdPrice: Number(finalTokenEstimate?.priceInUSD) || 0,
+      tokenUsdPrice: Number(finalTokenEstimate?.priceInUSD) || 0,
     };
   };
 
@@ -48,7 +48,8 @@ export const useTransactionList = () => {
     bestRoute,
     tokens: {
       from: {
-        address: bestRoute?.swapSteps[0].sourceToken.contractAddress || '',
+        contractAddress:
+          bestRoute?.swapSteps[0].sourceToken.contractAddress || '',
         symbol: bestRoute?.swapSteps[0].sourceToken.symbol || '',
         logo: bestRoute?.swapSteps[0].sourceToken.logo || '',
         blockchain: bestRoute?.swapSteps[0].sourceToken.blockchain || '',
@@ -56,7 +57,7 @@ export const useTransactionList = () => {
         blockchainLogo:
           bestRoute?.swapSteps[0].sourceToken.blockchainLogo || '',
         decimals: bestRoute?.swapSteps[0].sourceToken.decimals || 0,
-        usdPrice: bestRoute?.swapSteps[0].sourceToken.tokenUsdPrice || 0,
+        tokenUsdPrice: bestRoute?.swapSteps[0].sourceToken.tokenUsdPrice || 0,
       },
       to: {
         ...getToTokenDetails(),

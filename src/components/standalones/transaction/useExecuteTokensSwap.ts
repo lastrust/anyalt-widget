@@ -1,6 +1,9 @@
+import { useBitcoinWallet } from '@ant-design/web3-bitcoin';
 import { AnyAlt, EVMTransactionDataResponse } from '@anyalt/sdk';
 import { TransactionError } from '@anyalt/sdk/dist/types/types';
+import { useWallet } from '@solana/wallet-adapter-react';
 import { useAtom, useAtomValue } from 'jotai';
+import { useAccount } from 'wagmi';
 import { WalletConnector } from '../../..';
 import {
   STEP_DESCR,
@@ -8,11 +11,13 @@ import {
   TX_STATUS,
 } from '../../../constants/transaction';
 import {
+  bestRouteAtom,
   stepsProgressAtom,
   swapDataAtom,
   transactionIndexAtom,
 } from '../../../store/stateStore';
 import { TransactionProgress } from '../../../types/transaction';
+import { mapBlockchainToChainType } from '../../../utils/chains';
 import { getTransactionData } from '../../../utils/getTransactionData';
 import { handleSignerAddress } from '../../../utils/handleSignerAddress';
 import { submitPendingTransaction } from '../../../utils/submitPendingTransaction';
@@ -25,6 +30,12 @@ export const useExecuteTokensSwap = (
   const transactionIndex = useAtomValue(transactionIndexAtom);
   const [swapData, setSwapData] = useAtom(swapDataAtom);
   const [, setStepsProgress] = useAtom(stepsProgressAtom);
+  const bestRoute = useAtomValue(bestRouteAtom);
+
+  const { address: evmAddress, isConnected: isEvmConnected } = useAccount();
+  const { publicKey: solanaAddress, connected: isSolanaConnected } =
+    useWallet();
+  const { account: bitcoinAccount } = useBitcoinWallet();
 
   const { handleTransaction } = useHandleTransaction({
     externalEvmWalletConnector,
@@ -66,10 +77,44 @@ export const useExecuteTokensSwap = (
       let txHash: string | undefined;
 
       try {
+        const currentStep = bestRoute?.swapSteps?.[transactionIndex - 1];
+
+        if (!currentStep) {
+          throw new Error('No swap step found');
+        }
+
+        let walletAddress = null;
+        const chainType = mapBlockchainToChainType(
+          currentStep.sourceToken.blockchain,
+        );
+        switch (chainType) {
+          case 'EVM':
+            if (!isEvmConnected) {
+              throw new Error('EVM wallet not connected');
+            }
+            walletAddress = evmAddress;
+            break;
+          case 'SOLANA':
+            if (!isSolanaConnected) {
+              throw new Error('Solana wallet not connected');
+            }
+            walletAddress = solanaAddress?.toBase58();
+            break;
+          case 'BTC':
+            if (!bitcoinAccount) {
+              throw new Error('Bitcoin wallet not connected');
+            }
+            walletAddress = bitcoinAccount?.address;
+            break;
+          default:
+            throw new Error('Unsupported chain type');
+        }
+
         const transactionData = await getTransactionData(
           aaInstance,
           operationId,
           slippage,
+          walletAddress as string,
         );
 
         chainName = transactionData.blockChain;

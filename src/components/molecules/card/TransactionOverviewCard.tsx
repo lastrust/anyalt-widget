@@ -1,24 +1,24 @@
-import { SwapResultAsset } from '@anyalt/sdk/dist/adapter/api/api';
+import { Token } from '@anyalt/sdk/dist/adapter/api/api';
 import { Box, Divider, HStack, Text, VStack } from '@chakra-ui/react';
 import { useCallback, useState } from 'react';
 import { CopyIcon } from '../../atoms/icons/CopyIcon';
 import { ArrowRightIcon } from '../../atoms/icons/transaction/ArrowRightIcon';
 import { TokenCard } from './TokenCard';
 
-type SwapResultAssetWithAmount = SwapResultAsset & { amount: string };
+type TokenWithAmount = Token & { amount: string };
 
 type Props = {
-  requestId: string;
-  from?: SwapResultAssetWithAmount | undefined;
-  to?: SwapResultAssetWithAmount | undefined;
+  operationId: string;
+  from: TokenWithAmount | undefined;
+  to: TokenWithAmount | undefined;
 };
 
-export const TransactionOverviewCard = ({ requestId, to, from }: Props) => {
+export const TransactionOverviewCard = ({ operationId, to, from }: Props) => {
   const [isCopied, setIsCopied] = useState(false);
 
   const handleCopy = useCallback(() => {
     setIsCopied(true);
-    navigator.clipboard.writeText(requestId);
+    navigator.clipboard.writeText(operationId);
 
     setTimeout(() => {
       setIsCopied(false);
@@ -62,7 +62,7 @@ export const TransactionOverviewCard = ({ requestId, to, from }: Props) => {
       <Divider w="100%" h="1px" bgColor="brand.secondary.12" />
       <HStack justifyContent={'space-between'} w="100%">
         <Text textStyle={'regular.3'} color="brand.secondary.3">
-          RequestID: {isCopied ? 'Copied' : requestId}
+          OperationID: {isCopied ? 'Copied' : operationId}
         </Text>
         <Box cursor={'pointer'} onClick={handleCopy}>
           <CopyIcon />

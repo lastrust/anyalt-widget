@@ -41,7 +41,7 @@ export const useTransactionInfo = ({
         anyaltInstance,
         activeOperationId,
         slippage,
-        bestRoute?.swapSteps || [],
+        (bestRoute?.swapSteps ?? []).length,
         executeCallBack,
       );
       onTxComplete();

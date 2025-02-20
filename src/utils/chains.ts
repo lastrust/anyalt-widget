@@ -47,3 +47,31 @@ export const ChainIdToChainConstant = {
   137: CHAIN_POLYGON,
   324: CHAIN_ZKSYNC,
 } as const;
+
+export function mapBlockchainToChainType(
+  blockchain: string,
+): 'EVM' | 'SOLANA' | 'BTC' | null {
+  const evmChains = [
+    'ETH',
+    'ARBITRUM',
+    'BASE',
+    'OPTIMISM',
+    'POLYGON',
+    'LINEA',
+    'SCROLL',
+    'BLAST',
+  ];
+
+  if (evmChains.includes(blockchain.toUpperCase())) {
+    return 'EVM';
+  }
+
+  switch (blockchain.toUpperCase()) {
+    case 'BTC':
+      return 'BTC';
+    case 'SOLANA':
+      return 'SOLANA';
+    default:
+      return null;
+  }
+}

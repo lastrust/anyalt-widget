@@ -40,7 +40,7 @@
   "dependencies": {
     "@ant-design/web3": "^1.20.0",
     "@ant-design/web3-bitcoin": "^1.5.0",
-    "@anyalt/sdk": "file:../sdk/anyalt-sdk-1.0.5-canary.3.tgz",
+    "@anyalt/sdk": "file:../sdk/anyalt-sdk-1.0.10.tgz",
     "@chakra-ui/react": "2.10.4",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
