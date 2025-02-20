@@ -80,6 +80,7 @@ export const useEvmHandler = (externalEvmWalletConnector?: WalletConnector) => {
           return txHash;
         }
       } catch (error) {
+        console.error(error);
         throw new TransactionError(
           'Failed to send EVM transaction',
           error instanceof Error ? error.message : error,
