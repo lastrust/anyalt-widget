@@ -30,55 +30,56 @@ type Props = {
 export const RouteStep = ({
   exchangeIcon,
   exchangeName,
-  exchangeType,
   fromToken,
   toToken,
   loading,
 }: Props) => {
   return (
     <Flex justifyContent={'start'} w={'full'} alignItems={'center'}>
-      {loading ? (
-        <Skeleton w={'16px'} h={'16px'} borderRadius={'50%'} mr={'8px'} />
-      ) : (
-        <Image
-          src={exchangeIcon}
-          alt={`${exchangeIcon} Icon`}
-          marginRight={'8px'}
-          width="16px"
-          height="16px"
-          borderRadius={'50%'}
-          border="1px solid white"
-        />
-      )}
-      <VStack justifyContent={'space-between'} alignItems={'start'} gap={'4px'}>
-        {loading ? (
-          <Skeleton w={'180px'} h={'18px'} borderRadius="12px" />
-        ) : (
-          <Text color="brand.secondary.3" textStyle={'regular.3'}>
-            {exchangeType === 'BRIDGE' ? 'Bridge' : 'Swap'} token using{' '}
-            {exchangeName}
-          </Text>
-        )}
+      <VStack justifyContent={'space-between'} alignItems={'start'} gap={'8px'}>
+        <HStack gap={'4px'}>
+          {loading ? (
+            <Skeleton w={'16px'} h={'16px'} borderRadius={'50%'} mr={'8px'} />
+          ) : (
+            <Image
+              src={exchangeIcon}
+              alt={`${exchangeIcon} Icon`}
+              marginRight={'4px'}
+              width="16px"
+              height="16px"
+              borderRadius={'50%'}
+              border="1px solid white"
+            />
+          )}
+          {loading ? (
+            <Skeleton w={'180px'} h={'18px'} borderRadius="12px" />
+          ) : (
+            <Text color="brand.secondary.3" textStyle={'regular.3'}>
+              {/* {exchangeType === 'BRIDGE' ? 'Bridge' : 'Swap'} token using{' '} */}
+              {exchangeName}:
+            </Text>
+          )}
+        </HStack>
         {loading ? (
           <Skeleton w={'250px'} h={'18px'} borderRadius="12px" />
         ) : (
-          <HStack>
+          <HStack gap={'4px'}>
             <Text
               color="brand.secondary.3"
-              fontSize="12px"
-              fontWeight="regular"
+              textStyle={'regular.3'}
+              noOfLines={1}
             >
-              {`${fromToken.amount} ${fromToken.name}.${fromToken.chainName} `.toUpperCase()}
+              {`${fromToken.amount} ${fromToken.name} on ${fromToken.chainName.slice(0, 1).toUpperCase() + fromToken.chainName.slice(1).toLowerCase()} `}
             </Text>
             <Box>
               <ArrowRightIcon />
             </Box>
             <Text
               color="brand.secondary.3"
-              fontSize="12px"
-              fontWeight="regular"
+              textStyle={'regular.3'}
+              noOfLines={1}
             >
-              {`${toToken.amount} ${toToken.name}.${toToken.chainName}`.toUpperCase()}
+              {`${toToken.amount} ${toToken.name} on ${toToken.chainName.slice(0, 1).toUpperCase() + toToken.chainName.slice(1).toLowerCase()}`}
             </Text>
           </HStack>
         )}

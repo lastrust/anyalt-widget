@@ -5,6 +5,7 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
+  Divider,
   Flex,
   Skeleton,
   Text,
@@ -53,7 +54,7 @@ export const BestRouteAccordion = ({
   const isTokenBuyTemplate = useAtomValue(isTokenBuyTemplateAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
-  const [selectedRoute, setSelectedRoute] = useAtom(selectedRouteAtom);
+  const [, setSelectedRoute] = useAtom(selectedRouteAtom);
 
   if (!bestRoute) return <></>;
 
@@ -76,17 +77,15 @@ export const BestRouteAccordion = ({
     <Box w={'100%'} mt="16px">
       <Accordion defaultIndex={[0]} allowMultiple>
         <AccordionItem
-          border="1px solid"
+          border="3px solid"
+          borderWidth={loading ? '1px' : '3px!important'}
           borderColor={
-            selectedRoute?.requestId === bestRoute?.requestId
-              ? 'brand.border.bestRoute'
-              : 'transparent'
+            loading ? 'rgba(145, 158, 171, 0.12)' : 'brand.border.bestRoute'
           }
           borderRadius={'10px'}
           p={'16px'}
           cursor={'pointer'}
           onClick={handleRouteSelect}
-          bg={'brand.secondary.6'}
         >
           <AccordionButton
             display={'flex'}
@@ -177,7 +176,14 @@ export const BestRouteAccordion = ({
               amount={Number(finalTokenEstimate?.amountOut ?? '0.00')}
               price={Number(finalTokenEstimate?.priceInUSD ?? '0.00')}
               slippage={slippage}
-              network={`${bestRoute.swaps[0]?.swapperId}`}
+              network={
+                !isTokenBuyTemplate
+                  ? `${protocolFinalToken?.name} on ${protocolInputToken?.chain?.displayName}`
+                  : bestRoute.swaps[0]?.swapperId
+              }
+              bg={'brand.secondary.6'}
+              p="12px"
+              borderRadius={'8px'}
             />
           </AccordionButton>
           <AccordionPanel p={'0px'} mt="12px">
@@ -187,16 +193,11 @@ export const BestRouteAccordion = ({
               color="brand.secondary.3"
             >
               {loading ? (
-                <Skeleton
-                  w={'180px'}
-                  h={'18px'}
-                  ml="24px"
-                  borderRadius="12px"
-                />
+                <Skeleton w={'180px'} h={'18px'} borderRadius="12px" />
               ) : (
-                <Text textStyle={'bold.3'} ml={'24px'} lineHeight={'120%'}>
+                <Text textStyle={'bold.2'} lineHeight={'120%'}>
                   Transaction {currentStep}:{' '}
-                  {swaps[currentStep - 1]?.swapperName}
+                  {bestRoute?.swaps[currentStep - 1]?.swapperId}
                 </Text>
               )}
               {swaps?.map((step, index) => {
@@ -210,28 +211,31 @@ export const BestRouteAccordion = ({
                     exchangeType={step.swapperType}
                     fromToken={{
                       name: step.from.name,
-                      amount: truncateToDecimals(step.from.amount) || '0',
+                      amount: truncateToDecimals(step.from.amount, 4) || '0',
                       chainName: step.from.chainName || '',
                     }}
                     toToken={{
                       name: step.to.name,
-                      amount: truncateToDecimals(step.to.amount) || '0',
+                      amount: truncateToDecimals(step.to.amount, 4) || '0',
                       chainName: step.to.chainName || '',
                     }}
                   />
                 );
               })}
+            </VStack>
+
+            <Divider my="16px" />
+            <VStack
+              gap={'12px'}
+              alignItems={'flex-start'}
+              color="brand.secondary.3"
+            >
               {!isTokenBuyTemplate && swaps.length && (
                 <>
                   {loading ? (
-                    <Skeleton
-                      w={'180px'}
-                      h={'18px'}
-                      ml="24px"
-                      borderRadius="12px"
-                    />
+                    <Skeleton w={'180px'} h={'18px'} borderRadius="12px" />
                   ) : (
-                    <Text textStyle={'bold.3'} ml={'24px'} lineHeight={'120%'}>
+                    <Text textStyle={'bold.2'} lineHeight={'120%'}>
                       Transaction {(bestRoute.swaps?.length ?? 0) + 1}: Last
                       Mile Transaction
                     </Text>
@@ -246,8 +250,10 @@ export const BestRouteAccordion = ({
                     fromToken={{
                       name: swaps[swaps.length - 1].to.name,
                       amount:
-                        truncateToDecimals(swaps[swaps.length - 1].to.amount) ||
-                        '0',
+                        truncateToDecimals(
+                          swaps[swaps.length - 1].to.amount,
+                          4,
+                        ) || '0',
                       chainName: swaps[swaps.length - 1].to.chainName || '',
                     }}
                     toToken={{

@@ -1,4 +1,4 @@
-import { Box, Icon, Input, Text } from '@chakra-ui/react';
+import { Box, Flex, Icon, Input, Text } from '@chakra-ui/react';
 import { useAtom } from 'jotai';
 import { FC, useRef } from 'react';
 import { slippageAtom } from '../../../store/stateStore';
@@ -76,7 +76,7 @@ export const SlippageModal: FC<Props> = ({ onClose }) => {
               setSlippage={setSlippage}
             />
           </Box>
-          <Box display="flex" flexDir="row" gap="6px">
+          <Flex flexDir="row" gap="6px">
             <SlippageItem
               value={3}
               slippage={slippage}
@@ -95,18 +95,7 @@ export const SlippageModal: FC<Props> = ({ onClose }) => {
               justifyContent="center"
               gap="2px"
             >
-              <Text
-                fontSize="16px"
-                onClick={() => {
-                  if (inputRef.current) {
-                    inputRef.current.focus();
-                  }
-                }}
-              >
-                Custom %
-              </Text>
               <Input
-                value={slippage}
                 onChange={(e) => {
                   setSlippage(e.target.value);
                   if (parseFloat(e.target.value) > 100) {
@@ -117,19 +106,18 @@ export const SlippageModal: FC<Props> = ({ onClose }) => {
                 }}
                 ref={inputRef}
                 type="number"
-                placeholder=""
+                placeholder="Custom %"
                 outline="none"
                 border="none"
                 bgColor="transparent"
                 focusBorderColor="transparent"
                 fontSize="16px"
                 h="30px"
-                w="30px"
                 padding="0"
                 textAlign="center"
               />
             </Box>
-          </Box>
+          </Flex>
         </Box>
       </Box>
     </Box>

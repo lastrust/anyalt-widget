@@ -29,7 +29,7 @@ import {
 import { calculateWorstOutput } from '../../../utils';
 import { useTokenInputBox } from '../../standalones/selectSwap/token/input/useTokenInputBox';
 
-const REFRESH_INTERVAL = 20000;
+const REFRESH_INTERVAL = 30000;
 
 export const useAnyaltWidget = ({
   apiKey,
