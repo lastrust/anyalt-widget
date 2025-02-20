@@ -19,7 +19,7 @@ export const useTokenInputBox = () => {
   const inToken = useAtomValue(inTokenAtom);
   const currentStep = useAtomValue(currentUiStepAtom);
   const tokenFetchError = useAtomValue(tokenFetchErrorAtom);
-  // const [, setTokenFetchError] = useAtom(tokenFetchErrorAtom);
+  const [, setTokenFetchError] = useAtom(tokenFetchErrorAtom);
   const [inTokenAmount, setInTokenAmount] = useAtom(inTokenAmountAtom);
 
   const { publicKey } = useWallet();
