@@ -55,7 +55,7 @@ export const TokenInputBox: FC<Props> = ({
           Choose Your Deposit
         </Text>
         <Box
-          display={currentStep === 1 ? 'flex' : 'none'}
+          display={currentStep === 1 && isWalletConnected ? 'flex' : 'none'}
           flexDirection="row"
           alignItems="center"
           gap="4px"

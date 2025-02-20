@@ -460,6 +460,12 @@ export const useAnyaltWidget = ({
     return isWalletConnected;
   }, [isSolanaConnected, isEvmConnected, bestRoute, bitcoinAccount]);
 
+  useEffect(() => {
+    if (areWalletsConnected && isConnectWalletsOpen) {
+      connectWalletsClose();
+    }
+  }, [areWalletsConnected]);
+
   const onComplete = () => {
     onClose();
     setActiveStep(0);
