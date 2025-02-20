@@ -80,13 +80,20 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
 
     if (!isCrosschainSwapError) {
       if (transactionIndex !== swapData.totalSteps) updateTransactionIndex();
-      await executeLastMileTransaction(transactionIndex, executeCallBack);
+      await executeLastMileTransaction(
+        transactionIndex,
+        executeCallBack,
+        aaInstance,
+        operationId,
+      );
     }
   };
 
   const executeLastMileTransaction = async (
     stepIndex: number,
     executeCallBack: (token: Token) => Promise<ExecuteResponse>,
+    aaInstance: AnyAlt,
+    operationId: string,
   ) => {
     if (!swapDataRef.current.swapIsFinished)
       throw new TransactionError('Swap is not finished');
@@ -128,23 +135,51 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
 
       setFinalTokenAmount(executeResponse.amountOut);
 
-      const isApproval = Boolean(executeResponse.approvalTxHash);
-      const txHash = isApproval
-        ? executeResponse.approvalTxHash
-        : executeResponse.executeTxHash;
+      if (executeResponse.approvalTxHash) {
+        updateStepProgress({
+          isApproval: true,
+          status: TX_STATUS.confirmed,
+          message: TX_MESSAGE.confirmed,
+          txHash: executeResponse.approvalTxHash,
+          chainName: lastSwap?.to.blockchain,
+          details: {
+            currentStep: stepIndex,
+            totalSteps: swapDataRef.current.totalSteps,
+            stepDescription: STEP_DESCR.complete,
+          },
+        });
 
-      updateStepProgress({
-        isApproval,
-        status: TX_STATUS.confirmed,
-        message: TX_MESSAGE.confirmed,
-        txHash,
-        chainName: lastSwap?.to.blockchain,
-        details: {
-          currentStep: stepIndex,
-          totalSteps: swapDataRef.current.totalSteps,
-          stepDescription: STEP_DESCR.complete,
-        },
-      });
+        await aaInstance.createLastMileTransaction({
+          vmType: isEvm ? 'EVM' : 'SOLANA',
+          operationId,
+          order: 0,
+          chainId: isEvm ? chain?.chainId || 1 : 101,
+          transactionHash: executeResponse.approvalTxHash,
+        });
+      }
+
+      if (executeResponse.executeTxHash) {
+        updateStepProgress({
+          isApproval: false,
+          status: TX_STATUS.confirmed,
+          message: TX_MESSAGE.confirmed,
+          txHash: executeResponse.executeTxHash,
+          chainName: lastSwap?.to.blockchain,
+          details: {
+            currentStep: stepIndex,
+            totalSteps: swapDataRef.current.totalSteps,
+            stepDescription: STEP_DESCR.complete,
+          },
+        });
+
+        await aaInstance.createLastMileTransaction({
+          vmType: isEvm ? 'EVM' : 'SOLANA',
+          operationId,
+          order: 1,
+          chainId: isEvm ? chain?.chainId || 1 : 101,
+          transactionHash: executeResponse.executeTxHash,
+        });
+      }
     } catch (error) {
       try {
         const isErrorInstance = error instanceof Error;
@@ -154,7 +189,7 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
           message: isErrorInstance ? error.message : TX_MESSAGE.failed,
           error: isErrorInstance ? error.message : String(error),
           details: {
-            currentStep: stepIndex, // Ensure stepIndex is used
+            currentStep: stepIndex,
             totalSteps: swapDataRef.current.totalSteps,
             stepDescription: STEP_DESCR.failed,
           },

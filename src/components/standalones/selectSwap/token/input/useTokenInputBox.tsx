@@ -1,7 +1,7 @@
 import { useBitcoinWallet } from '@ant-design/web3-bitcoin';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useAtom, useAtomValue } from 'jotai';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { formatUnits } from 'viem';
 import { useAccount } from 'wagmi';
 import { useSolana } from '../../../../../providers/useSolana';
@@ -27,6 +27,14 @@ export const useTokenInputBox = () => {
   const { address: evmAddress } = useAccount();
   const { account: bitcoinAccount, getBalance: getBitcoinBalance } =
     useBitcoinWallet();
+
+  const isWalletConnected = useMemo(() => {
+    const tokenType = inToken?.chain?.chainType;
+    const isEvmWallet = tokenType === 'EVM' && evmAddress;
+    const isSolanaWallet = tokenType === 'SOLANA' && publicKey;
+    const isBtcWallet = tokenType === 'BTC' && bitcoinAccount;
+    return isEvmWallet || isSolanaWallet || isBtcWallet;
+  }, [inToken, evmAddress, publicKey, bitcoinAccount]);
 
   const getBalance = async () => {
     const tokenType = inToken?.chain?.chainType;
@@ -63,19 +71,21 @@ export const useTokenInputBox = () => {
     setInTokenAmount(balance);
   };
 
-  // useEffect(() => {
-  //   if (
-  //     currentStep === 1 &&
-  //     balance &&
-  //     inTokenAmount &&
-  //     parseFloat(balance) < parseFloat(inTokenAmount)
-  //   ) {
-  //     setTokenFetchError({
-  //       isError: true,
-  //       errorMessage: `Not enough balance.`,
-  //     });
-  //   }
-  // }, [inTokenAmount, balance, currentStep]);
+  useEffect(() => {
+    if (currentStep === 1 && balance && inTokenAmount) {
+      if (parseFloat(balance) < parseFloat(inTokenAmount)) {
+        setTokenFetchError({
+          isError: true,
+          errorMessage: `Not enough balance.`,
+        });
+      } else {
+        setTokenFetchError({
+          isError: false,
+          errorMessage: '',
+        });
+      }
+    }
+  }, [inTokenAmount, balance, currentStep]);
 
   useEffect(() => {
     getBalance();
@@ -95,5 +105,6 @@ export const useTokenInputBox = () => {
     tokenFetchError,
     maxButtonClick,
     balance,
+    isWalletConnected,
   };
 };
