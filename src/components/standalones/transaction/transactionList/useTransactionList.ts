@@ -2,6 +2,8 @@ import { useAtomValue } from 'jotai';
 import {
   bestRouteAtom,
   finalTokenEstimateAtom,
+  inTokenAmountAtom,
+  inTokenAtom,
   isTokenBuyTemplateAtom,
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
@@ -13,6 +15,8 @@ export const useTransactionList = () => {
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
   const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
+  const inToken = useAtomValue(inTokenAtom);
+  const inTokenAmount = useAtomValue(inTokenAmountAtom);
 
   const getToTokenDetails = () => {
     if (isTokenBuyTemplate) {
@@ -25,7 +29,11 @@ export const useTransactionList = () => {
         blockchainLogo: protocolInputToken?.chain?.logoUrl || '',
         decimals: protocolInputToken?.decimals || 0,
         usdPrice:
-          Number(bestRoute?.swaps[bestRoute.swaps.length - 1].to.usdPrice) || 0,
+          Number(
+            bestRoute?.swaps?.length === 0
+              ? 0
+              : bestRoute?.swaps[bestRoute.swaps.length - 1]?.to.usdPrice,
+          ) || 0,
       };
     }
 
@@ -40,6 +48,27 @@ export const useTransactionList = () => {
       usdPrice: Number(finalTokenEstimate?.priceInUSD) || 0,
     };
   };
+
+  if (!bestRoute || bestRoute?.swaps.length === 0) {
+    return {
+      bestRoute,
+      tokens: {
+        from: {
+          address: inToken?.tokenAddress || '',
+          symbol: inToken?.symbol || '',
+          logo: inToken?.logoUrl || '',
+          blockchain: inToken?.chain?.displayName || '',
+          amount: Number(inTokenAmount).toFixed(4) || '',
+          blockchainLogo: inToken?.chain?.logoUrl || '',
+          decimals: inToken?.decimals || 0,
+          usdPrice: 0,
+        },
+        to: {
+          ...getToTokenDetails(),
+        },
+      },
+    };
+  }
 
   return {
     bestRoute,

@@ -15,6 +15,7 @@ import { useEffect, useState } from 'react';
 import {
   bestRouteAtom,
   finalTokenEstimateAtom,
+  inTokenAmountAtom,
   isTokenBuyTemplateAtom,
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
@@ -54,6 +55,7 @@ export const BestRouteAccordion = ({
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const [selectedRoute, setSelectedRoute] = useAtom(selectedRouteAtom);
+  const inTokenAmount = useAtomValue(inTokenAmountAtom);
 
   if (!bestRoute) return <></>;
 
@@ -124,7 +126,7 @@ export const BestRouteAccordion = ({
                 <RouteTag
                   loading={loading}
                   text={
-                    bestRoute.swaps[0].fee
+                    bestRoute.swaps[0]?.fee
                       .reduce((acc, fee) => {
                         const amount = parseFloat(fee.amount);
                         const price = fee.price || 0;
@@ -177,7 +179,7 @@ export const BestRouteAccordion = ({
               amount={Number(finalTokenEstimate?.amountOut ?? '0.00')}
               price={Number(finalTokenEstimate?.priceInUSD ?? '0.00')}
               slippage={slippage}
-              network={`${bestRoute.swaps[0]?.swapperId}`}
+              network={`${bestRoute.swaps[0]?.swapperId ?? ''}`}
             />
           </AccordionButton>
           <AccordionPanel p={'0px'} mt="12px">
@@ -186,18 +188,22 @@ export const BestRouteAccordion = ({
               alignItems={'flex-start'}
               color="brand.secondary.3"
             >
-              {loading ? (
-                <Skeleton
-                  w={'180px'}
-                  h={'18px'}
-                  ml="24px"
-                  borderRadius="12px"
-                />
-              ) : (
-                <Text textStyle={'bold.3'} ml={'24px'} lineHeight={'120%'}>
-                  Transaction {currentStep}:{' '}
-                  {swaps[currentStep - 1]?.swapperName}
-                </Text>
+              {bestRoute.swaps.length > 0 && (
+                <>
+                  {loading ? (
+                    <Skeleton
+                      w={'180px'}
+                      h={'18px'}
+                      ml="24px"
+                      borderRadius="12px"
+                    />
+                  ) : (
+                    <Text textStyle={'bold.3'} ml={'24px'} lineHeight={'120%'}>
+                      Transaction {currentStep}:{' '}
+                      {swaps[currentStep - 1]?.swapperName}
+                    </Text>
+                  )}
+                </>
               )}
               {swaps?.map((step, index) => {
                 return (
@@ -221,7 +227,7 @@ export const BestRouteAccordion = ({
                   />
                 );
               })}
-              {!isTokenBuyTemplate && swaps.length && (
+              {!isTokenBuyTemplate && (
                 <>
                   {loading ? (
                     <Skeleton
@@ -244,11 +250,20 @@ export const BestRouteAccordion = ({
                     exchangeName={'Last Mile TX'}
                     exchangeType={'LAST_MILE'}
                     fromToken={{
-                      name: swaps[swaps.length - 1].to.name,
-                      amount:
-                        truncateToDecimals(swaps[swaps.length - 1].to.amount) ||
-                        '0',
-                      chainName: swaps[swaps.length - 1].to.chainName || '',
+                      name:
+                        swaps.length > 0
+                          ? swaps[swaps.length - 1].to.name
+                          : protocolInputToken?.symbol || '',
+                      amount: truncateToDecimals(
+                        swaps.length > 0
+                          ? swaps[swaps.length - 1].to.amount
+                          : inTokenAmount || '0',
+                        4,
+                      ),
+                      chainName:
+                        swaps.length > 0
+                          ? swaps[swaps.length - 1].to.chainName || ''
+                          : protocolInputToken?.chain?.displayName || '',
                     }}
                     toToken={{
                       name: protocolFinalToken?.name || '',
