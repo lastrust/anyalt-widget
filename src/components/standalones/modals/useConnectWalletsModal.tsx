@@ -1,10 +1,7 @@
-import { useProvider } from '@ant-design/web3';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { useWallet } from '@solana/wallet-adapter-react';
-import { useWalletModal } from '@solana/wallet-adapter-react-ui'; // Import the wallet modal hook
+import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import { useAtomValue } from 'jotai';
 import { useEffect, useMemo, useState } from 'react';
-import { useAccount } from 'wagmi';
 import { ChainType, WalletConnector } from '../../..';
 import { allChainsAtom, bestRouteAtom } from '../../../store/stateStore';
 
@@ -30,19 +27,14 @@ const WALLETS = [
 ];
 
 type UseConnectWalletsModalProps = {
-  onClose: () => void;
   walletConnector?: WalletConnector;
 };
 
 export const useConnectWalletsModal = ({
-  onClose,
   walletConnector,
 }: UseConnectWalletsModalProps) => {
   const { openConnectModal } = useConnectModal();
   const { setVisible } = useWalletModal(); // Hook to control the Solana wallet modal
-  const { address: evmAddress } = useAccount();
-  const { connected: isSolanaConnected } = useWallet();
-  const { account: bitcoinAccount } = useProvider();
   const [isBitcoinModalOpen, setIsBitcoinModalOpen] = useState(false);
   const [isEvmRequired, setIsEvmRequired] = useState(false);
   const [isSolanaRequired, setIsSolanaRequired] = useState(false);
@@ -69,69 +61,30 @@ export const useConnectWalletsModal = ({
     isBitcoinRequired,
   ]);
 
-  const getWalletConnectionStatus = useMemo(() => {
-    return {
-      EVM: {
-        connected: isEvmRequired ? Boolean(evmAddress) : false,
-        required: isEvmRequired,
-      },
-      Solana: {
-        connected: isSolanaRequired ? isSolanaConnected : false,
-        required: isSolanaRequired,
-      },
-      Bitcoin: {
-        connected: isBitcoinRequired ? Boolean(bitcoinAccount?.address) : false,
-        required: isBitcoinRequired,
-      },
-    };
-  }, [
-    evmAddress,
-    isSolanaConnected,
-    bitcoinAccount,
-    isEvmRequired,
-    isSolanaRequired,
-    isBitcoinRequired,
-  ]);
-
-  const areAllRequiredWalletsConnected = useMemo(() => {
-    return Object.values(getWalletConnectionStatus)
-      .filter((wallet) => wallet.required)
-      .every((wallet) => wallet.connected);
-  }, [getWalletConnectionStatus]);
-
   useEffect(() => {
     bestRoute?.swaps.forEach((swap) => {
       const fromBlockchain = swap.from.blockchain;
       const toBlockchain = swap.to.blockchain;
+
       const isSolanaFrom = fromBlockchain === 'SOLANA';
       const isSolanaTo = toBlockchain === 'SOLANA';
+      if (isSolanaFrom || isSolanaTo) setIsSolanaRequired(true);
+
       const isBitcoinFrom = fromBlockchain === 'BTC';
       const isBitcoinTo = toBlockchain === 'BTC';
-
-      if (isSolanaFrom || isSolanaTo) setIsSolanaRequired(true);
       if (isBitcoinFrom || isBitcoinTo) setIsBitcoinRequired(true);
 
+      const toChain = allChains.find((chain) => chain.name === toBlockchain);
       const fromChain = allChains.find(
         (chain) => chain.name === fromBlockchain,
       );
-      const toChain = allChains.find((chain) => chain.name === toBlockchain);
 
-      if (
-        fromChain?.chainType === ChainType.EVM ||
-        toChain?.chainType === ChainType.EVM
-      ) {
-        setIsEvmRequired(true);
-      }
+      const isEvmFrom = fromChain?.chainType === ChainType.EVM;
+      const isEvmTo = toChain?.chainType === ChainType.EVM;
+      if (isEvmFrom || isEvmTo) setIsEvmRequired(true);
     });
   }, [bestRoute, allChains]);
 
-  useEffect(() => {
-    if (areAllRequiredWalletsConnected) {
-      onClose();
-    }
-  }, [areAllRequiredWalletsConnected, onClose]);
-
-  // Function to handle wallet type click
   const handleWalletClick = (walletType: string) => {
     if (walletConnector) {
       if (walletConnector?.isConnected) {
@@ -144,9 +97,9 @@ export const useConnectWalletsModal = ({
     if (walletType === 'EVM') {
       openConnectModal?.();
     } else if (walletType === 'Solana') {
-      setVisible(true); // Open Solana wallet modal
+      setVisible(true);
     } else if (walletType === 'Bitcoin') {
-      setIsBitcoinModalOpen(true); // Open Bitcoin wallet modal
+      setIsBitcoinModalOpen(true);
     }
   };
 

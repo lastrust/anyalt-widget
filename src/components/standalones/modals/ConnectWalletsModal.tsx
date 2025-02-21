@@ -37,7 +37,6 @@ export const ConnectWalletsModal: FC<Props> = ({
     onBitcoinConnected,
     handleWalletClick,
   } = useConnectWalletsModal({
-    onClose,
     walletConnector,
   });
 
