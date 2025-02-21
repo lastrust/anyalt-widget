@@ -92,15 +92,14 @@ export const TransactionAccordion = () => {
               </Text>
               {currentStep - 1 > index && <CheckIcon />}
               {Boolean(
-                transactionsProgress?.transactions[index]?.approve ||
-                  transactionsProgress?.transactions[index]?.swap,
+                transactionsProgress![index]?.approve ||
+                  transactionsProgress![index]?.swap,
               ) &&
                 Boolean(
                   currentStep - 1 === index &&
-                    transactionsProgress?.transactions[index]?.approve
-                      ?.status !== 'failed' &&
-                    transactionsProgress?.transactions[index]?.swap?.status !==
-                      'failed',
+                    transactionsProgress![index]?.approve?.status !==
+                      'failed' &&
+                    transactionsProgress![index]?.swap?.status !== 'failed',
                 ) && (
                   <Text textStyle={'bold.2'} color="brand.tertiary.100">
                     In Progress
@@ -207,16 +206,16 @@ export const TransactionAccordion = () => {
                 </HStack>
               </HStack>
 
-              {transactionsProgress?.transactions[index]?.approve && (
+              {transactionsProgress![index]?.approve && (
                 <TransactionHash
                   type="Approval"
-                  progress={transactionsProgress?.transactions[index]?.approve}
+                  progress={transactionsProgress![index]?.approve}
                 />
               )}
-              {transactionsProgress?.transactions[index]?.swap && (
+              {transactionsProgress![index]?.swap && (
                 <TransactionHash
                   type="Swap"
-                  progress={transactionsProgress?.transactions[index]?.swap}
+                  progress={transactionsProgress![index]?.swap}
                 />
               )}
             </VStack>

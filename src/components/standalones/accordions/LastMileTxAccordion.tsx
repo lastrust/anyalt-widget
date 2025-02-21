@@ -141,22 +141,16 @@ export const LastMileTxAccordion = ({
         </VStack>
 
         <Box>
-          {transactionsProgress?.transactions[bestRoute.swaps.length]
-            .approve && (
+          {transactionsProgress![bestRoute.swaps.length]?.approve && (
             <TransactionHash
               type="Approval"
-              progress={
-                transactionsProgress?.transactions[bestRoute.swaps.length]
-                  .approve
-              }
+              progress={transactionsProgress![bestRoute.swaps.length]?.approve}
             />
           )}
-          {transactionsProgress?.transactions[bestRoute.swaps.length].swap && (
+          {transactionsProgress![bestRoute.swaps.length]?.swap && (
             <TransactionHash
               type="Swap"
-              progress={
-                transactionsProgress?.transactions[bestRoute.swaps.length].swap
-              }
+              progress={transactionsProgress![bestRoute.swaps.length]?.swap}
             />
           )}
         </Box>

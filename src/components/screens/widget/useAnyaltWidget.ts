@@ -307,7 +307,7 @@ export const useAnyaltWidget = ({
     if (areWalletsConnected) {
       // await onGetQuote(false);
       await connectWalletsAndConfirmRoute();
-      setTransactionsProgress(undefined);
+      setTransactionsProgress({});
     } else {
       if (walletConnector) {
         walletConnector.connect();

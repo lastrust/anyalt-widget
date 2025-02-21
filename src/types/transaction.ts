@@ -97,7 +97,7 @@ export type TransactionStatusList = {
 };
 
 export interface TransactionsProgress {
-  transactions: TransactionGroup[];
+  [key: number | string]: TransactionGroup;
 }
 
 export class TransactionError extends Error {

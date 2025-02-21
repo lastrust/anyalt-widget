@@ -14,7 +14,6 @@ import {
   bestRouteAtom,
   finalTokenAmountAtom,
   isTokenBuyTemplateAtom,
-  transactionsProgressAtom,
 } from '../../../store/stateStore';
 import { TransactionError } from '../../../types/transaction';
 import { chainIds } from '../../../utils/chains';
@@ -22,15 +21,11 @@ import { useExecuteTokensSwap } from './useExecuteTokensSwap';
 import { useSwapState } from './useSwapState';
 
 export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
+  const allChains = useAtomValue(allChainsAtom);
+  const bestRoute = useAtomValue(bestRouteAtom);
   const isTokenBuyTemplate = useAtomValue(isTokenBuyTemplateAtom);
 
   const [, setFinalTokenAmount] = useAtom(finalTokenAmountAtom);
-  const [transactionsProgress, setTransactionsProgress] = useAtom(
-    transactionsProgressAtom,
-  );
-
-  const allChains = useAtomValue(allChainsAtom);
-  const bestRoute = useAtomValue(bestRouteAtom);
 
   const {
     swapData,
@@ -39,7 +34,7 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
     transactionIndex,
     updateTransactionIndex,
   } = useSwapState();
-  const { executeTokensSwap, updateStepProgress } = useExecuteTokensSwap(
+  const { executeTokensSwap, updateTransactionProgress } = useExecuteTokensSwap(
     updateTransactionIndex,
     externalEvmWalletConnector,
   );
@@ -61,15 +56,6 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
         return newData;
       }
     });
-
-    // Initialize steps progress array if not already set
-    const isTransactionProgressEmpty =
-      !transactionsProgress?.transactions ||
-      transactionsProgress.transactions.length === 0;
-
-    if (isTransactionProgressEmpty) {
-      setTransactionsProgress({ transactions: Array(totalSteps).fill({}) });
-    }
 
     const { isCrosschainSwapError } = await executeTokensSwap(
       aaInstance,
@@ -101,6 +87,7 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
     aaInstance: AnyAlt,
     operationId: string,
   ) => {
+    console.log(stepIndex, 'stepIndex');
     if (!swapDataRef.current.swapIsFinished)
       throw new TransactionError('Swap is not finished');
 
@@ -117,12 +104,12 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
         });
       }
 
-      updateStepProgress({
+      updateTransactionProgress({
         isApproval: false,
         status: TX_STATUS.pending,
         message: TX_MESSAGE.pending,
         details: {
-          currentStep: stepIndex,
+          currentStep: stepIndex + 1,
           totalSteps: swapDataRef.current.totalSteps,
           stepDescription: STEP_DESCR.pending,
         },
@@ -142,14 +129,14 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
       setFinalTokenAmount(executeResponse.amountOut);
 
       if (executeResponse.approvalTxHash) {
-        updateStepProgress({
+        updateTransactionProgress({
           isApproval: true,
           status: TX_STATUS.confirmed,
           message: TX_MESSAGE.confirmed,
           txHash: executeResponse.approvalTxHash,
           chainName: lastSwap?.to.blockchain,
           details: {
-            currentStep: stepIndex,
+            currentStep: stepIndex + 1,
             totalSteps: swapDataRef.current.totalSteps,
             stepDescription: STEP_DESCR.complete,
           },
@@ -165,14 +152,14 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
       }
 
       if (executeResponse.executeTxHash) {
-        updateStepProgress({
+        updateTransactionProgress({
           isApproval: false,
           status: TX_STATUS.confirmed,
           message: TX_MESSAGE.confirmed,
           txHash: executeResponse.executeTxHash,
           chainName: lastSwap?.to.blockchain,
           details: {
-            currentStep: stepIndex,
+            currentStep: stepIndex + 1,
             totalSteps: swapDataRef.current.totalSteps,
             stepDescription: STEP_DESCR.complete,
           },
@@ -189,13 +176,13 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
     } catch (error) {
       try {
         const isErrorInstance = error instanceof Error;
-        updateStepProgress({
+        updateTransactionProgress({
           isApproval: false,
           status: TX_STATUS.failed,
           message: isErrorInstance ? error.message : TX_MESSAGE.failed,
           error: isErrorInstance ? error.message : String(error),
           details: {
-            currentStep: stepIndex,
+            currentStep: swapDataRef.current.currentStep,
             totalSteps: swapDataRef.current.totalSteps,
             stepDescription: STEP_DESCR.failed,
           },

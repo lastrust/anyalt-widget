@@ -12,7 +12,10 @@ import {
   transactionIndexAtom,
   transactionsProgressAtom,
 } from '../../../store/stateStore';
-import { TransactionProgress } from '../../../types/transaction';
+import {
+  TransactionProgress,
+  TransactionsProgress,
+} from '../../../types/transaction';
 import { getTransactionData } from '../../../utils/getTransactionData';
 import { handleSignerAddress } from '../../../utils/handleSignerAddress';
 import { submitPendingTransaction } from '../../../utils/submitPendingTransaction';
@@ -32,16 +35,16 @@ export const useExecuteTokensSwap = (
 
   const updateTransactionProgress = (progress: TransactionProgress) => {
     setTransactionsProgress((prev) => {
-      const newSteps = prev?.transactions ? [...prev.transactions] : [];
+      const newProgress: TransactionsProgress = prev || {};
       const index = progress.details.currentStep - 1;
-
       const txType = progress.isApproval ? 'approve' : 'swap';
 
-      newSteps[index] = {
-        ...newSteps[index],
+      newProgress[index] = {
+        ...newProgress[index],
         [txType]: progress,
       };
-      return { transactions: newSteps };
+
+      return { ...newProgress };
     });
   };
 
@@ -142,6 +145,7 @@ export const useExecuteTokensSwap = (
               swapIsFinished: waitForTxResponse.swapIsFinished,
               crosschainSwapOutputAmount: crosschainSwapOutputAmount,
               totalSteps,
+              currentStep: transactionIndex,
             };
             swapDataRef.current = newData;
             return newData;
@@ -232,6 +236,6 @@ export const useExecuteTokensSwap = (
 
   return {
     executeTokensSwap,
-    updateStepProgress: updateTransactionProgress,
+    updateTransactionProgress,
   };
 };
