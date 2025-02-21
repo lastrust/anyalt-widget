@@ -1,5 +1,6 @@
 import { AnyAlt } from '@anyalt/sdk';
 import { SwapResult } from '@anyalt/sdk/src/adapter/api/api';
+import { switchChain } from '@wagmi/core';
 import { useAtom, useAtomValue } from 'jotai';
 import { ChainType, ExecuteResponse, Token, WalletConnector } from '../../..';
 import { walletConfig } from '../../../constants/configs';
@@ -15,10 +16,8 @@ import {
   protocolInputTokenAtom,
 } from '../../../store/stateStore';
 import { TransactionError } from '../../../types/transaction';
-import { chainIds } from '../../../utils/chains';
 import { useExecuteTokensSwap } from './useExecuteTokensSwap';
 import { useSwapState } from './useSwapState';
-import { switchChain } from '@wagmi/core';
 
 export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
   const isTokenBuyTemplate = useAtomValue(isTokenBuyTemplateAtom);
