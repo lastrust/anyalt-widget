@@ -35,7 +35,7 @@ export const ProgressItem: FC<Props> = ({ isApprove, progress }) => {
             <FailIcon />
           </Box>
         )}
-        <Text textStyle={'regular.3'} color="brand.secondary.3">
+        <Text textStyle={'regular.3'} color="brand.secondary.3" maxW={'370px'}>
           {isApprove ? 'Approve' : 'Swap'}: {progress.message}
         </Text>
       </HStack>

@@ -26,6 +26,8 @@ export const TransactionStep = ({
         title={`Transaction ${currentStep}`}
         m="0"
         h="100%"
+        maxH={'520px'}
+        overflow={'scroll'}
         onBackClick={onBackClick}
       >
         <TransactionInfo

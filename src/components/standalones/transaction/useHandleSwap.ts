@@ -1,6 +1,5 @@
 import { AnyAlt } from '@anyalt/sdk';
 import { SwapResult } from '@anyalt/sdk/src/adapter/api/api';
-import { switchChain } from '@wagmi/core';
 import { useAtom, useAtomValue } from 'jotai';
 import { ChainType, ExecuteResponse, Token, WalletConnector } from '../../..';
 import { walletConfig } from '../../../constants/configs';
@@ -19,6 +18,7 @@ import { TransactionError } from '../../../types/transaction';
 import { chainIds } from '../../../utils/chains';
 import { useExecuteTokensSwap } from './useExecuteTokensSwap';
 import { useSwapState } from './useSwapState';
+import { switchChain } from '@wagmi/core';
 
 export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
   const isTokenBuyTemplate = useAtomValue(isTokenBuyTemplateAtom);
@@ -119,8 +119,7 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
         amount: swapDataRef.current.crosschainSwapOutputAmount,
         address: protocolInputToken?.tokenAddress || '',
         decimals: protocolInputToken?.decimals || 0,
-        chainId:
-          chainIds[protocolInputToken?.chainName as keyof typeof chainIds] || 1,
+        chainId: protocolInputToken?.chain?.chainId || 1,
         name: protocolInputToken?.symbol || '',
         symbol: protocolInputToken?.symbol || '',
         chainType: isEvm ? ChainType.EVM : ChainType.SOLANA,
