@@ -205,11 +205,7 @@ export const BestRouteAccordion = ({
                         borderRadius="12px"
                       />
                     ) : (
-                      <Text
-                        textStyle={'bold.3'}
-                        ml={'24px'}
-                        lineHeight={'120%'}
-                      >
+                      <Text textStyle={'bold.2'} lineHeight={'120%'}>
                         Transaction {currentStep}:{' '}
                         {bestRoute?.swaps[currentStep - 1]?.swapperId}
                       </Text>
