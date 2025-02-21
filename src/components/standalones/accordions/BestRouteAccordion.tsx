@@ -117,7 +117,7 @@ export const BestRouteAccordion = ({
                 />
                 <RouteTag
                   loading={loading}
-                  text={`${bestRoute.swaps.reduce((acc, swap) => acc + swap.estimatedTimeInSeconds, 0)}s`}
+                  text={`${bestRoute.swaps.reduce((acc, swap) => acc + swap.estimatedTimeInSeconds, 0) || finalTokenEstimate?.estimatedTimeInSeconds}s`}
                   icon={TimeIcon}
                   textColor="brand.tertiary.100"
                   bgColor="brand.bg.tag"
@@ -132,7 +132,7 @@ export const BestRouteAccordion = ({
                         return acc + amount * price;
                       }, 0)
                       .toFixed(2)
-                      .toString() + '$'
+                      .toString() || finalTokenEstimate?.estimatedFeeInUSD + '$'
                   }
                   icon={GasIcon}
                   textColor="brand.tertiary.100"

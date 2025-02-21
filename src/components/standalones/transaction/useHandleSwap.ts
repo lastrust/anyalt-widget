@@ -182,7 +182,7 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
           message: isErrorInstance ? error.message : TX_MESSAGE.failed,
           error: isErrorInstance ? error.message : String(error),
           details: {
-            currentStep: swapDataRef.current.currentStep,
+            currentStep: stepIndex + 1,
             totalSteps: swapDataRef.current.totalSteps,
             stepDescription: STEP_DESCR.failed,
           },
