@@ -6,7 +6,10 @@ import {
 } from '@anyalt/sdk';
 import { atom } from 'jotai';
 import { EstimateResponse, Token } from '..';
-import { StepsProgress, TransactionStatusList } from '../types/transaction';
+import {
+  TransactionsProgress,
+  TransactionStatusList,
+} from '../types/transaction';
 
 export const anyaltInstanceAtom = atom<AnyAlt | undefined>(undefined);
 
@@ -36,7 +39,12 @@ export const activeOperationIdAtom = atom<string | undefined>(undefined);
 
 export const transactionIndexAtom = atom<number>(1);
 
-export const stepsProgressAtom = atom<StepsProgress | undefined>(undefined);
+export const transactionsProgressAtom = atom<TransactionsProgress>({
+  0: {
+    approve: undefined,
+    swap: undefined,
+  },
+});
 
 export const finalTokenAmountAtom = atom<string>('');
 
@@ -55,11 +63,13 @@ export const swapDataAtom = atom<{
   isCrosschainSwapError: boolean;
   crosschainSwapOutputAmount: string;
   totalSteps: number;
+  currentStep: number;
 }>({
   swapIsFinished: false,
   isCrosschainSwapError: false,
   crosschainSwapOutputAmount: '0',
   totalSteps: 0,
+  currentStep: 0,
 });
 
 export const tokenFetchErrorAtom = atom<{

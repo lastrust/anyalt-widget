@@ -9,17 +9,11 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { useWalletModal } from '@solana/wallet-adapter-react-ui'; // Import the wallet modal hook
-import { useAtomValue } from 'jotai';
-import { FC, useEffect, useMemo, useState } from 'react';
-import { ChainType, WalletConnector } from '../../..';
-import {
-  allChainsAtom,
-  bestRouteAtom,
-  protocolInputTokenAtom,
-} from '../../../store/stateStore';
+import { FC } from 'react';
+import { WalletConnector } from '../../..';
+import { CustomButton } from '../../atoms/buttons/CustomButton';
 import { WalletButton } from '../../molecules/buttons/WalletButton';
+import { useConnectWalletsModal } from './useConnectWalletsModal';
 
 interface Props {
   isOpen: boolean;
@@ -29,24 +23,6 @@ interface Props {
   walletConnector?: WalletConnector;
 }
 
-const WALLETS = [
-  {
-    walletType: 'EVM',
-    network: 'Ethereum',
-    isDisabled: false,
-  },
-  {
-    walletType: 'Solana',
-    network: 'solana',
-    isDisabled: false,
-  },
-  {
-    walletType: 'Bitcoin',
-    network: 'bitcoin',
-    isDisabled: false,
-  },
-];
-
 export const ConnectWalletsModal: FC<Props> = ({
   isOpen,
   onClose,
@@ -54,90 +30,15 @@ export const ConnectWalletsModal: FC<Props> = ({
   areWalletsConnected,
   walletConnector,
 }) => {
-  const { openConnectModal } = useConnectModal();
-  const { setVisible } = useWalletModal(); // Hook to control the Solana wallet modal
-  const [isBitcoinModalOpen, setIsBitcoinModalOpen] = useState(false);
-  const [isEvmRequired, setIsEvmRequired] = useState(false);
-  const [isSolanaRequired, setIsSolanaRequired] = useState(false);
-  const [isBitcoinRequired, setIsBitcoinRequired] = useState(false);
-
-  const bestRoute = useAtomValue(bestRouteAtom);
-  const allChains = useAtomValue(allChainsAtom);
-  const protocolInputToken = useAtomValue(protocolInputTokenAtom);
-  const requiredWallets = useMemo(() => {
-    return WALLETS.filter((wallet) => {
-      if (wallet.walletType === 'EVM') {
-        return isEvmRequired;
-      } else if (wallet.walletType === 'Solana') {
-        return isSolanaRequired;
-      } else if (wallet.walletType === 'Bitcoin') {
-        return isBitcoinRequired;
-      }
-      return false;
-    });
-  }, [
-    bestRoute,
-    allChains,
-    isEvmRequired,
-    isSolanaRequired,
-    isBitcoinRequired,
-  ]);
-
-  useEffect(() => {
-    if (protocolInputToken?.chain?.chainType === ChainType.EVM) {
-      setIsEvmRequired(true);
-    } else if (protocolInputToken?.chain?.chainType === ChainType.SOLANA) {
-      setIsSolanaRequired(true);
-    }
-
-    bestRoute?.swaps.forEach((swap) => {
-      const fromBlockchain = swap.from.blockchain;
-      const toBlockchain = swap.to.blockchain;
-      const isSolanaFrom = fromBlockchain === 'SOLANA';
-      const isSolanaTo = toBlockchain === 'SOLANA';
-      const isBitcoinFrom = fromBlockchain === 'BTC';
-      const isBitcoinTo = toBlockchain === 'BTC';
-
-      if (isSolanaFrom || isSolanaTo) setIsSolanaRequired(true);
-      if (isBitcoinFrom || isBitcoinTo) setIsBitcoinRequired(true);
-
-      const fromChain = allChains.find(
-        (chain) => chain.name === fromBlockchain,
-      );
-      const toChain = allChains.find((chain) => chain.name === toBlockchain);
-
-      if (
-        fromChain?.chainType === ChainType.EVM ||
-        toChain?.chainType === ChainType.EVM
-      ) {
-        setIsEvmRequired(true);
-      }
-    });
-  }, [bestRoute, allChains]);
-
-  // Function to handle wallet type click
-  const handleWalletClick = (walletType: string) => {
-    console.log('walletType', walletType);
-    if (walletConnector) {
-      if (walletConnector?.isConnected) {
-        walletConnector.disconnect();
-      } else if (!walletConnector.isConnected) {
-        walletConnector.connect();
-      }
-    }
-
-    if (walletType === 'EVM') {
-      openConnectModal?.();
-    } else if (walletType === 'Solana') {
-      setVisible(true); // Open Solana wallet modal
-    } else if (walletType === 'Bitcoin') {
-      setIsBitcoinModalOpen(true); // Open Bitcoin wallet modal
-    }
-  };
-
-  const onBitcoinConnected = () => {
-    setIsBitcoinModalOpen(false);
-  };
+  const {
+    isBitcoinModalOpen,
+    requiredWallets,
+    setIsBitcoinModalOpen,
+    onBitcoinConnected,
+    handleWalletClick,
+  } = useConnectWalletsModal({
+    walletConnector,
+  });
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered size="sm">
@@ -171,10 +72,13 @@ export const ConnectWalletsModal: FC<Props> = ({
                 walletType={wallet.walletType}
                 network={wallet.network}
                 onConnect={() => handleWalletClick(wallet.walletType)}
-                isDisabled={wallet.isDisabled || false}
+                isDisabled={wallet.isDisabled}
                 walletConnector={walletConnector}
               />
             ))}
+            <CustomButton onButtonClick={() => onClose()}>
+              Continue
+            </CustomButton>
           </VStack>
           <Connector
             children={<></>}

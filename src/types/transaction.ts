@@ -66,7 +66,7 @@ export interface TransactionProgress {
   details: TransactionProgressDetails;
 }
 
-export interface StepProgress {
+export interface TransactionGroup {
   approve?: TransactionProgress;
   swap?: TransactionProgress;
 }
@@ -96,8 +96,8 @@ export type TransactionStatusList = {
   }[];
 };
 
-export interface StepsProgress {
-  steps: StepProgress[];
+export interface TransactionsProgress {
+  [key: number | string]: TransactionGroup;
 }
 
 export class TransactionError extends Error {

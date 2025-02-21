@@ -13,8 +13,7 @@ export function isValidSolanaAddress(address: string): boolean {
   try {
     const publicKey = new PublicKey(address);
     return PublicKey.isOnCurve(publicKey);
-  } catch (e) {
-    console.log(e);
+  } catch {
     return false;
   }
 }

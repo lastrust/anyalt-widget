@@ -122,7 +122,7 @@ export const SelectToken = ({
 
       <CustomButton
         isLoading={loading}
-        disabled={
+        isDisabled={
           isButtonDisabled ||
           (showConnectedWallets && failedToFetchRoute) ||
           (tokenFetchError.isError && !!isConnected)

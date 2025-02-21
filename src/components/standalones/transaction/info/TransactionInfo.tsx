@@ -7,7 +7,6 @@ import {
   inTokenAmountAtom,
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
-  stepsProgressAtom,
 } from '../../../../store/stateStore';
 import { truncateToDecimals } from '../../../../utils/truncateToDecimals';
 import { CustomButton } from '../../../atoms/buttons/CustomButton';
@@ -29,19 +28,19 @@ export const TransactionInfo: FC<Props> = ({
   executeCallBack,
 }) => {
   const {
-    runTx,
     fees,
+    runTx,
     isLoading,
     bestRoute,
     currentStep,
-    recentTransaction,
     estimatedTime,
+    recentTransaction,
+    transactionsProgress,
   } = useTransactionInfo({
     externalEvmWalletConnector,
     onTxComplete,
     executeCallBack,
   });
-  const stepsProgress = useAtomValue(stepsProgressAtom);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
   const inTokenAmount = useAtomValue(inTokenAmountAtom);
@@ -67,10 +66,9 @@ export const TransactionInfo: FC<Props> = ({
                   : 'Last mile transaction'}
             </Text>
             <ProgressList
-              stepsProgress={stepsProgress}
+              transactionsProgress={transactionsProgress}
               index={currentStep - 1}
             />
-
             <TransactionInfoCard estimatedTime={estimatedTime} fees={fees} />
           </VStack>
         </Box>
@@ -171,7 +169,7 @@ export const TransactionInfo: FC<Props> = ({
       <VStack w="100%" alignItems={'center'} gap={'16px'}>
         <CustomButton
           isLoading={isLoading}
-          isDisabled={false}
+          isDisabled={isLoading}
           onButtonClick={runTx}
         >
           Execute Transaction

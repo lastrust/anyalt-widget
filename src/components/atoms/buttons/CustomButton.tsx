@@ -25,8 +25,8 @@ export const CustomButton = ({ onButtonClick, children, ...props }: Props) => {
         onButtonClick();
       }}
       _disabled={{
-        bg: 'gray.500',
-        cursor: 'default',
+        bg: 'brand.buttons.disabled',
+        cursor: 'not-allowed',
       }}
       {...props}
     >

@@ -12,7 +12,7 @@ import {
 import { useAtomValue } from 'jotai';
 import { EstimateResponse, Token } from '../../..';
 import { inTokenAmountAtom } from '../../../store/stateStore';
-import { StepsProgress } from '../../../types/transaction';
+import { TransactionsProgress } from '../../../types/transaction';
 import { truncateToDecimals } from '../../../utils/truncateToDecimals';
 import { DividerIcon } from '../../atoms/icons/transaction/DividerIcon';
 import { GasIcon } from '../../atoms/icons/transaction/GasIcon';
@@ -25,7 +25,7 @@ type Props = {
   isLastMileExpanded: boolean;
   bestRoute: BestRouteResponse;
   currentStep: number;
-  stepsProgress: StepsProgress | undefined;
+  transactionsProgress: TransactionsProgress | undefined;
   protocolFinalToken: Token | undefined;
   finalTokenEstimate: EstimateResponse | undefined;
   protocolInputToken: SupportedToken | undefined;
@@ -36,7 +36,7 @@ export const LastMileTxAccordion = ({
   isLastMileExpanded,
   bestRoute,
   currentStep,
-  stepsProgress,
+  transactionsProgress,
   protocolFinalToken,
   protocolInputToken,
   finalTokenEstimate,
@@ -148,16 +148,16 @@ export const LastMileTxAccordion = ({
         </VStack>
 
         <Box>
-          {stepsProgress?.steps[bestRoute.swaps.length]?.approve && (
+          {transactionsProgress![bestRoute.swaps.length]?.approve && (
             <TransactionHash
               type="Approval"
-              progress={stepsProgress?.steps[bestRoute.swaps.length]?.approve}
+              progress={transactionsProgress![bestRoute.swaps.length]?.approve}
             />
           )}
-          {stepsProgress?.steps[bestRoute.swaps.length]?.swap && (
+          {transactionsProgress![bestRoute.swaps.length]?.swap && (
             <TransactionHash
               type="Swap"
-              progress={stepsProgress?.steps[bestRoute.swaps.length]?.swap}
+              progress={transactionsProgress![bestRoute.swaps.length]?.swap}
             />
           )}
         </Box>

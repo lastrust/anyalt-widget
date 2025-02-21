@@ -20,16 +20,16 @@ import {
   protocolInputTokenAtom,
   selectedRouteAtom,
   slippageAtom,
-  stepsProgressAtom,
   swapDataAtom,
   tokenFetchErrorAtom,
   transactionIndexAtom,
   transactionsListAtom,
+  transactionsProgressAtom,
 } from '../../../store/stateStore';
 import { calculateWorstOutput } from '../../../utils';
 import { useTokenInputBox } from '../../standalones/selectSwap/token/input/useTokenInputBox';
 
-const REFRESH_INTERVAL = 20000;
+const REFRESH_INTERVAL = 30000;
 
 export const useAnyaltWidget = ({
   apiKey,
@@ -75,29 +75,28 @@ export const useAnyaltWidget = ({
   const selectedRoute = useAtomValue(selectedRouteAtom);
 
   const [swapData, setSwapData] = useAtom(swapDataAtom);
-  const [, setStepsProgress] = useAtom(stepsProgressAtom);
   const [, setCurrentUiStep] = useAtom(currentUiStepAtom);
+  const [allChains, setAllChains] = useAtom(allChainsAtom);
+  const [bestRoute, setBestRoute] = useAtom(bestRouteAtom);
   const [, setIsTokenBuy] = useAtom(isTokenBuyTemplateAtom);
+  const [, setTokenFetchError] = useAtom(tokenFetchErrorAtom);
+  const [, setTransactionsList] = useAtom(transactionsListAtom);
+  const [, setTransactionIndex] = useAtom(transactionIndexAtom);
   const [, setActiveOperationId] = useAtom(activeOperationIdAtom);
+  const [, setProtocolFinalToken] = useAtom(protocolFinalTokenAtom);
+  const [, setTransactionsProgress] = useAtom(transactionsProgressAtom);
+  const [anyaltInstance, setAnyaltInstance] = useAtom(anyaltInstanceAtom);
   const [finalEstimateToken, setFinalTokenEstimate] = useAtom(
     finalTokenEstimateAtom,
   );
-  const [, setTransactionsList] = useAtom(transactionsListAtom);
-  const [, setTokenFetchError] = useAtom(tokenFetchErrorAtom);
-  const [allChains, setAllChains] = useAtom(allChainsAtom);
-  const [bestRoute, setBestRoute] = useAtom(bestRouteAtom);
-  const [, setProtocolFinalToken] = useAtom(protocolFinalTokenAtom);
-  const [anyaltInstance, setAnyaltInstance] = useAtom(anyaltInstanceAtom);
   const [protocolInputToken, setProtocolInputToken] = useAtom(
     protocolInputTokenAtom,
   );
-  const [, setTransactionIndex] = useAtom(transactionIndexAtom);
+  const { balance } = useTokenInputBox();
 
   useEffect(() => {
     onGetQuote(false);
-  }, [inToken, slippage]);
-
-  const { balance } = useTokenInputBox();
+  }, [inToken, slippage, balance]);
 
   // const resetState = useCallback(() => {
   //   setInTokenAmount('');
@@ -280,11 +279,7 @@ export const useAnyaltWidget = ({
         }
       }
 
-      if (
-        activeStep !== 0 &&
-        balance &&
-        parseFloat(balance) < parseFloat(inTokenAmount)
-      ) {
+      if (balance && parseFloat(balance) < parseFloat(inTokenAmount)) {
         setTokenFetchError({
           isError: true,
           errorMessage: `You don't have enough tokens in your wallet.`,
@@ -293,6 +288,7 @@ export const useAnyaltWidget = ({
 
       setIsValidAmountIn(isEnoughDepositTokens);
       setFailedToFetchRoute(false);
+      if (activeStep === 0) goToNext();
       if (withGoNext && isEnoughDepositTokens) goToNext();
     } catch (error) {
       console.error(error);
@@ -326,7 +322,7 @@ export const useAnyaltWidget = ({
     if (areWalletsConnected) {
       // await onGetQuote(false);
       await connectWalletsAndConfirmRoute();
-      setStepsProgress(undefined);
+      setTransactionsProgress({});
     } else {
       if (walletConnector) {
         walletConnector.connect();
@@ -370,7 +366,6 @@ export const useAnyaltWidget = ({
       });
 
       if (bestRoute?.swaps.length === 0) {
-        console.log('asdf');
         const res = await anyaltInstance?.createOperation();
         if (!res?.operationId) throw new Error('Failed to create operation');
 
