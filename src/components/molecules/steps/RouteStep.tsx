@@ -4,6 +4,7 @@ import {
   HStack,
   Image,
   Skeleton,
+  SkeletonCircle,
   Text,
   VStack,
 } from '@chakra-ui/react';
@@ -69,14 +70,36 @@ export const RouteStep = ({
         ) : (
           <HStack gap={'6px'}>
             <HStack gap={'4px'}>
-              <Image
-                src={fromToken.icon}
-                alt={`${fromToken.icon} Icon`}
-                w={'16px'}
-                h={'16px'}
-                borderRadius={'50%'}
-                border="1px solid white"
-              />
+              <Box position="relative">
+                <Image
+                  src={fromToken.icon}
+                  alt={`${fromToken.icon} Icon`}
+                  w={'16px'}
+                  h={'16px'}
+                  borderRadius={'50%'}
+                  border="1px solid white"
+                />
+                <Box
+                  position="absolute"
+                  bottom="-3px"
+                  left="10px"
+                  w={'8px'}
+                  h={'8px'}
+                >
+                  {fromToken.chainIcon !== '' ? (
+                    <Image
+                      src={fromToken.chainIcon}
+                      alt={`${fromToken.chainName} Icon`}
+                      width="8px"
+                      height="8px"
+                      borderRadius="50%"
+                    />
+                  ) : (
+                    <SkeletonCircle size="14px" bgColor="brand.secondary.100" />
+                  )}
+                </Box>
+              </Box>
+
               <Text
                 color="brand.secondary.3"
                 textStyle={'regular.3'}
@@ -100,14 +123,35 @@ export const RouteStep = ({
               <ArrowRightIcon />
             </Box>
             <HStack gap={'4px'}>
-              <Image
-                src={toToken.icon}
-                w={'16px'}
-                h={'16px'}
-                alt={`${toToken.icon} Icon`}
-                borderRadius={'50%'}
-                border="1px solid white"
-              />
+              <Box position="relative">
+                <Image
+                  src={toToken.icon}
+                  w={'16px'}
+                  h={'16px'}
+                  alt={`${toToken.icon} Icon`}
+                  borderRadius={'50%'}
+                  border="1px solid white"
+                />
+                <Box
+                  position="absolute"
+                  bottom="-3px"
+                  left="10px"
+                  w={'8px'}
+                  h={'8px'}
+                >
+                  {toToken.chainIcon !== '' ? (
+                    <Image
+                      src={toToken.chainIcon}
+                      alt={`${toToken.chainName} Icon`}
+                      width="8px"
+                      height="8px"
+                      borderRadius="50%"
+                    />
+                  ) : (
+                    <SkeletonCircle size="14px" bgColor="brand.secondary.100" />
+                  )}
+                </Box>
+              </Box>
               <Text
                 color="brand.secondary.3"
                 textStyle={'regular.3'}

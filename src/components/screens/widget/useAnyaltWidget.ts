@@ -366,7 +366,6 @@ export const useAnyaltWidget = ({
       });
 
       if (bestRoute?.swaps.length === 0) {
-        console.log('asdf');
         const res = await anyaltInstance?.createOperation();
         if (!res?.operationId) throw new Error('Failed to create operation');
 

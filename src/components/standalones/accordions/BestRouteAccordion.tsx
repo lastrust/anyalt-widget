@@ -244,13 +244,14 @@ export const BestRouteAccordion = ({
                 })}
                 {!isTokenBuyTemplate && (
                   <>
-                    <Divider my="16px" />
+                    {swaps.length > 0 && <Divider my="16px" />}
                     <VStack
                       gap={'12px'}
                       alignItems={'flex-start'}
                       color="brand.secondary.3"
+                      mb="5px"
                     >
-                      {!isTokenBuyTemplate && swaps.length && (
+                      {!isTokenBuyTemplate && (
                         <>
                           {loading ? (
                             <Skeleton
@@ -274,20 +275,25 @@ export const BestRouteAccordion = ({
                             fromToken={{
                               name:
                                 swaps.length > 0
-                                  ? swaps[swaps.length - 1].to.name
+                                  ? swaps[swaps.length - 1]?.to?.name
                                   : protocolInputToken?.symbol || '',
-                              icon: swaps[swaps.length - 1].to.icon || '',
+                              icon:
+                                swaps.length > 0
+                                  ? swaps[swaps.length - 1]?.to?.icon || ''
+                                  : protocolInputToken?.logoUrl || '',
                               chainIcon:
-                                swaps[swaps.length - 1].to.chainIcon || '',
+                                swaps.length > 0
+                                  ? swaps[swaps.length - 1]?.to?.chainIcon || ''
+                                  : protocolInputToken?.logoUrl || '',
                               amount: truncateToDecimals(
                                 swaps.length > 0
-                                  ? swaps[swaps.length - 1].to.amount
+                                  ? swaps[swaps.length - 1]?.to?.amount
                                   : inTokenAmount || '0',
                                 4,
                               ),
                               chainName:
                                 swaps.length > 0
-                                  ? swaps[swaps.length - 1].to.chainName || ''
+                                  ? swaps[swaps.length - 1]?.to?.chainName || ''
                                   : protocolInputToken?.chain?.displayName ||
                                     '',
                             }}
