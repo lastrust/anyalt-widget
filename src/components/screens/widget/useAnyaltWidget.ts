@@ -172,7 +172,7 @@ export const useAnyaltWidget = ({
 
     if (inputTokenChain) {
       anyaltInstance
-        ?.getToken(inputTokenChain.id, inputToken.address)
+        ?.getToken(inputTokenChain.name, inputToken.address)
         .then((res) => {
           setProtocolInputToken(res);
         });
@@ -343,8 +343,10 @@ export const useAnyaltWidget = ({
       setLoading(true);
       if (!bestRoute?.operationId) return;
 
+      let destination = '';
+
       const selectedWallets: Record<string, string> = {};
-      bestRoute.swapSteps.forEach((swapStep) => {
+      bestRoute.swapSteps.forEach((swapStep, index) => {
         const fromBlockchain = swapStep.sourceToken.blockchain;
         const toBlockchain = swapStep.destinationToken.blockchain;
 
@@ -366,14 +368,48 @@ export const useAnyaltWidget = ({
         const isEvmFrom = fromChain?.chainType === ChainType.EVM;
         const isEvmTo = toChain?.chainType === ChainType.EVM;
 
-        if (isEvmFrom) selectedWallets[fromBlockchain] = evmAddress || '';
-        if (isEvmTo) selectedWallets[toBlockchain] = evmAddress || '';
+        if (isEvmFrom || isEvmTo) {
+          if (!evmAddress) {
+            throw new Error('EVM Wallet not connected');
+          }
+        }
+
+        if (isSolanaFrom || isSolanaTo) {
+          if (!solanaAddress) {
+            throw new Error('Solana Wallet not connected');
+          }
+        }
+
+        if (isBitcoinFrom || isBitcoinTo) {
+          if (!bitcoinAccount) {
+            throw new Error('Bitcoin Wallet not connected');
+          }
+        }
+
+        if (isEvmFrom) selectedWallets[fromBlockchain] = evmAddress!;
+        if (isEvmTo) selectedWallets[toBlockchain] = evmAddress!;
+
+        if (index === bestRoute.swapSteps.length - 1) {
+          switch (true) {
+            case isEvmTo:
+              destination = evmAddress!;
+              break;
+            case isSolanaTo:
+              destination = solanaAddress!.toString();
+              break;
+            case isBitcoinTo:
+              destination = bitcoinAccount!.address;
+              break;
+            default:
+              throw new Error('Destination not found');
+          }
+        }
       });
 
       const res = await anyaltInstance?.confirmRoute({
         operationId: bestRoute.operationId,
         selectedWallets,
-        destination: evmAddress || '',
+        destination,
       });
 
       if (!res?.ok || !res?.operationId)

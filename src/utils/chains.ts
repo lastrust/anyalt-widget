@@ -48,9 +48,13 @@ export const ChainIdToChainConstant = {
   324: CHAIN_ZKSYNC,
 } as const;
 
-export function mapBlockchainToChainType(
-  blockchain: string,
-): 'EVM' | 'SOLANA' | 'BTC' | null {
+export enum ChainType {
+  EVM = 'EVM',
+  SOLANA = 'SOLANA',
+  BTC = 'BTC',
+}
+
+export function mapBlockchainToChainType(blockchain: string): ChainType | null {
   const evmChains = [
     'ETH',
     'ARBITRUM',
@@ -63,14 +67,14 @@ export function mapBlockchainToChainType(
   ];
 
   if (evmChains.includes(blockchain.toUpperCase())) {
-    return 'EVM';
+    return ChainType.EVM;
   }
 
   switch (blockchain.toUpperCase()) {
     case 'BTC':
-      return 'BTC';
+      return ChainType.BTC;
     case 'SOLANA':
-      return 'SOLANA';
+      return ChainType.SOLANA;
     default:
       return null;
   }
