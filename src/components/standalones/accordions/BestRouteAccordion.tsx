@@ -211,11 +211,15 @@ export const BestRouteAccordion = ({
                     exchangeType={step.swapperType}
                     fromToken={{
                       name: step.from.name,
+                      icon: step.from.icon || '',
+                      chainIcon: step.from.chainIcon || '',
                       amount: truncateToDecimals(step.from.amount, 4) || '0',
                       chainName: step.from.chainName || '',
                     }}
                     toToken={{
                       name: step.to.name,
+                      icon: step.to.icon || '',
+                      chainIcon: step.to.chainIcon || '',
                       amount: truncateToDecimals(step.to.amount, 4) || '0',
                       chainName: step.to.chainName || '',
                     }}
@@ -249,6 +253,8 @@ export const BestRouteAccordion = ({
                     exchangeType={'LAST_MILE'}
                     fromToken={{
                       name: swaps[swaps.length - 1].to.name,
+                      icon: swaps[swaps.length - 1].to.icon || '',
+                      chainIcon: swaps[swaps.length - 1].to.chainIcon || '',
                       amount:
                         truncateToDecimals(
                           swaps[swaps.length - 1].to.amount,
@@ -258,6 +264,8 @@ export const BestRouteAccordion = ({
                     }}
                     toToken={{
                       name: protocolFinalToken?.name || '',
+                      icon: protocolFinalToken?.logoUrl || '',
+                      chainIcon: protocolInputToken?.chain?.logoUrl || '',
                       amount: truncateToDecimals(
                         finalTokenEstimate?.amountOut ?? '0.00',
                         4,

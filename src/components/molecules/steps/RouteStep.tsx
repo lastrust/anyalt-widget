@@ -17,11 +17,15 @@ type Props = {
   stepNumber: number;
   fromToken: {
     name: string;
+    icon: string;
+    chainIcon: string;
     amount: string;
     chainName: string;
   };
   toToken: {
     name: string;
+    icon: string;
+    chainIcon: string;
     amount: string;
     chainName: string;
   };
@@ -63,24 +67,66 @@ export const RouteStep = ({
         {loading ? (
           <Skeleton w={'250px'} h={'18px'} borderRadius="12px" />
         ) : (
-          <HStack gap={'4px'}>
-            <Text
-              color="brand.secondary.3"
-              textStyle={'regular.3'}
-              noOfLines={1}
-            >
-              {`${fromToken.amount} ${fromToken.name} on ${fromToken.chainName.slice(0, 1).toUpperCase() + fromToken.chainName.slice(1).toLowerCase()} `}
-            </Text>
+          <HStack gap={'6px'}>
+            <HStack gap={'4px'}>
+              <Image
+                src={fromToken.icon}
+                alt={`${fromToken.icon} Icon`}
+                w={'16px'}
+                h={'16px'}
+                borderRadius={'50%'}
+                border="1px solid white"
+              />
+              <Text
+                color="brand.secondary.3"
+                textStyle={'regular.3'}
+                noOfLines={1}
+              >
+                <span
+                  style={{
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    lineHeight: '120%',
+                    color: 'white',
+                    marginRight: '4px',
+                  }}
+                >
+                  {fromToken.amount}
+                </span>
+                {`${fromToken.name} on ${fromToken.chainName.slice(0, 1).toUpperCase() + fromToken.chainName.slice(1).toLowerCase()} `}
+              </Text>
+            </HStack>
             <Box>
               <ArrowRightIcon />
             </Box>
-            <Text
-              color="brand.secondary.3"
-              textStyle={'regular.3'}
-              noOfLines={1}
-            >
-              {`${toToken.amount} ${toToken.name} on ${toToken.chainName.slice(0, 1).toUpperCase() + toToken.chainName.slice(1).toLowerCase()}`}
-            </Text>
+            <HStack gap={'4px'}>
+              <Image
+                src={toToken.icon}
+                w={'16px'}
+                h={'16px'}
+                alt={`${toToken.icon} Icon`}
+                borderRadius={'50%'}
+                border="1px solid white"
+              />
+              <Text
+                color="brand.secondary.3"
+                textStyle={'regular.3'}
+                noOfLines={1}
+              >
+                <span
+                  style={{
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    lineHeight: '120%',
+                    color: 'white',
+                    marginRight: '4px',
+                  }}
+                >
+                  {toToken.amount}
+                </span>
+                {`${toToken.name} on ${toToken.chainName.slice(0, 1).toUpperCase() + toToken.chainName.slice(1).toLowerCase()}`}
+              </Text>
+            </HStack>
           </HStack>
         )}
       </VStack>
