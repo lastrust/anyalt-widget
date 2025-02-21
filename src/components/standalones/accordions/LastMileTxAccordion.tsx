@@ -9,7 +9,9 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
+import { useAtomValue } from 'jotai';
 import { EstimateResponse, Token } from '../../..';
+import { inTokenAmountAtom } from '../../../store/stateStore';
 import { StepsProgress } from '../../../types/transaction';
 import { truncateToDecimals } from '../../../utils/truncateToDecimals';
 import { DividerIcon } from '../../atoms/icons/transaction/DividerIcon';
@@ -39,6 +41,8 @@ export const LastMileTxAccordion = ({
   protocolInputToken,
   finalTokenEstimate,
 }: Props) => {
+  const inTokenAmount = useAtomValue(inTokenAmountAtom);
+
   return (
     <AccordionItem
       key={'last mile tx'}
@@ -94,7 +98,10 @@ export const LastMileTxAccordion = ({
             fromToken={{
               name: protocolInputToken?.symbol || '',
               amount: truncateToDecimals(
-                bestRoute.swaps[bestRoute.swaps.length - 1].toAmount || '0',
+                bestRoute.swaps.length === 0
+                  ? inTokenAmount || '0'
+                  : bestRoute.swaps[bestRoute.swaps.length - 1]?.toAmount ||
+                      '0',
                 3,
               ),
               tokenLogo: protocolInputToken?.logoUrl || '',
@@ -141,16 +148,16 @@ export const LastMileTxAccordion = ({
         </VStack>
 
         <Box>
-          {stepsProgress?.steps[bestRoute.swaps.length].approve && (
+          {stepsProgress?.steps[bestRoute.swaps.length]?.approve && (
             <TransactionHash
               type="Approval"
-              progress={stepsProgress?.steps[bestRoute.swaps.length].approve}
+              progress={stepsProgress?.steps[bestRoute.swaps.length]?.approve}
             />
           )}
-          {stepsProgress?.steps[bestRoute.swaps.length].swap && (
+          {stepsProgress?.steps[bestRoute.swaps.length]?.swap && (
             <TransactionHash
               type="Swap"
-              progress={stepsProgress?.steps[bestRoute.swaps.length].swap}
+              progress={stepsProgress?.steps[bestRoute.swaps.length]?.swap}
             />
           )}
         </Box>

@@ -14,7 +14,11 @@ import { useWalletModal } from '@solana/wallet-adapter-react-ui'; // Import the 
 import { useAtomValue } from 'jotai';
 import { FC, useEffect, useMemo, useState } from 'react';
 import { ChainType, WalletConnector } from '../../..';
-import { allChainsAtom, bestRouteAtom } from '../../../store/stateStore';
+import {
+  allChainsAtom,
+  bestRouteAtom,
+  protocolInputTokenAtom,
+} from '../../../store/stateStore';
 import { WalletButton } from '../../molecules/buttons/WalletButton';
 
 interface Props {
@@ -59,6 +63,7 @@ export const ConnectWalletsModal: FC<Props> = ({
 
   const bestRoute = useAtomValue(bestRouteAtom);
   const allChains = useAtomValue(allChainsAtom);
+  const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const requiredWallets = useMemo(() => {
     return WALLETS.filter((wallet) => {
       if (wallet.walletType === 'EVM') {
@@ -79,6 +84,12 @@ export const ConnectWalletsModal: FC<Props> = ({
   ]);
 
   useEffect(() => {
+    if (protocolInputToken?.chain?.chainType === ChainType.EVM) {
+      setIsEvmRequired(true);
+    } else if (protocolInputToken?.chain?.chainType === ChainType.SOLANA) {
+      setIsSolanaRequired(true);
+    }
+
     bestRoute?.swaps.forEach((swap) => {
       const fromBlockchain = swap.from.blockchain;
       const toBlockchain = swap.to.blockchain;

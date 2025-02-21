@@ -10,10 +10,10 @@ import {
   TX_STATUS,
 } from '../../../constants/transaction';
 import {
-  allChainsAtom,
   bestRouteAtom,
   finalTokenAmountAtom,
   isTokenBuyTemplateAtom,
+  protocolInputTokenAtom,
   stepsProgressAtom,
 } from '../../../store/stateStore';
 import { TransactionError } from '../../../types/transaction';
@@ -26,8 +26,8 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
 
   const [, setFinalTokenAmount] = useAtom(finalTokenAmountAtom);
   const [stepsProgress, setStepsProgress] = useAtom(stepsProgressAtom);
+  const protocolInputToken = useAtomValue(protocolInputTokenAtom);
 
-  const allChains = useAtomValue(allChainsAtom);
   const bestRoute = useAtomValue(bestRouteAtom);
 
   const {
@@ -65,28 +65,28 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
       setStepsProgress({ steps: Array(totalSteps).fill({}) });
     }
 
-    const { isCrosschainSwapError } = await executeTokensSwap(
-      aaInstance,
-      operationId,
-      slippage,
-      totalSteps,
-      swapDataRef,
-    );
+    if (bestRoute?.swaps && bestRoute?.swaps?.length > 0) {
+      const { isCrosschainSwapError } = await executeTokensSwap(
+        aaInstance,
+        operationId,
+        slippage,
+        totalSteps,
+        swapDataRef,
+      );
 
-    if (isCrosschainSwapError) throw new TransactionError('Transaction failed');
-
+      if (isCrosschainSwapError)
+        throw new TransactionError('Transaction failed');
+    }
     // If the template is token buy, we don't need to execute the last mile transaction
     if (isTokenBuyTemplate) return;
 
-    if (!isCrosschainSwapError) {
-      if (transactionIndex !== swapData.totalSteps) updateTransactionIndex();
-      await executeLastMileTransaction(
-        transactionIndex,
-        executeCallBack,
-        aaInstance,
-        operationId,
-      );
-    }
+    if (transactionIndex !== swapData.totalSteps) updateTransactionIndex();
+    await executeLastMileTransaction(
+      transactionIndex,
+      executeCallBack,
+      aaInstance,
+      operationId,
+    );
   };
 
   const executeLastMileTransaction = async (
@@ -95,19 +95,19 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
     aaInstance: AnyAlt,
     operationId: string,
   ) => {
-    if (!swapDataRef.current.swapIsFinished)
+    if (
+      bestRoute?.swaps &&
+      bestRoute?.swaps?.length > 0 &&
+      !swapDataRef.current.swapIsFinished
+    )
       throw new TransactionError('Swap is not finished');
 
     try {
-      const lastSwap = bestRoute?.swaps[bestRoute.swaps.length - 1];
-      const chain = allChains.find(
-        (chain) => chain.name === lastSwap?.to.blockchain,
-      );
-      const isEvm = chain?.chainType === ChainType.EVM;
+      const isEvm = protocolInputToken?.chain?.chainType === ChainType.EVM;
 
-      if (isEvm && chain?.chainId) {
+      if (isEvm && protocolInputToken?.chain?.chainId) {
         await switchChain(walletConfig, {
-          chainId: chain.chainId,
+          chainId: protocolInputToken.chain.chainId,
         });
       }
 
@@ -124,12 +124,12 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
 
       const executeResponse = await executeCallBack({
         amount: swapDataRef.current.crosschainSwapOutputAmount,
-        address: lastSwap?.to.address || '',
-        decimals: lastSwap?.to.decimals || 0,
+        address: protocolInputToken?.tokenAddress || '',
+        decimals: protocolInputToken?.decimals || 0,
         chainId:
-          chainIds[lastSwap?.to.blockchain as keyof typeof chainIds] || 1,
-        name: lastSwap?.to.symbol || '',
-        symbol: lastSwap?.to.symbol || '',
+          chainIds[protocolInputToken?.chainName as keyof typeof chainIds] || 1,
+        name: protocolInputToken?.symbol || '',
+        symbol: protocolInputToken?.symbol || '',
         chainType: isEvm ? ChainType.EVM : ChainType.SOLANA,
       });
 
@@ -141,7 +141,7 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
           status: TX_STATUS.confirmed,
           message: TX_MESSAGE.confirmed,
           txHash: executeResponse.approvalTxHash,
-          chainName: lastSwap?.to.blockchain,
+          chainName: protocolInputToken?.chain?.name,
           details: {
             currentStep: stepIndex,
             totalSteps: swapDataRef.current.totalSteps,
@@ -153,7 +153,7 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
           vmType: isEvm ? 'EVM' : 'SOLANA',
           operationId,
           order: 0,
-          chainId: isEvm ? chain?.chainId || 1 : 101,
+          chainId: isEvm ? protocolInputToken?.chain?.chainId || 1 : 101,
           transactionHash: executeResponse.approvalTxHash,
         });
       }
@@ -164,7 +164,7 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
           status: TX_STATUS.confirmed,
           message: TX_MESSAGE.confirmed,
           txHash: executeResponse.executeTxHash,
-          chainName: lastSwap?.to.blockchain,
+          chainName: protocolInputToken?.chain?.name,
           details: {
             currentStep: stepIndex,
             totalSteps: swapDataRef.current.totalSteps,
@@ -176,7 +176,7 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
           vmType: isEvm ? 'EVM' : 'SOLANA',
           operationId,
           order: 1,
-          chainId: isEvm ? chain?.chainId || 1 : 101,
+          chainId: isEvm ? protocolInputToken?.chain?.chainId || 1 : 101,
           transactionHash: executeResponse.executeTxHash,
         });
       }

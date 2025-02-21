@@ -177,12 +177,27 @@ export const useAnyaltWidget = ({
   const onGetQuote = async (withGoNext: boolean = true) => {
     if (!inToken || !protocolInputToken || !inTokenAmount) return;
 
+    if (inToken.id === protocolInputToken.id) {
+      setBestRoute({
+        outputAmount: inTokenAmount,
+        swaps: [],
+        requestId: '',
+        missingWalletForSourceBlockchain: false,
+      });
+
+      setTokenFetchError({
+        isError: false,
+        errorMessage: '',
+      });
+      return;
+    }
+
     try {
       setLoading(true);
 
       const route = await anyaltInstance?.getBestRoute({
         from: inToken.id,
-        to: protocolInputToken?.id,
+        to: protocolInputToken.id,
         amount: inTokenAmount,
         slippage,
       });
@@ -327,10 +342,9 @@ export const useAnyaltWidget = ({
   const connectWalletsAndConfirmRoute = async () => {
     try {
       setLoading(true);
-      if (!bestRoute?.requestId) return;
 
       const selectedWallets: Record<string, string> = {};
-      bestRoute.swaps.forEach((swap) => {
+      bestRoute?.swaps.forEach((swap) => {
         const fromBlockchain = swap.from.blockchain;
         const toBlockchain = swap.to.blockchain;
         const isSolanaFrom = fromBlockchain === 'SOLANA';
@@ -355,19 +369,28 @@ export const useAnyaltWidget = ({
         if (isEvmTo) selectedWallets[toBlockchain] = evmAddress || '';
       });
 
-      const res = await anyaltInstance?.confirmRoute({
-        selectedRoute: {
-          requestId: bestRoute.requestId,
-        },
-        selectedWallets,
-        destination: evmAddress || '',
-      });
+      if (bestRoute?.swaps.length === 0) {
+        console.log('asdf');
+        const res = await anyaltInstance?.createOperation();
+        if (!res?.operationId) throw new Error('Failed to create operation');
 
-      if (!res?.operationId || !res?.result)
-        throw new Error('Failed to confirm route');
+        setActiveOperationId(res?.operationId);
+      } else {
+        if (!bestRoute?.requestId) return;
+        const res = await anyaltInstance?.confirmRoute({
+          selectedRoute: {
+            requestId: bestRoute.requestId,
+          },
+          selectedWallets,
+          destination: evmAddress || '',
+        });
 
-      setActiveOperationId(res?.operationId);
-      setBestRoute(res?.result);
+        if (!res?.operationId || !res?.result)
+          throw new Error('Failed to confirm route');
+
+        setActiveOperationId(res?.operationId);
+        setBestRoute(res?.result);
+      }
 
       connectWalletsClose();
       goToNext();
@@ -424,6 +447,13 @@ export const useAnyaltWidget = ({
 
     if (walletConnector && walletConnector.isConnected) {
       return walletConnector.isConnected;
+    }
+
+    // Set chain flags for last mile tx
+    if (protocolInputToken?.chain?.chainType === ChainType.EVM) {
+      isEvmRequired = true;
+    } else if (protocolInputToken?.chain?.chainType === ChainType.SOLANA) {
+      isSolanaRequired = true;
     }
 
     bestRoute?.swaps.forEach((swap) => {
