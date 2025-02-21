@@ -9,7 +9,9 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
+import { useAtomValue } from 'jotai';
 import { EstimateResponse, Token } from '../../..';
+import { inTokenAmountAtom } from '../../../store/stateStore';
 import { TransactionsProgress } from '../../../types/transaction';
 import { truncateToDecimals } from '../../../utils/truncateToDecimals';
 import { DividerIcon } from '../../atoms/icons/transaction/DividerIcon';
@@ -39,6 +41,8 @@ export const LastMileTxAccordion = ({
   protocolInputToken,
   finalTokenEstimate,
 }: Props) => {
+  const inTokenAmount = useAtomValue(inTokenAmountAtom);
+
   return (
     <AccordionItem
       key={'last mile tx'}
@@ -94,7 +98,10 @@ export const LastMileTxAccordion = ({
             fromToken={{
               name: protocolInputToken?.symbol || '',
               amount: truncateToDecimals(
-                bestRoute.swaps[bestRoute.swaps.length - 1].toAmount || '0',
+                bestRoute.swaps.length === 0
+                  ? inTokenAmount || '0'
+                  : bestRoute.swaps[bestRoute.swaps.length - 1]?.toAmount ||
+                      '0',
                 3,
               ),
               tokenLogo: protocolInputToken?.logoUrl || '',

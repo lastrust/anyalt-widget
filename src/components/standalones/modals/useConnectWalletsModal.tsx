@@ -3,7 +3,11 @@ import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import { useAtomValue } from 'jotai';
 import { useEffect, useMemo, useState } from 'react';
 import { ChainType, WalletConnector } from '../../..';
-import { allChainsAtom, bestRouteAtom } from '../../../store/stateStore';
+import {
+  allChainsAtom,
+  bestRouteAtom,
+  protocolInputTokenAtom,
+} from '../../../store/stateStore';
 
 const WALLETS = [
   {
@@ -33,6 +37,7 @@ type UseConnectWalletsModalProps = {
 export const useConnectWalletsModal = ({
   walletConnector,
 }: UseConnectWalletsModalProps) => {
+  const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const { openConnectModal } = useConnectModal();
   const { setVisible } = useWalletModal(); // Hook to control the Solana wallet modal
   const [isBitcoinModalOpen, setIsBitcoinModalOpen] = useState(false);
@@ -62,6 +67,12 @@ export const useConnectWalletsModal = ({
   ]);
 
   useEffect(() => {
+    if (protocolInputToken?.chain?.chainType === ChainType.EVM) {
+      setIsEvmRequired(true);
+    } else if (protocolInputToken?.chain?.chainType === ChainType.SOLANA) {
+      setIsSolanaRequired(true);
+    }
+
     bestRoute?.swaps.forEach((swap) => {
       const fromBlockchain = swap.from.blockchain;
       const toBlockchain = swap.to.blockchain;

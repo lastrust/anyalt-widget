@@ -28,7 +28,7 @@ export const useSelectToken = () => {
   };
 
   const inTokenPrice = useMemo(() => {
-    if (!bestRoute || !inTokenAmount) return '';
+    if (!bestRoute || !inTokenAmount || bestRoute.swaps.length === 0) return '';
     const tokenPrice = bestRoute.swaps[0].from.usdPrice;
 
     if (!tokenPrice) return '';
@@ -36,7 +36,7 @@ export const useSelectToken = () => {
   }, [bestRoute, inTokenAmount]);
 
   const outTokenPrice = useMemo(() => {
-    if (!bestRoute) return '';
+    if (!bestRoute || bestRoute.swaps.length === 0) return '';
     const lastSwap = bestRoute.swaps[bestRoute.swaps.length - 1];
     const tokenPrice = lastSwap.to.usdPrice;
 
