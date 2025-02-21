@@ -1,8 +1,6 @@
 import { Box, Center, Divider, Text, VStack } from '@chakra-ui/react';
-import { useAtomValue } from 'jotai';
 import { FC } from 'react';
 import { ExecuteResponse, Token, WalletConnector } from '../../../..';
-import { stepsProgressAtom } from '../../../../store/stateStore';
 import { truncateToDecimals } from '../../../../utils/truncateToDecimals';
 import { CustomButton } from '../../../atoms/buttons/CustomButton';
 import { ChevronDownIcon } from '../../../atoms/icons/transaction/ChevronDownIcon';
@@ -23,19 +21,19 @@ export const TransactionInfo: FC<Props> = ({
   executeCallBack,
 }) => {
   const {
-    runTx,
     fees,
+    runTx,
     isLoading,
     bestRoute,
     currentStep,
-    recentTransaction,
     estimatedTime,
+    recentTransaction,
+    transactionsProgress,
   } = useTransactionInfo({
     externalEvmWalletConnector,
     onTxComplete,
     executeCallBack,
   });
-  const stepsProgress = useAtomValue(stepsProgressAtom);
 
   return (
     <VStack
@@ -55,10 +53,9 @@ export const TransactionInfo: FC<Props> = ({
                 : `Depositing tokens to ${recentTransaction?.to.tokenName}`}
             </Text>
             <ProgressList
-              stepsProgress={stepsProgress}
+              transactionsProgress={transactionsProgress}
               index={currentStep - 1}
             />
-
             <TransactionInfoCard estimatedTime={estimatedTime} fees={fees} />
           </VStack>
         </Box>

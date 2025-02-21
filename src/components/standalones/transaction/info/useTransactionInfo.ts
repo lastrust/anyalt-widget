@@ -9,6 +9,7 @@ import {
   slippageAtom,
   transactionIndexAtom,
   transactionsListAtom,
+  transactionsProgressAtom,
 } from '../../../../store/stateStore';
 import { useHandleSwap } from '../useHandleSwap';
 
@@ -30,6 +31,7 @@ export const useTransactionInfo = ({
   const activeOperationId = useAtomValue(activeOperationIdAtom);
   const transactionsList = useAtomValue(transactionsListAtom);
   const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
+  const transactionsProgress = useAtomValue(transactionsProgressAtom);
 
   const { executeSwap } = useHandleSwap(externalEvmWalletConnector);
 
@@ -76,13 +78,14 @@ export const useTransactionInfo = ({
   }, [bestRoute, currentStep, finalTokenEstimate]);
 
   return {
-    bestRoute,
-    runTx,
-    currentStep,
-    isLoading,
-    transactionsList,
-    recentTransaction: transactionsList?.steps?.[currentStep - 1],
-    estimatedTime,
     fees,
+    runTx,
+    isLoading,
+    bestRoute,
+    currentStep,
+    estimatedTime,
+    transactionsList,
+    transactionsProgress,
+    recentTransaction: transactionsList?.steps?.[currentStep - 1],
   };
 };

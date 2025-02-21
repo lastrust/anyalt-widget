@@ -14,7 +14,7 @@ import {
   bestRouteAtom,
   finalTokenAmountAtom,
   isTokenBuyTemplateAtom,
-  stepsProgressAtom,
+  transactionsProgressAtom,
 } from '../../../store/stateStore';
 import { TransactionError } from '../../../types/transaction';
 import { chainIds } from '../../../utils/chains';
@@ -25,7 +25,9 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
   const isTokenBuyTemplate = useAtomValue(isTokenBuyTemplateAtom);
 
   const [, setFinalTokenAmount] = useAtom(finalTokenAmountAtom);
-  const [stepsProgress, setStepsProgress] = useAtom(stepsProgressAtom);
+  const [transactionsProgress, setTransactionsProgress] = useAtom(
+    transactionsProgressAtom,
+  );
 
   const allChains = useAtomValue(allChainsAtom);
   const bestRoute = useAtomValue(bestRouteAtom);
@@ -61,8 +63,12 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
     });
 
     // Initialize steps progress array if not already set
-    if (!stepsProgress?.steps || stepsProgress.steps.length === 0) {
-      setStepsProgress({ steps: Array(totalSteps).fill({}) });
+    const isTransactionProgressEmpty =
+      !transactionsProgress?.transactions ||
+      transactionsProgress.transactions.length === 0;
+
+    if (isTransactionProgressEmpty) {
+      setTransactionsProgress({ transactions: Array(totalSteps).fill({}) });
     }
 
     const { isCrosschainSwapError } = await executeTokensSwap(

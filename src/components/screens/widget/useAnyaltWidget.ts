@@ -20,11 +20,11 @@ import {
   protocolInputTokenAtom,
   selectedRouteAtom,
   slippageAtom,
-  stepsProgressAtom,
   swapDataAtom,
   tokenFetchErrorAtom,
   transactionIndexAtom,
   transactionsListAtom,
+  transactionsProgressAtom,
 } from '../../../store/stateStore';
 import { calculateWorstOutput } from '../../../utils';
 import { useTokenInputBox } from '../../standalones/selectSwap/token/input/useTokenInputBox';
@@ -75,24 +75,24 @@ export const useAnyaltWidget = ({
   const selectedRoute = useAtomValue(selectedRouteAtom);
 
   const [swapData, setSwapData] = useAtom(swapDataAtom);
-  const [, setStepsProgress] = useAtom(stepsProgressAtom);
   const [, setCurrentUiStep] = useAtom(currentUiStepAtom);
+  const [allChains, setAllChains] = useAtom(allChainsAtom);
+  const [bestRoute, setBestRoute] = useAtom(bestRouteAtom);
   const [, setIsTokenBuy] = useAtom(isTokenBuyTemplateAtom);
+  const [, setTokenFetchError] = useAtom(tokenFetchErrorAtom);
+  const [, setTransactionsList] = useAtom(transactionsListAtom);
+  const [, setTransactionIndex] = useAtom(transactionIndexAtom);
   const [, setActiveOperationId] = useAtom(activeOperationIdAtom);
+  const [, setProtocolFinalToken] = useAtom(protocolFinalTokenAtom);
+  const [, setTransactionsProgress] = useAtom(transactionsProgressAtom);
+  const [anyaltInstance, setAnyaltInstance] = useAtom(anyaltInstanceAtom);
   const [finalEstimateToken, setFinalTokenEstimate] = useAtom(
     finalTokenEstimateAtom,
   );
-  const [, setTransactionsList] = useAtom(transactionsListAtom);
-  const [, setTokenFetchError] = useAtom(tokenFetchErrorAtom);
-  const [allChains, setAllChains] = useAtom(allChainsAtom);
-  const [bestRoute, setBestRoute] = useAtom(bestRouteAtom);
-  const [, setProtocolFinalToken] = useAtom(protocolFinalTokenAtom);
-  const [anyaltInstance, setAnyaltInstance] = useAtom(anyaltInstanceAtom);
   const [protocolInputToken, setProtocolInputToken] = useAtom(
     protocolInputTokenAtom,
   );
   const { balance } = useTokenInputBox();
-  const [, setTransactionIndex] = useAtom(transactionIndexAtom);
 
   useEffect(() => {
     onGetQuote(false);
@@ -307,7 +307,7 @@ export const useAnyaltWidget = ({
     if (areWalletsConnected) {
       // await onGetQuote(false);
       await connectWalletsAndConfirmRoute();
-      setStepsProgress(undefined);
+      setTransactionsProgress(undefined);
     } else {
       if (walletConnector) {
         walletConnector.connect();

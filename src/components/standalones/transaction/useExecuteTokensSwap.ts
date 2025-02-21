@@ -8,9 +8,9 @@ import {
   TX_STATUS,
 } from '../../../constants/transaction';
 import {
-  stepsProgressAtom,
   swapDataAtom,
   transactionIndexAtom,
+  transactionsProgressAtom,
 } from '../../../store/stateStore';
 import { TransactionProgress } from '../../../types/transaction';
 import { getTransactionData } from '../../../utils/getTransactionData';
@@ -24,15 +24,15 @@ export const useExecuteTokensSwap = (
 ) => {
   const transactionIndex = useAtomValue(transactionIndexAtom);
   const [swapData, setSwapData] = useAtom(swapDataAtom);
-  const [, setStepsProgress] = useAtom(stepsProgressAtom);
+  const [, setTransactionsProgress] = useAtom(transactionsProgressAtom);
 
   const { handleTransaction } = useHandleTransaction({
     externalEvmWalletConnector,
   });
 
-  const updateStepProgress = (progress: TransactionProgress) => {
-    setStepsProgress((prev) => {
-      const newSteps = prev?.steps ? [...prev.steps] : [];
+  const updateTransactionProgress = (progress: TransactionProgress) => {
+    setTransactionsProgress((prev) => {
+      const newSteps = prev?.transactions ? [...prev.transactions] : [];
       const index = progress.details.currentStep - 1;
 
       const txType = progress.isApproval ? 'approve' : 'swap';
@@ -41,7 +41,7 @@ export const useExecuteTokensSwap = (
         ...newSteps[index],
         [txType]: progress,
       };
-      return { steps: newSteps };
+      return { transactions: newSteps };
     });
   };
 
@@ -83,7 +83,7 @@ export const useExecuteTokensSwap = (
         const signerAddress = handleSignerAddress(transactionData);
         const stepText = isApproval ? STEP_DESCR.approval : STEP_DESCR.swap;
 
-        updateStepProgress({
+        updateTransactionProgress({
           isApproval,
           status: TX_STATUS.signing,
           message: TX_MESSAGE.signing,
@@ -96,7 +96,7 @@ export const useExecuteTokensSwap = (
 
         txHash = await handleTransaction(transactionData);
 
-        updateStepProgress({
+        updateTransactionProgress({
           isApproval,
           status: TX_STATUS.broadcasting,
           message: TX_MESSAGE.broadcasting,
@@ -116,7 +116,7 @@ export const useExecuteTokensSwap = (
           signerAddress: signerAddress,
         });
 
-        updateStepProgress({
+        updateTransactionProgress({
           isApproval,
           status: TX_STATUS.pending,
           message: TX_MESSAGE.pending,
@@ -147,7 +147,7 @@ export const useExecuteTokensSwap = (
             return newData;
           });
 
-          updateStepProgress({
+          updateTransactionProgress({
             isApproval,
             status: TX_STATUS.confirmed,
             message: TX_MESSAGE.confirmed,
@@ -168,7 +168,7 @@ export const useExecuteTokensSwap = (
           throw new TransactionError(errMsg);
         }
 
-        updateStepProgress({
+        updateTransactionProgress({
           isApproval,
           status: TX_STATUS.confirmed,
           message: TX_MESSAGE.confirmed,
@@ -208,7 +208,7 @@ export const useExecuteTokensSwap = (
           ? error.message
           : TX_MESSAGE.failed;
 
-        updateStepProgress({
+        updateTransactionProgress({
           isApproval,
           status: TX_STATUS.failed,
           message: errorMessage,
@@ -232,6 +232,6 @@ export const useExecuteTokensSwap = (
 
   return {
     executeTokensSwap,
-    updateStepProgress,
+    updateStepProgress: updateTransactionProgress,
   };
 };

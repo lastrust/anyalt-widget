@@ -18,8 +18,8 @@ import {
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
   selectedRouteAtom,
-  stepsProgressAtom,
   transactionIndexAtom,
+  transactionsProgressAtom,
 } from '../../../store/stateStore';
 import { truncateToDecimals } from '../../../utils/truncateToDecimals';
 import { CheckIcon } from '../../atoms/icons/transaction/CheckIcon';
@@ -35,11 +35,11 @@ export const TransactionAccordion = () => {
 
   const bestRoute = useAtomValue(bestRouteAtom);
   const currentStep = useAtomValue(transactionIndexAtom);
-  const stepsProgress = useAtomValue(stepsProgressAtom);
   const isTokenBuyTemplate = useAtomValue(isTokenBuyTemplateAtom);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
   const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
+  const transactionsProgress = useAtomValue(transactionsProgressAtom);
 
   const [, setSelectedRoute] = useAtom(selectedRouteAtom);
 
@@ -92,13 +92,15 @@ export const TransactionAccordion = () => {
               </Text>
               {currentStep - 1 > index && <CheckIcon />}
               {Boolean(
-                stepsProgress?.steps[index]?.approve ||
-                  stepsProgress?.steps[index]?.swap,
+                transactionsProgress?.transactions[index]?.approve ||
+                  transactionsProgress?.transactions[index]?.swap,
               ) &&
                 Boolean(
                   currentStep - 1 === index &&
-                    stepsProgress?.steps[index]?.approve?.status !== 'failed' &&
-                    stepsProgress?.steps[index]?.swap?.status !== 'failed',
+                    transactionsProgress?.transactions[index]?.approve
+                      ?.status !== 'failed' &&
+                    transactionsProgress?.transactions[index]?.swap?.status !==
+                      'failed',
                 ) && (
                   <Text textStyle={'bold.2'} color="brand.tertiary.100">
                     In Progress
@@ -205,16 +207,16 @@ export const TransactionAccordion = () => {
                 </HStack>
               </HStack>
 
-              {stepsProgress?.steps[index]?.approve && (
+              {transactionsProgress?.transactions[index]?.approve && (
                 <TransactionHash
                   type="Approval"
-                  progress={stepsProgress?.steps[index]?.approve}
+                  progress={transactionsProgress?.transactions[index]?.approve}
                 />
               )}
-              {stepsProgress?.steps[index]?.swap && (
+              {transactionsProgress?.transactions[index]?.swap && (
                 <TransactionHash
                   type="Swap"
-                  progress={stepsProgress?.steps[index]?.swap}
+                  progress={transactionsProgress?.transactions[index]?.swap}
                 />
               )}
             </VStack>
@@ -224,14 +226,14 @@ export const TransactionAccordion = () => {
 
       {!isTokenBuyTemplate && (
         <LastMileTxAccordion
-          onLastMileClick={onLastMileClick}
-          isLastMileExpanded={isLastMileExpanded}
           bestRoute={bestRoute}
           currentStep={currentStep}
-          stepsProgress={stepsProgress}
+          isLastMileExpanded={isLastMileExpanded}
           protocolFinalToken={protocolFinalToken}
           protocolInputToken={protocolInputToken}
           finalTokenEstimate={finalTokenEstimate}
+          transactionsProgress={transactionsProgress}
+          onLastMileClick={onLastMileClick}
         />
       )}
     </Accordion>
