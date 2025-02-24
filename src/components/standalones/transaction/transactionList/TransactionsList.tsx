@@ -9,7 +9,7 @@ export const TransactionList = () => {
   return (
     <VStack w="100%" alignItems="flex-start" spacing="16px">
       <TransactionOverviewCard
-        requestId={bestRoute?.requestId || ''}
+        operationId={bestRoute?.operationId ?? ''}
         from={tokens.from}
         to={tokens.to}
       />

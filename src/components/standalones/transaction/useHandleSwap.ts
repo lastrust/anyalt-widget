@@ -1,5 +1,4 @@
 import { AnyAlt } from '@anyalt/sdk';
-import { SwapResult } from '@anyalt/sdk/src/adapter/api/api';
 import { switchChain } from '@wagmi/core';
 import { useAtom, useAtomValue } from 'jotai';
 import {
@@ -49,12 +48,12 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
     aaInstance: AnyAlt,
     operationId: string,
     slippage: string,
-    swaps: SwapResult[],
+    stepsNo: number,
     executeCallBack: (token: Token) => Promise<ExecuteResponse>,
     estimateCallback: (token: Token) => Promise<EstimateResponse>,
   ) => {
     const lastMileTxStep = 1;
-    const totalSteps = swaps.length + lastMileTxStep;
+    const totalSteps = stepsNo + lastMileTxStep;
 
     setSwapData((prev) => {
       {
@@ -64,7 +63,7 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
       }
     });
 
-    if (bestRoute?.swaps && bestRoute?.swaps?.length > 0) {
+    if (bestRoute?.swapSteps && bestRoute?.swapSteps?.length > 0) {
       const { isCrosschainSwapError } = await executeTokensSwap(
         aaInstance,
         operationId,
@@ -96,8 +95,8 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
     operationId: string,
   ) => {
     if (
-      bestRoute?.swaps &&
-      bestRoute?.swaps?.length > 0 &&
+      bestRoute?.swapSteps &&
+      bestRoute?.swapSteps?.length > 0 &&
       !swapDataRef.current.swapIsFinished
     )
       throw new TransactionError('Swap is not finished');

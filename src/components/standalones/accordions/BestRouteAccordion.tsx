@@ -5,14 +5,12 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
-  Divider,
   Flex,
   Skeleton,
   Text,
   VStack,
 } from '@chakra-ui/react';
 import { useAtom, useAtomValue } from 'jotai';
-import { useEffect, useState } from 'react';
 import {
   bestRouteAtom,
   finalTokenEstimateAtom,
@@ -22,10 +20,8 @@ import {
   protocolInputTokenAtom,
   selectedRouteAtom,
   slippageAtom,
-  transactionIndexAtom,
 } from '../../../store/stateStore';
-import { TransactionDetailsType } from '../../../types/transaction';
-import { getTransactionGroupData } from '../../../utils/getTransactionGroupData';
+import { ChainIdToChainConstant } from '../../../utils/chains';
 import { truncateToDecimals } from '../../../utils/truncateToDecimals';
 import { GasIcon } from '../../atoms/icons/GasIcon';
 import { StepsIcon } from '../../atoms/icons/StepsIcon';
@@ -46,12 +42,9 @@ export const BestRouteAccordion = ({
   failedToFetchRoute,
   isButtonHidden = true,
 }: Props) => {
-  const [swaps, setSwaps] = useState<TransactionDetailsType[]>([]);
-
   const slippage = useAtomValue(slippageAtom);
   const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
   const [bestRoute] = useAtom(bestRouteAtom);
-  const currentStep = useAtomValue(transactionIndexAtom);
   const isTokenBuyTemplate = useAtomValue(isTokenBuyTemplateAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
@@ -59,13 +52,6 @@ export const BestRouteAccordion = ({
   const inTokenAmount = useAtomValue(inTokenAmountAtom);
 
   if (!bestRoute) return <></>;
-
-  useEffect(() => {
-    if (bestRoute) {
-      const swaps = getTransactionGroupData(bestRoute);
-      setSwaps(swaps);
-    }
-  }, [bestRoute]);
 
   const handleRouteSelect = () => {
     setSelectedRoute(bestRoute);
@@ -117,36 +103,36 @@ export const BestRouteAccordion = ({
                 />
                 <RouteTag
                   loading={loading}
-                  text={`${bestRoute.swaps.reduce((acc, swap) => acc + swap.estimatedTimeInSeconds, 0) + (finalTokenEstimate?.estimatedTimeInSeconds ?? 0) || finalTokenEstimate?.estimatedTimeInSeconds}s`}
+                  text={`${bestRoute.swapSteps.reduce((acc, swap) => acc + swap.estimatedTimeInSeconds, 0 + Number(finalTokenEstimate?.estimatedTimeInSeconds ?? 0)) || finalTokenEstimate?.estimatedTimeInSeconds}s`}
                   icon={TimeIcon}
                   textColor="brand.tertiary.100"
                   bgColor="brand.bg.tag"
                 />
                 <RouteTag
                   loading={loading}
-                  text={
+                  text={`$${
                     (
-                      bestRoute.swaps.reduce((acc, swap) => {
-                        let feeAmount = 0;
-                        for (const fee of swap.fee) {
+                      bestRoute.swapSteps
+                        .flatMap((step) => step.fees)
+                        .reduce((acc, fee) => {
                           const amount = parseFloat(fee.amount);
                           const price = fee.price || 0;
-                          feeAmount += amount * price;
-                        }
-                        return acc + feeAmount;
-                      }, 0) +
+                          return acc + amount * price;
+                        }, 0) +
                       parseFloat(finalTokenEstimate?.estimatedFeeInUSD ?? '0')
                     )
                       .toFixed(2)
-                      .toString() || finalTokenEstimate?.estimatedFeeInUSD + '$'
-                  }
+                      .toString() ||
+                    finalTokenEstimate?.estimatedFeeInUSD ||
+                    '0.00'
+                  }`}
                   icon={GasIcon}
                   textColor="brand.tertiary.100"
                   bgColor="brand.bg.tag"
                 />
                 <RouteTag
                   loading={loading}
-                  text={`${bestRoute.swaps.reduce((acc, swap) => acc + swap.maxRequiredSign, 0)}`}
+                  text={`${bestRoute.swapSteps.length + Number(!isTokenBuyTemplate)}`}
                   icon={StepsIcon}
                   textColor="brand.tertiary.100"
                   bgColor="brand.bg.tag"
@@ -187,7 +173,7 @@ export const BestRouteAccordion = ({
               network={
                 !isTokenBuyTemplate
                   ? `${protocolFinalToken?.name} on ${protocolInputToken?.chain?.displayName}`
-                  : bestRoute.swaps[0]?.swapperId
+                  : bestRoute.swapSteps[0]?.swapperName
               }
               bg={'brand.secondary.6'}
               p="12px"
@@ -200,119 +186,135 @@ export const BestRouteAccordion = ({
               alignItems={'flex-start'}
               color="brand.secondary.3"
             >
-              <>
-                {bestRoute.swaps.length > 0 && (
-                  <>
-                    {loading ? (
-                      <Skeleton w={'180px'} h={'18px'} borderRadius="12px" />
-                    ) : (
-                      <Text textStyle={'bold.2'} lineHeight={'120%'}>
-                        Transaction {currentStep}:{' '}
-                        {bestRoute?.swaps[currentStep - 1]?.swapperId}
-                      </Text>
-                    )}
-                  </>
-                )}
-                {swaps?.map((step, index) => {
+              {loading ? (
+                <Skeleton
+                  w={'180px'}
+                  h={'18px'}
+                  ml="24px"
+                  borderRadius="12px"
+                />
+              ) : (
+                bestRoute.swapSteps.map((swapStep, index) => {
                   return (
-                    <RouteStep
-                      loading={loading}
-                      key={`${step.swapperName}-${index}`}
-                      stepNumber={index + 1}
-                      exchangeIcon={step.swapperLogo}
-                      exchangeName={step.swapperName}
-                      exchangeType={step.swapperType}
-                      fromToken={{
-                        name: step.from.name,
-                        icon: step.from.icon || '',
-                        chainIcon: step.from.chainIcon || '',
-                        amount: truncateToDecimals(step.from.amount, 4) || '0',
-                        chainName: step.from.chainName || '',
-                      }}
-                      toToken={{
-                        name: step.to.name,
-                        icon: step.to.icon || '',
-                        chainIcon: step.to.chainIcon || '',
-                        amount: truncateToDecimals(step.to.amount, 4) || '0',
-                        chainName: step.to.chainName || '',
-                      }}
-                    />
-                  );
-                })}
-                {!isTokenBuyTemplate && (
-                  <>
-                    {swaps.length > 0 && <Divider my="16px" />}
-                    <VStack
-                      gap={'12px'}
-                      alignItems={'flex-start'}
-                      color="brand.secondary.3"
-                      mb="5px"
-                    >
-                      {!isTokenBuyTemplate && (
-                        <>
-                          {loading ? (
-                            <Skeleton
-                              w={'180px'}
-                              h={'18px'}
-                              borderRadius="12px"
+                    <>
+                      <Text textStyle={'bold.2'} lineHeight={'120%'}>
+                        Transaction {index + 1}: {swapStep.swapperName}
+                      </Text>
+                      {swapStep.internalSwapSteps.map(
+                        (internalSwap, internalIndex) => {
+                          return (
+                            <RouteStep
+                              loading={loading}
+                              key={`${swapStep.executionOrder}-${index}-${internalIndex}`}
+                              stepNumber={internalIndex + 1}
+                              exchangeIcon={internalSwap.swapperLogoUrl}
+                              exchangeName={internalSwap.swapperName}
+                              exchangeType={internalSwap.swapperType}
+                              fromToken={{
+                                name: internalSwap.sourceToken.symbol,
+                                amount:
+                                  truncateToDecimals(internalSwap.amount) ||
+                                  '0',
+                                chainName: internalSwap.sourceToken.blockchain,
+                                icon: internalSwap.sourceToken.logo,
+                                chainIcon:
+                                  internalSwap.sourceToken.blockchainLogo,
+                              }}
+                              toToken={{
+                                name: internalSwap.destinationToken.symbol,
+                                amount: truncateToDecimals(internalSwap.payout),
+                                chainName:
+                                  internalSwap.destinationToken.blockchain,
+                                icon: internalSwap.destinationToken.logo,
+                                chainIcon:
+                                  internalSwap.destinationToken.blockchainLogo,
+                              }}
                             />
-                          ) : (
-                            <Text textStyle={'bold.2'} lineHeight={'120%'}>
-                              Transaction {(bestRoute.swaps?.length ?? 0) + 1}:
-                              Final Transaction
-                            </Text>
-                          )}
-                          <RouteStep
-                            loading={loading}
-                            key={`last-mile-transaction-${swaps.length}`}
-                            stepNumber={swaps.length + 1}
-                            exchangeIcon={protocolFinalToken?.logoUrl || ''}
-                            exchangeName={'Final Transaction'}
-                            exchangeType={'LAST_MILE'}
-                            fromToken={{
-                              name:
-                                swaps.length > 0
-                                  ? swaps[swaps.length - 1]?.to?.name
-                                  : protocolInputToken?.symbol || '',
-                              icon:
-                                swaps.length > 0
-                                  ? swaps[swaps.length - 1]?.to?.icon || ''
-                                  : protocolInputToken?.logoUrl || '',
-                              chainIcon:
-                                swaps.length > 0
-                                  ? swaps[swaps.length - 1]?.to?.chainIcon || ''
-                                  : protocolInputToken?.logoUrl || '',
-                              amount: truncateToDecimals(
-                                swaps.length > 0
-                                  ? swaps[swaps.length - 1]?.to?.amount
-                                  : inTokenAmount || '0',
-                                4,
-                              ),
-                              chainName:
-                                swaps.length > 0
-                                  ? swaps[swaps.length - 1]?.to?.chainName || ''
-                                  : protocolInputToken?.chain?.displayName ||
-                                    '',
-                            }}
-                            toToken={{
-                              name: protocolFinalToken?.name || '',
-                              icon: protocolFinalToken?.logoUrl || '',
-                              chainIcon:
-                                protocolInputToken?.chain?.logoUrl || '',
-                              amount: truncateToDecimals(
-                                finalTokenEstimate?.amountOut ?? '0.00',
-                                4,
-                              ),
-                              chainName:
-                                protocolInputToken?.chain?.displayName || '',
-                            }}
-                          />
-                        </>
+                          );
+                        },
                       )}
-                    </VStack>
-                  </>
-                )}
-              </>
+                    </>
+                  );
+                })
+              )}
+
+              {!isTokenBuyTemplate && (
+                <>
+                  {loading ? (
+                    <Skeleton
+                      w={'180px'}
+                      h={'18px'}
+                      ml="24px"
+                      borderRadius="12px"
+                    />
+                  ) : (
+                    <Text textStyle={'bold.2'} lineHeight={'120%'}>
+                      Transaction {(bestRoute.swapSteps?.length ?? 0) + 1}:
+                      Final Transaction
+                    </Text>
+                  )}
+                  <RouteStep
+                    loading={loading}
+                    key={`last-mile-transaction-${bestRoute.swapSteps.length}`}
+                    stepNumber={1}
+                    exchangeIcon={protocolFinalToken?.logoUrl || ''}
+                    exchangeName={'Last Mile TX'}
+                    exchangeType={'LAST_MILE'}
+                    fromToken={
+                      bestRoute.swapSteps.length
+                        ? {
+                            name: bestRoute.swapSteps.length
+                              ? bestRoute.swapSteps[
+                                  bestRoute.swapSteps.length - 1
+                                ].destinationToken.symbol
+                              : protocolInputToken?.symbol || '',
+                            amount:
+                              truncateToDecimals(
+                                bestRoute.swapSteps[
+                                  bestRoute.swapSteps.length - 1
+                                ].payout,
+                              ) || '0',
+                            chainName:
+                              bestRoute.swapSteps[
+                                bestRoute.swapSteps.length - 1
+                              ].destinationToken.blockchain,
+                            icon: bestRoute.swapSteps[
+                              bestRoute.swapSteps.length - 1
+                            ].destinationToken.logo,
+                            chainIcon:
+                              bestRoute.swapSteps[
+                                bestRoute.swapSteps.length - 1
+                              ].destinationToken.blockchainLogo,
+                          }
+                        : {
+                            name: protocolInputToken?.symbol || '',
+                            icon: protocolInputToken?.logoUrl || '',
+                            chainIcon: protocolInputToken?.logoUrl || '',
+                            amount: truncateToDecimals(inTokenAmount || '0', 4),
+                            chainName:
+                              protocolInputToken?.chain?.displayName || '',
+                          }
+                    }
+                    toToken={{
+                      name: protocolFinalToken?.name || '',
+                      amount: truncateToDecimals(
+                        finalTokenEstimate?.amountOut ?? '0.00',
+                        4,
+                      ),
+                      chainName:
+                        protocolInputToken?.chain?.displayName ||
+                        protocolFinalToken?.chainId != undefined
+                          ? ChainIdToChainConstant[
+                              protocolFinalToken!
+                                .chainId! as keyof typeof ChainIdToChainConstant
+                            ]
+                          : '',
+                      icon: protocolFinalToken?.logoUrl || '',
+                      chainIcon: protocolInputToken?.chain?.logoUrl || '',
+                    }}
+                  />
+                </>
+              )}
             </VStack>
           </AccordionPanel>
         </AccordionItem>

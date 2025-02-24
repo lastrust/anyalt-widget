@@ -3,6 +3,7 @@ import { useAtomValue } from 'jotai';
 import { useEffect, useMemo, useState } from 'react';
 import { allChainsAtom, anyaltInstanceAtom } from '../../../store/stateStore';
 import { isValidEthereumAddress, isValidSolanaAddress } from '../../../utils';
+import { ChainType } from '../../../utils/chains';
 
 export const useTokenSelectModal = () => {
   const allChains = useAtomValue(allChainsAtom);
@@ -22,6 +23,8 @@ export const useTokenSelectModal = () => {
   }, [allChains]);
 
   useEffect(() => {
+    setCustomToken(null);
+    setAllTokens([]);
     if (activeChain) {
       if (searchInputValue.length === 0) {
         anyaltInstance
@@ -35,12 +38,12 @@ export const useTokenSelectModal = () => {
           });
       } else {
         const isValidAddress =
-          activeChain?.chainType === 'SOLANA'
+          activeChain?.chainType === ChainType.SOLANA
             ? isValidSolanaAddress(searchInputValue)
             : isValidEthereumAddress(searchInputValue);
         if (isValidAddress) {
           anyaltInstance
-            ?.getToken(activeChain.id, searchInputValue)
+            ?.getToken(activeChain.name, searchInputValue)
             .then((res) => {
               setCustomToken(res);
             });
@@ -61,7 +64,7 @@ export const useTokenSelectModal = () => {
   }, [activeChain, searchInputValue]);
 
   const isValidAddress = useMemo(() => {
-    return activeChain?.chainType === 'SOLANA'
+    return activeChain?.chainType === ChainType.SOLANA
       ? isValidSolanaAddress(searchInputValue)
       : isValidEthereumAddress(searchInputValue);
   }, [activeChain, searchInputValue]);

@@ -27,6 +27,7 @@ import {
   transactionsProgressAtom,
 } from '../../../store/stateStore';
 import { calculateWorstOutput } from '../../../utils';
+import { ChainIdToChainConstant } from '../../../utils/chains';
 import { useTokenInputBox } from '../../standalones/selectSwap/token/input/useTokenInputBox';
 
 const REFRESH_INTERVAL = 30000;
@@ -143,9 +144,13 @@ export const useAnyaltWidget = ({
     setAnyaltInstance(anyaltInstance);
 
     if (anyaltInstance)
-      anyaltInstance.getChains().then((res) => {
-        setAllChains(res.chains);
-      });
+      try {
+        anyaltInstance.getChains().then((res) => {
+          setAllChains(res.chains);
+        });
+      } catch (error) {
+        console.error(error);
+      }
 
     setProtocolFinalToken(finalToken);
     setIsTokenBuy(isTokenBuy);
@@ -166,7 +171,7 @@ export const useAnyaltWidget = ({
 
     if (inputTokenChain) {
       anyaltInstance
-        ?.getToken(inputTokenChain.id, inputToken.address)
+        ?.getToken(inputTokenChain.name, inputToken.address)
         .then((res) => {
           setProtocolInputToken(res);
         });
@@ -179,8 +184,8 @@ export const useAnyaltWidget = ({
     if (inToken.id === protocolInputToken.id) {
       setBestRoute({
         outputAmount: inTokenAmount,
-        swaps: [],
-        requestId: '',
+        swapSteps: [],
+        operationId: '',
         missingWalletForSourceBlockchain: false,
       });
 
@@ -195,52 +200,62 @@ export const useAnyaltWidget = ({
       setLoading(true);
 
       const route = await anyaltInstance?.getBestRoute({
-        from: inToken.id,
-        to: protocolInputToken.id,
+        fromToken: {
+          address: inToken.tokenAddress ?? '',
+          chainName: inToken.chainName,
+        },
+        toToken: {
+          address: inputToken.address,
+          chainName:
+            ChainIdToChainConstant[
+              inputToken.chainId! as keyof typeof ChainIdToChainConstant
+            ],
+        },
         amount: inTokenAmount,
         slippage,
       });
       setBestRoute(route);
 
+      const lastStepOfOperation = route?.swapSteps[route?.swapSteps.length - 1];
+      const lastTokenOfOperation = lastStepOfOperation?.destinationToken;
+
       setTransactionsList({
         steps: [
-          ...(route?.swaps.map((swap) => ({
-            from: {
-              tokenName: swap.from.symbol,
-              tokenLogo: swap.from.logo,
-              tokenAmount: swap.fromAmount,
-              tokenPrice: swap.fromAmount,
-              tokenUsdPrice: swap.from.usdPrice?.toString() || '0',
-              tokenDecimals: swap.from.decimals,
-              blockchain: swap.from.blockchain,
-              blockchainLogo: swap.from.blockchainLogo,
-            },
-            to: {
-              tokenName: swap.to.symbol,
-              tokenLogo: swap.to.logo,
-              tokenAmount: swap.toAmount,
-              tokenPrice: swap.toAmount,
-              tokenUsdPrice: swap.to.usdPrice?.toString() || '0',
-              tokenDecimals: swap.to.decimals,
-              blockchain: swap.to.blockchain,
-              blockchainLogo: swap.to.blockchainLogo,
-            },
-          })) || []),
+          ...(route?.swapSteps.map((step) => {
+            return {
+              from: {
+                tokenName: step.sourceToken.symbol,
+                tokenLogo: step.sourceToken.logo,
+                tokenAmount: step.amount,
+                tokenPrice: step.amount,
+                tokenUsdPrice: step.sourceToken.tokenUsdPrice.toFixed(2),
+                tokenDecimals: step.sourceToken.decimals,
+                blockchain: step.sourceToken.blockchain,
+                blockchainLogo: step.sourceToken.blockchainLogo,
+              },
+              to: {
+                tokenName: step.destinationToken.symbol,
+                tokenLogo: step.destinationToken.logo,
+                tokenAmount: step.payout,
+                tokenPrice: step.payout,
+                tokenUsdPrice: step.destinationToken.tokenUsdPrice.toFixed(2),
+                tokenDecimals: step.destinationToken.decimals,
+                blockchain: step.destinationToken.blockchain,
+                blockchainLogo: step.destinationToken.blockchainLogo,
+              },
+            };
+          }) || []),
           {
             from: {
-              tokenName: route?.swaps[route?.swaps.length - 1].to.symbol || '',
-              tokenLogo: route?.swaps[route?.swaps.length - 1].to.logo || '',
-              tokenAmount: route?.swaps[route?.swaps.length - 1].toAmount || '',
-              tokenPrice: route?.swaps[route?.swaps.length - 1].toAmount || '',
+              tokenName: lastTokenOfOperation?.symbol || '',
+              tokenLogo: lastTokenOfOperation?.logo || '',
+              tokenAmount: lastStepOfOperation?.amount || '',
+              tokenPrice: lastStepOfOperation?.amount || '',
               tokenUsdPrice:
-                route?.swaps[route?.swaps.length - 1].to.usdPrice?.toString() ||
-                '0',
-              tokenDecimals:
-                route?.swaps[route?.swaps.length - 1].to.decimals || 0,
-              blockchain:
-                route?.swaps[route?.swaps.length - 1].to.blockchain || '',
-              blockchainLogo:
-                route?.swaps[route?.swaps.length - 1].to.blockchainLogo || '',
+                lastTokenOfOperation?.tokenUsdPrice.toFixed(2) || '',
+              tokenDecimals: lastTokenOfOperation?.decimals || 0,
+              blockchain: lastTokenOfOperation?.blockchain || '',
+              blockchainLogo: lastTokenOfOperation?.blockchainLogo || '',
             },
             to: {
               tokenName: finalToken.name,
@@ -343,10 +358,13 @@ export const useAnyaltWidget = ({
     try {
       setLoading(true);
 
+      let destination = '';
+
       const selectedWallets: Record<string, string> = {};
-      bestRoute?.swaps.forEach((swap) => {
-        const fromBlockchain = swap.from.blockchain;
-        const toBlockchain = swap.to.blockchain;
+      bestRoute?.swapSteps.forEach((swapStep, index) => {
+        const fromBlockchain = swapStep.sourceToken.blockchain;
+        const toBlockchain = swapStep.destinationToken.blockchain;
+
         const isSolanaFrom = fromBlockchain === 'SOLANA';
         const isSolanaTo = toBlockchain === 'SOLANA';
         const isBitcoinFrom = fromBlockchain === 'BTC';
@@ -365,30 +383,62 @@ export const useAnyaltWidget = ({
         const isEvmFrom = fromChain?.chainType === ChainType.EVM;
         const isEvmTo = toChain?.chainType === ChainType.EVM;
 
-        if (isEvmFrom) selectedWallets[fromBlockchain] = evmAddress || '';
-        if (isEvmTo) selectedWallets[toBlockchain] = evmAddress || '';
+        if (isEvmFrom || isEvmTo) {
+          if (!evmAddress) {
+            throw new Error('EVM Wallet not connected');
+          }
+        }
+
+        if (isSolanaFrom || isSolanaTo) {
+          if (!solanaAddress) {
+            throw new Error('Solana Wallet not connected');
+          }
+        }
+
+        if (isBitcoinFrom || isBitcoinTo) {
+          if (!bitcoinAccount) {
+            throw new Error('Bitcoin Wallet not connected');
+          }
+        }
+
+        if (isEvmFrom) selectedWallets[fromBlockchain] = evmAddress!;
+        if (isEvmTo) selectedWallets[toBlockchain] = evmAddress!;
+
+        if (index === bestRoute.swapSteps.length - 1) {
+          switch (true) {
+            case isEvmTo:
+              destination = evmAddress!;
+              break;
+            case isSolanaTo:
+              destination = solanaAddress!.toString();
+              break;
+            case isBitcoinTo:
+              destination = bitcoinAccount!.address;
+              break;
+            default:
+              throw new Error('Destination not found');
+          }
+        }
       });
 
-      if (bestRoute?.swaps.length === 0) {
+      if (bestRoute?.swapSteps.length === 0) {
         const res = await anyaltInstance?.createOperation();
         if (!res?.operationId) throw new Error('Failed to create operation');
 
         setActiveOperationId(res?.operationId);
       } else {
-        if (!bestRoute?.requestId) return;
+        if (!bestRoute?.operationId) return;
         const res = await anyaltInstance?.confirmRoute({
-          selectedRoute: {
-            requestId: bestRoute.requestId,
-          },
+          operationId: bestRoute?.operationId,
           selectedWallets,
-          destination: evmAddress || '',
+          destination: destination,
         });
 
-        if (!res?.operationId || !res?.result)
+        if (!res?.operationId || !res?.ok)
           throw new Error('Failed to confirm route');
 
         setActiveOperationId(res?.operationId);
-        setBestRoute(res?.result);
+        setBestRoute(bestRoute);
       }
 
       connectWalletsClose();
@@ -455,9 +505,9 @@ export const useAnyaltWidget = ({
       isSolanaRequired = true;
     }
 
-    bestRoute?.swaps.forEach((swap) => {
-      const fromBlockchain = swap.from.blockchain;
-      const toBlockchain = swap.to.blockchain;
+    bestRoute?.swapSteps.forEach((swapStep) => {
+      const fromBlockchain = swapStep.sourceToken.blockchain;
+      const toBlockchain = swapStep.destinationToken.blockchain;
       const isSolanaFrom = fromBlockchain === 'SOLANA';
       const isSolanaTo = toBlockchain === 'SOLANA';
       const isBitcoinFrom = fromBlockchain === 'BTC';
@@ -476,6 +526,7 @@ export const useAnyaltWidget = ({
         isEvmRequired = true;
       }
     });
+
     let isWalletConnected = true;
     if (isSolanaRequired && !isSolanaConnected) {
       isWalletConnected = false;

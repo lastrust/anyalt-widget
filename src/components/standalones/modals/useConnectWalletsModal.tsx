@@ -73,9 +73,9 @@ export const useConnectWalletsModal = ({
       setIsSolanaRequired(true);
     }
 
-    bestRoute?.swaps.forEach((swap) => {
-      const fromBlockchain = swap.from.blockchain;
-      const toBlockchain = swap.to.blockchain;
+    bestRoute?.swapSteps.forEach((swapStep) => {
+      const fromBlockchain = swapStep.sourceToken.blockchain;
+      const toBlockchain = swapStep.destinationToken.blockchain;
 
       const isSolanaFrom = fromBlockchain === 'SOLANA';
       const isSolanaTo = toBlockchain === 'SOLANA';

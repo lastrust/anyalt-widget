@@ -8,6 +8,7 @@ import {
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
 } from '../../../../store/stateStore';
+import { TokenWithAmount } from '../../../molecules/card/TransactionOverviewCard';
 
 export const useTransactionList = () => {
   const bestRoute = useAtomValue(bestRouteAtom);
@@ -21,51 +22,50 @@ export const useTransactionList = () => {
   const getToTokenDetails = () => {
     if (isTokenBuyTemplate) {
       return {
-        address: protocolInputToken?.tokenAddress || '',
+        contractAddress: protocolInputToken?.tokenAddress || '',
         symbol: protocolInputToken?.symbol || '',
         logo: protocolInputToken?.logoUrl || '',
         blockchain: protocolInputToken?.chain?.displayName || '',
         amount: Number(bestRoute?.outputAmount).toFixed(4) || '',
         blockchainLogo: protocolInputToken?.chain?.logoUrl || '',
         decimals: protocolInputToken?.decimals || 0,
-        usdPrice:
+        tokenUsdPrice:
           Number(
-            bestRoute?.swaps?.length === 0
-              ? 0
-              : bestRoute?.swaps[bestRoute.swaps.length - 1]?.to.usdPrice,
+            bestRoute?.swapSteps[bestRoute.swapSteps.length - 1]
+              .destinationToken.tokenUsdPrice,
           ) || 0,
       };
     }
 
     return {
-      address: protocolFinalToken?.address || '',
+      contractAddress: protocolFinalToken?.address || '',
       symbol: protocolFinalToken?.symbol || '',
       logo: protocolFinalToken?.logoUrl || '',
       blockchain: protocolInputToken?.chain?.displayName || '',
       amount: Number(finalTokenEstimate?.amountOut).toFixed(4) || '',
       blockchainLogo: protocolInputToken?.chain?.logoUrl || '',
       decimals: protocolFinalToken?.decimals || 0,
-      usdPrice: Number(finalTokenEstimate?.priceInUSD) || 0,
+      tokenUsdPrice: Number(finalTokenEstimate?.priceInUSD) || 0,
     };
   };
 
-  if (!bestRoute || bestRoute?.swaps.length === 0) {
+  if (!bestRoute || bestRoute?.swapSteps.length === 0) {
     return {
       bestRoute,
       tokens: {
         from: {
-          address: inToken?.tokenAddress || '',
+          contractAddress: inToken?.tokenAddress || '',
           symbol: inToken?.symbol || '',
           logo: inToken?.logoUrl || '',
           blockchain: inToken?.chain?.displayName || '',
           amount: Number(inTokenAmount).toFixed(4) || '',
           blockchainLogo: inToken?.chain?.logoUrl || '',
           decimals: inToken?.decimals || 0,
-          usdPrice: 0,
-        },
+          tokenUsdPrice: 0,
+        } as TokenWithAmount,
         to: {
           ...getToTokenDetails(),
-        },
+        } as TokenWithAmount,
       },
     };
   }
@@ -74,18 +74,20 @@ export const useTransactionList = () => {
     bestRoute,
     tokens: {
       from: {
-        address: bestRoute?.swaps[0].from.address || '',
-        symbol: bestRoute?.swaps[0].from.symbol || '',
-        logo: bestRoute?.swaps[0].from.logo || '',
-        blockchain: bestRoute?.swaps[0].from.blockchain || '',
-        amount: Number(bestRoute?.swaps[0].fromAmount).toFixed(4) || '',
-        blockchainLogo: bestRoute?.swaps[0].from.blockchainLogo || '',
-        decimals: bestRoute?.swaps[0].from.decimals || 0,
-        usdPrice: bestRoute?.swaps[0].from.usdPrice || 0,
-      },
+        contractAddress:
+          bestRoute?.swapSteps[0].sourceToken.contractAddress || '',
+        symbol: bestRoute?.swapSteps[0].sourceToken.symbol || '',
+        logo: bestRoute?.swapSteps[0].sourceToken.logo || '',
+        blockchain: bestRoute?.swapSteps[0].sourceToken.blockchain || '',
+        amount: Number(bestRoute?.swapSteps[0].amount).toFixed(4) || '',
+        blockchainLogo:
+          bestRoute?.swapSteps[0].sourceToken.blockchainLogo || '',
+        decimals: bestRoute?.swapSteps[0].sourceToken.decimals || 0,
+        tokenUsdPrice: bestRoute?.swapSteps[0].sourceToken.tokenUsdPrice || 0,
+      } as TokenWithAmount,
       to: {
         ...getToTokenDetails(),
-      },
+      } as TokenWithAmount,
     },
   };
 };

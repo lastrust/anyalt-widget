@@ -10,6 +10,7 @@ export const getTransactionData = async (
   aaInstance: AnyAlt,
   operationId: string,
   slippage: string,
+  walletAddress: string,
 ): Promise<
   | EVMTransactionDataResponse
   | SolanaTransactionDataResponse
@@ -19,6 +20,7 @@ export const getTransactionData = async (
     const response = await aaInstance.getTransactionData({
       operationId,
       slippage,
+      walletAddress,
     });
 
     if (!response) {
