@@ -78,7 +78,7 @@ export const RouteStep = ({
                 : exchangeType === 'LAST_MILE'
                   ? ''
                   : 'Swap token using'}{' '}
-              {exchangeName}:
+              {exchangeName}
             </Text>
           )}
         </HStack>

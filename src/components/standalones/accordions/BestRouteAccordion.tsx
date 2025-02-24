@@ -261,7 +261,7 @@ export const BestRouteAccordion = ({
                             key={`last-mile-transaction-${swaps.length}`}
                             stepNumber={swaps.length + 1}
                             exchangeIcon={protocolFinalToken?.logoUrl || ''}
-                            exchangeName={'Last Mile TX'}
+                            exchangeName={'Final Transaction'}
                             exchangeType={'LAST_MILE'}
                             fromToken={{
                               name:
