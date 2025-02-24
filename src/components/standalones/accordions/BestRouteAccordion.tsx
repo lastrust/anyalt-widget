@@ -259,7 +259,7 @@ export const BestRouteAccordion = ({
                           ) : (
                             <Text textStyle={'bold.2'} lineHeight={'120%'}>
                               Transaction {(bestRoute.swaps?.length ?? 0) + 1}:
-                              Last Mile Transaction
+                              Final Transaction
                             </Text>
                           )}
                           <RouteStep
