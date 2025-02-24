@@ -70,7 +70,7 @@ export const useEvmHandler = (externalEvmWalletConnector?: WalletConnector) => {
         } else {
           const txHash = await sendTransaction(walletConfig, {
             to: transactionDetails.to as `0x${string}`,
-            value: BigInt(transactionDetails.value!),
+            value: BigInt(transactionDetails.value || 0),
             data: transactionDetails.data! as `0x${string}`,
           });
           await waitForTransactionReceipt(walletConfig, {

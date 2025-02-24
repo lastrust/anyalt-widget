@@ -16,8 +16,7 @@ export const useSolana = () => {
       (chain) => chain.chainType === ChainType.SOLANA,
     )?.rpcUrl;
     if (!endpoint || endpoint === '') {
-      endpoint =
-        'https://solana-mainnet.g.alchemy.com/v2/WQX7PcmM63BpSj4VdQ4da1wP8y2N9G_8';
+      endpoint = 'https://api.mainnet-beta.solana.com';
     }
     setConnection(new Connection(endpoint));
   }, [allChains]);

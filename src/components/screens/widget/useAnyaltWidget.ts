@@ -228,20 +228,20 @@ export const useAnyaltWidget = ({
                 tokenLogo: step.sourceToken.logo,
                 tokenAmount: step.amount,
                 tokenPrice: step.amount,
-                tokenUsdPrice: '0', // temporary values
-                tokenDecimals: 18,
+                tokenUsdPrice: step.sourceToken.tokenUsdPrice.toFixed(2),
+                tokenDecimals: step.sourceToken.decimals,
                 blockchain: step.sourceToken.blockchain,
-                blockchainLogo: '', // temporary values
+                blockchainLogo: step.sourceToken.blockchainLogo,
               },
               to: {
                 tokenName: step.destinationToken.symbol,
                 tokenLogo: step.destinationToken.logo,
                 tokenAmount: step.payout,
                 tokenPrice: step.payout,
-                tokenUsdPrice: '0',
-                tokenDecimals: 18,
+                tokenUsdPrice: step.destinationToken.tokenUsdPrice.toFixed(2),
+                tokenDecimals: step.destinationToken.decimals,
                 blockchain: step.destinationToken.blockchain,
-                blockchainLogo: '', // temporary values
+                blockchainLogo: step.destinationToken.blockchainLogo,
               },
             };
           }) || []),
@@ -251,10 +251,11 @@ export const useAnyaltWidget = ({
               tokenLogo: lastTokenOfOperation?.logo || '',
               tokenAmount: lastStepOfOperation?.amount || '',
               tokenPrice: lastStepOfOperation?.amount || '',
-              tokenUsdPrice: '0',
-              tokenDecimals: 18,
+              tokenUsdPrice:
+                lastTokenOfOperation?.tokenUsdPrice.toFixed(2) || '',
+              tokenDecimals: lastTokenOfOperation?.decimals || 0,
               blockchain: lastTokenOfOperation?.blockchain || '',
-              blockchainLogo: '',
+              blockchainLogo: lastTokenOfOperation?.blockchainLogo || '',
             },
             to: {
               tokenName: finalToken.name,
