@@ -357,12 +357,11 @@ export const useAnyaltWidget = ({
   const connectWalletsAndConfirmRoute = async () => {
     try {
       setLoading(true);
-      if (!bestRoute?.operationId) return;
 
       let destination = '';
 
       const selectedWallets: Record<string, string> = {};
-      bestRoute.swapSteps.forEach((swapStep, index) => {
+      bestRoute?.swapSteps.forEach((swapStep, index) => {
         const fromBlockchain = swapStep.sourceToken.blockchain;
         const toBlockchain = swapStep.destinationToken.blockchain;
 

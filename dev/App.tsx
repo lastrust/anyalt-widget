@@ -79,8 +79,8 @@ const App = () => {
           <Box maxW={'600px'}>
             <OpenModalButton onOpen={onOpen} />
             <AnyaltWidget
-              isTokenBuyTemplate={true}
-              inputToken={popcatToken}
+              isTokenBuyTemplate={false}
+              inputToken={usdtToken}
               finalToken={{
                 symbol: 'Aarnâ Afi802',
                 address: '0x123',

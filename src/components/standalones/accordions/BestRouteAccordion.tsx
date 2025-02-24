@@ -14,6 +14,7 @@ import { useAtom, useAtomValue } from 'jotai';
 import {
   bestRouteAtom,
   finalTokenEstimateAtom,
+  inTokenAmountAtom,
   isTokenBuyTemplateAtom,
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
@@ -48,6 +49,7 @@ export const BestRouteAccordion = ({
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const [, setSelectedRoute] = useAtom(selectedRouteAtom);
+  const inTokenAmount = useAtomValue(inTokenAmountAtom);
 
   if (!bestRoute) return <></>;
 
@@ -236,7 +238,7 @@ export const BestRouteAccordion = ({
                 })
               )}
 
-              {!isTokenBuyTemplate && bestRoute.swapSteps.length && (
+              {!isTokenBuyTemplate && (
                 <>
                   {loading ? (
                     <Skeleton
@@ -258,23 +260,41 @@ export const BestRouteAccordion = ({
                     exchangeIcon={protocolFinalToken?.logoUrl || ''}
                     exchangeName={'Last Mile TX'}
                     exchangeType={'LAST_MILE'}
-                    fromToken={{
-                      name: bestRoute.swapSteps[bestRoute.swapSteps.length - 1]
-                        .destinationToken.symbol,
-                      amount:
-                        truncateToDecimals(
-                          bestRoute.swapSteps[bestRoute.swapSteps.length - 1]
-                            .payout,
-                        ) || '0',
-                      chainName:
-                        bestRoute.swapSteps[bestRoute.swapSteps.length - 1]
-                          .destinationToken.blockchain,
-                      icon: bestRoute.swapSteps[bestRoute.swapSteps.length - 1]
-                        .destinationToken.logo,
-                      chainIcon:
-                        bestRoute.swapSteps[bestRoute.swapSteps.length - 1]
-                          .destinationToken.blockchainLogo,
-                    }}
+                    fromToken={
+                      bestRoute.swapSteps.length
+                        ? {
+                            name: bestRoute.swapSteps.length
+                              ? bestRoute.swapSteps[
+                                  bestRoute.swapSteps.length - 1
+                                ].destinationToken.symbol
+                              : protocolInputToken?.symbol || '',
+                            amount:
+                              truncateToDecimals(
+                                bestRoute.swapSteps[
+                                  bestRoute.swapSteps.length - 1
+                                ].payout,
+                              ) || '0',
+                            chainName:
+                              bestRoute.swapSteps[
+                                bestRoute.swapSteps.length - 1
+                              ].destinationToken.blockchain,
+                            icon: bestRoute.swapSteps[
+                              bestRoute.swapSteps.length - 1
+                            ].destinationToken.logo,
+                            chainIcon:
+                              bestRoute.swapSteps[
+                                bestRoute.swapSteps.length - 1
+                              ].destinationToken.blockchainLogo,
+                          }
+                        : {
+                            name: protocolInputToken?.symbol || '',
+                            icon: protocolInputToken?.logoUrl || '',
+                            chainIcon: protocolInputToken?.logoUrl || '',
+                            amount: truncateToDecimals(inTokenAmount || '0', 4),
+                            chainName:
+                              protocolInputToken?.chain?.displayName || '',
+                          }
+                    }
                     toToken={{
                       name: protocolFinalToken?.name || '',
                       amount: truncateToDecimals(
