@@ -40,7 +40,12 @@ export const RouteStep = ({
   loading,
 }: Props) => {
   return (
-    <Flex justifyContent={'start'} w={'full'} alignItems={'center'}>
+    <Flex
+      justifyContent={'start'}
+      w={'full'}
+      alignItems={'center'}
+      width={'100%'}
+    >
       <VStack justifyContent={'space-between'} alignItems={'start'} gap={'8px'}>
         <HStack gap={'4px'}>
           {loading ? (
@@ -67,7 +72,7 @@ export const RouteStep = ({
         {loading ? (
           <Skeleton w={'250px'} h={'18px'} borderRadius="12px" />
         ) : (
-          <HStack gap={'6px'}>
+          <HStack gap={'6px'} width={'100%'} justifyContent={'space-between'}>
             <HStack gap={'8px'}>
               <Box position="relative">
                 <Image
