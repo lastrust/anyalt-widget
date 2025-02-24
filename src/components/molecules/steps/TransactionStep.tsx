@@ -51,6 +51,8 @@ export const TransactionStep = ({
             color="brand.secondary.3"
             textStyle={'bold.3'}
             fontSize={'12px'}
+            lineHeight={'120%'}
+            whiteSpace={'nowrap'}
           >
             {exchangeName}:
           </Text>
