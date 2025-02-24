@@ -35,6 +35,8 @@ type Props = {
 export const RouteStep = ({
   exchangeIcon,
   exchangeName,
+  stepNumber,
+  exchangeType,
   fromToken,
   toToken,
   loading,
@@ -49,7 +51,14 @@ export const RouteStep = ({
       <VStack justifyContent={'space-between'} alignItems={'start'} gap={'8px'}>
         <HStack gap={'4px'}>
           {loading ? (
-            <Skeleton w={'16px'} h={'16px'} borderRadius={'50%'} mr={'8px'} />
+            <Skeleton w={'40px'} h={'16px'} mr={'4px'} borderRadius="12px" />
+          ) : (
+            <Text textStyle={'extraBold.5'} color="brand.secondary.3">
+              Step {stepNumber}:
+            </Text>
+          )}
+          {loading ? (
+            <Skeleton w={'16px'} h={'16px'} borderRadius={'50%'} mr={'4px'} />
           ) : (
             <Image
               src={exchangeIcon}
@@ -64,7 +73,11 @@ export const RouteStep = ({
             <Skeleton w={'180px'} h={'18px'} borderRadius="12px" />
           ) : (
             <Text color="brand.secondary.3" textStyle={'regular.3'}>
-              {/* {exchangeType === 'BRIDGE' ? 'Bridge' : 'Swap'} token using{' '} */}
+              {exchangeType === 'BRIDGE'
+                ? 'Bridge token using'
+                : exchangeType === 'LAST_MILE'
+                  ? ''
+                  : 'Swap token using'}{' '}
               {exchangeName}:
             </Text>
           )}

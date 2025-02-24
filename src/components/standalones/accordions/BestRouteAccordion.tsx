@@ -259,7 +259,7 @@ export const BestRouteAccordion = ({
                           <RouteStep
                             loading={loading}
                             key={`last-mile-transaction-${swaps.length}`}
-                            stepNumber={swaps.length}
+                            stepNumber={swaps.length + 1}
                             exchangeIcon={protocolFinalToken?.logoUrl || ''}
                             exchangeName={'Last Mile TX'}
                             exchangeType={'LAST_MILE'}
