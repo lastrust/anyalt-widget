@@ -193,6 +193,12 @@ export const useExecuteTokensSwap = (
         const crosschainSwapOutputAmount =
           waitForTxResponse?.outputAmount || '0';
         if (swapIsFinished) {
+          if (parseFloat(crosschainSwapOutputAmount) === 0) {
+            throw new TransactionError(
+              'Transaction failed: Output amount is 0',
+            );
+          }
+
           const res = await estimateCallback({
             name: protocolInputToken?.name ?? '',
             symbol: protocolInputToken?.symbol ?? '',

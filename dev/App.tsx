@@ -84,7 +84,7 @@ const App = () => {
               finalToken={{
                 symbol: 'Aarnâ Afi802',
                 address: '0x123',
-                chainId: 1,
+                chainId: 42161,
                 chainType: ChainType.EVM,
                 logoUrl: 'https://engine.aarna.ai/static/logo-only.svg',
                 name: 'Aarna Afi802',
