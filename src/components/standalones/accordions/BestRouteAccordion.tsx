@@ -101,7 +101,7 @@ export const BestRouteAccordion = ({
                 />
                 <RouteTag
                   loading={loading}
-                  text={`${bestRoute.swapSteps.reduce((acc, swap) => acc + swap.estimatedTimeInSeconds, 0) || finalTokenEstimate?.estimatedTimeInSeconds}s`}
+                  text={`${bestRoute.swapSteps.reduce((acc, swap) => acc + swap.estimatedTimeInSeconds, 0 + Number(finalTokenEstimate?.estimatedTimeInSeconds ?? 0)) || finalTokenEstimate?.estimatedTimeInSeconds}s`}
                   icon={TimeIcon}
                   textColor="brand.tertiary.100"
                   bgColor="brand.bg.tag"
@@ -115,9 +115,11 @@ export const BestRouteAccordion = ({
                         const amount = parseFloat(fee.amount);
                         const price = fee.price || 0;
                         return acc + amount * price;
-                      }, 0)
-                      .toFixed(2)
-                      .toString() || finalTokenEstimate?.estimatedFeeInUSD + '$'
+                      }, 0) +
+                      parseFloat(finalTokenEstimate?.estimatedFeeInUSD ?? '0')
+                        .toFixed(2)
+                        .toString() ||
+                    finalTokenEstimate?.estimatedFeeInUSD + '$'
                   }
                   icon={GasIcon}
                   textColor="brand.tertiary.100"
@@ -190,11 +192,7 @@ export const BestRouteAccordion = ({
                 bestRoute.swapSteps.map((swapStep, index) => {
                   return (
                     <>
-                      <Text
-                        textStyle={'bold.3'}
-                        ml={'24px'}
-                        lineHeight={'120%'}
-                      >
+                      <Text textStyle={'bold.2'} lineHeight={'120%'}>
                         Transaction {index + 1}: {swapStep.swapperName}
                       </Text>
                       {swapStep.internalSwapSteps.map(
@@ -245,9 +243,9 @@ export const BestRouteAccordion = ({
                       borderRadius="12px"
                     />
                   ) : (
-                    <Text textStyle={'bold.3'} ml={'24px'} lineHeight={'120%'}>
-                      Transaction {(bestRoute.swapSteps?.length ?? 0) + 1}: Last
-                      Mile Transaction
+                    <Text textStyle={'bold.2'} lineHeight={'120%'}>
+                      Transaction {(bestRoute.swapSteps?.length ?? 0) + 1}:
+                      Final Transaction
                     </Text>
                   )}
                   <RouteStep

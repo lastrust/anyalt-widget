@@ -259,8 +259,12 @@ export const useAnyaltWidget = ({
             to: {
               tokenName: finalToken.name,
               tokenLogo: finalToken.logoUrl || '',
-              tokenAmount: route?.outputAmount || '',
-              tokenPrice: route?.outputAmount || '',
+              tokenAmount: finalEstimateToken?.amountOut || '',
+              tokenPrice:
+                (
+                  parseFloat(finalEstimateToken?.priceInUSD || '0') /
+                  parseFloat(finalEstimateToken?.amountOut || '1')
+                ).toFixed(2) || '',
               tokenUsdPrice: finalEstimateToken?.priceInUSD || '0',
               tokenDecimals: finalToken.decimals || 0,
               blockchain: protocolInputToken.chain?.displayName || '',

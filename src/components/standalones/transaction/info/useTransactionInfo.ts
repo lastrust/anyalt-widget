@@ -1,6 +1,11 @@
 import { useAtomValue } from 'jotai';
 import { useMemo, useState } from 'react';
-import { ExecuteResponse, Token, WalletConnector } from '../../../..';
+import {
+  EstimateResponse,
+  ExecuteResponse,
+  Token,
+  WalletConnector,
+} from '../../../..';
 import {
   activeOperationIdAtom,
   anyaltInstanceAtom,
@@ -17,10 +22,12 @@ export const useTransactionInfo = ({
   externalEvmWalletConnector,
   onTxComplete,
   executeCallBack,
+  estimateCallback,
 }: {
   externalEvmWalletConnector?: WalletConnector;
   onTxComplete: () => void;
   executeCallBack: (amount: Token) => Promise<ExecuteResponse>;
+  estimateCallback: (token: Token) => Promise<EstimateResponse>;
 }) => {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -45,6 +52,7 @@ export const useTransactionInfo = ({
         slippage,
         (bestRoute?.swapSteps ?? []).length,
         executeCallBack,
+        estimateCallback,
       );
       onTxComplete();
       setIsLoading(false);

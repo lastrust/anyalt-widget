@@ -94,7 +94,7 @@ export const LastMileTxAccordion = ({
         <VStack gap={'12px'}>
           <TransactionStep
             exchangeLogo={protocolFinalToken?.logoUrl || ''}
-            exchangeName={'Last mile transaction'}
+            exchangeName={'Final tx'}
             fromToken={{
               name: protocolInputToken?.symbol || '',
               amount: truncateToDecimals(

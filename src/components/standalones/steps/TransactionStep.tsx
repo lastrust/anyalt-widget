@@ -1,6 +1,11 @@
 import { Grid } from '@chakra-ui/react';
 import { useAtomValue } from 'jotai';
-import { ExecuteResponse, Token, WalletConnector } from '../../..';
+import {
+  EstimateResponse,
+  ExecuteResponse,
+  Token,
+  WalletConnector,
+} from '../../..';
 import { transactionIndexAtom } from '../../../store/stateStore';
 import { SwappingTemplate } from '../../templates/SwappingTemplate';
 import { TransactionInfo } from '../transaction/info/TransactionInfo';
@@ -11,11 +16,13 @@ type Props = {
   onBackClick: () => void;
   executeCallBack: (amount: Token) => Promise<ExecuteResponse>;
   onTxComplete: () => void;
+  estimateCallback: (token: Token) => Promise<EstimateResponse>;
 };
 
 export const TransactionStep = ({
   walletConnector,
   executeCallBack,
+  estimateCallback,
   onBackClick,
   onTxComplete,
 }: Props) => {
@@ -33,6 +40,7 @@ export const TransactionStep = ({
         <TransactionInfo
           externalEvmWalletConnector={walletConnector}
           executeCallBack={executeCallBack}
+          estimateCallback={estimateCallback}
           onTxComplete={onTxComplete}
         />
       </SwappingTemplate>
