@@ -2,7 +2,13 @@ import { AnyAlt } from '@anyalt/sdk';
 import { SwapResult } from '@anyalt/sdk/src/adapter/api/api';
 import { switchChain } from '@wagmi/core';
 import { useAtom, useAtomValue } from 'jotai';
-import { ChainType, ExecuteResponse, Token, WalletConnector } from '../../..';
+import {
+  ChainType,
+  EstimateResponse,
+  ExecuteResponse,
+  Token,
+  WalletConnector,
+} from '../../..';
 import { walletConfig } from '../../../constants/configs';
 import {
   STEP_DESCR,
@@ -45,6 +51,7 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
     slippage: string,
     swaps: SwapResult[],
     executeCallBack: (token: Token) => Promise<ExecuteResponse>,
+    estimateCallback: (token: Token) => Promise<EstimateResponse>,
   ) => {
     const lastMileTxStep = 1;
     const totalSteps = swaps.length + lastMileTxStep;
@@ -64,6 +71,7 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
         slippage,
         totalSteps,
         swapDataRef,
+        estimateCallback,
       );
 
       if (isCrosschainSwapError)

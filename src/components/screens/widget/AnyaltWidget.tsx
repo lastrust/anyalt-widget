@@ -102,6 +102,7 @@ export const AnyaltWidgetWrapper = ({
           walletConnector={walletConnector}
           executeCallBack={executeCallBack}
           onTxComplete={onTxComplete}
+          estimateCallback={estimateCallback}
         />
         <CompleteStep onConfigClick={onConfigClick} onComplete={onComplete} />
       </Stepper>

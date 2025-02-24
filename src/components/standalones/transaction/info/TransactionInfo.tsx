@@ -1,7 +1,12 @@
 import { Box, Center, Divider, Text, VStack } from '@chakra-ui/react';
 import { useAtomValue } from 'jotai';
 import { FC } from 'react';
-import { ExecuteResponse, Token, WalletConnector } from '../../../..';
+import {
+  EstimateResponse,
+  ExecuteResponse,
+  Token,
+  WalletConnector,
+} from '../../../..';
 import {
   finalTokenEstimateAtom,
   inTokenAmountAtom,
@@ -20,12 +25,14 @@ type Props = {
   externalEvmWalletConnector?: WalletConnector;
   onTxComplete: () => void;
   executeCallBack: (amount: Token) => Promise<ExecuteResponse>;
+  estimateCallback: (token: Token) => Promise<EstimateResponse>;
 };
 
 export const TransactionInfo: FC<Props> = ({
   externalEvmWalletConnector,
   onTxComplete,
   executeCallBack,
+  estimateCallback,
 }) => {
   const {
     fees,
@@ -40,6 +47,7 @@ export const TransactionInfo: FC<Props> = ({
     externalEvmWalletConnector,
     onTxComplete,
     executeCallBack,
+    estimateCallback,
   });
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
