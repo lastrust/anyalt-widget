@@ -1,15 +1,18 @@
 import { AnyAlt, EVMTransactionDataResponse } from '@anyalt/sdk';
 import { TransactionError } from '@anyalt/sdk/dist/types/types';
 import { useAtom, useAtomValue } from 'jotai';
-import { WalletConnector } from '../../..';
+import { ChainType, EstimateResponse, Token, WalletConnector } from '../../..';
 import {
   STEP_DESCR,
   TX_MESSAGE,
   TX_STATUS,
 } from '../../../constants/transaction';
 import {
+  finalTokenEstimateAtom,
+  protocolInputTokenAtom,
   swapDataAtom,
   transactionIndexAtom,
+  transactionsListAtom,
   transactionsProgressAtom,
 } from '../../../store/stateStore';
 import {
@@ -28,6 +31,9 @@ export const useExecuteTokensSwap = (
   const transactionIndex = useAtomValue(transactionIndexAtom);
   const [swapData, setSwapData] = useAtom(swapDataAtom);
   const [, setTransactionsProgress] = useAtom(transactionsProgressAtom);
+  const protocolInputToken = useAtomValue(protocolInputTokenAtom);
+  const [, setFinalTokenEstimate] = useAtom(finalTokenEstimateAtom);
+  const [transactionsList, setTransactionsList] = useAtom(transactionsListAtom);
 
   const { handleTransaction } = useHandleTransaction({
     externalEvmWalletConnector,
@@ -59,6 +65,7 @@ export const useExecuteTokensSwap = (
       crosschainSwapOutputAmount: string;
       totalSteps: number;
     }>,
+    estimateCallback: (token: Token) => Promise<EstimateResponse>,
   ) => {
     let isCrosschainSwapError = false;
     do {
@@ -139,6 +146,19 @@ export const useExecuteTokensSwap = (
         const crosschainSwapOutputAmount =
           waitForTxResponse?.outputAmount || '0';
         if (swapIsFinished) {
+          const res = await estimateCallback({
+            name: protocolInputToken?.name ?? '',
+            symbol: protocolInputToken?.symbol ?? '',
+            address: protocolInputToken?.tokenAddress ?? '',
+            chainId: Number(protocolInputToken?.chain?.id ?? 0),
+            decimals: protocolInputToken?.decimals ?? 0,
+            amount: crosschainSwapOutputAmount,
+            chainType:
+              (protocolInputToken?.chain?.chainType as ChainType) ??
+              ChainType.EVM,
+          });
+          updateTransactionsList(crosschainSwapOutputAmount, res);
+          setFinalTokenEstimate(res);
           setSwapData((prev) => {
             const newData = {
               ...prev,
@@ -232,6 +252,52 @@ export const useExecuteTokensSwap = (
     return {
       isCrosschainSwapError,
     };
+  };
+
+  const updateTransactionsList = (
+    crosschainSwapOutputAmount: string,
+    finalEstimate: EstimateResponse,
+  ) => {
+    console.log('updateTransactionsList', transactionsList);
+    if (transactionsList?.steps) {
+      const newSteps = transactionsList.steps.slice(0, -1);
+      const lastStep =
+        transactionsList.steps[transactionsList.steps.length - 1];
+
+      setTransactionsList({
+        steps: [
+          ...newSteps,
+          {
+            from: {
+              tokenName: lastStep.from.tokenName,
+              tokenLogo: lastStep.from.tokenLogo,
+              tokenAmount: crosschainSwapOutputAmount,
+              tokenPrice: lastStep.from.tokenPrice,
+              tokenUsdPrice: (
+                parseFloat(lastStep.from.tokenPrice) *
+                parseFloat(crosschainSwapOutputAmount)
+              ).toFixed(2),
+              tokenDecimals: lastStep.from.tokenDecimals,
+              blockchain: lastStep.from.blockchain,
+              blockchainLogo: lastStep.from.blockchainLogo,
+            },
+            to: {
+              tokenName: lastStep.to.tokenName,
+              tokenLogo: lastStep.to.tokenLogo,
+              tokenAmount: finalEstimate.amountOut,
+              tokenPrice: (
+                parseFloat(finalEstimate.priceInUSD) /
+                parseFloat(finalEstimate.amountOut)
+              ).toFixed(2),
+              tokenUsdPrice: finalEstimate.priceInUSD,
+              tokenDecimals: lastStep.to.tokenDecimals,
+              blockchain: lastStep.to.blockchain,
+              blockchainLogo: lastStep.to.blockchainLogo,
+            },
+          },
+        ],
+      });
+    }
   };
 
   return {
