@@ -198,12 +198,7 @@ export const BestRouteAccordion = ({
                 {bestRoute.swaps.length > 0 && (
                   <>
                     {loading ? (
-                      <Skeleton
-                        w={'180px'}
-                        h={'18px'}
-                        ml="24px"
-                        borderRadius="12px"
-                      />
+                      <Skeleton w={'180px'} h={'18px'} borderRadius="12px" />
                     ) : (
                       <Text textStyle={'bold.2'} lineHeight={'120%'}>
                         Transaction {currentStep}:{' '}

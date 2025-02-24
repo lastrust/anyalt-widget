@@ -49,7 +49,6 @@ export const RouteStep = ({
             <Image
               src={exchangeIcon}
               alt={`${exchangeIcon} Icon`}
-              marginRight={'4px'}
               width="16px"
               height="16px"
               borderRadius={'50%'}
@@ -69,7 +68,7 @@ export const RouteStep = ({
           <Skeleton w={'250px'} h={'18px'} borderRadius="12px" />
         ) : (
           <HStack gap={'6px'}>
-            <HStack gap={'4px'}>
+            <HStack gap={'8px'}>
               <Box position="relative">
                 <Image
                   src={fromToken.icon}
@@ -122,7 +121,7 @@ export const RouteStep = ({
             <Box>
               <ArrowRightIcon />
             </Box>
-            <HStack gap={'4px'}>
+            <HStack gap={'8px'}>
               <Box position="relative">
                 <Image
                   src={toToken.icon}

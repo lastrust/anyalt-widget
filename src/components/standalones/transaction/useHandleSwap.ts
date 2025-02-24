@@ -106,7 +106,7 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
       updateTransactionProgress({
         isApproval: false,
         status: TX_STATUS.pending,
-        message: TX_MESSAGE.pending,
+        message: TX_MESSAGE.signing,
         details: {
           currentStep: stepIndex + 1,
           totalSteps: swapDataRef.current.totalSteps,
@@ -172,13 +172,19 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
         });
       }
     } catch (error) {
+      const isErrorInstance = error instanceof Error;
+      const errorMessage = isErrorInstance ? error.message : String(error);
+      const isRejectedByUser =
+        (error as any)?.code === 4001 || errorMessage.includes('User rejected');
+
       try {
-        const isErrorInstance = error instanceof Error;
         updateTransactionProgress({
           isApproval: false,
           status: TX_STATUS.failed,
-          message: isErrorInstance ? error.message : TX_MESSAGE.failed,
-          error: isErrorInstance ? error.message : String(error),
+          message: isRejectedByUser
+            ? 'Transaction rejected by user'
+            : TX_MESSAGE.failed, // Default failure message
+          error: errorMessage,
           details: {
             currentStep: stepIndex + 1,
             totalSteps: swapDataRef.current.totalSteps,
@@ -190,7 +196,9 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
       }
 
       throw new TransactionError(
-        'Failed to execute last mile transaction',
+        isRejectedByUser
+          ? 'Transaction was rejected by the user in MetaMask'
+          : 'Failed to execute last mile transaction',
         error,
       );
     }
