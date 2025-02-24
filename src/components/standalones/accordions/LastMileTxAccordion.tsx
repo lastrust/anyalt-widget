@@ -9,8 +9,10 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
+import { useAtomValue } from 'jotai';
 import { EstimateResponse, Token } from '../../..';
-import { StepsProgress } from '../../../types/transaction';
+import { inTokenAmountAtom } from '../../../store/stateStore';
+import { TransactionsProgress } from '../../../types/transaction';
 import { truncateToDecimals } from '../../../utils/truncateToDecimals';
 import { DividerIcon } from '../../atoms/icons/transaction/DividerIcon';
 import { GasIcon } from '../../atoms/icons/transaction/GasIcon';
@@ -23,7 +25,7 @@ type Props = {
   isLastMileExpanded: boolean;
   bestRoute: BestRouteResponse;
   currentStep: number;
-  stepsProgress: StepsProgress | undefined;
+  transactionsProgress: TransactionsProgress | undefined;
   protocolFinalToken: Token | undefined;
   finalTokenEstimate: EstimateResponse | undefined;
   protocolInputToken: SupportedToken | undefined;
@@ -34,11 +36,13 @@ export const LastMileTxAccordion = ({
   isLastMileExpanded,
   bestRoute,
   currentStep,
-  stepsProgress,
+  transactionsProgress,
   protocolFinalToken,
   protocolInputToken,
   finalTokenEstimate,
 }: Props) => {
+  const inTokenAmount = useAtomValue(inTokenAmountAtom);
+
   return (
     <AccordionItem
       key={'last mile tx'}
@@ -94,8 +98,10 @@ export const LastMileTxAccordion = ({
             fromToken={{
               name: protocolInputToken?.symbol || '',
               amount: truncateToDecimals(
-                bestRoute.swapSteps[bestRoute.swapSteps.length - 1].payout ||
-                  '0',
+                bestRoute.swapSteps.length === 0
+                  ? inTokenAmount || '0'
+                  : bestRoute.swapSteps[bestRoute.swapSteps.length - 1]
+                      ?.amount || '0',
                 3,
               ),
               tokenLogo: protocolInputToken?.logoUrl || '',
@@ -142,18 +148,18 @@ export const LastMileTxAccordion = ({
         </VStack>
 
         <Box>
-          {stepsProgress?.steps[bestRoute.swapSteps.length].approve && (
+          {transactionsProgress![bestRoute.swapSteps.length]?.approve && (
             <TransactionHash
               type="Approval"
               progress={
-                stepsProgress?.steps[bestRoute.swapSteps.length].approve
+                transactionsProgress![bestRoute.swapSteps.length]?.approve
               }
             />
           )}
-          {stepsProgress?.steps[bestRoute.swapSteps.length].swap && (
+          {transactionsProgress![bestRoute.swapSteps.length]?.swap && (
             <TransactionHash
               type="Swap"
-              progress={stepsProgress?.steps[bestRoute.swapSteps.length].swap}
+              progress={transactionsProgress![bestRoute.swapSteps.length]?.swap}
             />
           )}
         </Box>

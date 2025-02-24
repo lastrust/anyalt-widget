@@ -5,7 +5,7 @@ import { CopyIcon } from '../../atoms/icons/CopyIcon';
 import { ArrowRightIcon } from '../../atoms/icons/transaction/ArrowRightIcon';
 import { TokenCard } from './TokenCard';
 
-type TokenWithAmount = Token & { amount: string };
+export type TokenWithAmount = Token & { amount: string };
 
 type Props = {
   operationId: string;

@@ -1,9 +1,11 @@
+import { useAtom, useAtomValue } from 'jotai';
+import { useAccount } from 'wagmi';
+
 import { useBitcoinWallet } from '@ant-design/web3-bitcoin';
 import { AnyAlt, EVMTransactionDataResponse } from '@anyalt/sdk';
 import { TransactionError } from '@anyalt/sdk/dist/types/types';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { useAtom, useAtomValue } from 'jotai';
-import { useAccount } from 'wagmi';
+
 import { WalletConnector } from '../../..';
 import {
   STEP_DESCR,
@@ -12,11 +14,14 @@ import {
 } from '../../../constants/transaction';
 import {
   bestRouteAtom,
-  stepsProgressAtom,
   swapDataAtom,
   transactionIndexAtom,
+  transactionsProgressAtom,
 } from '../../../store/stateStore';
-import { TransactionProgress } from '../../../types/transaction';
+import {
+  TransactionProgress,
+  TransactionsProgress,
+} from '../../../types/transaction';
 import { mapBlockchainToChainType } from '../../../utils/chains';
 import { getTransactionData } from '../../../utils/getTransactionData';
 import { handleSignerAddress } from '../../../utils/handleSignerAddress';
@@ -29,30 +34,30 @@ export const useExecuteTokensSwap = (
 ) => {
   const transactionIndex = useAtomValue(transactionIndexAtom);
   const [swapData, setSwapData] = useAtom(swapDataAtom);
-  const [, setStepsProgress] = useAtom(stepsProgressAtom);
   const bestRoute = useAtomValue(bestRouteAtom);
 
   const { address: evmAddress, isConnected: isEvmConnected } = useAccount();
   const { publicKey: solanaAddress, connected: isSolanaConnected } =
     useWallet();
   const { account: bitcoinAccount } = useBitcoinWallet();
+  const [, setTransactionsProgress] = useAtom(transactionsProgressAtom);
 
   const { handleTransaction } = useHandleTransaction({
     externalEvmWalletConnector,
   });
 
-  const updateStepProgress = (progress: TransactionProgress) => {
-    setStepsProgress((prev) => {
-      const newSteps = prev?.steps ? [...prev.steps] : [];
+  const updateTransactionProgress = (progress: TransactionProgress) => {
+    setTransactionsProgress((prev) => {
+      const newProgress: TransactionsProgress = prev || {};
       const index = progress.details.currentStep - 1;
-
       const txType = progress.isApproval ? 'approve' : 'swap';
 
-      newSteps[index] = {
-        ...newSteps[index],
+      newProgress[index] = {
+        ...newProgress[index],
         [txType]: progress,
       };
-      return { steps: newSteps };
+
+      return { ...newProgress };
     });
   };
 
@@ -128,7 +133,7 @@ export const useExecuteTokensSwap = (
         const signerAddress = handleSignerAddress(transactionData);
         const stepText = isApproval ? STEP_DESCR.approval : STEP_DESCR.swap;
 
-        updateStepProgress({
+        updateTransactionProgress({
           isApproval,
           status: TX_STATUS.signing,
           message: TX_MESSAGE.signing,
@@ -141,7 +146,7 @@ export const useExecuteTokensSwap = (
 
         txHash = await handleTransaction(transactionData);
 
-        updateStepProgress({
+        updateTransactionProgress({
           isApproval,
           status: TX_STATUS.broadcasting,
           message: TX_MESSAGE.broadcasting,
@@ -161,7 +166,7 @@ export const useExecuteTokensSwap = (
           signerAddress: signerAddress,
         });
 
-        updateStepProgress({
+        updateTransactionProgress({
           isApproval,
           status: TX_STATUS.pending,
           message: TX_MESSAGE.pending,
@@ -187,12 +192,13 @@ export const useExecuteTokensSwap = (
               swapIsFinished: waitForTxResponse.swapIsFinished,
               crosschainSwapOutputAmount: crosschainSwapOutputAmount,
               totalSteps,
+              currentStep: transactionIndex,
             };
             swapDataRef.current = newData;
             return newData;
           });
 
-          updateStepProgress({
+          updateTransactionProgress({
             isApproval,
             status: TX_STATUS.confirmed,
             message: TX_MESSAGE.confirmed,
@@ -213,7 +219,7 @@ export const useExecuteTokensSwap = (
           throw new TransactionError(errMsg);
         }
 
-        updateStepProgress({
+        updateTransactionProgress({
           isApproval,
           status: TX_STATUS.confirmed,
           message: TX_MESSAGE.confirmed,
@@ -253,7 +259,7 @@ export const useExecuteTokensSwap = (
           ? error.message
           : TX_MESSAGE.failed;
 
-        updateStepProgress({
+        updateTransactionProgress({
           isApproval,
           status: TX_STATUS.failed,
           message: errorMessage,
@@ -277,6 +283,6 @@ export const useExecuteTokensSwap = (
 
   return {
     executeTokensSwap,
-    updateStepProgress,
+    updateTransactionProgress,
   };
 };

@@ -64,11 +64,9 @@ export const useTokenSelectModal = () => {
   }, [activeChain, searchInputValue]);
 
   const isValidAddress = useMemo(() => {
-    const res =
-      activeChain?.chainType === ChainType.SOLANA
-        ? isValidSolanaAddress(searchInputValue)
-        : isValidEthereumAddress(searchInputValue);
-    return res;
+    return activeChain?.chainType === ChainType.SOLANA
+      ? isValidSolanaAddress(searchInputValue)
+      : isValidEthereumAddress(searchInputValue);
   }, [activeChain, searchInputValue]);
 
   return {

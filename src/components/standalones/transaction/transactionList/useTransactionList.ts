@@ -2,10 +2,13 @@ import { useAtomValue } from 'jotai';
 import {
   bestRouteAtom,
   finalTokenEstimateAtom,
+  inTokenAmountAtom,
+  inTokenAtom,
   isTokenBuyTemplateAtom,
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
 } from '../../../../store/stateStore';
+import { TokenWithAmount } from '../../../molecules/card/TransactionOverviewCard';
 
 export const useTransactionList = () => {
   const bestRoute = useAtomValue(bestRouteAtom);
@@ -13,6 +16,8 @@ export const useTransactionList = () => {
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
   const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
+  const inToken = useAtomValue(inTokenAtom);
+  const inTokenAmount = useAtomValue(inTokenAmountAtom);
 
   const getToTokenDetails = () => {
     if (isTokenBuyTemplate) {
@@ -44,6 +49,27 @@ export const useTransactionList = () => {
     };
   };
 
+  if (!bestRoute || bestRoute?.swapSteps.length === 0) {
+    return {
+      bestRoute,
+      tokens: {
+        from: {
+          contractAddress: inToken?.tokenAddress || '',
+          symbol: inToken?.symbol || '',
+          logo: inToken?.logoUrl || '',
+          blockchain: inToken?.chain?.displayName || '',
+          amount: Number(inTokenAmount).toFixed(4) || '',
+          blockchainLogo: inToken?.chain?.logoUrl || '',
+          decimals: inToken?.decimals || 0,
+          tokenUsdPrice: 0,
+        } as TokenWithAmount,
+        to: {
+          ...getToTokenDetails(),
+        } as TokenWithAmount,
+      },
+    };
+  }
+
   return {
     bestRoute,
     tokens: {
@@ -58,10 +84,10 @@ export const useTransactionList = () => {
           bestRoute?.swapSteps[0].sourceToken.blockchainLogo || '',
         decimals: bestRoute?.swapSteps[0].sourceToken.decimals || 0,
         tokenUsdPrice: bestRoute?.swapSteps[0].sourceToken.tokenUsdPrice || 0,
-      },
+      } as TokenWithAmount,
       to: {
         ...getToTokenDetails(),
-      },
+      } as TokenWithAmount,
     },
   };
 };

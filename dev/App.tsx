@@ -59,13 +59,11 @@ const App = () => {
             <OpenModalButton onOpen={onOpen} />
             <AnyaltWidget
               inputToken={{
-                symbol: 'USDT',
-                address: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
-                chainId: 42161,
-                chainType: ChainType.EVM,
-                name: 'USDT',
-                decimals: 18,
-                amount: '100',
+                symbol: 'Please',
+                address: 'CfnYYxqBRrfxteb8647y4hMHQZJUrhCxPw6w1LTdpump',
+                chainType: ChainType.SOLANA,
+                name: 'Please don\'t jeet',
+                decimals: 6,
               }}
               finalToken={{
                 symbol: 'Aarnâ Afi802',

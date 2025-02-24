@@ -56,7 +56,7 @@ export const defaultTheme = extendTheme({
       border: {
         primary: 'rgba(145, 158, 171, 0.12)',
         tag: '#008080',
-        bestRoute: 'rgba(145, 158, 171, 0.12)',
+        bestRoute: '#008080',
       },
       bg: {
         tag: 'transparent',
@@ -77,6 +77,7 @@ export const defaultTheme = extendTheme({
         accordion: {
           primary: '#fff',
         },
+        disabled: '#0B3E3E',
       },
     },
   },

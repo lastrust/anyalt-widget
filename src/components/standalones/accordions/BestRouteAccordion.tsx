@@ -20,6 +20,7 @@ import {
   selectedRouteAtom,
   slippageAtom,
 } from '../../../store/stateStore';
+import { ChainIdToChainConstant } from '../../../utils/chains';
 import { truncateToDecimals } from '../../../utils/truncateToDecimals';
 import { GasIcon } from '../../atoms/icons/GasIcon';
 import { StepsIcon } from '../../atoms/icons/StepsIcon';
@@ -46,7 +47,7 @@ export const BestRouteAccordion = ({
   const isTokenBuyTemplate = useAtomValue(isTokenBuyTemplateAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
-  const [selectedRoute, setSelectedRoute] = useAtom(selectedRouteAtom);
+  const [, setSelectedRoute] = useAtom(selectedRouteAtom);
 
   if (!bestRoute) return <></>;
 
@@ -62,17 +63,15 @@ export const BestRouteAccordion = ({
     <Box w={'100%'} mt="16px">
       <Accordion defaultIndex={[0]} allowMultiple>
         <AccordionItem
-          border="1px solid"
+          border="3px solid"
+          borderWidth={loading ? '1px' : '3px!important'}
           borderColor={
-            selectedRoute?.operationId === bestRoute?.operationId
-              ? 'brand.border.bestRoute'
-              : 'transparent'
+            loading ? 'rgba(145, 158, 171, 0.12)' : 'brand.border.bestRoute'
           }
           borderRadius={'10px'}
           p={'16px'}
           cursor={'pointer'}
           onClick={handleRouteSelect}
-          bg={'brand.secondary.6'}
         >
           <AccordionButton
             display={'flex'}
@@ -102,7 +101,7 @@ export const BestRouteAccordion = ({
                 />
                 <RouteTag
                   loading={loading}
-                  text={`${bestRoute.swapSteps.reduce((acc, swap) => acc + swap.estimatedTimeInSeconds, 0)}s`}
+                  text={`${bestRoute.swapSteps.reduce((acc, swap) => acc + swap.estimatedTimeInSeconds, 0) || finalTokenEstimate?.estimatedTimeInSeconds}s`}
                   icon={TimeIcon}
                   textColor="brand.tertiary.100"
                   bgColor="brand.bg.tag"
@@ -118,7 +117,7 @@ export const BestRouteAccordion = ({
                         return acc + amount * price;
                       }, 0)
                       .toFixed(2)
-                      .toString() + '$'
+                      .toString() || finalTokenEstimate?.estimatedFeeInUSD + '$'
                   }
                   icon={GasIcon}
                   textColor="brand.tertiary.100"
@@ -164,7 +163,14 @@ export const BestRouteAccordion = ({
               amount={Number(finalTokenEstimate?.amountOut ?? '0.00')}
               price={Number(finalTokenEstimate?.priceInUSD ?? '0.00')}
               slippage={slippage}
-              network={`${bestRoute.swapSteps[0]?.swapperName}`}
+              network={
+                !isTokenBuyTemplate
+                  ? `${protocolFinalToken?.name} on ${protocolInputToken?.chain?.displayName}`
+                  : bestRoute.swapSteps[0]?.swapperName
+              }
+              bg={'brand.secondary.6'}
+              p="12px"
+              borderRadius={'8px'}
             />
           </AccordionButton>
           <AccordionPanel p={'0px'} mt="12px">
@@ -207,12 +213,18 @@ export const BestRouteAccordion = ({
                                   truncateToDecimals(internalSwap.amount) ||
                                   '0',
                                 chainName: internalSwap.sourceToken.blockchain,
+                                icon: internalSwap.sourceToken.logo,
+                                chainIcon:
+                                  internalSwap.sourceToken.blockchainLogo,
                               }}
                               toToken={{
                                 name: internalSwap.destinationToken.symbol,
                                 amount: truncateToDecimals(internalSwap.payout),
                                 chainName:
                                   internalSwap.destinationToken.blockchain,
+                                icon: internalSwap.destinationToken.logo,
+                                chainIcon:
+                                  internalSwap.destinationToken.blockchainLogo,
                               }}
                             />
                           );
@@ -256,6 +268,11 @@ export const BestRouteAccordion = ({
                       chainName:
                         bestRoute.swapSteps[bestRoute.swapSteps.length - 1]
                           .destinationToken.blockchain,
+                      icon: bestRoute.swapSteps[bestRoute.swapSteps.length - 1]
+                        .destinationToken.logo,
+                      chainIcon:
+                        bestRoute.swapSteps[bestRoute.swapSteps.length - 1]
+                          .destinationToken.blockchainLogo,
                     }}
                     toToken={{
                       name: protocolFinalToken?.name || '',
@@ -263,7 +280,16 @@ export const BestRouteAccordion = ({
                         finalTokenEstimate?.amountOut ?? '0.00',
                         4,
                       ),
-                      chainName: protocolInputToken?.chain?.displayName || '',
+                      chainName:
+                        protocolInputToken?.chain?.displayName ||
+                        protocolFinalToken?.chainId != undefined
+                          ? ChainIdToChainConstant[
+                              protocolFinalToken!
+                                .chainId! as keyof typeof ChainIdToChainConstant
+                            ]
+                          : '',
+                      icon: protocolFinalToken?.logoUrl || '',
+                      chainIcon: protocolInputToken?.chain?.logoUrl || '',
                     }}
                   />
                 </>

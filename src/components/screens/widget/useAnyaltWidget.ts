@@ -20,17 +20,17 @@ import {
   protocolInputTokenAtom,
   selectedRouteAtom,
   slippageAtom,
-  stepsProgressAtom,
   swapDataAtom,
   tokenFetchErrorAtom,
   transactionIndexAtom,
   transactionsListAtom,
+  transactionsProgressAtom,
 } from '../../../store/stateStore';
 import { calculateWorstOutput } from '../../../utils';
 import { ChainIdToChainConstant } from '../../../utils/chains';
 import { useTokenInputBox } from '../../standalones/selectSwap/token/input/useTokenInputBox';
 
-const REFRESH_INTERVAL = 20000;
+const REFRESH_INTERVAL = 30000;
 
 export const useAnyaltWidget = ({
   apiKey,
@@ -76,29 +76,28 @@ export const useAnyaltWidget = ({
   const selectedRoute = useAtomValue(selectedRouteAtom);
 
   const [swapData, setSwapData] = useAtom(swapDataAtom);
-  const [, setStepsProgress] = useAtom(stepsProgressAtom);
   const [, setCurrentUiStep] = useAtom(currentUiStepAtom);
+  const [allChains, setAllChains] = useAtom(allChainsAtom);
+  const [bestRoute, setBestRoute] = useAtom(bestRouteAtom);
   const [, setIsTokenBuy] = useAtom(isTokenBuyTemplateAtom);
+  const [, setTokenFetchError] = useAtom(tokenFetchErrorAtom);
+  const [, setTransactionsList] = useAtom(transactionsListAtom);
+  const [, setTransactionIndex] = useAtom(transactionIndexAtom);
   const [, setActiveOperationId] = useAtom(activeOperationIdAtom);
+  const [, setProtocolFinalToken] = useAtom(protocolFinalTokenAtom);
+  const [, setTransactionsProgress] = useAtom(transactionsProgressAtom);
+  const [anyaltInstance, setAnyaltInstance] = useAtom(anyaltInstanceAtom);
   const [finalEstimateToken, setFinalTokenEstimate] = useAtom(
     finalTokenEstimateAtom,
   );
-  const [, setTransactionsList] = useAtom(transactionsListAtom);
-  const [, setTokenFetchError] = useAtom(tokenFetchErrorAtom);
-  const [allChains, setAllChains] = useAtom(allChainsAtom);
-  const [bestRoute, setBestRoute] = useAtom(bestRouteAtom);
-  const [, setProtocolFinalToken] = useAtom(protocolFinalTokenAtom);
-  const [anyaltInstance, setAnyaltInstance] = useAtom(anyaltInstanceAtom);
   const [protocolInputToken, setProtocolInputToken] = useAtom(
     protocolInputTokenAtom,
   );
-  const [, setTransactionIndex] = useAtom(transactionIndexAtom);
+  const { balance } = useTokenInputBox();
 
   useEffect(() => {
     onGetQuote(false);
-  }, [inToken, slippage]);
-
-  const { balance } = useTokenInputBox();
+  }, [inToken, slippage, balance]);
 
   // const resetState = useCallback(() => {
   //   setInTokenAmount('');
@@ -181,6 +180,21 @@ export const useAnyaltWidget = ({
 
   const onGetQuote = async (withGoNext: boolean = true) => {
     if (!inToken || !protocolInputToken || !inTokenAmount) return;
+
+    if (inToken.id === protocolInputToken.id) {
+      setBestRoute({
+        outputAmount: inTokenAmount,
+        swapSteps: [],
+        operationId: '',
+        missingWalletForSourceBlockchain: false,
+      });
+
+      setTokenFetchError({
+        isError: false,
+        errorMessage: '',
+      });
+      return;
+    }
 
     try {
       setLoading(true);
@@ -279,11 +293,7 @@ export const useAnyaltWidget = ({
         }
       }
 
-      if (
-        activeStep !== 0 &&
-        balance &&
-        parseFloat(balance) < parseFloat(inTokenAmount)
-      ) {
+      if (balance && parseFloat(balance) < parseFloat(inTokenAmount)) {
         setTokenFetchError({
           isError: true,
           errorMessage: `You don't have enough tokens in your wallet.`,
@@ -292,6 +302,7 @@ export const useAnyaltWidget = ({
 
       setIsValidAmountIn(isEnoughDepositTokens);
       setFailedToFetchRoute(false);
+      if (activeStep === 0) goToNext();
       if (withGoNext && isEnoughDepositTokens) goToNext();
     } catch (error) {
       console.error(error);
@@ -325,7 +336,7 @@ export const useAnyaltWidget = ({
     if (areWalletsConnected) {
       // await onGetQuote(false);
       await connectWalletsAndConfirmRoute();
-      setStepsProgress(undefined);
+      setTransactionsProgress({});
     } else {
       if (walletConnector) {
         walletConnector.connect();
@@ -406,16 +417,25 @@ export const useAnyaltWidget = ({
         }
       });
 
-      const res = await anyaltInstance?.confirmRoute({
-        operationId: bestRoute.operationId,
-        selectedWallets,
-        destination,
-      });
+      if (bestRoute?.swapSteps.length === 0) {
+        const res = await anyaltInstance?.createOperation();
+        if (!res?.operationId) throw new Error('Failed to create operation');
 
-      if (!res?.ok || !res?.operationId)
-        throw new Error('Failed to confirm route');
+        setActiveOperationId(res?.operationId);
+      } else {
+        if (!bestRoute?.operationId) return;
+        const res = await anyaltInstance?.confirmRoute({
+          operationId: bestRoute?.operationId,
+          selectedWallets,
+          destination: destination,
+        });
 
-      setActiveOperationId(res.operationId);
+        if (!res?.operationId || !res?.ok)
+          throw new Error('Failed to confirm route');
+
+        setActiveOperationId(res?.operationId);
+        setBestRoute(bestRoute);
+      }
 
       connectWalletsClose();
       goToNext();
@@ -474,6 +494,13 @@ export const useAnyaltWidget = ({
       return walletConnector.isConnected;
     }
 
+    // Set chain flags for last mile tx
+    if (protocolInputToken?.chain?.chainType === ChainType.EVM) {
+      isEvmRequired = true;
+    } else if (protocolInputToken?.chain?.chainType === ChainType.SOLANA) {
+      isSolanaRequired = true;
+    }
+
     bestRoute?.swapSteps.forEach((swapStep) => {
       const fromBlockchain = swapStep.sourceToken.blockchain;
       const toBlockchain = swapStep.destinationToken.blockchain;
@@ -508,6 +535,12 @@ export const useAnyaltWidget = ({
     }
     return isWalletConnected;
   }, [isSolanaConnected, isEvmConnected, bestRoute, bitcoinAccount]);
+
+  useEffect(() => {
+    if (areWalletsConnected && isConnectWalletsOpen) {
+      connectWalletsClose();
+    }
+  }, [areWalletsConnected]);
 
   const onComplete = () => {
     onClose();
