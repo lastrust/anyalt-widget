@@ -108,26 +108,29 @@ export const BestRouteAccordion = ({
                 />
                 <RouteTag
                   loading={loading}
-                  text={
-                    bestRoute.swapSteps
-                      .flatMap((step) => step.fees)
-                      .reduce((acc, fee) => {
-                        const amount = parseFloat(fee.amount);
-                        const price = fee.price || 0;
-                        return acc + amount * price;
-                      }, 0) +
+                  text={`$${
+                    (
+                      bestRoute.swapSteps
+                        .flatMap((step) => step.fees)
+                        .reduce((acc, fee) => {
+                          const amount = parseFloat(fee.amount);
+                          const price = fee.price || 0;
+                          return acc + amount * price;
+                        }, 0) +
                       parseFloat(finalTokenEstimate?.estimatedFeeInUSD ?? '0')
-                        .toFixed(2)
-                        .toString() ||
-                    finalTokenEstimate?.estimatedFeeInUSD + '$'
-                  }
+                    )
+                      .toFixed(2)
+                      .toString() ||
+                    finalTokenEstimate?.estimatedFeeInUSD ||
+                    '0.00'
+                  }`}
                   icon={GasIcon}
                   textColor="brand.tertiary.100"
                   bgColor="brand.bg.tag"
                 />
                 <RouteTag
                   loading={loading}
-                  text={`${bestRoute.swapSteps.length}`}
+                  text={`${bestRoute.swapSteps.length + Number(!isTokenBuyTemplate)}`}
                   icon={StepsIcon}
                   textColor="brand.tertiary.100"
                   bgColor="brand.bg.tag"
@@ -251,7 +254,7 @@ export const BestRouteAccordion = ({
                   <RouteStep
                     loading={loading}
                     key={`last-mile-transaction-${bestRoute.swapSteps.length}`}
-                    stepNumber={bestRoute.swapSteps.length}
+                    stepNumber={1}
                     exchangeIcon={protocolFinalToken?.logoUrl || ''}
                     exchangeName={'Last Mile TX'}
                     exchangeType={'LAST_MILE'}

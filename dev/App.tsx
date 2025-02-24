@@ -27,6 +27,27 @@ import '@solana/wallet-adapter-react-ui/styles.css';
 
 const queryClient = new QueryClient();
 
+
+const USDT_ADDRESS = "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9";
+const AAVE_USDT_ADDRESS = "0x6ab707Aca953eDAeFBc4fD23bA73294241490620";
+const AAVE_L3_POOL_ADDRESS = "0x794a61358D6845594F94dc1DB02A252b5b4814aD";
+const POPCAT_ADDRESS = "7GCihgDB8fe6KNjn2MYtkzZcRjQy3t9GHdC8uHYmW2hr";
+
+const usdtToken: Token = {
+  symbol: "USDT",
+  address: USDT_ADDRESS,
+  chainId: 42161,
+  name: "USDT",
+  chainType: ChainType.EVM,
+};
+
+const popcatToken: Token = {
+  name: "Popcat",
+  symbol: "POPCAT",
+  address: POPCAT_ADDRESS,
+  chainType: ChainType.SOLANA,
+};
+
 const App = () => {
   const { isOpen, onOpen, onClose } = useModal();
 
@@ -58,13 +79,7 @@ const App = () => {
           <Box maxW={'600px'}>
             <OpenModalButton onOpen={onOpen} />
             <AnyaltWidget
-              inputToken={{
-                symbol: 'Please',
-                address: 'CfnYYxqBRrfxteb8647y4hMHQZJUrhCxPw6w1LTdpump',
-                chainType: ChainType.SOLANA,
-                name: 'Please don\'t jeet',
-                decimals: 6,
-              }}
+              inputToken={popcatToken}
               finalToken={{
                 symbol: 'Aarnâ Afi802',
                 address: '0x123',
