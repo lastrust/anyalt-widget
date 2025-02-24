@@ -198,12 +198,7 @@ export const BestRouteAccordion = ({
                 {bestRoute.swaps.length > 0 && (
                   <>
                     {loading ? (
-                      <Skeleton
-                        w={'180px'}
-                        h={'18px'}
-                        ml="24px"
-                        borderRadius="12px"
-                      />
+                      <Skeleton w={'180px'} h={'18px'} borderRadius="12px" />
                     ) : (
                       <Text textStyle={'bold.2'} lineHeight={'120%'}>
                         Transaction {currentStep}:{' '}
@@ -264,9 +259,9 @@ export const BestRouteAccordion = ({
                           <RouteStep
                             loading={loading}
                             key={`last-mile-transaction-${swaps.length}`}
-                            stepNumber={swaps.length}
+                            stepNumber={swaps.length + 1}
                             exchangeIcon={protocolFinalToken?.logoUrl || ''}
-                            exchangeName={'Last Mile TX'}
+                            exchangeName={'Final Transaction'}
                             exchangeType={'LAST_MILE'}
                             fromToken={{
                               name:

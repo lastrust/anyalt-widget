@@ -35,21 +35,34 @@ type Props = {
 export const RouteStep = ({
   exchangeIcon,
   exchangeName,
+  stepNumber,
+  exchangeType,
   fromToken,
   toToken,
   loading,
 }: Props) => {
   return (
-    <Flex justifyContent={'start'} w={'full'} alignItems={'center'}>
+    <Flex
+      justifyContent={'start'}
+      w={'full'}
+      alignItems={'center'}
+      width={'100%'}
+    >
       <VStack justifyContent={'space-between'} alignItems={'start'} gap={'8px'}>
         <HStack gap={'4px'}>
           {loading ? (
-            <Skeleton w={'16px'} h={'16px'} borderRadius={'50%'} mr={'8px'} />
+            <Skeleton w={'40px'} h={'16px'} mr={'4px'} borderRadius="12px" />
+          ) : (
+            <Text textStyle={'extraBold.5'} color="brand.secondary.3">
+              Step {stepNumber}:
+            </Text>
+          )}
+          {loading ? (
+            <Skeleton w={'16px'} h={'16px'} borderRadius={'50%'} mr={'4px'} />
           ) : (
             <Image
               src={exchangeIcon}
               alt={`${exchangeIcon} Icon`}
-              marginRight={'4px'}
               width="16px"
               height="16px"
               borderRadius={'50%'}
@@ -60,16 +73,20 @@ export const RouteStep = ({
             <Skeleton w={'180px'} h={'18px'} borderRadius="12px" />
           ) : (
             <Text color="brand.secondary.3" textStyle={'regular.3'}>
-              {/* {exchangeType === 'BRIDGE' ? 'Bridge' : 'Swap'} token using{' '} */}
-              {exchangeName}:
+              {exchangeType === 'BRIDGE'
+                ? 'Bridge token using'
+                : exchangeType === 'LAST_MILE'
+                  ? ''
+                  : 'Swap token using'}{' '}
+              {exchangeName}
             </Text>
           )}
         </HStack>
         {loading ? (
           <Skeleton w={'250px'} h={'18px'} borderRadius="12px" />
         ) : (
-          <HStack gap={'6px'}>
-            <HStack gap={'4px'}>
+          <HStack gap={'6px'} width={'100%'} justifyContent={'space-between'}>
+            <HStack gap={'8px'}>
               <Box position="relative">
                 <Image
                   src={fromToken.icon}
@@ -122,7 +139,7 @@ export const RouteStep = ({
             <Box>
               <ArrowRightIcon />
             </Box>
-            <HStack gap={'4px'}>
+            <HStack gap={'8px'}>
               <Box position="relative">
                 <Image
                   src={toToken.icon}
