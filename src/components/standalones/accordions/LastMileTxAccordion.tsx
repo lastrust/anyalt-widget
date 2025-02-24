@@ -67,9 +67,9 @@ export const LastMileTxAccordion = ({
       >
         <HStack justifyContent={'flex-start'}>
           <Text textStyle={'bold.1'} mr="8px">
-            Transaction {bestRoute.swaps.length + 1}
+            Transaction {bestRoute.swapSteps.length + 1}
           </Text>
-          {currentStep === bestRoute.swaps.length + 1 && (
+          {currentStep === bestRoute.swapSteps.length + 1 && (
             <Text textStyle={'bold.1'} color="brand.tertiary.100">
               In Progress
             </Text>
@@ -98,10 +98,10 @@ export const LastMileTxAccordion = ({
             fromToken={{
               name: protocolInputToken?.symbol || '',
               amount: truncateToDecimals(
-                bestRoute.swaps.length === 0
+                bestRoute.swapSteps.length === 0
                   ? inTokenAmount || '0'
-                  : bestRoute.swaps[bestRoute.swaps.length - 1]?.toAmount ||
-                      '0',
+                  : bestRoute.swapSteps[bestRoute.swapSteps.length - 1]
+                      ?.amount || '0',
                 3,
               ),
               tokenLogo: protocolInputToken?.logoUrl || '',
@@ -148,16 +148,18 @@ export const LastMileTxAccordion = ({
         </VStack>
 
         <Box>
-          {transactionsProgress![bestRoute.swaps.length]?.approve && (
+          {transactionsProgress![bestRoute.swapSteps.length]?.approve && (
             <TransactionHash
               type="Approval"
-              progress={transactionsProgress![bestRoute.swaps.length]?.approve}
+              progress={
+                transactionsProgress![bestRoute.swapSteps.length]?.approve
+              }
             />
           )}
-          {transactionsProgress![bestRoute.swaps.length]?.swap && (
+          {transactionsProgress![bestRoute.swapSteps.length]?.swap && (
             <TransactionHash
               type="Swap"
-              progress={transactionsProgress![bestRoute.swaps.length]?.swap}
+              progress={transactionsProgress![bestRoute.swapSteps.length]?.swap}
             />
           )}
         </Box>

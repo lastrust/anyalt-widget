@@ -28,17 +28,18 @@ export const useSelectToken = () => {
   };
 
   const inTokenPrice = useMemo(() => {
-    if (!bestRoute || !inTokenAmount || bestRoute.swaps.length === 0) return '';
-    const tokenPrice = bestRoute.swaps[0].from.usdPrice;
+    if (!bestRoute || !inTokenAmount || bestRoute.swapSteps.length === 0)
+      return '';
+    const tokenPrice = bestRoute.swapSteps[0].sourceToken.tokenUsdPrice;
 
     if (!tokenPrice) return '';
     return (tokenPrice * parseFloat(inTokenAmount)).toFixed(2);
   }, [bestRoute, inTokenAmount]);
 
   const outTokenPrice = useMemo(() => {
-    if (!bestRoute || bestRoute.swaps.length === 0) return '';
-    const lastSwap = bestRoute.swaps[bestRoute.swaps.length - 1];
-    const tokenPrice = lastSwap.to.usdPrice;
+    if (!bestRoute || bestRoute.swapSteps.length === 0) return '';
+    const lastStep = bestRoute.swapSteps[bestRoute.swapSteps.length - 1];
+    const tokenPrice = lastStep.destinationToken.tokenUsdPrice;
 
     if (!tokenPrice) return '';
     return (tokenPrice * parseFloat(bestRoute.outputAmount)).toFixed(2);

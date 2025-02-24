@@ -3,3 +3,5 @@ dist
 **/.DS_Store
 .eslintcache
 anyalt-widget-*.tgz
+
+.vscode/settings.json

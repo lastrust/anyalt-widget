@@ -51,7 +51,8 @@ export const calculateWorstOutput = (
   route: BestRouteResponse,
   slippage: string,
 ) => {
-  const decimals = route.swaps[route.swaps.length - 1].to.decimals;
+  const decimals =
+    route.swapSteps[route.swapSteps.length - 1].destinationToken.decimals;
 
   const outputAmountFloat = parseFloat(route.outputAmount);
   const outputAmountBigInt = ethers.parseUnits(
@@ -71,7 +72,7 @@ export const calculateWorstOutput = (
     PRECISION - BigInt(Math.floor(slippageNo * 1000000));
 
   let worstOutput = outputAmountBigInt;
-  for (let i = 0; i < route.swaps.length; i++) {
+  for (let i = 0; i < route.swapSteps.length; i++) {
     if (i === 0) {
       // In Rango, the first swap applies half the slippage
       // This is done to balance the possibility of financial loss due to the slippage being applied on each swap
