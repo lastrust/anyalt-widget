@@ -117,7 +117,7 @@ export const BestRouteAccordion = ({
                 />
                 <RouteTag
                   loading={loading}
-                  text={`${bestRoute.swaps.reduce((acc, swap) => acc + swap.estimatedTimeInSeconds, 0) || finalTokenEstimate?.estimatedTimeInSeconds}s`}
+                  text={`${bestRoute.swaps.reduce((acc, swap) => acc + swap.estimatedTimeInSeconds, 0) + (finalTokenEstimate?.estimatedTimeInSeconds ?? 0) || finalTokenEstimate?.estimatedTimeInSeconds}s`}
                   icon={TimeIcon}
                   textColor="brand.tertiary.100"
                   bgColor="brand.bg.tag"
@@ -125,12 +125,18 @@ export const BestRouteAccordion = ({
                 <RouteTag
                   loading={loading}
                   text={
-                    bestRoute.swaps[0]?.fee
-                      .reduce((acc, fee) => {
-                        const amount = parseFloat(fee.amount);
-                        const price = fee.price || 0;
-                        return acc + amount * price;
-                      }, 0)
+                    (
+                      bestRoute.swaps.reduce((acc, swap) => {
+                        let feeAmount = 0;
+                        for (const fee of swap.fee) {
+                          const amount = parseFloat(fee.amount);
+                          const price = fee.price || 0;
+                          feeAmount += amount * price;
+                        }
+                        return acc + feeAmount;
+                      }, 0) +
+                      parseFloat(finalTokenEstimate?.estimatedFeeInUSD ?? '0')
+                    )
                       .toFixed(2)
                       .toString() || finalTokenEstimate?.estimatedFeeInUSD + '$'
                   }
