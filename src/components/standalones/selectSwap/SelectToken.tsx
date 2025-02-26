@@ -16,6 +16,7 @@ import { TokenSelectModal } from '../modals/TokenSelectModal';
 import { TokenInputBox } from './token/input/TokenInputBox';
 import { TokenQuoteBox } from './token/quote/TokenQuoteBox';
 import { useSelectToken } from './useSelectToken';
+import { useMemo } from 'react';
 
 type Props = {
   loading: boolean;
@@ -67,6 +68,14 @@ export const SelectToken = ({
     walletConnector,
   });
 
+  const isCrossChain = useMemo(() => {
+    if (!bestRoute?.swapSteps.length) return false;
+    const sourceChain = bestRoute.swapSteps[0].sourceToken.blockchain;
+    return bestRoute.swapSteps.some(
+      (step) => step.destinationToken.blockchain !== sourceChain
+    );
+  }, [bestRoute]);
+
   return (
     <Flex flexDirection="column" gap="16px" {...props}>
       <VStack w="full" gap="6px" alignItems="flex-start">
@@ -79,6 +88,11 @@ export const SelectToken = ({
           readonly={false}
           w="full"
         />
+        {isCrossChain && (
+          <Text color="brand.text.warning" fontSize="14px" ml="12px">
+            This is a cross-chain transaction
+          </Text>
+        )}
         <CrossChainWarningCard />
       </VStack>
 

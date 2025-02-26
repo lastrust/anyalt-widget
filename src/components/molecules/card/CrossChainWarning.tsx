@@ -8,13 +8,16 @@ import { WarningIconOrange } from '../../atoms/icons/transaction/WarningIconOran
 export const CrossChainWarningCard = () => {
   const bestRoute = useAtomValue(bestRouteAtom);
 
-  const hasInternalSwaps = useMemo(() => {
-    return bestRoute?.swapSteps.some(
-      (swap) => swap.internalSwapSteps?.length > 0,
+  const isCrossChain = useMemo(() => {
+    if (!bestRoute?.swapSteps.length) return false;
+    
+    const sourceChain = bestRoute.swapSteps[0].sourceToken.blockchain;
+    return bestRoute.swapSteps.some(
+      (step) => step.destinationToken.blockchain !== sourceChain
     );
   }, [bestRoute]);
 
-  if (!hasInternalSwaps) return null;
+  if (!isCrossChain) return null;
 
   return (
     <Tooltip
