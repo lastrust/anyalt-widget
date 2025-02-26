@@ -10,10 +10,10 @@ export const CrossChainWarningCard = () => {
 
   const isCrossChain = useMemo(() => {
     if (!bestRoute?.swapSteps.length) return false;
-    
+
     const sourceChain = bestRoute.swapSteps[0].sourceToken.blockchain;
     return bestRoute.swapSteps.some(
-      (step) => step.destinationToken.blockchain !== sourceChain
+      (step) => step.destinationToken.blockchain !== sourceChain,
     );
   }, [bestRoute]);
 
