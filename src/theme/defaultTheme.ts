@@ -63,6 +63,7 @@ export const defaultTheme = extendTheme({
       },
       text: {
         primary: '#fff',
+        warning: '#f9e154',
       },
       footer: {
         text: '#fff',

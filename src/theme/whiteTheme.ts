@@ -63,6 +63,7 @@ export const whiteTheme = extendTheme({
       },
       text: {
         primary: '#000000',
+        warning: '#ffcc00',
       },
       footer: {
         text: '#333',
