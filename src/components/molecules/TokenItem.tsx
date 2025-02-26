@@ -50,6 +50,7 @@ export const TokenItem: FC<Props> = ({
           width="32px"
           height="32px"
           borderRadius="50%"
+          loading="lazy"
         />
         <Box
           display="flex"

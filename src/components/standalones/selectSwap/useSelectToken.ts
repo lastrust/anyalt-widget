@@ -1,6 +1,10 @@
+import { useBitcoinWallet } from '@ant-design/web3-bitcoin';
 import { SupportedToken } from '@anyalt/sdk';
+import { useWallet } from '@solana/wallet-adapter-react';
 import { useAtom, useAtomValue } from 'jotai';
 import { useMemo, useState } from 'react';
+import { useAccount } from 'wagmi';
+import { WalletConnector } from '../../..';
 import {
   bestRouteAtom,
   finalTokenEstimateAtom,
@@ -9,9 +13,14 @@ import {
   isTokenBuyTemplateAtom,
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
+  tokenFetchErrorAtom,
 } from '../../../store/stateStore';
 
-export const useSelectToken = () => {
+export const useSelectToken = ({
+  walletConnector,
+}: {
+  walletConnector?: WalletConnector;
+}) => {
   const [openTokenSelect, setOpenTokenSelect] = useState<boolean>(false);
 
   const [, setInToken] = useAtom(inTokenAtom);
@@ -20,6 +29,27 @@ export const useSelectToken = () => {
   const inTokenAmount = useAtomValue(inTokenAmountAtom);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
+
+  const tokenFetchError = useAtomValue(tokenFetchErrorAtom);
+
+  const { publicKey: solanaAddress, connected: isSolanaConnected } =
+    useWallet();
+  const { address: evmAddress, isConnected: isEvmConnected } = useAccount();
+  const { account: bitcoinAccount } = useBitcoinWallet();
+
+  const isConnected = useMemo(() => {
+    return (
+      isEvmConnected ||
+      isSolanaConnected ||
+      walletConnector?.isConnected ||
+      bitcoinAccount
+    );
+  }, [
+    isEvmConnected,
+    isSolanaConnected,
+    walletConnector?.isConnected,
+    bitcoinAccount,
+  ]);
 
   const onTokenSelect = (token: SupportedToken, callback: () => void) => {
     setInToken(token);
@@ -48,16 +78,23 @@ export const useSelectToken = () => {
   const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
 
   return {
-    isTokenBuyTemplate,
+    isConnected,
     inTokenPrice,
+    tokenFetchError,
+    solanaAddress,
+    evmAddress,
+    bitcoinAccount,
+    isEvmConnected,
+    isSolanaConnected,
     outTokenPrice,
     onTokenSelect,
     openTokenSelect,
+    isTokenBuyTemplate,
     setOpenTokenSelect,
     finalTokenEstimate,
     protocolInputToken,
     protocolFinalToken,
-    activeRoute: bestRoute,
+    bestRoute,
     inTokenAmount,
   };
 };

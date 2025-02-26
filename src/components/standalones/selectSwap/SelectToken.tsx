@@ -1,4 +1,3 @@
-import { useBitcoinWallet } from '@ant-design/web3-bitcoin';
 import {
   BoxProps,
   Divider,
@@ -8,13 +7,10 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
-import { useWallet } from '@solana/wallet-adapter-react';
-import { useAtomValue } from 'jotai';
-import { useAccount } from 'wagmi';
 import { WalletConnector } from '../../..';
-import { tokenFetchErrorAtom } from '../../../store/stateStore';
 import { truncateToDecimals } from '../../../utils/truncateToDecimals';
 import { CustomButton } from '../../atoms/buttons/CustomButton';
+import { CrossChainWarningCard } from '../../molecules/card/CrossChainWarning';
 import { SlippageModal } from '../modals/SlippageModal';
 import { TokenSelectModal } from '../modals/TokenSelectModal';
 import { TokenInputBox } from './token/input/TokenInputBox';
@@ -50,40 +46,42 @@ export const SelectToken = ({
   ...props
 }: Props) => {
   const {
+    bestRoute,
+    isConnected,
+    solanaAddress,
+    evmAddress,
     inTokenPrice,
     outTokenPrice,
     onTokenSelect,
+    isEvmConnected,
+    bitcoinAccount,
+    tokenFetchError,
     openTokenSelect,
+    isSolanaConnected,
     isTokenBuyTemplate,
     finalTokenEstimate,
     setOpenTokenSelect,
     protocolInputToken,
     protocolFinalToken,
-    activeRoute,
-  } = useSelectToken();
-
-  const tokenFetchError = useAtomValue(tokenFetchErrorAtom);
-
-  const { publicKey: solanaAddress, connected: isSolanaConnected } =
-    useWallet();
-  const { address: evmAddress, isConnected: isEvmConnected } = useAccount();
-  const { account: bitcoinAccount } = useBitcoinWallet();
-  const isConnected =
-    isEvmConnected ||
-    isSolanaConnected ||
-    walletConnector?.isConnected ||
-    bitcoinAccount;
+  } = useSelectToken({
+    walletConnector,
+  });
 
   return (
     <Flex flexDirection="column" gap="16px" {...props}>
-      <TokenInputBox
-        openTokenSelectModal={() => setOpenTokenSelect(true)}
-        loading={loading}
-        price={inTokenPrice}
-        isValidAmountIn={isValidAmountIn}
-        failedToFetchRoute={failedToFetchRoute}
-        readonly={false}
-      />
+      <VStack w="full" gap="6px" alignItems="flex-start">
+        <TokenInputBox
+          openTokenSelectModal={() => setOpenTokenSelect(true)}
+          loading={loading}
+          price={inTokenPrice}
+          isValidAmountIn={isValidAmountIn}
+          failedToFetchRoute={failedToFetchRoute}
+          readonly={false}
+          w="full"
+        />
+        <CrossChainWarningCard />
+      </VStack>
+
       <VStack gap="12px" w="full" alignItems="flex-start">
         <TokenQuoteBox
           loading={loading}
@@ -94,9 +92,10 @@ export const SelectToken = ({
           tokenLogo={protocolInputToken?.logoUrl ?? ''}
           chainName={protocolInputToken?.chain?.displayName ?? ''}
           chainLogo={protocolInputToken?.chain?.logoUrl ?? ''}
-          amount={truncateToDecimals(activeRoute?.outputAmount ?? '0.00', 4)}
+          amount={truncateToDecimals(bestRoute?.outputAmount ?? '0.00', 4)}
           price={truncateToDecimals(outTokenPrice ?? '0.00', 4)}
         />
+
         {!isTokenBuyTemplate && (
           <>
             <Divider w="100%" h="1px" bgColor="brand.secondary.12" />
