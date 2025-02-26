@@ -69,7 +69,7 @@ export const SelectToken = ({
 
   return (
     <Flex flexDirection="column" gap="16px" {...props}>
-      <VStack w="full" gap="4px" alignItems="flex-start">
+      <VStack w="full" gap="6px" alignItems="flex-start">
         <TokenInputBox
           openTokenSelectModal={() => setOpenTokenSelect(true)}
           loading={loading}
