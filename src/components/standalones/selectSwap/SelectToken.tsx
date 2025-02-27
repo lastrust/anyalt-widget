@@ -2,7 +2,6 @@ import { BoxProps, Divider, Flex, VStack } from '@chakra-ui/react';
 import { WalletConnector } from '../../..';
 import { truncateToDecimals } from '../../../utils/truncateToDecimals';
 import { CustomButton } from '../../atoms/buttons/CustomButton';
-import { CrossChainWarningCard } from '../../molecules/card/CrossChainWarning';
 import { TokenSelectModal } from '../modals/selectTokenModal/SelectTokenModal';
 import { SlippageModal } from '../modals/SlippageModal';
 import { WalletsGroup } from '../walletsGroup/WalletsGroup';
@@ -64,18 +63,15 @@ export const SelectToken = ({
 
   return (
     <Flex flexDirection="column" gap="16px" {...props}>
-      <VStack w="full" gap="6px" alignItems="flex-start">
-        <TokenInputBox
-          openTokenSelectModal={() => setOpenTokenSelect(true)}
-          loading={loading}
-          price={inTokenPrice}
-          isValidAmountIn={isValidAmountIn}
-          failedToFetchRoute={failedToFetchRoute}
-          readonly={false}
-          w="full"
-        />
-        <CrossChainWarningCard loading={loading} />
-      </VStack>
+      <TokenInputBox
+        openTokenSelectModal={() => setOpenTokenSelect(true)}
+        loading={loading}
+        price={inTokenPrice}
+        isValidAmountIn={isValidAmountIn}
+        failedToFetchRoute={failedToFetchRoute}
+        readonly={false}
+        w="full"
+      />
 
       <VStack gap="12px" w="full" alignItems="flex-start">
         <TokenQuoteBox

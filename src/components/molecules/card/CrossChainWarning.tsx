@@ -1,31 +1,8 @@
 import { HStack, Icon, Text, Tooltip } from '@chakra-ui/react';
-import { useAtomValue } from 'jotai';
-import { useMemo } from 'react';
 import { TEXTS } from '../../../constants/text';
-import { bestRouteAtom } from '../../../store/stateStore';
 import { InfoIcon } from '../../atoms/icons/InfoIcon';
 
-type Props = {
-  loading: boolean;
-};
-export const CrossChainWarningCard = ({ loading }: Props) => {
-  const bestRoute = useAtomValue(bestRouteAtom);
-
-  const isCrossChainBridge = useMemo(() => {
-    if (!bestRoute?.swapSteps.length) return false;
-
-    return (
-      bestRoute.swapSteps.some((swap) => swap.swapperType === 'BRIDGE') ||
-      bestRoute.swapSteps.some((swap) =>
-        swap.internalSwapSteps.some(
-          (internalSwap) => internalSwap.swapperType === 'BRIDGE',
-        ),
-      )
-    );
-  }, [bestRoute]);
-
-  if (!isCrossChainBridge || loading) return null;
-
+export const CrossChainWarningCard = () => {
   return (
     <Tooltip
       label={TEXTS.crossChainWarning}
@@ -40,8 +17,6 @@ export const CrossChainWarningCard = ({ loading }: Props) => {
         gap="4px"
         cursor="pointer"
         w="100%"
-        pt={'5px'}
-        pr={'12px'}
         justifyContent={'end'}
       >
         <Icon as={InfoIcon} color="#f9e154" />
