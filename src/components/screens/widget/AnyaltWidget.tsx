@@ -33,22 +33,22 @@ export const AnyaltWidgetWrapper = ({
 }: AnyaltWidgetProps) => {
   const {
     loading,
-    activeRoute,
     activeStep,
-    goToNext,
-    onChooseRouteButtonClick,
+    activeRoute,
+    isValidAmountIn,
+    isButtonDisabled,
+    isConnectWalletsOpen,
+    failedToFetchRoute,
+    areWalletsConnected,
+    onBackClick,
+    onComplete,
+    onTxComplete,
     onConfigClick,
     openSlippageModal,
-    setOpenSlippageModal,
-    isConnectWalletsOpen,
-    connectWalletsClose,
-    failedToFetchRoute,
-    isValidAmountIn,
     connectWalletsOpen,
-    onBackClick,
-    onTxComplete,
-    areWalletsConnected,
-    onComplete,
+    connectWalletsClose,
+    setOpenSlippageModal,
+    onChooseRouteButtonClick,
   } = useAnyaltWidget({
     apiKey,
     inputToken,
@@ -59,12 +59,6 @@ export const AnyaltWidgetWrapper = ({
     isTokenBuyTemplate,
     onClose,
   });
-  const inTokenAmount = useAtomValue(inTokenAmountAtom);
-  const inToken = useAtomValue(inTokenAtom);
-
-  const isButtonDisabled = useMemo(() => {
-    return Number(inTokenAmount ?? 0) == 0 || inToken == null;
-  }, [inTokenAmount, inToken]);
 
   return (
     <ModalWrapper
@@ -76,7 +70,6 @@ export const AnyaltWidgetWrapper = ({
       <Stepper activeStep={activeStep}>
         <SelectTokenStep
           loading={loading}
-          goToNext={goToNext}
           isTokenBuyTemplate={isTokenBuyTemplate}
           isValidAmountIn={isValidAmountIn}
           onConfigClick={onConfigClick}

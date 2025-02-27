@@ -1,18 +1,21 @@
 import { Box, Flex, Icon, Input, Text } from '@chakra-ui/react';
 import { useAtom } from 'jotai';
-import { FC, useRef } from 'react';
+import { useRef } from 'react';
 import { slippageAtom } from '../../../store/stateStore';
 import { CloseIcon } from '../../atoms/icons/modals/CloseIcon';
 import { InfoIcon } from '../../atoms/icons/modals/InfoIcon';
 import { SlippageItem } from '../../molecules/SlippageItem';
 
 type Props = {
+  isOpen: boolean;
   onClose: () => void;
 };
 
-export const SlippageModal: FC<Props> = ({ onClose }) => {
+export const SlippageModal = ({ isOpen, onClose }: Props) => {
   const [slippage, setSlippage] = useAtom(slippageAtom);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  if (!isOpen) return null;
 
   return (
     <Box

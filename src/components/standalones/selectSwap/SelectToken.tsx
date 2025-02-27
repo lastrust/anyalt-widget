@@ -1,18 +1,11 @@
-import {
-  BoxProps,
-  Divider,
-  Flex,
-  HStack,
-  Image,
-  Text,
-  VStack,
-} from '@chakra-ui/react';
+import { BoxProps, Divider, Flex, VStack } from '@chakra-ui/react';
 import { WalletConnector } from '../../..';
 import { truncateToDecimals } from '../../../utils/truncateToDecimals';
 import { CustomButton } from '../../atoms/buttons/CustomButton';
 import { CrossChainWarningCard } from '../../molecules/card/CrossChainWarning';
 import { SlippageModal } from '../modals/SlippageModal';
 import { TokenSelectModal } from '../modals/TokenSelectModal';
+import { WalletsGroup } from '../walletsGroup/WalletsGroup';
 import { TokenInputBox } from './token/input/TokenInputBox';
 import { TokenQuoteBox } from './token/quote/TokenQuoteBox';
 import { useSelectToken } from './useSelectToken';
@@ -53,18 +46,20 @@ export const SelectToken = ({
     inTokenPrice,
     outTokenPrice,
     onTokenSelect,
-    isEvmConnected,
     bitcoinAccount,
     tokenFetchError,
     openTokenSelect,
-    isSolanaConnected,
     isTokenBuyTemplate,
     finalTokenEstimate,
     setOpenTokenSelect,
     protocolInputToken,
     protocolFinalToken,
+    isEvmWalletConnected,
+    isSolanaWalletConnected,
+    isBitcoinWalletConnected,
   } = useSelectToken({
     walletConnector,
+    showConnectedWallets,
   });
 
   return (
@@ -130,98 +125,31 @@ export const SelectToken = ({
       >
         {buttonText}
       </CustomButton>
-      {showConnectedWallets && (
-        <HStack alignItems={'center'}>
-          {isConnected && (
-            <Text color="brand.tertiary.100" textStyle={'regular.2'}>
-              Connected:
-            </Text>
-          )}
-          <VStack gap={'8px'} alignItems={'flex-start'}>
-            {showConnectedWallets &&
-              (isEvmConnected || walletConnector?.isConnected) && (
-                <HStack>
-                  <Image
-                    src={'https://www.anyalt.finance/widget/eth.png'}
-                    w={'16px'}
-                    h={'16px'}
-                    alt="EVM"
-                  />
-                  <Text
-                    cursor={'pointer'}
-                    textStyle={'regular.3'}
-                    color="brand.secondary.3"
-                    noOfLines={1}
-                    maxW={'300px'}
-                    onClick={
-                      walletConnector?.isConnected
-                        ? () => walletConnector.disconnect()
-                        : connectWalletsOpen
-                    }
-                  >
-                    {evmAddress || walletConnector?.address}
-                  </Text>
-                </HStack>
-              )}
-            {showConnectedWallets && isSolanaConnected && (
-              <HStack>
-                <Image
-                  src={'https://www.anyalt.finance/widget/solana.png'}
-                  w={'16px'}
-                  h={'16px'}
-                  alt="SOL"
-                />
-                <Text
-                  cursor={'pointer'}
-                  textStyle={'regular.3'}
-                  color="brand.secondary.3"
-                  onClick={connectWalletsOpen}
-                  noOfLines={1}
-                  maxW={'300px'}
-                >
-                  {solanaAddress?.toBase58()}
-                </Text>
-              </HStack>
-            )}
-            {showConnectedWallets && bitcoinAccount && (
-              <HStack>
-                <Image
-                  src={
-                    'https://s2.coinmarketcap.com/static/img/coins/64x64/1.png'
-                  }
-                  w={'16px'}
-                  h={'16px'}
-                  alt="BTC"
-                />
-                <Text
-                  cursor={'pointer'}
-                  textStyle={'regular.3'}
-                  color="brand.secondary.3"
-                  noOfLines={1}
-                  maxW={'300px'}
-                  onClick={connectWalletsOpen}
-                >
-                  {bitcoinAccount.address}
-                </Text>
-              </HStack>
-            )}
-          </VStack>
-        </HStack>
-      )}
-
-      {openTokenSelect && (
-        <TokenSelectModal
-          onClose={() => setOpenTokenSelect(false)}
-          onTokenSelect={(token) =>
-            onTokenSelect(token, () => {
-              setOpenTokenSelect(false);
-            })
-          }
-        />
-      )}
-      {openSlippageModal && (
-        <SlippageModal onClose={() => setOpenSlippageModal(false)} />
-      )}
+      <WalletsGroup
+        evmAddress={evmAddress}
+        isConnected={isConnected}
+        walletConnector={walletConnector}
+        solanaAddress={solanaAddress?.toBase58()}
+        bitcoinAccount={bitcoinAccount?.address}
+        connectWalletsOpen={connectWalletsOpen}
+        showConnectedWallets={showConnectedWallets}
+        isEvmWalletConnected={isEvmWalletConnected}
+        isSolanaWalletConnected={isSolanaWalletConnected}
+        isBitcoinWalletConnected={isBitcoinWalletConnected}
+      />
+      <TokenSelectModal
+        isOpen={openTokenSelect}
+        onClose={() => setOpenTokenSelect(false)}
+        onTokenSelect={(token) =>
+          onTokenSelect(token, () => {
+            setOpenTokenSelect(false);
+          })
+        }
+      />
+      <SlippageModal
+        isOpen={openSlippageModal}
+        onClose={() => setOpenSlippageModal(false)}
+      />
     </Flex>
   );
 };

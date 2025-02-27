@@ -1,6 +1,5 @@
 import { SupportedToken } from '@anyalt/sdk';
 import { Box, Icon, Image, Input, Text } from '@chakra-ui/react';
-import { FC } from 'react';
 
 import { CloseIcon } from '../../atoms/icons/modals/CloseIcon';
 import { SearchIcon } from '../../atoms/icons/selectToken/SearchIcon';
@@ -9,23 +8,26 @@ import { TokenItem } from '../../molecules/TokenItem';
 import { useTokenSelectModal } from './useTokenSelectModal';
 
 type Props = {
+  isOpen: boolean;
   onClose: () => void;
   onTokenSelect: (token: SupportedToken) => void;
 };
 
-export const TokenSelectModal: FC<Props> = ({ onClose, onTokenSelect }) => {
+export const TokenSelectModal = ({ isOpen, onClose, onTokenSelect }: Props) => {
   const {
-    showAccept,
-    setShowAccept,
-    isValidAddress,
-    setSearchInputValue,
-    customToken,
     chains,
     allTokens,
+    showAccept,
+    customToken,
     activeChain,
+    setShowAccept,
     setActiveChain,
+    isValidAddress,
     searchInputValue,
+    setSearchInputValue,
   } = useTokenSelectModal();
+
+  if (!isOpen) return null;
 
   return (
     <Box

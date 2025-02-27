@@ -18,8 +18,10 @@ import {
 
 export const useSelectToken = ({
   walletConnector,
+  showConnectedWallets,
 }: {
   walletConnector?: WalletConnector;
+  showConnectedWallets: boolean;
 }) => {
   const [openTokenSelect, setOpenTokenSelect] = useState<boolean>(false);
 
@@ -38,11 +40,11 @@ export const useSelectToken = ({
   const { account: bitcoinAccount } = useBitcoinWallet();
 
   const isConnected = useMemo(() => {
-    return (
+    return Boolean(
       isEvmConnected ||
-      isSolanaConnected ||
-      walletConnector?.isConnected ||
-      bitcoinAccount
+        isSolanaConnected ||
+        walletConnector?.isConnected ||
+        bitcoinAccount,
     );
   }, [
     isEvmConnected,
@@ -77,15 +79,31 @@ export const useSelectToken = ({
 
   const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
 
+  const isEvmWalletConnected = useMemo(() => {
+    return (
+      showConnectedWallets &&
+      Boolean(isEvmConnected || walletConnector?.isConnected)
+    );
+  }, [isEvmConnected, walletConnector?.isConnected, showConnectedWallets]);
+
+  const isSolanaWalletConnected = useMemo(() => {
+    return showConnectedWallets && isSolanaConnected;
+  }, [isSolanaConnected, showConnectedWallets]);
+
+  const isBitcoinWalletConnected = useMemo(() => {
+    return showConnectedWallets && Boolean(bitcoinAccount);
+  }, [bitcoinAccount, showConnectedWallets]);
+
   return {
     isConnected,
     inTokenPrice,
     tokenFetchError,
+    isEvmWalletConnected,
+    isSolanaWalletConnected,
+    isBitcoinWalletConnected,
     solanaAddress,
     evmAddress,
     bitcoinAccount,
-    isEvmConnected,
-    isSolanaConnected,
     outTokenPrice,
     onTokenSelect,
     openTokenSelect,
