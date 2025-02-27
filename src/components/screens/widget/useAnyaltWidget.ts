@@ -99,6 +99,13 @@ export const useAnyaltWidget = ({
     onGetQuote(false);
   }, [inToken, slippage, balance]);
 
+  const isButtonDisabled = useMemo(() => {
+    if (activeStep === 0) {
+      return Number(inTokenAmount ?? 0) == 0 || inToken == null || !bestRoute;
+    }
+    return Number(inTokenAmount ?? 0) == 0 || inToken == null;
+  }, [inTokenAmount, inToken, bestRoute, activeStep]);
+
   // const resetState = useCallback(() => {
   //   setInTokenAmount('');
   //   setActiveOperationId(undefined);
@@ -554,11 +561,10 @@ export const useAnyaltWidget = ({
 
   return {
     loading,
+    isButtonDisabled,
     activeRoute: bestRoute,
     activeStep,
     onGetQuote,
-    goToNext,
-    goToPrevious,
     onChooseRouteButtonClick,
     onConfigClick,
     openSlippageModal,

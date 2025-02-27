@@ -93,6 +93,8 @@ export const RouteStep = ({
                   alt={`${fromToken.icon} Icon`}
                   w={'16px'}
                   h={'16px'}
+                  minW={'16px'}
+                  minH={'16px'}
                   borderRadius={'50%'}
                   border="1px solid white"
                 />

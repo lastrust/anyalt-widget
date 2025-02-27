@@ -1,5 +1,4 @@
-import { Box, Center, Divider, Text, VStack } from '@chakra-ui/react';
-import { useAtomValue } from 'jotai';
+import { Box, Center, Divider, HStack, Text, VStack } from '@chakra-ui/react';
 import { FC } from 'react';
 import {
   EstimateResponse,
@@ -7,15 +6,10 @@ import {
   Token,
   WalletConnector,
 } from '../../../..';
-import {
-  finalTokenEstimateAtom,
-  inTokenAmountAtom,
-  protocolFinalTokenAtom,
-  protocolInputTokenAtom,
-} from '../../../../store/stateStore';
 import { truncateToDecimals } from '../../../../utils/truncateToDecimals';
 import { CustomButton } from '../../../atoms/buttons/CustomButton';
 import { ChevronDownIcon } from '../../../atoms/icons/transaction/ChevronDownIcon';
+import { CrossChainWarningCard } from '../../../molecules/card/CrossChainWarning';
 import { TransactionInfoCard } from '../../../molecules/card/TransactionInfoCard';
 import { TokenQuoteBox } from '../../selectSwap/token/quote/TokenQuoteBox';
 import { ProgressList } from '../ProgressList';
@@ -39,9 +33,14 @@ export const TransactionInfo: FC<Props> = ({
     runTx,
     isLoading,
     bestRoute,
+    headerText,
     currentStep,
     estimatedTime,
+    inTokenAmount,
+    protocolInputToken,
+    protocolFinalToken,
     recentTransaction,
+    finalTokenEstimate,
     transactionsProgress,
   } = useTransactionInfo({
     externalEvmWalletConnector,
@@ -49,10 +48,6 @@ export const TransactionInfo: FC<Props> = ({
     executeCallBack,
     estimateCallback,
   });
-  const protocolInputToken = useAtomValue(protocolInputTokenAtom);
-  const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
-  const inTokenAmount = useAtomValue(inTokenAmountAtom);
-  const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
 
   return (
     <VStack
@@ -65,13 +60,17 @@ export const TransactionInfo: FC<Props> = ({
       <VStack w={'100%'} gap={'16px'}>
         <Box w={'100%'}>
           <VStack alignItems="flex-start" spacing="16px" w={'100%'}>
-            <Text textStyle={'regular.1'} color="brand.secondary.3">
-              {bestRoute?.swapSteps?.length
-                ? bestRoute?.swapSteps?.length >= currentStep
-                  ? `${bestRoute.swapSteps[currentStep - 1].swapperType === 'BRIDGE' ? 'Bridge' : 'Swap'} tokens using ${bestRoute.swapSteps[currentStep - 1].swapperName}`
-                  : `Depositing tokens to ${recentTransaction?.to.tokenName}`
-                : 'Last mile transaction'}
-            </Text>
+            <HStack justifyContent={'space-between'} w={'100%'}>
+              <Text
+                textStyle={'regular.1'}
+                color="brand.secondary.3"
+                w={'100%'}
+                whiteSpace={'nowrap'}
+              >
+                {headerText}
+              </Text>
+              <CrossChainWarningCard />
+            </HStack>
             <ProgressList
               transactionsProgress={transactionsProgress}
               index={currentStep - 1}

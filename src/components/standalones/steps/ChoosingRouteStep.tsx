@@ -52,6 +52,7 @@ export const ChoosingRouteStep = ({
         />
       </SwappingTemplate>
       <SwappingTemplate
+        withDisclaimer
         title={'Routes'}
         subtitle={
           failedToFetchRoute

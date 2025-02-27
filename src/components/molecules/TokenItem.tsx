@@ -29,18 +29,20 @@ export const TokenItem: FC<Props> = ({
   return (
     <>
       <Box
+        py="8px"
+        gap="16px"
         display="flex"
         flexDir="row"
         alignItems="center"
-        py="8px"
-        gap="16px"
+        cursor="pointer"
+        borderRadius={'8px'}
         _last={{
           borderBottom: 'none',
         }}
-        cursor="pointer"
         _hover={{
           bgColor: 'brand.secondary.4',
         }}
+        px="8px"
         onClick={onClick}
         {...props}
       >

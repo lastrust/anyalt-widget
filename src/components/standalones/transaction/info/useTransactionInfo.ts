@@ -11,6 +11,9 @@ import {
   anyaltInstanceAtom,
   bestRouteAtom,
   finalTokenEstimateAtom,
+  inTokenAmountAtom,
+  protocolFinalTokenAtom,
+  protocolInputTokenAtom,
   slippageAtom,
   transactionIndexAtom,
   transactionsListAtom,
@@ -39,8 +42,34 @@ export const useTransactionInfo = ({
   const transactionsList = useAtomValue(transactionsListAtom);
   const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
   const transactionsProgress = useAtomValue(transactionsProgressAtom);
+  const inTokenAmount = useAtomValue(inTokenAmountAtom);
+  const protocolInputToken = useAtomValue(protocolInputTokenAtom);
+  const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
 
   const { executeSwap } = useHandleSwap(externalEvmWalletConnector);
+
+  const isBridgeSwap = useMemo(() => {
+    return bestRoute?.swapSteps[currentStep - 1].swapperType === 'BRIDGE';
+  }, [bestRoute, currentStep]);
+
+  const headerText = useMemo(() => {
+    const isSwaps = bestRoute?.swapSteps?.length;
+
+    const swapperType = isBridgeSwap ? 'Bridge' : 'Swap';
+    const swapperName = bestRoute?.swapSteps[currentStep - 1].swapperName;
+    const depositToken =
+      transactionsList?.steps?.[currentStep - 1]?.to.tokenName;
+
+    const swappingText =
+      isSwaps && isSwaps >= currentStep
+        ? `${swapperType} tokens using ${swapperName}`
+        : `Depositing tokens to ${depositToken}`;
+    const lastMileText = 'Last mile transaction';
+
+    const text = isSwaps ? swappingText : lastMileText;
+
+    return text;
+  }, [bestRoute, currentStep, transactionsList]);
 
   const runTx = async () => {
     if (!anyaltInstance || !activeOperationId) return;
@@ -64,15 +93,19 @@ export const useTransactionInfo = ({
 
   const estimatedTime = useMemo(() => {
     if (!bestRoute) return 0;
+
     if (currentStep > bestRoute.swapSteps.length)
       return finalTokenEstimate?.estimatedTimeInSeconds || 0;
+
     return bestRoute.swapSteps[currentStep - 1]?.estimatedTimeInSeconds || 0;
   }, [bestRoute, currentStep, finalTokenEstimate]);
 
   const fees = useMemo(() => {
     if (!bestRoute) return '0';
+
     if (currentStep > bestRoute.swapSteps.length)
       return finalTokenEstimate?.estimatedFeeInUSD || '0';
+
     return (
       bestRoute.swapSteps[currentStep - 1]?.fees
         .reduce((acc, fee) => {
@@ -91,9 +124,15 @@ export const useTransactionInfo = ({
     isLoading,
     bestRoute,
     currentStep,
+    isBridgeSwap,
+    inTokenAmount,
     estimatedTime,
     transactionsList,
+    finalTokenEstimate,
+    protocolInputToken,
+    protocolFinalToken,
     transactionsProgress,
+    headerText,
     recentTransaction: transactionsList?.steps?.[currentStep - 1],
   };
 };

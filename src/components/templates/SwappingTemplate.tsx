@@ -10,11 +10,13 @@ import {
 } from '@chakra-ui/react';
 import { ConfigIcon } from '../atoms/icons/selectToken/ConfigIcon';
 import { SelectTokenIcon } from '../atoms/icons/selectToken/SelectTokenIcon';
+import { CrossChainWarningCard } from '../molecules/card/CrossChainWarning';
 
 type Props = {
   title?: string;
-  secondTitle?: string;
   subtitle?: string;
+  secondTitle?: string;
+  withDisclaimer?: boolean;
   secondSubtitle?: string;
   onConfigClick?: () => void;
   onBackClick?: () => void;
@@ -23,12 +25,13 @@ type Props = {
 
 export const SwappingTemplate = ({
   title,
+  children,
   subtitle,
   secondTitle,
   secondSubtitle,
   onConfigClick,
   onBackClick,
-  children,
+  withDisclaimer = false,
   ...props
 }: Props) => {
   return (
@@ -49,8 +52,8 @@ export const SwappingTemplate = ({
           gap="16px"
           w={'100%'}
         >
-          <Flex justifyContent="space-between" alignItems="center">
-            <VStack alignItems="left">
+          <Flex justifyContent="space-between" alignItems="center" w={'100%'}>
+            <VStack alignItems="left" w={'100%'}>
               <HStack>
                 {onBackClick && (
                   <Box
@@ -70,13 +73,17 @@ export const SwappingTemplate = ({
                 </Text>
               </HStack>
               {subtitle && (
-                <Text
-                  fontSize={'14px'}
-                  fontWeight={'normal'}
-                  color="brand.secondary.2"
-                >
-                  {subtitle}
-                </Text>
+                <HStack w={'100%'} justifyContent={'space-between'}>
+                  <Text
+                    fontSize={'14px'}
+                    fontWeight={'normal'}
+                    color="brand.secondary.2"
+                    whiteSpace={'nowrap'}
+                  >
+                    {subtitle}
+                  </Text>
+                  {withDisclaimer && <CrossChainWarningCard />}
+                </HStack>
               )}
             </VStack>
             {onConfigClick && (

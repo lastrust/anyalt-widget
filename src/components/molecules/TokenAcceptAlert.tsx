@@ -6,7 +6,7 @@ type Props = BoxProps & {
   onClick: () => void;
 };
 
-export const TokenAccept: FC<Props> = ({ onClick, ...props }) => {
+export const TokenAcceptAlert: FC<Props> = ({ onClick, ...props }) => {
   return (
     <Box
       borderRadius="8px"
