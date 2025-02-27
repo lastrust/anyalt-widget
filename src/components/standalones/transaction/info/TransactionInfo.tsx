@@ -35,7 +35,6 @@ export const TransactionInfo: FC<Props> = ({
     bestRoute,
     headerText,
     currentStep,
-    isBridgeSwap,
     estimatedTime,
     inTokenAmount,
     protocolInputToken,
