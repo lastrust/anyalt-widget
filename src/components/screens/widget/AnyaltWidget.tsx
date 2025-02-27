@@ -1,7 +1,4 @@
-import { useAtomValue } from 'jotai';
-import { useMemo } from 'react';
 import { AnyaltWidgetProps } from '../../..';
-import { inTokenAmountAtom, inTokenAtom } from '../../../store/stateStore';
 import { Footer } from '../../molecules/footer/Footer';
 import { Header } from '../../molecules/header/Header';
 import { ConnectWalletsModal } from '../../standalones/modals/ConnectWalletsModal';
