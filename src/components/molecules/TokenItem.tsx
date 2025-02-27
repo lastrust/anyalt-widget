@@ -35,12 +35,14 @@ export const TokenItem: FC<Props> = ({
         flexDir="row"
         alignItems="center"
         cursor="pointer"
+        borderRadius={'8px'}
         _last={{
           borderBottom: 'none',
         }}
         _hover={{
           bgColor: 'brand.secondary.4',
         }}
+        px="8px"
         onClick={onClick}
         {...props}
       >
