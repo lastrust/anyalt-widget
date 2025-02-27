@@ -187,12 +187,7 @@ export const BestRouteAccordion = ({
               color="brand.secondary.3"
             >
               {loading ? (
-                <Skeleton
-                  w={'180px'}
-                  h={'18px'}
-                  ml="24px"
-                  borderRadius="12px"
-                />
+                <Skeleton w={'180px'} h={'18px'} borderRadius="12px" />
               ) : (
                 bestRoute.swapSteps.map((swapStep, index) => {
                   return (
@@ -241,12 +236,7 @@ export const BestRouteAccordion = ({
               {!isTokenBuyTemplate && (
                 <>
                   {loading ? (
-                    <Skeleton
-                      w={'180px'}
-                      h={'18px'}
-                      ml="24px"
-                      borderRadius="12px"
-                    />
+                    <Skeleton w={'180px'} h={'18px'} borderRadius="12px" />
                   ) : (
                     <Text textStyle={'bold.2'} lineHeight={'120%'}>
                       Transaction {(bestRoute.swapSteps?.length ?? 0) + 1}:

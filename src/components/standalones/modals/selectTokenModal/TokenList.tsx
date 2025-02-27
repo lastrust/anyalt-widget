@@ -24,10 +24,10 @@ export const TokenList = ({
 }: Props) => {
   if (isLoading) {
     return (
-      <VStack w="100%" spacing={'16px'}>
-        <Skeleton height="64px" w="100%" borderRadius="8px" />
-        <Skeleton height="64px" w="100%" borderRadius="8px" />
-        <Skeleton height="64px" w="100%" borderRadius="8px" />
+      <VStack w="100%" spacing={'28px'}>
+        <Skeleton height="53px" w="100%" borderRadius="8px" />
+        <Skeleton height="53px" w="100%" borderRadius="8px" />
+        <Skeleton height="53px" w="100%" borderRadius="8px" />
       </VStack>
     );
   }

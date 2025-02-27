@@ -3,21 +3,28 @@ import { useAtomValue } from 'jotai';
 import { useMemo } from 'react';
 import { TEXTS } from '../../../constants/text';
 import { bestRouteAtom } from '../../../store/stateStore';
-import { WarningIconOrange } from '../../atoms/icons/transaction/WarningIconOrange';
+import { InfoIcon } from '../../atoms/icons/InfoIcon';
 
-export const CrossChainWarningCard = () => {
+type Props = {
+  loading: boolean;
+};
+export const CrossChainWarningCard = ({ loading }: Props) => {
   const bestRoute = useAtomValue(bestRouteAtom);
 
-  const isCrossChain = useMemo(() => {
+  const isCrossChainBridge = useMemo(() => {
     if (!bestRoute?.swapSteps.length) return false;
 
-    const sourceChain = bestRoute.swapSteps[0].sourceToken.blockchain;
-    return bestRoute.swapSteps.some(
-      (step) => step.destinationToken.blockchain !== sourceChain,
+    return (
+      bestRoute.swapSteps.some((swap) => swap.swapperType === 'BRIDGE') ||
+      bestRoute.swapSteps.some((swap) =>
+        swap.internalSwapSteps.some(
+          (internalSwap) => internalSwap.swapperType === 'BRIDGE',
+        ),
+      )
     );
   }, [bestRoute]);
 
-  if (!isCrossChain) return null;
+  if (!isCrossChainBridge || loading) return null;
 
   return (
     <Tooltip
@@ -28,8 +35,16 @@ export const CrossChainWarningCard = () => {
       bgColor="black"
       cursor={'pointer'}
     >
-      <HStack alignItems="center" gap="4px" ml={'12px'} cursor="pointer">
-        <Icon as={WarningIconOrange} color="#f9e154" />
+      <HStack
+        alignItems="center"
+        gap="4px"
+        cursor="pointer"
+        w="100%"
+        pt={'5px'}
+        pr={'12px'}
+        justifyContent={'end'}
+      >
+        <Icon as={InfoIcon} color="#f9e154" />
         <Text color="brand.text.warning" textStyle={'regular.3'}>
           Disclaimer
         </Text>

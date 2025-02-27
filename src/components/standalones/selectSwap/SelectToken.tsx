@@ -74,7 +74,7 @@ export const SelectToken = ({
           readonly={false}
           w="full"
         />
-        <CrossChainWarningCard />
+        <CrossChainWarningCard loading={loading} />
       </VStack>
 
       <VStack gap="12px" w="full" alignItems="flex-start">
