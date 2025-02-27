@@ -1,10 +1,19 @@
 import { SupportedToken } from '@anyalt/sdk';
-import { Box, Icon, Image, Input, Text } from '@chakra-ui/react';
+import {
+  Box,
+  FormControl,
+  FormLabel,
+  Icon,
+  Image,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Text,
+} from '@chakra-ui/react';
 
-import { CloseIcon } from '../../atoms/icons/modals/CloseIcon';
-import { SearchIcon } from '../../atoms/icons/selectToken/SearchIcon';
-import { TokenAccept } from '../../molecules/TokenAccept';
-import { TokenItem } from '../../molecules/TokenItem';
+import { CloseIcon } from '../../../atoms/icons/modals/CloseIcon';
+import { SearchIcon } from '../../../atoms/icons/selectToken/SearchIcon';
+import { TokenList } from './TokenList';
 import { useTokenSelectModal } from './useTokenSelectModal';
 
 type Props = {
@@ -16,6 +25,7 @@ type Props = {
 export const TokenSelectModal = ({ isOpen, onClose, onTokenSelect }: Props) => {
   const {
     chains,
+    isLoading,
     allTokens,
     showAccept,
     customToken,
@@ -123,17 +133,12 @@ export const TokenSelectModal = ({ isOpen, onClose, onTokenSelect }: Props) => {
             ))}
           </Box>
         </Box>
-        <Box overflow="auto">
-          <Text fontSize="20px" fontWeight="bold" mb="16px">
+
+        <FormControl>
+          <FormLabel fontSize="20px" fontWeight="bold" mb="16px">
             Select A Token Or Paste A Contract Address
-          </Text>
-          <Box
-            display="flex"
-            flexDir="row"
-            alignItems="center"
-            h="38px"
-            gap="8px"
-            padding="9px 8px"
+          </FormLabel>
+          <InputGroup
             borderRadius="32px"
             border="1px solid"
             borderColor="brand.secondary.12"
@@ -141,61 +146,37 @@ export const TokenSelectModal = ({ isOpen, onClose, onTokenSelect }: Props) => {
             opacity="0.4"
             mb="16px"
           >
-            <SearchIcon />
+            <InputLeftElement pointerEvents="none">
+              <SearchIcon />
+            </InputLeftElement>
             <Input
+              border="none"
+              outline="none"
+              fontSize="16px"
+              lineHeight="120%"
+              bgColor="transparent"
               value={searchInputValue}
+              color="brand.text.primary"
+              focusBorderColor="transparent"
               onChange={(e) => setSearchInputValue(e.target.value)}
               placeholder="Type a token or enter the contract address"
-              outline="none"
-              border="none"
-              bgColor="transparent"
-              color="brand.text.primary"
-              fontSize="16px"
-              fontWeight="regular"
-              lineHeight="120%"
-              focusBorderColor="transparent"
-              padding="0"
               _placeholder={{
                 color: 'brand.text.primary',
               }}
             />
-          </Box>
+          </InputGroup>
           <Box overflow="auto" maxH="210px" scrollBehavior="smooth">
-            {isValidAddress && customToken ? (
-              <>
-                {showAccept ? (
-                  <TokenAccept
-                    onClick={() => {
-                      setShowAccept(false);
-                      onTokenSelect(customToken);
-                    }}
-                  />
-                ) : (
-                  <TokenItem
-                    tokenSymbol={customToken.symbol}
-                    tokenIcon={customToken.logoUrl}
-                    tokenAddress={customToken.tokenAddress ?? ''}
-                    onClick={() => {
-                      setShowAccept(true);
-                    }}
-                  />
-                )}
-              </>
-            ) : (
-              allTokens.map((token) => (
-                <TokenItem
-                  key={token.id}
-                  tokenSymbol={token.symbol}
-                  tokenIcon={token.logoUrl}
-                  tokenAddress={token.tokenAddress ?? ''}
-                  onClick={() => {
-                    onTokenSelect(token);
-                  }}
-                />
-              ))
-            )}
+            <TokenList
+              isValidAddress={isValidAddress}
+              customToken={customToken}
+              showAccept={showAccept}
+              allTokens={allTokens}
+              setShowAccept={setShowAccept}
+              onTokenSelect={onTokenSelect}
+              isLoading={isLoading}
+            />
           </Box>
-        </Box>
+        </FormControl>
       </Box>
     </Box>
   );
