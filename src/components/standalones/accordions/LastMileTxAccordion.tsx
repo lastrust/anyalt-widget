@@ -21,7 +21,6 @@ import { TransactionStep } from '../../molecules/steps/TransactionStep';
 import { TransactionHash } from '../../molecules/text/TransactionHash';
 
 type Props = {
-  onLastMileClick: () => void;
   isLastMileExpanded: boolean;
   bestRoute: BestRouteResponse;
   currentStep: number;
@@ -32,7 +31,6 @@ type Props = {
 };
 
 export const LastMileTxAccordion = ({
-  onLastMileClick,
   isLastMileExpanded,
   bestRoute,
   currentStep,
@@ -51,7 +49,6 @@ export const LastMileTxAccordion = ({
       borderRadius={'10px'}
       p={'16px'}
       cursor={'pointer'}
-      onClick={onLastMileClick}
       bg={isLastMileExpanded ? 'brand.secondary.12' : 'transparent'}
       _hover={{
         bgColor: 'bg.secondary.1',
@@ -101,7 +98,7 @@ export const LastMileTxAccordion = ({
                 bestRoute.swapSteps.length === 0
                   ? inTokenAmount || '0'
                   : bestRoute.swapSteps[bestRoute.swapSteps.length - 1]
-                      ?.amount || '0',
+                      ?.payout || '0',
                 3,
               ),
               tokenLogo: protocolInputToken?.logoUrl || '',

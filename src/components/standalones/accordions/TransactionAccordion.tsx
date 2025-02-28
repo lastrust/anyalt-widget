@@ -237,11 +237,7 @@ export const TransactionAccordion = () => {
           protocolInputToken={protocolInputToken}
           finalTokenEstimate={finalTokenEstimate}
           transactionsProgress={transactionsProgress}
-          onLastMileClick={() => {
-            if (currentStep > 0) {
-              setExpandedIndexes([currentStep - 1]);
-            }
-          }}
+          
         />
       )}
     </Accordion>
