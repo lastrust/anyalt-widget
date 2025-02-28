@@ -237,7 +237,6 @@ export const TransactionAccordion = () => {
           protocolInputToken={protocolInputToken}
           finalTokenEstimate={finalTokenEstimate}
           transactionsProgress={transactionsProgress}
-          
         />
       )}
     </Accordion>
