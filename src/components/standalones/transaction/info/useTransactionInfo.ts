@@ -49,16 +49,16 @@ export const useTransactionInfo = ({
   const { executeSwap } = useHandleSwap(externalEvmWalletConnector);
 
   const isBridgeSwap = useMemo(() => {
-    return bestRoute?.swapSteps[currentStep - 1].swapperType === 'BRIDGE';
+    return bestRoute?.swapSteps[currentStep - 1]?.swapperType === 'BRIDGE';
   }, [bestRoute, currentStep]);
 
   const headerText = useMemo(() => {
     const isSwaps = bestRoute?.swapSteps?.length;
 
     const swapperType = isBridgeSwap ? 'Bridge' : 'Swap';
-    const swapperName = bestRoute?.swapSteps[currentStep - 1].swapperName;
+    const swapperName = bestRoute?.swapSteps[currentStep - 1]?.swapperName;
     const depositToken =
-      transactionsList?.steps?.[currentStep - 1]?.to.tokenName;
+      transactionsList?.steps?.[currentStep - 1]?.to?.tokenName;
 
     const swappingText =
       isSwaps && isSwaps >= currentStep

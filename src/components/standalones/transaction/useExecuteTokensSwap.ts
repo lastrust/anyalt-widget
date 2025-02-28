@@ -19,12 +19,8 @@ import {
   swapDataAtom,
   transactionIndexAtom,
   transactionsListAtom,
-  transactionsProgressAtom,
 } from '../../../store/stateStore';
-import {
-  TransactionProgress,
-  TransactionsProgress,
-} from '../../../types/transaction';
+import { TransactionProgress } from '../../../types/transaction';
 import { mapBlockchainToChainType } from '../../../utils/chains';
 import { getTransactionData } from '../../../utils/getTransactionData';
 import { handleSignerAddress } from '../../../utils/handleSignerAddress';
@@ -33,6 +29,7 @@ import { useHandleTransaction } from './handlers/useHandleTransaction';
 
 export const useExecuteTokensSwap = (
   increaseTransactionIndex: () => void,
+  updateTransactionProgress: (progress: TransactionProgress) => void,
   externalEvmWalletConnector?: WalletConnector,
 ) => {
   const transactionIndex = useAtomValue(transactionIndexAtom);
@@ -43,7 +40,6 @@ export const useExecuteTokensSwap = (
   const { publicKey: solanaAddress, connected: isSolanaConnected } =
     useWallet();
   const { account: bitcoinAccount } = useBitcoinWallet();
-  const [, setTransactionsProgress] = useAtom(transactionsProgressAtom);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const [, setFinalTokenEstimate] = useAtom(finalTokenEstimateAtom);
   const [transactionsList, setTransactionsList] = useAtom(transactionsListAtom);
@@ -51,21 +47,6 @@ export const useExecuteTokensSwap = (
   const { handleTransaction } = useHandleTransaction({
     externalEvmWalletConnector,
   });
-
-  const updateTransactionProgress = (progress: TransactionProgress) => {
-    setTransactionsProgress((prev) => {
-      const newProgress: TransactionsProgress = prev || {};
-      const index = progress.details.currentStep - 1;
-      const txType = progress.isApproval ? 'approve' : 'swap';
-
-      newProgress[index] = {
-        ...newProgress[index],
-        [txType]: progress,
-      };
-
-      return { ...newProgress };
-    });
-  };
 
   const executeTokensSwap = async (
     aaInstance: AnyAlt,
@@ -77,6 +58,7 @@ export const useExecuteTokensSwap = (
       isCrosschainSwapError: boolean;
       crosschainSwapOutputAmount: string;
       totalSteps: number;
+      currentStep: number;
     }>,
     estimateCallback: (token: Token) => Promise<EstimateResponse>,
   ) => {
@@ -211,19 +193,6 @@ export const useExecuteTokensSwap = (
               ChainType.EVM,
           });
           updateTransactionsList(crosschainSwapOutputAmount, res);
-          setFinalTokenEstimate(res);
-          setSwapData((prev) => {
-            const newData = {
-              ...prev,
-              swapIsFinished: waitForTxResponse.swapIsFinished,
-              crosschainSwapOutputAmount: crosschainSwapOutputAmount,
-              totalSteps,
-              currentStep: transactionIndex,
-            };
-            swapDataRef.current = newData;
-            return newData;
-          });
-
           updateTransactionProgress({
             isApproval,
             status: TX_STATUS.confirmed,
@@ -236,6 +205,18 @@ export const useExecuteTokensSwap = (
               stepDescription: STEP_DESCR.complete,
             },
           });
+          setFinalTokenEstimate(res);
+          setSwapData((prev) => {
+            const newData = {
+              ...prev,
+              swapIsFinished: waitForTxResponse.swapIsFinished,
+              crosschainSwapOutputAmount: crosschainSwapOutputAmount,
+              totalSteps,
+            };
+            swapDataRef.current = newData;
+            return newData;
+          });
+          increaseTransactionIndex();
           break;
         }
 
