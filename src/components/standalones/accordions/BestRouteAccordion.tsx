@@ -11,6 +11,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { useAtom, useAtomValue } from 'jotai';
+import { useMemo } from 'react';
 import {
   bestRouteAtom,
   finalTokenEstimateAtom,
@@ -50,6 +51,26 @@ export const BestRouteAccordion = ({
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const [, setSelectedRoute] = useAtom(selectedRouteAtom);
   const inTokenAmount = useAtomValue(inTokenAmountAtom);
+
+  const fees = useMemo(() => {
+    if (!bestRoute) return '0.00';
+
+    return `$${
+      (
+        bestRoute?.swapSteps
+          ?.flatMap((step) => step.fees)
+          ?.reduce((acc, fee) => {
+            const amount = parseFloat(fee.amount);
+            const price = fee.price || 0;
+            return acc + amount * price;
+          }, 0) + parseFloat(finalTokenEstimate?.estimatedFeeInUSD ?? '0')
+      )
+        .toFixed(2)
+        .toString() ||
+      finalTokenEstimate?.estimatedFeeInUSD ||
+      '0.00'
+    }`;
+  }, [bestRoute, finalTokenEstimate]);
 
   if (!bestRoute) return <></>;
 
@@ -110,22 +131,7 @@ export const BestRouteAccordion = ({
                 />
                 <RouteTag
                   loading={loading}
-                  text={`$${
-                    (
-                      bestRoute.swapSteps
-                        .flatMap((step) => step.fees)
-                        .reduce((acc, fee) => {
-                          const amount = parseFloat(fee.amount);
-                          const price = fee.price || 0;
-                          return acc + amount * price;
-                        }, 0) +
-                      parseFloat(finalTokenEstimate?.estimatedFeeInUSD ?? '0')
-                    )
-                      .toFixed(2)
-                      .toString() ||
-                    finalTokenEstimate?.estimatedFeeInUSD ||
-                    '0.00'
-                  }`}
+                  text={fees}
                   icon={GasIcon}
                   textColor="brand.tertiary.100"
                   bgColor="brand.bg.tag"

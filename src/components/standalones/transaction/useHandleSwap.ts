@@ -33,14 +33,14 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
   const bestRoute = useAtomValue(bestRouteAtom);
 
   const {
-    swapData,
     setSwapData,
     swapDataRef,
-    transactionIndex,
     updateTransactionIndex,
+    updateTransactionProgress,
   } = useSwapState();
-  const { executeTokensSwap, updateTransactionProgress } = useExecuteTokensSwap(
+  const { executeTokensSwap } = useExecuteTokensSwap(
     updateTransactionIndex,
+    updateTransactionProgress,
     externalEvmWalletConnector,
   );
 
@@ -79,9 +79,8 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
     // If the template is token buy, we don't need to execute the last mile transaction
     if (isTokenBuyTemplate) return;
 
-    if (transactionIndex !== swapData.totalSteps) updateTransactionIndex();
     await executeLastMileTransaction(
-      transactionIndex,
+      swapDataRef.current.currentStep,
       executeCallBack,
       aaInstance,
       operationId,
@@ -109,7 +108,6 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
           chainId: protocolInputToken.chain.chainId,
         });
       }
-
       updateTransactionProgress({
         isApproval: false,
         status: TX_STATUS.pending,

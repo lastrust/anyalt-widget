@@ -10,7 +10,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { useAtom, useAtomValue } from 'jotai';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   bestRouteAtom,
   finalTokenEstimateAtom,
@@ -31,7 +31,7 @@ import { TransactionHash } from '../../molecules/text/TransactionHash';
 import { LastMileTxAccordion } from './LastMileTxAccordion';
 
 export const TransactionAccordion = () => {
-  const [isLastMileExpanded, setIsLastMileExpanded] = useState(false);
+  const [expandedIndexes, setExpandedIndexes] = useState<number[]>([]);
 
   const bestRoute = useAtomValue(bestRouteAtom);
   const currentStep = useAtomValue(transactionIndexAtom);
@@ -47,15 +47,18 @@ export const TransactionAccordion = () => {
     setSelectedRoute(bestRoute);
   };
 
-  const onLastMileClick = () => {
-    setIsLastMileExpanded(!isLastMileExpanded);
-  };
+  useEffect(() => {
+    if (currentStep > 0) {
+      setExpandedIndexes([currentStep - 1]);
+    }
+  }, [currentStep]);
 
   if (!bestRoute) return <></>;
 
   return (
     <Accordion
-      defaultIndex={[0]}
+      index={expandedIndexes}
+      onChange={(indexes) => setExpandedIndexes(indexes as number[])}
       allowMultiple
       w={'full'}
       gap={'12px'}
@@ -229,12 +232,11 @@ export const TransactionAccordion = () => {
         <LastMileTxAccordion
           bestRoute={bestRoute}
           currentStep={currentStep}
-          isLastMileExpanded={isLastMileExpanded}
+          isLastMileExpanded={expandedIndexes.includes(currentStep - 1)}
           protocolFinalToken={protocolFinalToken}
           protocolInputToken={protocolInputToken}
           finalTokenEstimate={finalTokenEstimate}
           transactionsProgress={transactionsProgress}
-          onLastMileClick={onLastMileClick}
         />
       )}
     </Accordion>

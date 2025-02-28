@@ -69,7 +69,7 @@ export const swapDataAtom = atom<{
   isCrosschainSwapError: false,
   crosschainSwapOutputAmount: '0',
   totalSteps: 0,
-  currentStep: 0,
+  currentStep: 1,
 });
 
 export const tokenFetchErrorAtom = atom<{
