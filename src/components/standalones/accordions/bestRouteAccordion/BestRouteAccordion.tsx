@@ -10,6 +10,7 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
+import { RANGO_PLACEHOLDER_LOGO } from '../../../../constants/links';
 import { ChainIdToChainConstant } from '../../../../utils/chains';
 import { truncateToDecimals } from '../../../../utils/truncateToDecimals';
 import { GasIcon } from '../../../atoms/icons/GasIcon';
@@ -177,6 +178,17 @@ export const BestRouteAccordion = ({
                       </Text>
                       {swapStep.internalSwapSteps.map(
                         (internalSwap, internalIndex) => {
+                          if (
+                            isTokenBuyTemplate &&
+                            internalSwap.destinationToken.contractAddress.toLowerCase() ===
+                              protocolInputToken?.tokenAddress?.toLowerCase() &&
+                            internalSwap.destinationToken.logo ===
+                              RANGO_PLACEHOLDER_LOGO &&
+                            protocolInputToken?.logoUrl
+                          ) {
+                            internalSwap.destinationToken.logo =
+                              protocolInputToken?.logoUrl;
+                          }
                           return (
                             <RouteStep
                               loading={loading}

@@ -6,6 +6,7 @@ import { useAtom, useAtomValue } from 'jotai';
 import { useEffect, useMemo, useState } from 'react';
 import { useAccount } from 'wagmi';
 import { ChainType, EstimateResponse, Token, WalletConnector } from '../../..';
+import { ANYALT_PLACEHOLDER_LOGO } from '../../../constants/links';
 import {
   activeOperationIdAtom,
   allChainsAtom,
@@ -29,7 +30,6 @@ import {
 import { calculateWorstOutput } from '../../../utils';
 import { ChainIdToChainConstant } from '../../../utils/chains';
 import { useTokenInputBox } from '../../standalones/selectSwap/token/input/useTokenInputBox';
-
 const REFRESH_INTERVAL = 30000;
 
 export const useAnyaltWidget = ({
@@ -45,7 +45,7 @@ export const useAnyaltWidget = ({
   estimateCallback: (token: Token) => Promise<EstimateResponse>;
   apiKey: string;
   inputToken: Token;
-  finalToken: Token;
+  finalToken?: Token;
   isTokenBuyTemplate: boolean;
   minDepositAmount: number;
   walletConnector?: WalletConnector;
@@ -177,6 +177,9 @@ export const useAnyaltWidget = ({
       anyaltInstance
         ?.getToken(inputTokenChain.name, inputToken.address)
         .then((res) => {
+          if (res.logoUrl === ANYALT_PLACEHOLDER_LOGO && inputToken.logoUrl) {
+            res.logoUrl = inputToken.logoUrl;
+          }
           setProtocolInputToken(res);
         });
     }
@@ -262,8 +265,8 @@ export const useAnyaltWidget = ({
               blockchainLogo: lastTokenOfOperation?.blockchainLogo || '',
             },
             to: {
-              tokenName: finalToken.name,
-              tokenLogo: finalToken.logoUrl || '',
+              tokenName: finalToken?.name || '',
+              tokenLogo: finalToken?.logoUrl || '',
               tokenAmount: finalEstimateToken?.amountOut || '',
               tokenPrice:
                 (
@@ -271,7 +274,7 @@ export const useAnyaltWidget = ({
                   parseFloat(finalEstimateToken?.amountOut || '1')
                 ).toFixed(2) || '',
               tokenUsdPrice: finalEstimateToken?.priceInUSD || '0',
-              tokenDecimals: finalToken.decimals || 0,
+              tokenDecimals: finalToken?.decimals || 0,
               blockchain: protocolInputToken.chain?.displayName || '',
               blockchainLogo: protocolInputToken.chain?.logoUrl || '',
             },

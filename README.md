@@ -94,12 +94,14 @@ const Widget = () => {
     address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
     chainId: 1,
     chainType: ChainType.EVM,
+    logoUrl: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png',
   };
 
   const finalToken: Token = {
     symbol: 'SOL',
     address: 'So11111111111111111111111111111111111111112',
     chainType: ChainType.SOLANA,
+    logoUrl: 'https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png',
   };
 
   const estimateCallback = async (token: Token): Promise<EstimateResponse> => {
@@ -127,6 +129,7 @@ const Widget = () => {
         <button onClick={() => setIsOpen(true)}>Open Widget</button>
         <AnyaltWidget
           isOpen={isOpen}
+          isTokenBuyTemplate={false}
           inputToken={inputToken}
           finalToken={finalToken}
           apiKey="your-api-key"
@@ -167,6 +170,7 @@ export const ClientWidgetWrapper = dynamic(
 | Prop                | Type                                          | Description                              |
 | ------------------- | --------------------------------------------- | ---------------------------------------- |
 | `isOpen`            | `boolean`                                     | Controls widget visibility               |
+| `isTokenBuyTemplate`| `boolean`                                     | true, in case of token purchase          |
 | `inputToken`        | `Token`                                       | Input token details                      |
 | `finalToken`        | `Token`                                       | Output token details                     |
 | `apiKey`            | `string`                                      | API key for Anyalt services              |
@@ -176,7 +180,28 @@ export const ClientWidgetWrapper = dynamic(
 | `walletConnector?`  | `WalletConnector`                             | Optional custom wallet connector         |
 | `minDepositAmount?` | `number`                                      | Minimum deposit amount in USD equivalent |
 
-### `Token`
+`isTokenBuyTemplate` is used to determine if the widget is in token buy template mode.
+
+If true, the widget will be in token buy template mode. And `inputToken` will be the token that the user wants to buy. Also `finalToken` is not required.
+
+#### Props Types
+
+```ts
+export type AnyaltWidgetProps = {
+  isOpen: boolean;
+  apiKey: string;
+  inputToken: Token;
+  finalToken?: Token;
+  minDepositAmount?: number;
+  isTokenBuyTemplate?: boolean;
+  walletConnector?: WalletConnector;
+  onClose: () => void;
+  estimateCallback: (token: Token) => Promise<EstimateResponse>;
+  executeCallBack: (token: Token) => Promise<ExecuteResponse>;
+};
+```
+
+#### `Token`
 
 ```ts
 export interface Token {

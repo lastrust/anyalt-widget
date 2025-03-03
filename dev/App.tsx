@@ -30,7 +30,6 @@ const queryClient = new QueryClient();
 const USDT_ADDRESS = '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9';
 const AAVE_USDT_ADDRESS = '0x6ab707Aca953eDAeFBc4fD23bA73294241490620';
 const AAVE_L3_POOL_ADDRESS = '0x794a61358D6845594F94dc1DB02A252b5b4814aD';
-const POPCAT_ADDRESS = '7GCihgDB8fe6KNjn2MYtkzZcRjQy3t9GHdC8uHYmW2hr';
 
 const usdtToken: Token = {
   symbol: 'USDT',
@@ -40,15 +39,27 @@ const usdtToken: Token = {
   chainType: ChainType.EVM,
 };
 
-const popcatToken: Token = {
-  name: 'Popcat',
-  symbol: 'POPCAT',
-  address: POPCAT_ADDRESS,
+const popkittyToken: Token = {
+  name: 'Popkitty',
+  symbol: 'POPKITTY',
+  address: 'GB8V6tFBN6QZCEFdEjsntGu7kT8C5cHHn13dcwgtnPZU',
   chainType: ChainType.SOLANA,
+  logoUrl: 'https://img-v1.raydium.io/icon/GB8V6tFBN6QZCEFdEjsntGu7kT8C5cHHn13dcwgtnPZU.png',
+};
+
+const aarnaToken: Token = {
+  symbol: 'Aarnâ Afi802',
+  address: '0x123',
+  chainId: 42161,
+  chainType: ChainType.EVM,
+  logoUrl: 'https://engine.aarna.ai/static/logo-only.svg',
+  name: 'Aarna Afi802',
+  decimals: 18,
 };
 
 const App = () => {
   const { isOpen, onOpen, onClose } = useModal();
+  const isTokenBuyTemplate = true;
 
   const estimateCallback = async (token: Token): Promise<EstimateResponse> => {
     return {
@@ -78,17 +89,9 @@ const App = () => {
           <Box maxW={'600px'}>
             <OpenModalButton onOpen={onOpen} />
             <AnyaltWidget
-              isTokenBuyTemplate={false}
-              inputToken={usdtToken}
-              finalToken={{
-                symbol: 'Aarnâ Afi802',
-                address: '0x123',
-                chainId: 42161,
-                chainType: ChainType.EVM,
-                logoUrl: 'https://engine.aarna.ai/static/logo-only.svg',
-                name: 'Aarna Afi802',
-                decimals: 18,
-              }}
+              isTokenBuyTemplate={isTokenBuyTemplate}
+              inputToken={isTokenBuyTemplate ? popkittyToken : usdtToken}
+              finalToken={aarnaToken}
               apiKey={'pk_0xCYxjM8dFF0Vii7syrgpR6U4'}
               isOpen={isOpen}
               onClose={onClose}

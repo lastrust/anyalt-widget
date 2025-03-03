@@ -53,7 +53,7 @@ export type AnyaltWidgetProps = {
   isOpen: boolean;
   apiKey: string;
   inputToken: Token;
-  finalToken: Token;
+  finalToken?: Token;
   minDepositAmount?: number;
   isTokenBuyTemplate?: boolean;
   walletConnector?: WalletConnector;
