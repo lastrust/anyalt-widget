@@ -10,8 +10,8 @@ import { FC } from 'react';
 import { TokenIconBox } from './TokenIconBox';
 
 type Props = BoxProps & {
-  amount: number;
-  price: number;
+  amount: string;
+  price: string;
   chainIcon: string;
   tokenName: string;
   slippage: string;

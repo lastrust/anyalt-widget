@@ -141,8 +141,14 @@ export const BestRouteAccordion = ({
                   ? protocolInputToken?.logoUrl || ''
                   : protocolFinalToken?.logoUrl || ''
               }
-              amount={Number(finalTokenEstimate?.amountOut ?? '0.00')}
-              price={Number(finalTokenEstimate?.priceInUSD ?? '0.00')}
+              amount={truncateToDecimals(
+                finalTokenEstimate?.amountOut ?? '0.00',
+                4,
+              )}
+              price={truncateToDecimals(
+                finalTokenEstimate?.priceInUSD ?? '0.00',
+                4,
+              )}
               slippage={slippage}
               network={
                 !isTokenBuyTemplate
