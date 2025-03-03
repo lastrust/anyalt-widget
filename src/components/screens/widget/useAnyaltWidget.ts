@@ -45,7 +45,7 @@ export const useAnyaltWidget = ({
   estimateCallback: (token: Token) => Promise<EstimateResponse>;
   apiKey: string;
   inputToken: Token;
-  finalToken: Token;
+  finalToken?: Token;
   isTokenBuyTemplate: boolean;
   minDepositAmount: number;
   walletConnector?: WalletConnector;
@@ -265,8 +265,8 @@ export const useAnyaltWidget = ({
               blockchainLogo: lastTokenOfOperation?.blockchainLogo || '',
             },
             to: {
-              tokenName: finalToken.name,
-              tokenLogo: finalToken.logoUrl || '',
+              tokenName: finalToken?.name || '',
+              tokenLogo: finalToken?.logoUrl || '',
               tokenAmount: finalEstimateToken?.amountOut || '',
               tokenPrice:
                 (
@@ -274,7 +274,7 @@ export const useAnyaltWidget = ({
                   parseFloat(finalEstimateToken?.amountOut || '1')
                 ).toFixed(2) || '',
               tokenUsdPrice: finalEstimateToken?.priceInUSD || '0',
-              tokenDecimals: finalToken.decimals || 0,
+              tokenDecimals: finalToken?.decimals || 0,
               blockchain: protocolInputToken.chain?.displayName || '',
               blockchainLogo: protocolInputToken.chain?.logoUrl || '',
             },
