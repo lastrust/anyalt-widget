@@ -70,11 +70,11 @@ export const useAnyaltWidget = ({
     onOpen: connectWalletsOpen,
   } = useDisclosure();
 
-  const inToken = useAtomValue(inTokenAtom);
   const slippage = useAtomValue(slippageAtom);
-  const inTokenAmount = useAtomValue(inTokenAmountAtom);
   const selectedRoute = useAtomValue(selectedRouteAtom);
 
+  const [inTokenAmount, setInTokenAmount] = useAtom(inTokenAmountAtom);
+  const [inToken, setInToken] = useAtom(inTokenAtom);
   const [swapData, setSwapData] = useAtom(swapDataAtom);
   const [, setCurrentUiStep] = useAtom(currentUiStepAtom);
   const [allChains, setAllChains] = useAtom(allChainsAtom);
@@ -106,29 +106,26 @@ export const useAnyaltWidget = ({
     return Number(inTokenAmount ?? 0) == 0 || inToken == null;
   }, [inTokenAmount, inToken, bestRoute, activeStep]);
 
-  // const resetState = useCallback(() => {
-  //   setInTokenAmount('');
-  //   setActiveOperationId(undefined);
-  //   setFinalTokenEstimate(undefined);
-  //   setTransactionsList(undefined);
-  //   setTokenFetchError({ isError: false, errorMessage: '' });
-  //   setSelectedRoute(undefined);
-  //   setBestRoute(undefined);
-  // }, [
-  //   setInTokenAmount,
-  //   setActiveOperationId,
-  //   setFinalTokenEstimate,
-  //   setTransactionsList,
-  //   setTokenFetchError,
-  //   setSelectedRoute,
-  //   setBestRoute,
-  // ]);
-
-  // useEffect(() => {
-  //   if (activeStep === 0) {
-  //     resetState();
-  //   }
-  // }, [activeStep]);
+  const resetState = () => {
+    setActiveOperationId(undefined);
+    setFinalTokenEstimate(undefined);
+    setTransactionsList(undefined);
+    setInTokenAmount(undefined);
+    setInToken(undefined);
+    setTokenFetchError({ isError: false, errorMessage: '' });
+    setBestRoute(undefined);
+    setSwapData({
+      swapIsFinished: false,
+      isCrosschainSwapError: false,
+      crosschainSwapOutputAmount: '',
+      totalSteps: 0,
+      currentStep: 1,
+    });
+    setTransactionsProgress({});
+    setTransactionsList(undefined);
+    setTransactionIndex(1);
+    setCurrentUiStep(0);
+  };
 
   useEffect(() => {
     setCurrentUiStep(activeStep);
@@ -557,28 +554,30 @@ export const useAnyaltWidget = ({
     onClose();
     setActiveStep(0);
     setTransactionIndex(1);
+    resetState();
   };
 
   return {
     loading,
+    activeStep,
+    isValidAmountIn,
     isButtonDisabled,
     activeRoute: bestRoute,
-    activeStep,
-    onGetQuote,
-    onChooseRouteButtonClick,
-    onConfigClick,
-    openSlippageModal,
-    setOpenSlippageModal,
     isConnectWalletsOpen,
-    connectWalletsClose,
     failedToFetchRoute,
-    isValidAmountIn,
-    connectWalletsOpen,
+    areWalletsConnected,
+    resetState,
+    onComplete,
+    getChain,
+    onGetQuote,
     onBackClick,
     onTxComplete,
-    areWalletsConnected,
     setActiveStep,
-    getChain,
-    onComplete,
+    onConfigClick,
+    openSlippageModal,
+    connectWalletsClose,
+    connectWalletsOpen,
+    setOpenSlippageModal,
+    onChooseRouteButtonClick,
   };
 };
