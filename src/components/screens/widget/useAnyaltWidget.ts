@@ -6,6 +6,7 @@ import { useAtom, useAtomValue } from 'jotai';
 import { useEffect, useMemo, useState } from 'react';
 import { useAccount } from 'wagmi';
 import { ChainType, EstimateResponse, Token, WalletConnector } from '../../..';
+import { ANYALT_PLACEHOLDER_LOGO } from '../../../constants/links';
 import {
   activeOperationIdAtom,
   allChainsAtom,
@@ -29,7 +30,6 @@ import {
 import { calculateWorstOutput } from '../../../utils';
 import { ChainIdToChainConstant } from '../../../utils/chains';
 import { useTokenInputBox } from '../../standalones/selectSwap/token/input/useTokenInputBox';
-
 const REFRESH_INTERVAL = 30000;
 
 export const useAnyaltWidget = ({
@@ -177,6 +177,9 @@ export const useAnyaltWidget = ({
       anyaltInstance
         ?.getToken(inputTokenChain.name, inputToken.address)
         .then((res) => {
+          if (res.logoUrl === ANYALT_PLACEHOLDER_LOGO && inputToken.logoUrl) {
+            res.logoUrl = inputToken.logoUrl;
+          }
           setProtocolInputToken(res);
         });
     }
