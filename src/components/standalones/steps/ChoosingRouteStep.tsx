@@ -2,7 +2,7 @@ import { BestRouteResponse } from '@anyalt/sdk';
 import { Grid } from '@chakra-ui/react';
 import { WalletConnector } from '../../..';
 import { SwappingTemplate } from '../../templates/SwappingTemplate';
-import { BestRouteAccordion } from '../accordions/BestRouteAccordion';
+import { BestRouteAccordion } from '../accordions/bestRouteAccordion/BestRouteAccordion';
 import { SelectToken } from '../selectSwap/SelectToken';
 
 type Props = {

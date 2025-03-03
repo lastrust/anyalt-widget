@@ -94,7 +94,7 @@ export const TransactionInfo: FC<Props> = ({
                 tokenLogo={recentTransaction?.from.tokenLogo || ''}
                 chainName={recentTransaction?.from.blockchain || ''}
                 chainLogo={recentTransaction?.from.blockchainLogo || ''}
-                amount={Number(recentTransaction?.from.tokenAmount).toFixed(4)}
+                amount={Number(recentTransaction?.from.tokenAmount).toFixed(5)}
                 price={(
                   Number(recentTransaction?.from.tokenUsdPrice) *
                   Number(recentTransaction?.from.tokenAmount)

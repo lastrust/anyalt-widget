@@ -87,7 +87,16 @@ export const LastMileTxAccordion = ({
           />
         </Box>
       </AccordionButton>
-      <AccordionPanel p={'0px'} mt="12px">
+      <AccordionPanel
+        p={'0px'}
+        mt="12px"
+        pb={
+          !finalTokenEstimate?.estimatedTimeInSeconds &&
+          !finalTokenEstimate?.estimatedFeeInUSD
+            ? '6px'
+            : '0px'
+        }
+      >
         <VStack gap={'12px'}>
           <TransactionStep
             exchangeLogo={protocolFinalToken?.logoUrl || ''}
