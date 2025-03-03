@@ -10,27 +10,16 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
-import { useAtom, useAtomValue } from 'jotai';
-import { useMemo } from 'react';
-import {
-  bestRouteAtom,
-  finalTokenEstimateAtom,
-  inTokenAmountAtom,
-  isTokenBuyTemplateAtom,
-  protocolFinalTokenAtom,
-  protocolInputTokenAtom,
-  selectedRouteAtom,
-  slippageAtom,
-} from '../../../store/stateStore';
-import { ChainIdToChainConstant } from '../../../utils/chains';
-import { truncateToDecimals } from '../../../utils/truncateToDecimals';
-import { GasIcon } from '../../atoms/icons/GasIcon';
-import { StepsIcon } from '../../atoms/icons/StepsIcon';
-import { TimeIcon } from '../../atoms/icons/TimeIcon';
-import { NoRouteCard } from '../../molecules/card/NoRouteCard';
-import { RouteTag } from '../../molecules/routeTag/RouteTag';
-import { RouteStep } from '../../molecules/steps/RouteStep';
-import { TokenRouteInfo } from '../../molecules/TokenRouteInfo';
+import { ChainIdToChainConstant } from '../../../../utils/chains';
+import { truncateToDecimals } from '../../../../utils/truncateToDecimals';
+import { GasIcon } from '../../../atoms/icons/GasIcon';
+import { StepsIcon } from '../../../atoms/icons/StepsIcon';
+import { TimeIcon } from '../../../atoms/icons/TimeIcon';
+import { NoRouteCard } from '../../../molecules/card/NoRouteCard';
+import { RouteTag } from '../../../molecules/routeTag/RouteTag';
+import { RouteStep } from '../../../molecules/steps/RouteStep';
+import { TokenRouteInfo } from '../../../molecules/TokenRouteInfo';
+import { useBestRouteAccordion } from './useBestRouteAccordion';
 
 type Props = {
   loading: boolean;
@@ -43,40 +32,19 @@ export const BestRouteAccordion = ({
   failedToFetchRoute,
   isButtonHidden = true,
 }: Props) => {
-  const slippage = useAtomValue(slippageAtom);
-  const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
-  const [bestRoute] = useAtom(bestRouteAtom);
-  const isTokenBuyTemplate = useAtomValue(isTokenBuyTemplateAtom);
-  const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
-  const protocolInputToken = useAtomValue(protocolInputTokenAtom);
-  const [, setSelectedRoute] = useAtom(selectedRouteAtom);
-  const inTokenAmount = useAtomValue(inTokenAmountAtom);
-
-  const fees = useMemo(() => {
-    if (!bestRoute) return '0.00';
-
-    return `$${
-      (
-        bestRoute?.swapSteps
-          ?.flatMap((step) => step.fees)
-          ?.reduce((acc, fee) => {
-            const amount = parseFloat(fee.amount);
-            const price = fee.price || 0;
-            return acc + amount * price;
-          }, 0) + parseFloat(finalTokenEstimate?.estimatedFeeInUSD ?? '0')
-      )
-        .toFixed(2)
-        .toString() ||
-      finalTokenEstimate?.estimatedFeeInUSD ||
-      '0.00'
-    }`;
-  }, [bestRoute, finalTokenEstimate]);
+  const {
+    fees,
+    slippage,
+    bestRoute,
+    fromToken,
+    handleRouteSelect,
+    isTokenBuyTemplate,
+    protocolFinalToken,
+    protocolInputToken,
+    finalTokenEstimate,
+  } = useBestRouteAccordion();
 
   if (!bestRoute) return <></>;
-
-  const handleRouteSelect = () => {
-    setSelectedRoute(bestRoute);
-  };
 
   if (failedToFetchRoute && !loading) {
     return <NoRouteCard />;
@@ -214,7 +182,7 @@ export const BestRouteAccordion = ({
                               fromToken={{
                                 name: internalSwap.sourceToken.symbol,
                                 amount:
-                                  truncateToDecimals(internalSwap.amount) ||
+                                  truncateToDecimals(internalSwap.amount, 4) ||
                                   '0',
                                 chainName: internalSwap.sourceToken.blockchain,
                                 icon: internalSwap.sourceToken.logo,
@@ -223,7 +191,10 @@ export const BestRouteAccordion = ({
                               }}
                               toToken={{
                                 name: internalSwap.destinationToken.symbol,
-                                amount: truncateToDecimals(internalSwap.payout),
+                                amount: truncateToDecimals(
+                                  internalSwap.payout,
+                                  4,
+                                ),
                                 chainName:
                                   internalSwap.destinationToken.blockchain,
                                 icon: internalSwap.destinationToken.logo,
@@ -256,41 +227,8 @@ export const BestRouteAccordion = ({
                     exchangeIcon={protocolFinalToken?.logoUrl || ''}
                     exchangeName={'Last Mile TX'}
                     exchangeType={'LAST_MILE'}
-                    fromToken={
-                      bestRoute.swapSteps.length
-                        ? {
-                            name: bestRoute.swapSteps.length
-                              ? bestRoute.swapSteps[
-                                  bestRoute.swapSteps.length - 1
-                                ].destinationToken.symbol
-                              : protocolInputToken?.symbol || '',
-                            amount:
-                              truncateToDecimals(
-                                bestRoute.swapSteps[
-                                  bestRoute.swapSteps.length - 1
-                                ].payout,
-                              ) || '0',
-                            chainName:
-                              bestRoute.swapSteps[
-                                bestRoute.swapSteps.length - 1
-                              ].destinationToken.blockchain,
-                            icon: bestRoute.swapSteps[
-                              bestRoute.swapSteps.length - 1
-                            ].destinationToken.logo,
-                            chainIcon:
-                              bestRoute.swapSteps[
-                                bestRoute.swapSteps.length - 1
-                              ].destinationToken.blockchainLogo,
-                          }
-                        : {
-                            name: protocolInputToken?.symbol || '',
-                            icon: protocolInputToken?.logoUrl || '',
-                            chainIcon: protocolInputToken?.logoUrl || '',
-                            amount: truncateToDecimals(inTokenAmount || '0', 4),
-                            chainName:
-                              protocolInputToken?.chain?.displayName || '',
-                          }
-                    }
+                    pb={'6px'}
+                    fromToken={fromToken}
                     toToken={{
                       name: protocolFinalToken?.name || '',
                       amount: truncateToDecimals(

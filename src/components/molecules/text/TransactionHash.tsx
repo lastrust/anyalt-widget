@@ -1,5 +1,5 @@
 import { Box, Divider, HStack, Link, Text } from '@chakra-ui/react';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { TransactionProgress } from '../../../types/transaction';
 import { chainExplorers } from '../../../utils/chains';
 import { CopyIcon } from '../../atoms/icons/CopyIcon';
@@ -12,14 +12,15 @@ type Props = {
 export const TransactionHash = ({ type, progress }: Props) => {
   const [isCopied, setIsCopied] = useState(false);
 
-  const handleCopy = useCallback(() => {
+  const handleCopy = () => {
     setIsCopied(true);
+    console.log('progress', progress);
     navigator.clipboard.writeText(progress?.txHash ?? '');
 
     setTimeout(() => {
       setIsCopied(false);
     }, 2000);
-  }, []);
+  };
 
   if (!progress || !progress.txHash || !progress.chainName) return null;
 

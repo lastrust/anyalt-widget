@@ -1,5 +1,6 @@
 import {
   Box,
+  BoxProps,
   Flex,
   HStack,
   Image,
@@ -30,7 +31,7 @@ type Props = {
     amount: string;
     chainName: string;
   };
-};
+} & BoxProps;
 
 export const RouteStep = ({
   exchangeIcon,
@@ -40,6 +41,7 @@ export const RouteStep = ({
   fromToken,
   toToken,
   loading,
+  ...props
 }: Props) => {
   return (
     <Flex
@@ -47,6 +49,7 @@ export const RouteStep = ({
       w={'full'}
       alignItems={'center'}
       width={'100%'}
+      {...props}
     >
       <VStack justifyContent={'space-between'} alignItems={'start'} gap={'8px'}>
         <HStack gap={'4px'}>
