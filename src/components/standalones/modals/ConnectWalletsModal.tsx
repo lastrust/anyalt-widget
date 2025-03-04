@@ -31,11 +31,13 @@ export const ConnectWalletsModal: FC<Props> = ({
   walletConnector,
 }) => {
   const {
-    isBitcoinModalOpen,
     requiredWallets,
+    isWalletConnected,
+    isBitcoinModalOpen,
     setIsBitcoinModalOpen,
     onBitcoinConnected,
     handleWalletClick,
+    setIsWalletConnected,
   } = useConnectWalletsModal({
     walletConnector,
   });
@@ -74,10 +76,16 @@ export const ConnectWalletsModal: FC<Props> = ({
                 onConnect={() => handleWalletClick(wallet.walletType)}
                 isDisabled={wallet.isDisabled}
                 walletConnector={walletConnector}
+                setIsWalletConnected={setIsWalletConnected}
               />
             ))}
-            <CustomButton onButtonClick={() => onClose()}>
-              Continue
+            <CustomButton
+              isDisabled={!isWalletConnected}
+              onButtonClick={() => onClose()}
+            >
+              {isWalletConnected
+                ? 'Continue'
+                : 'Please Connect Required Wallets'}
             </CustomButton>
           </VStack>
           <Connector

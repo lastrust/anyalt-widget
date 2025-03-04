@@ -1,7 +1,7 @@
 import { useProvider } from '@ant-design/web3';
 import { Button, Circle, Flex, Text } from '@chakra-ui/react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { FC } from 'react';
+import { FC, useEffect, useMemo } from 'react';
 import { useAccount, useDisconnect } from 'wagmi';
 import { WalletConnector } from '../../..';
 
@@ -10,6 +10,7 @@ interface WalletButtonProps {
   network: string;
   onConnect: () => void;
   isDisabled: boolean;
+  setIsWalletConnected: (isConnected: boolean) => void;
   walletConnector?: WalletConnector;
 }
 
@@ -19,6 +20,7 @@ export const WalletButton: FC<WalletButtonProps> = ({
   onConnect,
   isDisabled,
   walletConnector,
+  setIsWalletConnected,
 }) => {
   if (isDisabled) {
     return null;
@@ -38,10 +40,24 @@ export const WalletButton: FC<WalletButtonProps> = ({
   const isSolanaWallet = walletType === 'Solana';
   const isBitcoinWallet = walletType === 'Bitcoin';
 
-  const isWalletConnected =
-    (isEvmWallet && isEvmConnected) ||
-    (isSolanaWallet && isSolanaConnected) ||
-    (isBitcoinWallet && bitcoinAccount != undefined);
+  const isWalletConnected = useMemo(() => {
+    return (
+      (isEvmWallet && isEvmConnected) ||
+      (isSolanaWallet && isSolanaConnected) ||
+      (isBitcoinWallet && bitcoinAccount != undefined)
+    );
+  }, [
+    isEvmConnected,
+    isSolanaConnected,
+    bitcoinAccount,
+    isEvmWallet,
+    isSolanaWallet,
+    isBitcoinWallet,
+  ]);
+
+  useEffect(() => {
+    setIsWalletConnected(isWalletConnected);
+  }, [isWalletConnected, setIsWalletConnected]);
 
   const formatAddress = (address: string) => {
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
@@ -119,7 +135,10 @@ export const WalletButton: FC<WalletButtonProps> = ({
             <Text color="brand.text.primary" fontSize="16px">
               {getButtonStatus()}
             </Text>
-            {isWalletConnected && <Circle size="8px" bg="brand.tertiary.100" />}
+            <Circle
+              size="8px"
+              bg={isWalletConnected ? 'brand.tertiary.100' : 'red'}
+            />
           </Flex>
           <Text color="brand.secondary.3" fontSize="14px">
             {getDisplayAddress()}

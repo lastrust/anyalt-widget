@@ -5,6 +5,7 @@ import {
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
 } from '../../../store/stateStore';
+import { truncateToDecimals } from '../../../utils/truncateToDecimals';
 import { ThumbIcon } from '../../atoms/icons/transaction/ThumbIcon';
 import { TokenIconBox } from '../../molecules/TokenIconBox';
 import { SwappingTemplate } from '../../templates/SwappingTemplate';
@@ -14,7 +15,7 @@ type Props = {
   onComplete: () => void;
 };
 
-export const CompleteStep = ({ onConfigClick, onComplete }: Props) => {
+export const SuccessfulDepositStep = ({ onConfigClick, onComplete }: Props) => {
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
   const finalTokenAmount = useAtomValue(finalTokenAmountAtom);
@@ -62,7 +63,7 @@ export const CompleteStep = ({ onConfigClick, onComplete }: Props) => {
             color="brand.text.primary"
             mr="4px"
           >
-            {finalTokenAmount}
+            {truncateToDecimals(finalTokenAmount, 4)}
           </Text>
           <Text fontSize="16px" fontWeight="400" color="brand.secondary.100">
             {protocolFinalToken?.symbol} On{' '}

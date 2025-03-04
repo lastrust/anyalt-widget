@@ -37,6 +37,7 @@ type UseConnectWalletsModalProps = {
 export const useConnectWalletsModal = ({
   walletConnector,
 }: UseConnectWalletsModalProps) => {
+  const [isWalletConnected, setIsWalletConnected] = useState(false);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const { openConnectModal } = useConnectModal();
   const { setVisible } = useWalletModal(); // Hook to control the Solana wallet modal
@@ -47,6 +48,7 @@ export const useConnectWalletsModal = ({
 
   const bestRoute = useAtomValue(bestRouteAtom);
   const allChains = useAtomValue(allChainsAtom);
+  
   const requiredWallets = useMemo(() => {
     return WALLETS.filter((wallet) => {
       if (wallet.walletType === 'EVM') {
@@ -119,6 +121,8 @@ export const useConnectWalletsModal = ({
   };
 
   return {
+    isWalletConnected, 
+    setIsWalletConnected,
     isBitcoinModalOpen,
     requiredWallets,
     setIsBitcoinModalOpen,

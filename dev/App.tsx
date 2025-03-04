@@ -44,7 +44,8 @@ const popkittyToken: Token = {
   symbol: 'POPKITTY',
   address: 'GB8V6tFBN6QZCEFdEjsntGu7kT8C5cHHn13dcwgtnPZU',
   chainType: ChainType.SOLANA,
-  logoUrl: 'https://img-v1.raydium.io/icon/GB8V6tFBN6QZCEFdEjsntGu7kT8C5cHHn13dcwgtnPZU.png',
+  logoUrl:
+    'https://img-v1.raydium.io/icon/GB8V6tFBN6QZCEFdEjsntGu7kT8C5cHHn13dcwgtnPZU.png',
 };
 
 const aarnaToken: Token = {
@@ -89,8 +90,8 @@ const App = () => {
           <Box maxW={'600px'}>
             <OpenModalButton onOpen={onOpen} />
             <AnyaltWidget
-              isTokenBuyTemplate={isTokenBuyTemplate}
-              inputToken={isTokenBuyTemplate ? popkittyToken : usdtToken}
+              // isTokenBuyTemplate={isTokenBuyTemplate}
+              inputToken={usdtToken}
               finalToken={aarnaToken}
               apiKey={'pk_0xCYxjM8dFF0Vii7syrgpR6U4'}
               isOpen={isOpen}
