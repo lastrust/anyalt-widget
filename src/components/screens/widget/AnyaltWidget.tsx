@@ -1,7 +1,7 @@
 import { AnyaltWidgetProps } from '../../..';
 import { Footer } from '../../molecules/footer/Footer';
 import { Header } from '../../molecules/header/Header';
-import { ConnectWalletsModal } from '../../standalones/modals/ConnectWalletsModal';
+import { ConnectWalletsModal } from '../../standalones/modals/connectWalletsModal/ConnectWalletsModal';
 import ModalWrapper from '../../standalones/modals/ModalWrapper';
 import Stepper from '../../standalones/stepper/Stepper';
 import { ChoosingRouteStep } from '../../standalones/steps/ChoosingRouteStep';

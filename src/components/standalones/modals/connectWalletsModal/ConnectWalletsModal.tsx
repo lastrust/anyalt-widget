@@ -10,9 +10,9 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { FC } from 'react';
-import { WalletConnector } from '../../..';
-import { CustomButton } from '../../atoms/buttons/CustomButton';
-import { WalletButton } from '../../molecules/buttons/WalletButton';
+import { WalletConnector } from '../../../..';
+import { CustomButton } from '../../../atoms/buttons/CustomButton';
+import { WalletButton } from '../../../molecules/buttons/WalletButton';
 import { useConnectWalletsModal } from './useConnectWalletsModal';
 
 interface Props {
@@ -32,12 +32,12 @@ export const ConnectWalletsModal: FC<Props> = ({
 }) => {
   const {
     requiredWallets,
-    isWalletConnected,
     isBitcoinModalOpen,
+    walletStatus,
+    setWalletStatus,
     setIsBitcoinModalOpen,
     onBitcoinConnected,
     handleWalletClick,
-    setIsWalletConnected,
   } = useConnectWalletsModal({
     walletConnector,
   });
@@ -76,14 +76,14 @@ export const ConnectWalletsModal: FC<Props> = ({
                 onConnect={() => handleWalletClick(wallet.walletType)}
                 isDisabled={wallet.isDisabled}
                 walletConnector={walletConnector}
-                setIsWalletConnected={setIsWalletConnected}
+                setWalletStatus={setWalletStatus}
               />
             ))}
             <CustomButton
-              isDisabled={!isWalletConnected}
+              isDisabled={!walletStatus?.every((wallet) => wallet.isConnected)}
               onButtonClick={() => onClose()}
             >
-              {isWalletConnected
+              {walletStatus?.every((wallet) => wallet.isConnected)
                 ? 'Continue'
                 : 'Please Connect Required Wallets'}
             </CustomButton>

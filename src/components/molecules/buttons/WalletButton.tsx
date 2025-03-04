@@ -8,9 +8,19 @@ import { WalletConnector } from '../../..';
 interface WalletButtonProps {
   walletType: string;
   network: string;
-  onConnect: () => void;
   isDisabled: boolean;
-  setIsWalletConnected: (isConnected: boolean) => void;
+  onConnect: () => void;
+  setWalletStatus: React.Dispatch<
+    React.SetStateAction<
+      | {
+          walletType: string;
+          network: string;
+          isDisabled: boolean;
+          isConnected: boolean;
+        }[]
+      | undefined
+    >
+  >;
   walletConnector?: WalletConnector;
 }
 
@@ -20,7 +30,7 @@ export const WalletButton: FC<WalletButtonProps> = ({
   onConnect,
   isDisabled,
   walletConnector,
-  setIsWalletConnected,
+  setWalletStatus,
 }) => {
   if (isDisabled) {
     return null;
@@ -56,8 +66,40 @@ export const WalletButton: FC<WalletButtonProps> = ({
   ]);
 
   useEffect(() => {
-    setIsWalletConnected(isWalletConnected);
-  }, [isWalletConnected, setIsWalletConnected]);
+    if (isEvmWallet && evmAddress) {
+      console.log('called evm');
+      setWalletStatus((prev) =>
+        prev?.map((wallet) =>
+          wallet.walletType === 'EVM'
+            ? { ...wallet, isConnected: true }
+            : wallet,
+        ),
+      );
+    } else if (isSolanaWallet && publicKey) {
+      setWalletStatus((prev) =>
+        prev?.map((wallet) =>
+          wallet.walletType === 'Solana'
+            ? { ...wallet, isConnected: true }
+            : wallet,
+        ),
+      );
+    } else if (isBitcoinWallet && bitcoinAccount) {
+      setWalletStatus((prev) =>
+        prev?.map((wallet) =>
+          wallet.walletType === 'Bitcoin'
+            ? { ...wallet, isConnected: true }
+            : wallet,
+        ),
+      );
+    }
+  }, [
+    isEvmWallet,
+    isSolanaWallet,
+    isBitcoinWallet,
+    evmAddress,
+    publicKey,
+    bitcoinAccount,
+  ]);
 
   const formatAddress = (address: string) => {
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
@@ -75,10 +117,31 @@ export const WalletButton: FC<WalletButtonProps> = ({
     if (isWalletConnected) {
       if (isEvmWallet) {
         disconnectEvm();
+        setWalletStatus((prev) =>
+          prev?.map((wallet) =>
+            wallet.walletType === 'EVM'
+              ? { ...wallet, isConnected: false }
+              : wallet,
+          ),
+        );
       } else if (isSolanaWallet) {
         disconnectSolana();
+        setWalletStatus((prev) =>
+          prev?.map((wallet) =>
+            wallet.walletType === 'Solana'
+              ? { ...wallet, isConnected: false }
+              : wallet,
+          ),
+        );
       } else if (isBitcoinWallet) {
         disconnectBitcoin?.();
+        setWalletStatus((prev) =>
+          prev?.map((wallet) =>
+            wallet.walletType === 'Bitcoin'
+              ? { ...wallet, isConnected: false }
+              : wallet,
+          ),
+        );
       }
     } else {
       onConnect();
