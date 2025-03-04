@@ -48,7 +48,7 @@ export const useConnectWalletsModal = ({
 
   const bestRoute = useAtomValue(bestRouteAtom);
   const allChains = useAtomValue(allChainsAtom);
-  
+
   const requiredWallets = useMemo(() => {
     return WALLETS.filter((wallet) => {
       if (wallet.walletType === 'EVM') {
@@ -121,7 +121,7 @@ export const useConnectWalletsModal = ({
   };
 
   return {
-    isWalletConnected, 
+    isWalletConnected,
     setIsWalletConnected,
     isBitcoinModalOpen,
     requiredWallets,
