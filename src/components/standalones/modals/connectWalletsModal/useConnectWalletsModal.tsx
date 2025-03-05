@@ -2,12 +2,12 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import { useAtomValue } from 'jotai';
 import { useEffect, useMemo, useState } from 'react';
-import { ChainType, WalletConnector } from '../../..';
+import { ChainType, WalletConnector } from '../../../..';
 import {
   allChainsAtom,
   bestRouteAtom,
   protocolInputTokenAtom,
-} from '../../../store/stateStore';
+} from '../../../../store/stateStore';
 
 const WALLETS = [
   {
@@ -37,6 +37,7 @@ type UseConnectWalletsModalProps = {
 export const useConnectWalletsModal = ({
   walletConnector,
 }: UseConnectWalletsModalProps) => {
+  const [isWalletConnected, setIsWalletConnected] = useState(false);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const { openConnectModal } = useConnectModal();
   const { setVisible } = useWalletModal(); // Hook to control the Solana wallet modal
@@ -47,6 +48,16 @@ export const useConnectWalletsModal = ({
 
   const bestRoute = useAtomValue(bestRouteAtom);
   const allChains = useAtomValue(allChainsAtom);
+
+  const [walletStatus, setWalletStatus] = useState<
+    {
+      walletType: string;
+      network: string;
+      isDisabled: boolean;
+      isConnected: boolean;
+    }[]
+  >();
+
   const requiredWallets = useMemo(() => {
     return WALLETS.filter((wallet) => {
       if (wallet.walletType === 'EVM') {
@@ -65,6 +76,10 @@ export const useConnectWalletsModal = ({
     isSolanaRequired,
     isBitcoinRequired,
   ]);
+
+  useEffect(() => {
+    setWalletStatus(requiredWallets);
+  }, [requiredWallets]);
 
   useEffect(() => {
     if (protocolInputToken?.chain?.chainType === ChainType.EVM) {
@@ -119,6 +134,10 @@ export const useConnectWalletsModal = ({
   };
 
   return {
+    walletStatus,
+    setWalletStatus,
+    isWalletConnected,
+    setIsWalletConnected,
     isBitcoinModalOpen,
     requiredWallets,
     setIsBitcoinModalOpen,

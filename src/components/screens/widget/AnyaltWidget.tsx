@@ -1,12 +1,12 @@
 import { AnyaltWidgetProps } from '../../..';
 import { Footer } from '../../molecules/footer/Footer';
 import { Header } from '../../molecules/header/Header';
-import { ConnectWalletsModal } from '../../standalones/modals/ConnectWalletsModal';
+import { ConnectWalletsModal } from '../../standalones/modals/connectWalletsModal/ConnectWalletsModal';
 import ModalWrapper from '../../standalones/modals/ModalWrapper';
 import Stepper from '../../standalones/stepper/Stepper';
 import { ChoosingRouteStep } from '../../standalones/steps/ChoosingRouteStep';
-import { CompleteStep } from '../../standalones/steps/CompleteStep';
 import { SelectTokenStep } from '../../standalones/steps/SelectTokenStep';
+import { SuccessfulDepositStep } from '../../standalones/steps/SuccessfulDepositStep';
 import { TransactionStep } from '../../standalones/steps/TransactionStep';
 import { useAnyaltWidget } from './useAnyaltWidget';
 export { useModal } from '../../../hooks/useModal';
@@ -94,7 +94,10 @@ export const AnyaltWidgetWrapper = ({
           onTxComplete={onTxComplete}
           estimateCallback={estimateCallback}
         />
-        <CompleteStep onConfigClick={onConfigClick} onComplete={onComplete} />
+        <SuccessfulDepositStep
+          onConfigClick={onConfigClick}
+          onComplete={onComplete}
+        />
       </Stepper>
       <Footer />
 

@@ -314,8 +314,8 @@ export const useAnyaltWidget = ({
 
       setIsValidAmountIn(isEnoughDepositTokens);
       setFailedToFetchRoute(false);
-      if (activeStep === 0) goToNext();
-      if (withGoNext && isEnoughDepositTokens) goToNext();
+      if (activeStep === 0) setActiveStep(1);
+      if (withGoNext && isEnoughDepositTokens) setActiveStep(1);
     } catch (error) {
       console.error(error);
       setTokenFetchError({
@@ -345,23 +345,26 @@ export const useAnyaltWidget = ({
   };
 
   const onChooseRouteButtonClick = async () => {
-    if (areWalletsConnected) {
-      // await onGetQuote(false);
-      await connectWalletsAndConfirmRoute();
-      setTransactionsProgress({});
-    } else {
-      if (walletConnector) {
-        walletConnector.connect();
+    try {
+      if (areWalletsConnected) {
+        await confirmSelectedRoute();
+        setTransactionsProgress({});
       } else {
-        connectWalletsOpen();
+        if (walletConnector) {
+          walletConnector.connect();
+        } else {
+          connectWalletsOpen();
+        }
       }
+    } catch (error) {
+      console.error(error);
     }
   };
 
   const getChain = (blockchain: string) =>
     allChains.find((chain) => chain.name === blockchain);
 
-  const connectWalletsAndConfirmRoute = async () => {
+  const confirmSelectedRoute = async () => {
     try {
       setLoading(true);
 
@@ -535,15 +538,10 @@ export const useAnyaltWidget = ({
     });
 
     let isWalletConnected = true;
-    if (isSolanaRequired && !isSolanaConnected) {
-      isWalletConnected = false;
-    }
-    if (isEvmRequired && !isEvmConnected) {
-      isWalletConnected = false;
-    }
-    if (isBitcoinRequired && !bitcoinAccount) {
-      isWalletConnected = false;
-    }
+    if (isSolanaRequired && !isSolanaConnected) isWalletConnected = false;
+    if (isEvmRequired && !isEvmConnected) isWalletConnected = false;
+    if (isBitcoinRequired && !bitcoinAccount) isWalletConnected = false;
+
     return isWalletConnected;
   }, [isSolanaConnected, isEvmConnected, bestRoute, bitcoinAccount]);
 
@@ -563,23 +561,19 @@ export const useAnyaltWidget = ({
   return {
     loading,
     activeStep,
+    activeRoute: bestRoute,
     isValidAmountIn,
     isButtonDisabled,
-    activeRoute: bestRoute,
     isConnectWalletsOpen,
     failedToFetchRoute,
     areWalletsConnected,
-    resetState,
-    onComplete,
-    getChain,
-    onGetQuote,
     onBackClick,
+    onComplete,
     onTxComplete,
-    setActiveStep,
     onConfigClick,
     openSlippageModal,
-    connectWalletsClose,
     connectWalletsOpen,
+    connectWalletsClose,
     setOpenSlippageModal,
     onChooseRouteButtonClick,
   };
