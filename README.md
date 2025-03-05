@@ -172,7 +172,7 @@ export const ClientWidgetWrapper = dynamic(
 | `isOpen`            | `boolean`                                     | Controls widget visibility               |
 | `isTokenBuyTemplate`| `boolean`                                     | true, in case of token purchase          |
 | `inputToken`        | `Token`                                       | Input token details                      |
-| `finalToken`        | `Token`                                       | Output token details                     |
+| `finalToken?`       | `Token`                                       | Output token details                     |
 | `apiKey`            | `string`                                      | API key for Anyalt services              |
 | `onClose`           | `() => void`                                  | Callback triggered when widget is closed |
 | `estimateCallback`  | `(token: Token) => Promise<EstimateResponse>` | Function to estimate token swap          |
