@@ -25,3 +25,4 @@ export const STEP_DESCR = {
 };
 
 export const REFRESH_INTERVAL = 30000;
+export const DEBOUNCE_TIMEOUT = 600;

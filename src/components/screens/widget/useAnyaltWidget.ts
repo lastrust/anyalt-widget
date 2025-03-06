@@ -7,7 +7,10 @@ import { useEffect, useMemo, useState } from 'react';
 import { useAccount } from 'wagmi';
 import { ChainType, EstimateResponse, Token, WalletConnector } from '../../..';
 import { ANYALT_PLACEHOLDER_LOGO } from '../../../constants/links';
-import { REFRESH_INTERVAL } from '../../../constants/transaction';
+import {
+  DEBOUNCE_TIMEOUT,
+  REFRESH_INTERVAL,
+} from '../../../constants/transaction';
 import {
   activeOperationIdAtom,
   allChainsAtom,
@@ -336,7 +339,7 @@ export const useAnyaltWidget = ({
       if (inTokenAmount && inToken) {
         onGetQuote(false);
       }
-    }, 600);
+    }, DEBOUNCE_TIMEOUT);
 
     return () => {
       clearTimeout(debounceTimeout);
