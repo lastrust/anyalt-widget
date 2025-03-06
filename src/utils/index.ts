@@ -39,7 +39,7 @@ export const getEvmTokenBalance = async (
   }
 
   const res = await getBalance(config, {
-    chainId: chainId as 1 | 42161 | 137 | 10 | 8453 | 59144 | 534352 | 81457,
+    chainId: chainId as chainIdsValues,
     token: tokenAddress as `0x${string}`,
     address: walletAddress as `0x${string}`,
   });
