@@ -59,7 +59,7 @@ export const useLastMileTransaction = ({
           chainId: protocolInputToken.chain.chainId,
         });
       }
-      
+
       updateTransactionProgress({
         isApproval: false,
         status: TX_STATUS.pending,
