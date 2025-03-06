@@ -37,7 +37,12 @@ export const TokenIconBox: FC<Props> = ({
           borderRadius="50%"
         />
       ) : (
-        <Box w="32px" h="32px" borderRadius="50%" bgColor="#CBD5E0" />
+        <Box
+          w="32px"
+          h="32px"
+          borderRadius="50%"
+          bgColor="rgba(255, 255, 255, 0.04)"
+        />
       )}
       <Box position="absolute" bottom="0px" left={leftSmallImg}>
         {chainIcon !== '' ? (
@@ -53,8 +58,7 @@ export const TokenIconBox: FC<Props> = ({
             w="14px"
             h="14px"
             borderRadius="50%"
-            bgColor="#CBD5E0"
-            border="1px solid black"
+            bgColor="#919EAB"
           />
         )}
       </Box>
