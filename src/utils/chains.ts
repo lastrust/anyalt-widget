@@ -24,6 +24,16 @@ export const chainIds = {
   SOLANA: 101,
 };
 
+export type chainIdsValues =
+  | 1
+  | 42161
+  | 137
+  | 10
+  | 8453
+  | 59144
+  | 534352
+  | 81457;
+
 export const CHAIN_ETHEREUM = 'ETH';
 export const CHAIN_ARBITRUM = 'ARBITRUM';
 export const CHAIN_AVALANCHE = 'AVAX_CCHAIN';

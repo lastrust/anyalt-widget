@@ -1,12 +1,4 @@
-import { connectorsForWallets } from '@rainbow-me/rainbowkit';
-import {
-  coinbaseWallet,
-  metaMaskWallet,
-  okxWallet,
-  walletConnectWallet,
-} from '@rainbow-me/rainbowkit/wallets';
-import { createAppKit } from '@reown/appkit';
-import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
+import { getDefaultConfig } from '@rainbow-me/rainbowkit';
 import {
   arbitrum,
   base,
@@ -27,45 +19,9 @@ const metadata = {
   icons: ['https://assets.reown.com/reown-profile-pic.png'],
 };
 
-const networks = [
-  mainnet,
-  arbitrum,
-  polygon,
-  optimism,
-  base,
-  linea,
-  scroll,
-  blast,
-];
-
-const connectors = connectorsForWallets(
-  [
-    {
-      groupName: 'Recommended',
-      wallets: [metaMaskWallet, coinbaseWallet, okxWallet, walletConnectWallet],
-    },
-  ],
-  {
-    appName: 'Anyalt Widget',
-    projectId: projectId,
-  },
-);
-
-export const defaultWalletConfig = new WagmiAdapter({
-  connectors,
-  networks,
+export const config = getDefaultConfig({
+  appName: metadata.name,
   projectId,
-  ssr: false,
+  chains: [mainnet, arbitrum, polygon, optimism, base, linea, scroll, blast],
+  ssr: true, // If your dApp uses server side rendering (SSR)
 });
-
-createAppKit({
-  adapters: [defaultWalletConfig],
-  networks: [mainnet, arbitrum, polygon, optimism, base, linea, scroll, blast],
-  projectId,
-  metadata,
-  features: {
-    analytics: true,
-  },
-});
-
-export const walletConfig = defaultWalletConfig.wagmiConfig;
