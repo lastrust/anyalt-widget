@@ -172,7 +172,12 @@ export const BestRouteAccordion = ({
               ) : (
                 bestRoute.swapSteps.map((swapStep, index) => {
                   return (
-                    <>
+                    <VStack
+                      gap={'12px'}
+                      alignItems={'flex-start'}
+                      color="brand.secondary.3"
+                      key={`accordion-wrapper-${swapStep.executionOrder}-${index}`}
+                    >
                       <Text textStyle={'bold.2'} lineHeight={'120%'}>
                         Transaction {index + 1}: {swapStep.swapperName}
                       </Text>
@@ -223,7 +228,7 @@ export const BestRouteAccordion = ({
                           );
                         },
                       )}
-                    </>
+                    </VStack>
                   );
                 })
               )}

@@ -7,6 +7,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useAccount } from 'wagmi';
 import { ChainType, EstimateResponse, Token, WalletConnector } from '../../..';
 import { ANYALT_PLACEHOLDER_LOGO } from '../../../constants/links';
+import { REFRESH_INTERVAL } from '../../../constants/transaction';
 import {
   activeOperationIdAtom,
   allChainsAtom,
@@ -30,7 +31,6 @@ import {
 import { calculateWorstOutput } from '../../../utils';
 import { ChainIdToChainConstant } from '../../../utils/chains';
 import { useTokenInputBox } from '../../standalones/selectSwap/token/input/useTokenInputBox';
-const REFRESH_INTERVAL = 30000;
 
 export const useAnyaltWidget = ({
   apiKey,
@@ -329,16 +329,19 @@ export const useAnyaltWidget = ({
   };
 
   useEffect(() => {
+    //Show loading state immediatly instead of waiting for a delay
+    if (inTokenAmount && inToken) setLoading(true);
+
     const debounceTimeout = setTimeout(() => {
-      if (inTokenAmount) {
+      if (inTokenAmount && inToken) {
         onGetQuote(false);
       }
-    }, 500);
+    }, 600);
 
     return () => {
       clearTimeout(debounceTimeout);
     };
-  }, [inTokenAmount]);
+  }, [inToken, protocolInputToken, inTokenAmount]);
 
   const onConfigClick = () => {
     setOpenSlippageModal(true);
@@ -479,25 +482,26 @@ export const useAnyaltWidget = ({
   };
 
   useEffect(() => {
-    if (activeStep === 1) {
+    if (activeStep === 1 && bestRoute) {
       const interval = setInterval(() => {
         // Capture latest values inside the interval callback
         const currentInToken = inToken;
         const currentProtocolInputToken = protocolInputToken;
         const currentInTokenAmount = inTokenAmount;
-
-        if (
+        const userSelectedToken =
           currentInToken &&
           currentProtocolInputToken &&
-          currentInTokenAmount
-        ) {
+          currentInTokenAmount &&
+          bestRoute;
+
+        if (userSelectedToken) {
           onGetQuote(false);
         }
       }, REFRESH_INTERVAL);
 
       return () => clearInterval(interval);
     }
-  }, [activeStep, inToken, protocolInputToken, inTokenAmount, onGetQuote]);
+  }, [bestRoute]);
 
   const areWalletsConnected = useMemo(() => {
     let isSolanaRequired = false;

@@ -38,6 +38,7 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
     updateTransactionIndex,
     updateTransactionProgress,
   } = useSwapState();
+
   const { executeTokensSwap } = useExecuteTokensSwap(
     updateTransactionIndex,
     updateTransactionProgress,
