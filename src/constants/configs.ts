@@ -1,4 +1,12 @@
-import { getDefaultConfig } from '@rainbow-me/rainbowkit';
+import { connectorsForWallets } from '@rainbow-me/rainbowkit';
+import {
+  coinbaseWallet,
+  metaMaskWallet,
+  okxWallet,
+  walletConnectWallet,
+} from '@rainbow-me/rainbowkit/wallets';
+import { createClient, http } from 'viem';
+import { createConfig } from 'wagmi';
 import {
   arbitrum,
   base,
@@ -12,16 +20,24 @@ import {
 
 const projectId = 'c9123e47ba32bd9e6b2ab13381d5e51b';
 
-const metadata = {
-  name: 'AnyAlt-Widget',
-  description: 'AppKit Example',
-  url: 'https://reown.com/appkit', // origin must match your domain & subdomain
-  icons: ['https://assets.reown.com/reown-profile-pic.png'],
-};
+const connectors = connectorsForWallets(
+  [
+    {
+      groupName: 'Recommended',
+      wallets: [metaMaskWallet, coinbaseWallet, okxWallet, walletConnectWallet],
+    },
+  ],
+  {
+    appName: 'AnyAlt-Widget',
+    projectId: projectId,
+  },
+);
 
-export const config = getDefaultConfig({
-  appName: metadata.name,
-  projectId,
+export const config = createConfig({
+  connectors,
   chains: [mainnet, arbitrum, polygon, optimism, base, linea, scroll, blast],
-  ssr: true, // If your dApp uses server side rendering (SSR)
+  ssr: true,
+  client({ chain }) {
+    return createClient({ chain, transport: http() });
+  },
 });
