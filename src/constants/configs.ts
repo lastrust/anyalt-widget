@@ -9,13 +9,16 @@ import { createClient, http } from 'viem';
 import { createConfig } from 'wagmi';
 import {
   arbitrum,
+  avalanche,
   base,
   blast,
+  bsc,
   linea,
   mainnet,
   optimism,
   polygon,
   scroll,
+  zksync
 } from 'wagmi/chains';
 
 const projectId = 'c9123e47ba32bd9e6b2ab13381d5e51b';
@@ -35,7 +38,19 @@ const connectors = connectorsForWallets(
 
 export const config = createConfig({
   connectors,
-  chains: [mainnet, arbitrum, polygon, optimism, base, linea, scroll, blast],
+  chains: [
+    mainnet,
+    arbitrum,
+    polygon,
+    optimism,
+    base,
+    linea,
+    scroll,
+    blast,
+    avalanche,
+    bsc,
+    zksync
+  ],
   ssr: true,
   client({ chain }) {
     return createClient({ chain, transport: http() });
