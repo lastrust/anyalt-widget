@@ -1,4 +1,4 @@
-import { Box, BoxProps, Image, SkeletonCircle } from '@chakra-ui/react';
+import { Box, BoxProps, Image } from '@chakra-ui/react';
 import { FC } from 'react';
 
 type Props = BoxProps & {
@@ -37,7 +37,12 @@ export const TokenIconBox: FC<Props> = ({
           borderRadius="50%"
         />
       ) : (
-        <SkeletonCircle size="32px" bgColor="brand.secondary.4" />
+        <Box
+          w="32px"
+          h="32px"
+          borderRadius="50%"
+          bgColor="rgba(255, 255, 255, 0.04)"
+        />
       )}
       <Box position="absolute" bottom="0px" left={leftSmallImg}>
         {chainIcon !== '' ? (
@@ -49,7 +54,7 @@ export const TokenIconBox: FC<Props> = ({
             borderRadius="50%"
           />
         ) : (
-          <SkeletonCircle size="14px" bgColor="brand.secondary.100" />
+          <Box w="14px" h="14px" borderRadius="50%" bgColor="#919EAB" />
         )}
       </Box>
     </Box>

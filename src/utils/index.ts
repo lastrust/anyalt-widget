@@ -3,7 +3,8 @@ import { PublicKey } from '@solana/web3.js';
 import { getBalance } from '@wagmi/core';
 import { ethers } from 'ethers';
 import { formatUnits, zeroAddress } from 'viem';
-import { walletConfig } from '../constants/configs';
+import { config } from '../constants/configs';
+import { chainIdsValues } from './chains';
 
 export function isValidEthereumAddress(address: string): boolean {
   return ethers.isAddress(address);
@@ -29,16 +30,16 @@ export const getEvmTokenBalance = async (
     tokenAddress === zeroAddress ||
     tokenAddress.toLowerCase() === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
   ) {
-    const res = await getBalance(walletConfig, {
-      chainId: chainId,
+    const res = await getBalance(config, {
+      chainId: chainId as chainIdsValues,
       address: walletAddress as `0x${string}`,
     });
     const balance = formatUnits(res.value, res.decimals);
     return balance;
   }
 
-  const res = await getBalance(walletConfig, {
-    chainId: chainId,
+  const res = await getBalance(config, {
+    chainId: chainId as chainIdsValues,
     token: tokenAddress as `0x${string}`,
     address: walletAddress as `0x${string}`,
   });

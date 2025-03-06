@@ -2,7 +2,7 @@ import { AnyAlt } from '@anyalt/sdk';
 import { switchChain } from '@wagmi/core';
 import { useAtom, useAtomValue } from 'jotai';
 import { ChainType, ExecuteResponse, Token } from '../../..';
-import { walletConfig } from '../../../constants/configs';
+import { config } from '../../../constants/configs';
 import {
   STEP_DESCR,
   TX_MESSAGE,
@@ -17,6 +17,7 @@ import {
   TransactionError,
   TransactionProgress,
 } from '../../../types/transaction';
+import { chainIdsValues } from '../../../utils/chains';
 
 type UseLastMileTransactionProps = {
   updateTransactionProgress: (progress: TransactionProgress) => void;
@@ -55,8 +56,8 @@ export const useLastMileTransaction = ({
       const isEvm = protocolInputToken?.chain?.chainType === ChainType.EVM;
 
       if (isEvm && protocolInputToken?.chain?.chainId) {
-        await switchChain(walletConfig, {
-          chainId: protocolInputToken.chain.chainId,
+        await switchChain(config, {
+          chainId: protocolInputToken.chain.chainId as chainIdsValues,
         });
       }
 

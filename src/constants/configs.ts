@@ -5,38 +5,23 @@ import {
   okxWallet,
   walletConnectWallet,
 } from '@rainbow-me/rainbowkit/wallets';
-import { createAppKit } from '@reown/appkit';
-import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
+import { createClient, http } from 'viem';
+import { createConfig } from 'wagmi';
 import {
   arbitrum,
+  avalanche,
   base,
   blast,
+  bsc,
   linea,
   mainnet,
   optimism,
   polygon,
   scroll,
+  zksync,
 } from 'wagmi/chains';
 
 const projectId = 'c9123e47ba32bd9e6b2ab13381d5e51b';
-
-const metadata = {
-  name: 'AnyAlt-Widget',
-  description: 'AppKit Example',
-  url: 'https://reown.com/appkit', // origin must match your domain & subdomain
-  icons: ['https://assets.reown.com/reown-profile-pic.png'],
-};
-
-const networks = [
-  mainnet,
-  arbitrum,
-  polygon,
-  optimism,
-  base,
-  linea,
-  scroll,
-  blast,
-];
 
 const connectors = connectorsForWallets(
   [
@@ -46,26 +31,28 @@ const connectors = connectorsForWallets(
     },
   ],
   {
-    appName: 'Anyalt Widget',
+    appName: 'AnyAlt-Widget',
     projectId: projectId,
   },
 );
 
-export const defaultWalletConfig = new WagmiAdapter({
+export const config = createConfig({
   connectors,
-  networks,
-  projectId,
-  ssr: false,
-});
-
-createAppKit({
-  adapters: [defaultWalletConfig],
-  networks: [mainnet, arbitrum, polygon, optimism, base, linea, scroll, blast],
-  projectId,
-  metadata,
-  features: {
-    analytics: true,
+  chains: [
+    mainnet,
+    arbitrum,
+    polygon,
+    optimism,
+    base,
+    linea,
+    scroll,
+    blast,
+    avalanche,
+    bsc,
+    zksync,
+  ],
+  ssr: true,
+  client({ chain }) {
+    return createClient({ chain, transport: http() });
   },
 });
-
-export const walletConfig = defaultWalletConfig.wagmiConfig;

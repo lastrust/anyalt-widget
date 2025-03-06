@@ -9,8 +9,9 @@ import { useAtomValue } from 'jotai';
 import { useCallback } from 'react';
 import { useAccount } from 'wagmi';
 import { WalletConnector } from '../../../..';
-import { walletConfig } from '../../../../constants/configs';
+import { config } from '../../../../constants/configs';
 import { allChainsAtom } from '../../../../store/stateStore';
+import { chainIdsValues } from '../../../../utils/chains';
 
 export const useEvmHandler = (externalEvmWalletConnector?: WalletConnector) => {
   const { isConnected: isEvmConnected } = useAccount();
@@ -53,27 +54,27 @@ export const useEvmHandler = (externalEvmWalletConnector?: WalletConnector) => {
           );
         }
 
-        await switchChain(walletConfig, {
-          chainId: chain.chainId,
+        await switchChain(config, {
+          chainId: chain.chainId as chainIdsValues,
         });
 
         if (transactionDetails.isApprovalTx) {
-          const txHash = await sendTransaction(walletConfig, {
+          const txHash = await sendTransaction(config, {
             to: transactionDetails.to as `0x${string}`,
             data: transactionDetails.data! as `0x${string}`,
           });
-          await waitForTransactionReceipt(walletConfig, {
+          await waitForTransactionReceipt(config, {
             hash: txHash,
           });
 
           return txHash;
         } else {
-          const txHash = await sendTransaction(walletConfig, {
+          const txHash = await sendTransaction(config, {
             to: transactionDetails.to as `0x${string}`,
             value: BigInt(transactionDetails.value || 0),
             data: transactionDetails.data! as `0x${string}`,
           });
-          await waitForTransactionReceipt(walletConfig, {
+          await waitForTransactionReceipt(config, {
             hash: txHash,
           });
 
