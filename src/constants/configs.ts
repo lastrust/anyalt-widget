@@ -18,7 +18,7 @@ import {
   optimism,
   polygon,
   scroll,
-  zksync
+  zksync,
 } from 'wagmi/chains';
 
 const projectId = 'c9123e47ba32bd9e6b2ab13381d5e51b';
@@ -49,7 +49,7 @@ export const config = createConfig({
     blast,
     avalanche,
     bsc,
-    zksync
+    zksync,
   ],
   ssr: true,
   client({ chain }) {

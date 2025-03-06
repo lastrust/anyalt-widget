@@ -49,7 +49,13 @@ export const TokenIconBox: FC<Props> = ({
             borderRadius="50%"
           />
         ) : (
-          <Box w="14px" h="14px" borderRadius="50%" bgColor="#CBD5E0" border="1px solid black" />
+          <Box
+            w="14px"
+            h="14px"
+            borderRadius="50%"
+            bgColor="#CBD5E0"
+            border="1px solid black"
+          />
         )}
       </Box>
     </Box>
