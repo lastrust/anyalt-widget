@@ -40,7 +40,7 @@ export const TokenItem: FC<Props> = ({
           borderBottom: 'none',
         }}
         _hover={{
-          bgColor: 'brand.secondary.4',
+          bgColor: 'brand.bg.card',
         }}
         px="8px"
         onClick={onClick}
@@ -98,7 +98,7 @@ export const TokenItem: FC<Props> = ({
           </Flex>
         </Box>
       </Box>
-      <Divider w="100%" h="1px" bgColor="brand.secondary.8" my="8px" />
+      <Divider w="100%" h="1px" bgColor="brand.bg.primary" my="8px" />
     </>
   );
 };

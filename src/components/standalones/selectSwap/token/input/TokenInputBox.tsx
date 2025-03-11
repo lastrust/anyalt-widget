@@ -51,7 +51,7 @@ export const TokenInputBox: FC<Props> = ({
         alignItems="center"
         mb="12px"
       >
-        <Text color={'brand.secondary.3'} textStyle={'bold.2'}>
+        <Text color={'brand.text.secondary.2'} textStyle={'bold.2'}>
           Choose Your Deposit
         </Text>
         <Box
@@ -60,7 +60,11 @@ export const TokenInputBox: FC<Props> = ({
           alignItems="center"
           gap="4px"
         >
-          <Text color={'brand.secondary.3'} textStyle={'bold.3'} opacity={0.4}>
+          <Text
+            color={'brand.text.secondary.2'}
+            textStyle={'bold.3'}
+            opacity={0.4}
+          >
             Balance: {balance ? truncateToDecimals(balance, 6) : ''}
           </Text>
           <Button
@@ -84,7 +88,7 @@ export const TokenInputBox: FC<Props> = ({
         justifyContent="space-between"
         alignItems="center"
         gap="16px"
-        bgColor="brand.secondary.4"
+        bgColor="brand.bg.cardBg"
         padding="16px"
         borderRadius="8px"
         border={!isValidAmountIn || failedToFetchRoute ? '1px solid' : 'none'}

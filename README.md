@@ -167,18 +167,18 @@ export const ClientWidgetWrapper = dynamic(
 
 ### Props
 
-| Prop                | Type                                          | Description                              |
-| ------------------- | --------------------------------------------- | ---------------------------------------- |
-| `isOpen`            | `boolean`                                     | Controls widget visibility               |
-| `isTokenBuyTemplate`| `boolean`                                     | true, in case of token purchase          |
-| `inputToken`        | `Token`                                       | Input token details                      |
-| `finalToken?`       | `Token`                                       | Output token details                     |
-| `apiKey`            | `string`                                      | API key for Anyalt services              |
-| `onClose`           | `() => void`                                  | Callback triggered when widget is closed |
-| `estimateCallback`  | `(token: Token) => Promise<EstimateResponse>` | Function to estimate token swap          |
-| `executeCallBack`   | `(token: Token) => Promise<ExecuteResponse>`  | Function to execute token swap           |
-| `walletConnector?`  | `WalletConnector`                             | Optional custom wallet connector         |
-| `minDepositAmount?` | `number`                                      | Minimum deposit amount in USD equivalent |
+| Prop                 | Type                                          | Description                              |
+| -------------------- | --------------------------------------------- | ---------------------------------------- |
+| `isOpen`             | `boolean`                                     | Controls widget visibility               |
+| `isTokenBuyTemplate` | `boolean`                                     | true, in case of token purchase          |
+| `inputToken`         | `Token`                                       | Input token details                      |
+| `finalToken?`        | `Token`                                       | Output token details                     |
+| `apiKey`             | `string`                                      | API key for Anyalt services              |
+| `onClose`            | `() => void`                                  | Callback triggered when widget is closed |
+| `estimateCallback`   | `(token: Token) => Promise<EstimateResponse>` | Function to estimate token swap          |
+| `executeCallBack`    | `(token: Token) => Promise<ExecuteResponse>`  | Function to execute token swap           |
+| `walletConnector?`   | `WalletConnector`                             | Optional custom wallet connector         |
+| `minDepositAmount?`  | `number`                                      | Minimum deposit amount in USD equivalent |
 
 `isTokenBuyTemplate` is used to determine if the widget is in token buy template mode.
 
@@ -252,13 +252,170 @@ export interface WalletConnector {
 
 ## Theming
 
-You can customize the widget’s appearance by modifying `defaultTheme`.
+You can customize the widget's appearance by modifying the `defaultTheme`. The theme object follows Chakra UI's theme structure and can be customized extensively.
+
+### Basic Theme Customization
+
+```tsx
+import { defaultTheme } from '@anyalt/widget';
+import { WidgetProvider } from '@anyalt/widget';
+
+// Create your custom theme by extending the default theme
+const customTheme = {
+  ...defaultTheme,
+  colors: {
+    ...defaultTheme.colors,
+    brand: {
+      ...defaultTheme.colors.brand,
+      primary: '#YOUR_PRIMARY_COLOR',
+      secondary: {
+        1: '#000000',
+        2: 'rgba(255, 255, 255, 0.80)',
+        3: 'rgba(255, 255, 255, 0.40)',
+        4: '#YOUR_SECONDARY_COLOR',
+        // ... other secondary colors
+      },
+      tertiary: {
+        1: '#YOUR_TERTIARY_COLOR',
+        2: '#YOUR_TERTIARY_COLOR_DARKER',
+        3: '#YOUR_TERTIARY_COLOR_WITH_OPACITY',
+      },
+    },
+  },
+};
+
+// Use the custom theme in your app
+const App = () => {
+  return (
+    <WidgetProvider theme={customTheme}>
+      {/* Your app content */}
+    </WidgetProvider>
+  );
+};
+```
+
+### Available Theme Customization Options
+
+The widget supports customization of the following theme properties:
+
+#### Colors
 
 ```ts
-import { defaultTheme } from '@anyalt/widget';
-
-defaultTheme.colors.primary = '#ff5733';
+colors: {
+  brand: {
+    primary: string;           // Main background color
+    secondary: {
+      1: string;              // Black color
+      2: string;              // High emphasis text
+      3: string;              // Medium emphasis text
+      4: string;              // Button background
+      5: string;              // White color
+      6: string;              // Divider color
+      7: string;              // Modal overlay
+      8: string;              // Hover states
+      9: string;              // Disabled states
+    },
+    tertiary: {
+      1: string;              // Primary accent color
+      2: string;              // Darker accent color
+      3: string;              // Accent color with opacity
+    },
+    text: {
+      primary: string;        // Primary text color
+      warning: string;        // Warning text color
+    },
+    border: {
+      primary: string;        // Primary border color
+      tag: string;           // Tag border color
+      bestRoute: string;     // Best route indicator border
+    },
+    bg: {
+      tag: string;           // Tag background
+      modal: string;         // Modal background
+    }
+  }
+}
 ```
+
+#### Typography
+
+```ts
+fonts: {
+  heading: string; // Heading font family
+  body: string; // Body font family
+}
+```
+
+#### Global Styles
+
+```ts
+styles: {
+  global: {
+    body: {
+      bg: string; // Body background color
+      color: string; // Default text color
+      fontFamily: string; // Default font family
+    }
+  }
+}
+```
+
+### Example with Full Customization
+
+```tsx
+const fullCustomTheme = {
+  ...defaultTheme,
+  colors: {
+    brand: {
+      primary: '#1A1A1A',
+      secondary: {
+        1: '#000000',
+        2: 'rgba(255, 255, 255, 0.90)',
+        3: 'rgba(255, 255, 255, 0.50)',
+        4: '#2A2A2A',
+        5: '#FFFFFF',
+        6: 'rgba(255, 255, 255, 0.10)',
+        7: 'rgba(0, 0, 0, 0.6)',
+        8: '#3A3A3A',
+        9: '#666666',
+      },
+      tertiary: {
+        1: '#3498db',
+        2: '#2980b9',
+        3: '#3498db33',
+      },
+      text: {
+        primary: '#FFFFFF',
+        warning: '#f1c40f',
+      },
+      border: {
+        primary: 'rgba(255, 255, 255, 0.15)',
+        tag: '#3498db',
+        bestRoute: '#3498db',
+      },
+      bg: {
+        tag: 'transparent',
+        modal: '#0A0A0A',
+      },
+    },
+  },
+  fonts: {
+    heading: '"Rethink Sans", sans-serif',
+    body: '"Rethink Sans", sans-serif',
+  },
+  styles: {
+    global: {
+      body: {
+        bg: '#1A1A1A',
+        color: '#FFFFFF',
+        fontFamily: '"Rethink Sans", sans-serif',
+      },
+    },
+  },
+};
+```
+
+Remember to maintain sufficient contrast ratios for accessibility when customizing colors.
 
 ---
 

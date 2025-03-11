@@ -41,7 +41,7 @@ export const SlippageModal = ({ isOpen, onClose }: Props) => {
         overflow="hidden"
         position="relative"
         border="1px solid"
-        borderColor="brand.secondary.8"
+        borderColor="brand.border.secondary"
         borderBottom="none"
         zIndex="100"
       >
@@ -91,7 +91,7 @@ export const SlippageModal = ({ isOpen, onClose }: Props) => {
               bgColor="brand.primary"
               borderRadius="8px"
               border="1px solid"
-              borderColor="brand.secondary.8"
+              borderColor="brand.border.secondary"
               display="flex"
               flexDir="row"
               alignItems="center"

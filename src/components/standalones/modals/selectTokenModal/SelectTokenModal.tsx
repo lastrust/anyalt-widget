@@ -49,7 +49,7 @@ export const TokenSelectModal = ({ isOpen, onClose, onTokenSelect }: Props) => {
       display="flex"
       flexDir="column"
       justifyContent="flex-end"
-      bgColor="brand.secondary.7"
+      bgColor="brand.bg.selectToken"
       backdropFilter="blur(10px)"
       zIndex="2000"
       _hover={{
@@ -82,7 +82,7 @@ export const TokenSelectModal = ({ isOpen, onClose, onTokenSelect }: Props) => {
         overflow="hidden"
         position="relative"
         border="1px solid"
-        borderColor="brand.secondary.8"
+        borderColor="brand.border.secondary"
         borderBottom="none"
         zIndex="100"
       >
@@ -114,7 +114,7 @@ export const TokenSelectModal = ({ isOpen, onClose, onTokenSelect }: Props) => {
                 borderColor={
                   activeChain?.id === chain.id
                     ? 'brand.tertiary.1'
-                    : 'brand.secondary.8'
+                    : 'brand.border.secondary'
                 }
                 bgColor="brand.primary"
                 width="fit-content"
@@ -141,7 +141,7 @@ export const TokenSelectModal = ({ isOpen, onClose, onTokenSelect }: Props) => {
           <InputGroup
             borderRadius="32px"
             border="1px solid"
-            borderColor="brand.secondary.8"
+            borderColor="brand.border.secondary"
             bgColor="brand.primary"
             opacity="0.4"
             mb="16px"

@@ -31,14 +31,6 @@ export const defaultTheme = extendTheme({
     brand: {
       primary: '#121212',
       secondary: {
-        1: '#000000',
-        2: 'rgba(255, 255, 255, 0.80)',
-        3: 'rgba(255, 255, 255, 0.40)',
-        4: '#919eab0a',
-        5: '#ffffff',
-        6: 'rgba(255, 255, 255, 0.08)',
-        7: 'rgba(0, 0, 0, 0.5)',
-        8: '#919eab1f',
         9: '#919eab',
       },
       tertiary: {
@@ -52,16 +44,27 @@ export const defaultTheme = extendTheme({
       },
       border: {
         primary: 'rgba(145, 158, 171, 0.12)',
+        secondary: '#919eab1f',
         tag: '#008080',
         bestRoute: '#008080',
       },
       bg: {
+        primary: '#919eab1f',
+        hover: '#919eab1f',
         tag: 'transparent',
         modal: '#0C0600',
+        cardBg: '#919eab0a',
+        selectToken: 'rgba(0, 0, 0, 0.5)',
       },
       text: {
         primary: '#fff',
         warning: '#f9e154',
+        secondary: {
+          0: '#ffffff',
+          1: 'rgba(255, 255, 255, 0.80)',
+          2: 'rgba(255, 255, 255, 0.40)',
+          3: 'rgba(255, 255, 255, 0.08)',
+        },
       },
       buttons: {
         close: {

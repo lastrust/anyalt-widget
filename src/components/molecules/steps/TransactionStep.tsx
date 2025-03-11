@@ -48,7 +48,7 @@ export const TransactionStep = ({
             border="1px solid white"
           />
           <Text
-            color="brand.secondary.3"
+            color="brand.text.secondary.2"
             textStyle={'bold.3'}
             fontSize={'12px'}
             lineHeight={'120%'}
@@ -90,7 +90,7 @@ export const TransactionStep = ({
               </Box>
             </Box>
             <Text
-              color="brand.secondary.3"
+              color="brand.text.secondary.2"
               fontSize="12px"
               fontWeight="regular"
               noOfLines={1}
@@ -135,7 +135,7 @@ export const TransactionStep = ({
             </Box>
             <Box>
               <Text
-                color="brand.secondary.3"
+                color="brand.text.secondary.2"
                 textStyle={'regular.3'}
                 noOfLines={1}
                 maxW={'105px'}

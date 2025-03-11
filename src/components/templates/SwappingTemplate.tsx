@@ -77,7 +77,7 @@ export const SwappingTemplate = ({
                   <Text
                     fontSize={'14px'}
                     fontWeight={'normal'}
-                    color="brand.secondary.2"
+                    color="brand.text.secondary.1"
                     whiteSpace={'nowrap'}
                   >
                     {subtitle}
@@ -112,7 +112,7 @@ export const SwappingTemplate = ({
               <Text
                 fontSize={'14px'}
                 fontWeight={'normal'}
-                color="brand.secondary.2"
+                color="brand.text.secondary.1"
               >
                 {secondSubtitle}
               </Text>

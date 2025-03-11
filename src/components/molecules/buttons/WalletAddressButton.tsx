@@ -23,7 +23,7 @@ export const WalletAddressButton = ({
       <Text
         cursor={'pointer'}
         textStyle={'regular.3'}
-        color="brand.secondary.3"
+        color="brand.text.secondary.2"
         onClick={onClick}
         noOfLines={1}
         maxW={'300px'}

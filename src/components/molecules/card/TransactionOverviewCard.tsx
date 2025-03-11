@@ -32,7 +32,7 @@ export const TransactionOverviewCard = ({ operationId, to, from }: Props) => {
       gap={'12px'}
       borderWidth={'1px'}
       borderRadius="10px"
-      bg="brand.secondary.6"
+      bg="brand.text.secondary.3"
       borderColor="brand.border.primary"
     >
       <VStack w="100%" gap={'16px'} alignItems="flex-start">
@@ -59,9 +59,9 @@ export const TransactionOverviewCard = ({ operationId, to, from }: Props) => {
           />
         </HStack>
       </VStack>
-      <Divider w="100%" h="1px" bgColor="brand.secondary.8" />
+      <Divider w="100%" h="1px" bgColor="brand.bg.primary" />
       <HStack justifyContent={'space-between'} w="100%">
-        <Text textStyle={'regular.3'} color="brand.secondary.3">
+        <Text textStyle={'regular.3'} color="brand.text.secondary.2">
           OperationID: {isCopied ? 'Copied' : operationId}
         </Text>
         <Box cursor={'pointer'} onClick={handleCopy}>

@@ -28,8 +28,6 @@ const ModalWrapper: FC<ModalWrapperProps> = ({
       <ModalContent
         bg="brand.primary"
         borderRadius="12px"
-        // border="1px solid"
-        // borderColor="brand.secondary.8"
         maxW={maxWidthCustom || '1000px'}
         containerProps={{ zIndex: 1000 }}
       >

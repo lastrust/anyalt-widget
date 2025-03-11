@@ -18,15 +18,15 @@ export const WalletCard: FC<WalletCardProps> = ({
       w="100%"
       h="auto"
       p="16px"
-      bg="brand.secondary.4"
-      _hover={{ bg: 'brand.secondary.8' }}
+      bg="brand.bg.card"
+      _hover={{ bg: 'brand.bg.hover' }}
       onClick={onClick}
     >
       <VStack w="100%" justify="space-between" align="start">
-        <Text color="brand.secondary.5" fontSize="20px">
+        <Text color="brand.text.secondary.0" fontSize="20px">
           {walletType}
         </Text>
-        <Text color="brand.secondary.3" fontSize="16px">
+        <Text color="brand.text.secondary.2" fontSize="16px">
           {network}
         </Text>
       </VStack>

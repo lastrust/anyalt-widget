@@ -49,7 +49,7 @@ export const LastMileTxAccordion = ({
       borderRadius={'10px'}
       p={'16px'}
       cursor={'pointer'}
-      bg={isLastMileExpanded ? 'brand.secondary.8' : 'transparent'}
+      bg={isLastMileExpanded ? 'brand.bg.primary' : 'transparent'}
       _hover={{
         bgColor: 'bg.secondary.1',
       }}
@@ -131,7 +131,7 @@ export const LastMileTxAccordion = ({
                 <HStack>
                   <TimeIcon />
                   <Text
-                    color={'brand.secondary.3'}
+                    color={'brand.text.secondary.2'}
                     lineHeight={'120%'}
                     textStyle={'regular.3'}
                   >
@@ -142,7 +142,7 @@ export const LastMileTxAccordion = ({
                 <HStack>
                   <GasIcon />
                   <Text
-                    color={'brand.secondary.3'}
+                    color={'brand.text.secondary.2'}
                     lineHeight={'120%'}
                     textStyle={'regular.3'}
                   >

@@ -31,13 +31,6 @@ export const whiteTheme = extendTheme({
     brand: {
       primary: '#ffffff',
       secondary: {
-        1: '#000000',
-        2: '#999',
-        3: '#999',
-        4: '#F2F3F4',
-        5: '#ffffff',
-        6: '#F2F3F4',
-        7: 'rgba(0, 0, 0, 0.5)',
         8: '#919eab1f',
         9: '#919eab',
       },
@@ -56,12 +49,22 @@ export const whiteTheme = extendTheme({
         bestRoute: '#333',
       },
       bg: {
+        primary: '#919eab1f',
+        hover: '#919eab1f',
         tag: '#fff',
         modal: '#fff',
+        cardBg: '#F2F3F4',
+        selectToken: 'rgba(0, 0, 0, 0.5)',
       },
       text: {
         primary: '#000000',
         warning: '#ffcc00',
+        secondary: {
+          0: '#ffffff',
+          1: '#999',
+          2: '#999',
+          3: '#F2F3F4',
+        },
       },
       footer: {
         text: '#333',

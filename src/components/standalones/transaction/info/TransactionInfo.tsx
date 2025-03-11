@@ -63,7 +63,7 @@ export const TransactionInfo: FC<Props> = ({
             <HStack justifyContent={'space-between'} w={'100%'}>
               <Text
                 textStyle={'regular.1'}
-                color="brand.secondary.3"
+                color="brand.text.secondary.2"
                 w={'100%'}
                 whiteSpace={'nowrap'}
               >
@@ -120,7 +120,7 @@ export const TransactionInfo: FC<Props> = ({
             ))}
 
           <Box position="relative" w="100%">
-            <Divider w="100%" h="1px" bgColor="brand.secondary.8" />
+            <Divider w="100%" h="1px" bgColor="brand.bg.primary" />
             <Center
               position="absolute"
               top="50%"

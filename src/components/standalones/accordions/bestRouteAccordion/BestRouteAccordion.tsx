@@ -87,7 +87,7 @@ export const BestRouteAccordion = ({
                 <RouteTag
                   loading={loading}
                   text="Fastest"
-                  textColor="brand.secondary.5"
+                  textColor="brand.text.secondary.0"
                   bgColor="brand.tertiary.1"
                   withBorder={false}
                 />
@@ -156,7 +156,7 @@ export const BestRouteAccordion = ({
                   ? `${protocolFinalToken?.name} on ${protocolInputToken?.chain?.displayName}`
                   : bestRoute.swapSteps[0]?.swapperName
               }
-              bg={'brand.secondary.6'}
+              bg={'brand.text.secondary.3'}
               p="12px"
               borderRadius={'8px'}
             />
@@ -165,7 +165,7 @@ export const BestRouteAccordion = ({
             <VStack
               gap={'12px'}
               alignItems={'flex-start'}
-              color="brand.secondary.3"
+              color="brand.text.secondary.2"
             >
               {loading ? (
                 <Skeleton w={'180px'} h={'18px'} borderRadius="12px" />
@@ -175,7 +175,7 @@ export const BestRouteAccordion = ({
                     <VStack
                       gap={'12px'}
                       alignItems={'flex-start'}
-                      color="brand.secondary.3"
+                      color="brand.text.secondary.2"
                       key={`accordion-wrapper-${swapStep.executionOrder}-${index}`}
                     >
                       <Text textStyle={'bold.2'} lineHeight={'120%'}>

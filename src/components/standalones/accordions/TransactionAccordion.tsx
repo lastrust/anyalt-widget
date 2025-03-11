@@ -70,7 +70,7 @@ export const TransactionAccordion = () => {
           key={`${swapStep.executionOrder}-${index}`}
           p={'16px'}
           cursor={'pointer'}
-          bg="brand.secondary.6"
+          bg="brand.text.secondary.3"
           onClick={handleRouteSelect}
           borderRadius={'10px'}
           borderWidth={'3px!important'}
@@ -126,7 +126,7 @@ export const TransactionAccordion = () => {
           </AccordionButton>
           <AccordionPanel p={'0px'} mt="12px">
             <VStack gap={'12px'} alignItems={'flex-start'}>
-              <Text textStyle={'regular.1'} color="brand.secondary.3">
+              <Text textStyle={'regular.1'} color="brand.text.secondary.2">
                 {swapStep.swapperType === 'BRIDGE' ? 'Bridge' : 'Swap'} tokens
                 using {swapStep.swapperName}
               </Text>
@@ -182,7 +182,7 @@ export const TransactionAccordion = () => {
                 <HStack>
                   <TimeIcon />
                   <Text
-                    color={'brand.secondary.3'}
+                    color={'brand.text.secondary.2'}
                     lineHeight={'120%'}
                     textStyle={'regular.3'}
                   >
@@ -194,7 +194,7 @@ export const TransactionAccordion = () => {
                 <HStack>
                   <GasIcon />
                   <Text
-                    color={'brand.secondary.3'}
+                    color={'brand.text.secondary.2'}
                     lineHeight={'120%'}
                     textStyle={'regular.3'}
                   >
