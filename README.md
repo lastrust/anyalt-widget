@@ -390,25 +390,6 @@ const customTheme = {
 };
 ```
 
-#### Dark/Light Mode Colors
-
-```tsx
-const darkTheme = {
-  ...defaultTheme,
-  colors: {
-    brand: {
-      ...defaultTheme.colors.brand,
-      primary: '#121212',
-      bg: {
-        ...defaultTheme.colors.brand.bg,
-        cardBg: '#1e1e1e',
-        modal: '#000000',
-      },
-    },
-  },
-};
-```
-
 Remember to maintain sufficient contrast ratios for accessibility when customizing colors.
 
 ---
