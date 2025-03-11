@@ -58,9 +58,9 @@ export const SwappingTemplate = ({
                 {onBackClick && (
                   <Box
                     cursor="pointer"
-                    color={'brand.tertiary.1'}
+                    color={'brand.buttons.action.bg'}
                     _hover={{
-                      color: 'brand.tertiary.2',
+                      color: 'brand.buttons.action.hover',
                     }}
                     onClick={onBackClick}
                     transform={'rotate(180deg)'}
@@ -89,7 +89,7 @@ export const SwappingTemplate = ({
             {onConfigClick && (
               <Box
                 cursor="pointer"
-                color="brand.tertiary.1"
+                color="brand.text.active"
                 onClick={onConfigClick}
               >
                 <Icon as={ConfigIcon} />

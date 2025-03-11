@@ -67,13 +67,13 @@ export const LastMileTxAccordion = ({
             Transaction {bestRoute.swapSteps.length + 1}
           </Text>
           {currentStep === bestRoute.swapSteps.length + 1 && (
-            <Text textStyle={'bold.1'} color="brand.tertiary.1">
+            <Text textStyle={'bold.1'} color="brand.text.active">
               In Progress
             </Text>
           )}
         </HStack>
         <Box
-          bg="brand.tertiary.1"
+          bg="brand.bg.active"
           borderRadius={'50%'}
           w={'24px'}
           h={'24px'}

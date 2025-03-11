@@ -20,7 +20,7 @@ export const ProgressItem: FC<Props> = ({ isApprove, progress }) => {
           progress.status === 'pending') && (
           <CircularProgress
             isIndeterminate
-            color="brand.tertiary.1"
+            color="brand.text.active"
             trackColor="transparent"
             size={'20px'}
           />

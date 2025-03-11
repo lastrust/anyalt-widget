@@ -200,7 +200,7 @@ export const WalletButton: FC<WalletButtonProps> = ({
             </Text>
             <Circle
               size="8px"
-              bg={isWalletConnected ? 'brand.tertiary.1' : 'red'}
+              bg={isWalletConnected ? 'brand.border.active' : 'brand.bg.error'}
             />
           </Flex>
           <Text color="brand.text.secondary.2" fontSize="14px">

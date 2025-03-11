@@ -17,9 +17,9 @@ export const CustomButton = ({ onButtonClick, children, ...props }: Props) => {
       fontWeight="700"
       lineHeight="120%"
       height={'unset'}
-      bg="brand.tertiary.1"
+      bg="brand.buttons.action.bg"
       _hover={{
-        bg: 'brand.tertiary.2',
+        bg: 'brand.buttons.action.hover',
       }}
       onClick={() => {
         onButtonClick();

@@ -72,9 +72,9 @@ export const SuccessfulDepositStep = ({ onConfigClick, onComplete }: Props) => {
         </Flex>
         <Button
           width={'100%'}
-          bg="brand.tertiary.1"
+          bg="brand.buttons.action.bg"
           _hover={{
-            bg: 'brand.tertiary.2',
+            bg: 'brand.buttons.action.hover',
           }}
           color="white"
           fontSize="16px"

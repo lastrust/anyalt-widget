@@ -12,7 +12,7 @@ export const TokenAcceptAlert: FC<Props> = ({ onClick, ...props }) => {
       borderRadius="8px"
       bgColor="brand.primary"
       border="1px solid"
-      borderColor="brand.quinary.1"
+      borderColor="brand.border.error"
       padding="12px"
       {...props}
     >
@@ -29,9 +29,9 @@ export const TokenAcceptAlert: FC<Props> = ({ onClick, ...props }) => {
         acknowledge and accept the risk.
       </Text>
       <Button
-        bg="brand.tertiary.1"
+        bg="brand.buttons.action.bg"
         _hover={{
-          bg: 'brand.tertiary.2',
+          bg: 'brand.buttons.action.hover',
         }}
         color="white"
         fontSize="16px"

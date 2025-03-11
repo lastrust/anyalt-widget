@@ -30,24 +30,19 @@ export const defaultTheme = extendTheme({
   colors: {
     brand: {
       primary: '#121212',
-      tertiary: {
-        1: '#008080',
-        2: '#006666',
-        3: '#00808033',
-      },
-      quinary: {
-        1: '#E53030',
-        2: '#E530301a',
-      },
       border: {
-        primary: 'rgba(145, 158, 171, 0.12)',
-        secondary: '#919eab1f',
         tag: '#008080',
+        active: '#008080',
         bestRoute: '#008080',
+        secondary: '#919eab1f',
+        error: '#E53030',
+        primary: 'rgba(145, 158, 171, 0.12)',
       },
       bg: {
         primary: '#919eab1f',
+        active: '#008080',
         hover: '#919eab1f',
+        error: 'E530301a',
         tag: 'transparent',
         modal: '#0C0600',
         cardBg: '#919eab0a',
@@ -57,6 +52,8 @@ export const defaultTheme = extendTheme({
       text: {
         primary: '#fff',
         warning: '#f9e154',
+        error: '#E53030',
+        active: '#008080',
         secondary: {
           0: '#ffffff',
           1: 'rgba(255, 255, 255, 0.80)',
@@ -74,6 +71,12 @@ export const defaultTheme = extendTheme({
         },
         accordion: {
           primary: '#fff',
+        },
+        action: {
+          bg: '#008080',
+          bgFaded: '#00808033',
+          hover: '#006666',
+          disabled: '00808033',
         },
         disabled: '#0B3E3E',
       },

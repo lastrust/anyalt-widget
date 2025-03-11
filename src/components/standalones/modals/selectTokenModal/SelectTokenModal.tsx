@@ -113,7 +113,7 @@ export const TokenSelectModal = ({ isOpen, onClose, onTokenSelect }: Props) => {
                 border="1px solid"
                 borderColor={
                   activeChain?.id === chain.id
-                    ? 'brand.tertiary.1'
+                    ? 'brand.border.active'
                     : 'brand.border.secondary'
                 }
                 bgColor="brand.primary"

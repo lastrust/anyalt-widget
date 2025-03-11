@@ -33,7 +33,7 @@ export const WalletsGroup = ({
   return (
     <HStack alignItems={'center'}>
       {isConnected && (
-        <Text color="brand.tertiary.1" textStyle={'regular.2'}>
+        <Text color="brand.text.active" textStyle={'regular.2'}>
           Connected:
         </Text>
       )}
