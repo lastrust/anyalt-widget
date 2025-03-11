@@ -136,7 +136,8 @@ export const TokenInputBox: FC<Props> = ({
           </Box>
           <Box>
             <Input
-              type="number"
+              type="text"
+              pattern="[0-9]+([,\.][0-9]+)?"
               fontSize="32px"
               fontWeight="bold"
               border="none"
@@ -152,9 +153,18 @@ export const TokenInputBox: FC<Props> = ({
                 color: 'brand.text.primary',
                 opacity: 0.4,
               }}
-              value={inTokenAmount?.replace(',', '.')}
+              value={inTokenAmount}
               onChange={(e) => {
-                setInTokenAmount(e.target.value);
+                const inputValue = e.target.value.replace(',', '.');
+                const regex = /^\d*\.?\d*$/;
+                const isEmptyInput = inputValue === '';
+                const isOnlyNumberOrOneDot = new RegExp(regex, 'g').test(
+                  inputValue,
+                );
+
+                if (isEmptyInput || isOnlyNumberOrOneDot) {
+                  setInTokenAmount(inputValue);
+                }
               }}
               readOnly={readonly}
             />
