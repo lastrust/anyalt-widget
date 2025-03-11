@@ -117,7 +117,7 @@ export const RouteStep = ({
                       borderRadius="50%"
                     />
                   ) : (
-                    <SkeletonCircle size="14px" bgColor="brand.secondary.9" />
+                    <SkeletonCircle size="14px" bgColor="brand.bg.skeleton" />
                   )}
                 </Box>
               </Box>
@@ -170,7 +170,7 @@ export const RouteStep = ({
                       borderRadius="50%"
                     />
                   ) : (
-                    <SkeletonCircle size="14px" bgColor="brand.secondary.9" />
+                    <SkeletonCircle size="14px" bgColor="brand.bg.skeleton" />
                   )}
                 </Box>
               </Box>

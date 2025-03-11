@@ -30,10 +30,6 @@ export const whiteTheme = extendTheme({
   colors: {
     brand: {
       primary: '#ffffff',
-      secondary: {
-        8: '#919eab1f',
-        9: '#919eab',
-      },
       tertiary: {
         1: '#333',
         2: '#999',
@@ -55,6 +51,7 @@ export const whiteTheme = extendTheme({
         modal: '#fff',
         cardBg: '#F2F3F4',
         selectToken: 'rgba(0, 0, 0, 0.5)',
+        skeleton: '#919eab',
       },
       text: {
         primary: '#000000',
@@ -64,6 +61,7 @@ export const whiteTheme = extendTheme({
           1: '#999',
           2: '#999',
           3: '#F2F3F4',
+          4: '#919eab',
         },
       },
       footer: {

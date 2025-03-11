@@ -93,7 +93,7 @@ export const TokenSelectModal = ({ isOpen, onClose, onTokenSelect }: Props) => {
           right="16px"
           onClick={onClose}
         >
-          <Icon as={CloseIcon} color="brand.secondary.9" />
+          <Icon as={CloseIcon} color="brand.buttons.close.primary" />
         </Box>
         <Box mb="16px">
           <Text fontSize="20px" fontWeight="bold" mb="16px">

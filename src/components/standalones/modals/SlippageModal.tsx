@@ -52,7 +52,7 @@ export const SlippageModal = ({ isOpen, onClose }: Props) => {
           right="16px"
           onClick={onClose}
         >
-          <Icon as={CloseIcon} color="brand.secondary.9" />
+          <Icon as={CloseIcon} color="brand.buttons.close.primary" />
         </Box>
         <Box
           display="flex"

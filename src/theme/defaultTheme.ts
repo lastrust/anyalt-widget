@@ -30,9 +30,6 @@ export const defaultTheme = extendTheme({
   colors: {
     brand: {
       primary: '#121212',
-      secondary: {
-        9: '#919eab',
-      },
       tertiary: {
         1: '#008080',
         2: '#006666',
@@ -55,6 +52,7 @@ export const defaultTheme = extendTheme({
         modal: '#0C0600',
         cardBg: '#919eab0a',
         selectToken: 'rgba(0, 0, 0, 0.5)',
+        skeleton: '#919eab',
       },
       text: {
         primary: '#fff',
@@ -64,11 +62,12 @@ export const defaultTheme = extendTheme({
           1: 'rgba(255, 255, 255, 0.80)',
           2: 'rgba(255, 255, 255, 0.40)',
           3: 'rgba(255, 255, 255, 0.08)',
+          4: '#919eab',
         },
       },
       buttons: {
         close: {
-          primary: '#fff',
+          primary: '#919eab',
         },
         back: {
           primary: '#fff',
