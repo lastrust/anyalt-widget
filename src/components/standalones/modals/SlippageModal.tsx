@@ -36,7 +36,7 @@ export const SlippageModal = ({ isOpen, onClose }: Props) => {
         minH="198px"
         padding="24px"
         borderRadius="16px 16px 12px 12px"
-        bgColor="brand.quaternary.1"
+        bgColor="brand.bg.modal"
         color="brand.text.primary"
         overflow="hidden"
         position="relative"

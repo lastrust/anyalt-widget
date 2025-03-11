@@ -77,7 +77,7 @@ export const TokenSelectModal = ({ isOpen, onClose, onTokenSelect }: Props) => {
         padding="24px"
         margin="0 auto"
         borderRadius="16px 16px 12px 12px"
-        bgColor="brand.quaternary.1"
+        bgColor="brand.bg.modal"
         color="brand.text.primary"
         overflow="hidden"
         position="relative"

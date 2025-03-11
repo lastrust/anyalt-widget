@@ -46,9 +46,6 @@ export const defaultTheme = extendTheme({
         2: '#006666',
         3: '#00808033',
       },
-      quaternary: {
-        1: '#0C0600',
-      },
       quinary: {
         1: '#E53030',
         2: '#E530301a',
@@ -60,13 +57,11 @@ export const defaultTheme = extendTheme({
       },
       bg: {
         tag: 'transparent',
+        modal: '#0C0600',
       },
       text: {
         primary: '#fff',
         warning: '#f9e154',
-      },
-      footer: {
-        text: '#fff',
       },
       buttons: {
         close: {
@@ -79,6 +74,9 @@ export const defaultTheme = extendTheme({
           primary: '#fff',
         },
         disabled: '#0B3E3E',
+      },
+      footer: {
+        text: '#fff',
       },
     },
   },

@@ -46,9 +46,6 @@ export const whiteTheme = extendTheme({
         2: '#999',
         3: '#00808033',
       },
-      quaternary: {
-        1: '#fff',
-      },
       quinary: {
         1: '#E53030',
         2: '#E530301a',
@@ -60,6 +57,7 @@ export const whiteTheme = extendTheme({
       },
       bg: {
         tag: '#fff',
+        modal: '#fff',
       },
       text: {
         primary: '#000000',
