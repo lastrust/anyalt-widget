@@ -252,13 +252,164 @@ export interface WalletConnector {
 
 ## Theming
 
-You can customize the widget’s appearance by modifying `defaultTheme`.
+You can customize the widget's appearance by extending the default theme. The widget uses Chakra UI's theming system under the hood.
 
-```ts
+### Color Customization
+
+```tsx
 import { defaultTheme } from '@anyalt/widget';
+import { WidgetProvider } from '@anyalt/widget';
 
-defaultTheme.colors.primary = '#ff5733';
+const customTheme = {
+  ...defaultTheme,
+  colors: {
+    brand: {
+      primary: '#121212', // Main background color
+      border: {
+        tag: '#008080', // Tag border color
+        active: '#008080', // Active state border
+        bestRoute: '#008080', // Best route indicator
+        secondary: '#919eab1f', // Secondary borders
+        error: '#E53030', // Error state border
+        primary: 'rgba(145, 158, 171, 0.12)', // Primary border color
+      },
+      bg: {
+        primary: '#919eab1f', // Primary background
+        active: '#008080', // Active state background
+        hover: '#919eab1f', // Hover state background
+        error: '#E530301a', // Error state background
+        tag: 'transparent', // Tag background
+        modal: '#0C0600', // Modal background
+        cardBg: '#919eab0a', // Card background
+        selectToken: 'rgba(0, 0, 0, 0.5)', // Token selector background
+        skeleton: '#919eab', // Loading skeleton color
+      },
+      text: {
+        primary: '#fff', // Primary text color
+        warning: '#f9e154', // Warning text color
+        error: '#E53030', // Error text color
+        active: '#008080', // Active state text
+        secondary: {
+          0: '#ffffff', // Pure white text
+          1: 'rgba(255, 255, 255, 0.80)', // High emphasis text
+          2: 'rgba(255, 255, 255, 0.40)', // Medium emphasis text
+          3: 'rgba(255, 255, 255, 0.08)', // Low emphasis text
+          4: '#919eab', // Muted text
+        },
+      },
+      buttons: {
+        close: {
+          primary: '#919eab', // Close button color
+        },
+        back: {
+          primary: '#fff', // Back button color
+        },
+        accordion: {
+          primary: '#fff', // Accordion button color
+        },
+        action: {
+          bg: '#008080', // Action button background
+          bgFaded: '#00808033', // Faded action button
+          hover: '#006666', // Action button hover
+          disabled: '#00808033', // Disabled action button
+        },
+        disabled: '#0B3E3E', // General disabled state
+      },
+      footer: {
+        text: '#fff', // Footer text color
+      },
+    },
+  },
+};
+
+// Use the custom theme in your app
+const App = () => {
+  return (
+    <WidgetProvider theme={customTheme}>
+      <AnyaltWidget
+      // ... other props
+      />
+    </WidgetProvider>
+  );
+};
 ```
+
+### Quick Theme Customization Examples
+
+Here are some common customization scenarios:
+
+#### Change Primary Colors
+
+```tsx
+const customTheme = {
+  ...defaultTheme,
+  colors: {
+    brand: {
+      ...defaultTheme.colors.brand,
+      primary: '#000000', // Main background
+      bg: {
+        ...defaultTheme.colors.brand.bg,
+        active: '#3498db', // Active states
+        hover: 'rgba(52, 152, 219, 0.1)', // Hover states
+      },
+      buttons: {
+        ...defaultTheme.colors.brand.buttons,
+        action: {
+          bg: '#3498db', // Main action button
+          bgFaded: '#3498db33', // Faded state
+          hover: '#2980b9', // Hover state
+          disabled: '#3498db33', // Disabled state
+        },
+      },
+    },
+  },
+};
+```
+
+#### Customize Text Colors
+
+```tsx
+const customTheme = {
+  ...defaultTheme,
+  colors: {
+    brand: {
+      ...defaultTheme.colors.brand,
+      text: {
+        primary: '#ffffff', // Main text
+        warning: '#f39c12', // Warnings
+        error: '#e74c3c', // Errors
+        secondary: {
+          1: 'rgba(255, 255, 255, 0.9)', // Primary text
+          2: 'rgba(255, 255, 255, 0.6)', // Secondary text
+          3: 'rgba(255, 255, 255, 0.1)', // Disabled text
+          4: '#95a5a6', // Muted text
+        },
+      },
+    },
+  },
+};
+```
+
+#### Dark/Light Mode Colors
+
+```tsx
+const darkTheme = {
+  ...defaultTheme,
+  colors: {
+    brand: {
+      ...defaultTheme.colors.brand,
+      primary: '#121212',
+      bg: {
+        ...defaultTheme.colors.brand.bg,
+        cardBg: '#1e1e1e',
+        modal: '#000000',
+      },
+    },
+  },
+};
+```
+
+Remember to maintain sufficient contrast ratios for accessibility when customizing colors.
 
 ---
 
