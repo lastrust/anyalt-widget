@@ -188,7 +188,7 @@ export const WalletButton: FC<WalletButtonProps> = ({
       w="100%"
       h="auto"
       p="16px"
-      bg="brand.bg.card"
+      bg="brand.bg.cardBg"
       _hover={{ bg: 'brand.bg.hover' }}
       onClick={handleClick}
     >
