@@ -59,7 +59,7 @@ export const ConnectWalletsModal: FC<Props> = ({
           alignItems="center"
         >
           {title}
-          <CloseButton onClick={onClose} color="brand.secondary.100" />
+          <CloseButton onClick={onClose} color="brand.secondary.9" />
         </ModalHeader>
         <ModalBody p="0">
           <Text color="brand.secondary.2" mb="16px">

@@ -85,7 +85,7 @@ export const TransactionStep = ({
                     borderRadius="50%"
                   />
                 ) : (
-                  <SkeletonCircle size="14px" bgColor="brand.secondary.100" />
+                  <SkeletonCircle size="14px" bgColor="brand.secondary.9" />
                 )}
               </Box>
             </Box>
@@ -129,7 +129,7 @@ export const TransactionStep = ({
                     borderRadius="50%"
                   />
                 ) : (
-                  <SkeletonCircle size="14px" bgColor="brand.secondary.100" />
+                  <SkeletonCircle size="14px" bgColor="brand.secondary.9" />
                 )}
               </Box>
             </Box>

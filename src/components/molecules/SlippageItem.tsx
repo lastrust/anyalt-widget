@@ -17,8 +17,8 @@ export const SlippageItem: FC<Props> = ({ value, slippage, setSlippage }) => {
       border="1px solid"
       borderColor={
         parseFloat(slippage) === value
-          ? 'brand.tertiary.100'
-          : 'brand.secondary.12'
+          ? 'brand.tertiary.1'
+          : 'brand.secondary.8'
       }
       display="flex"
       alignItems="center"

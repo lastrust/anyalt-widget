@@ -19,7 +19,7 @@ export const WalletCard: FC<WalletCardProps> = ({
       h="auto"
       p="16px"
       bg="brand.secondary.4"
-      _hover={{ bg: 'brand.secondary.12' }}
+      _hover={{ bg: 'brand.secondary.8' }}
       onClick={onClick}
     >
       <VStack w="100%" justify="space-between" align="start">

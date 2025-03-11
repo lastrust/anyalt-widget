@@ -88,28 +88,28 @@ export const BestRouteAccordion = ({
                   loading={loading}
                   text="Fastest"
                   textColor="brand.secondary.5"
-                  bgColor="brand.tertiary.100"
+                  bgColor="brand.tertiary.1"
                   withBorder={false}
                 />
                 <RouteTag
                   loading={loading}
                   text={`${bestRoute.swapSteps.reduce((acc, swap) => acc + swap.estimatedTimeInSeconds, 0 + Number(finalTokenEstimate?.estimatedTimeInSeconds ?? 0)) || finalTokenEstimate?.estimatedTimeInSeconds}s`}
                   icon={TimeIcon}
-                  textColor="brand.tertiary.100"
+                  textColor="brand.tertiary.1"
                   bgColor="brand.bg.tag"
                 />
                 <RouteTag
                   loading={loading}
                   text={fees}
                   icon={GasIcon}
-                  textColor="brand.tertiary.100"
+                  textColor="brand.tertiary.1"
                   bgColor="brand.bg.tag"
                 />
                 <RouteTag
                   loading={loading}
                   text={`${bestRoute.swapSteps.length + Number(!isTokenBuyTemplate)}`}
                   icon={StepsIcon}
-                  textColor="brand.tertiary.100"
+                  textColor="brand.tertiary.1"
                   bgColor="brand.bg.tag"
                 />
               </Flex>
@@ -118,7 +118,7 @@ export const BestRouteAccordion = ({
                   h={'24px'}
                   w={'24px'}
                   borderRadius={'50%'}
-                  bgColor="brand.tertiary.100"
+                  bgColor="brand.tertiary.1"
                   cursor="pointer"
                 >
                   <AccordionIcon w={'24px'} h={'24px'} />

@@ -31,7 +31,6 @@ export const whiteTheme = extendTheme({
     brand: {
       primary: '#ffffff',
       secondary: {
-        100: '#919eab',
         1: '#000000',
         2: '#999',
         3: '#999',
@@ -39,20 +38,21 @@ export const whiteTheme = extendTheme({
         5: '#ffffff',
         6: '#F2F3F4',
         7: 'rgba(0, 0, 0, 0.5)',
-        12: '#919eab1f',
+        8: '#919eab1f',
+        9: '#919eab',
       },
       tertiary: {
-        100: '#333',
-        90: '#999',
-        20: '#00808033',
-        30: '#0080801a',
+        1: '#333',
+        2: '#999',
+        3: '#00808033',
       },
-      quaternary: '#fff',
+      quaternary: {
+        1: '#fff',
+      },
       quinary: {
-        100: '#E53030',
-        10: '#E530301a',
+        1: '#E53030',
+        2: '#E530301a',
       },
-      white: '#FFFFFF',
       border: {
         primary: 'rgba(145, 158, 171, 0.12)',
         tag: 'transparent',

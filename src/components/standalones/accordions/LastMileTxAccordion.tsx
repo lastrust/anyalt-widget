@@ -49,7 +49,7 @@ export const LastMileTxAccordion = ({
       borderRadius={'10px'}
       p={'16px'}
       cursor={'pointer'}
-      bg={isLastMileExpanded ? 'brand.secondary.12' : 'transparent'}
+      bg={isLastMileExpanded ? 'brand.secondary.8' : 'transparent'}
       _hover={{
         bgColor: 'bg.secondary.1',
       }}
@@ -67,13 +67,13 @@ export const LastMileTxAccordion = ({
             Transaction {bestRoute.swapSteps.length + 1}
           </Text>
           {currentStep === bestRoute.swapSteps.length + 1 && (
-            <Text textStyle={'bold.1'} color="brand.tertiary.100">
+            <Text textStyle={'bold.1'} color="brand.tertiary.1">
               In Progress
             </Text>
           )}
         </HStack>
         <Box
-          bg="brand.tertiary.100"
+          bg="brand.tertiary.1"
           borderRadius={'50%'}
           w={'24px'}
           h={'24px'}

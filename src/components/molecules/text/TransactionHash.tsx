@@ -26,7 +26,7 @@ export const TransactionHash = ({ type, progress }: Props) => {
 
   return (
     <Box w="100%">
-      <Divider w="100%" h="1px" bgColor="brand.secondary.12" mb="12px" />
+      <Divider w="100%" h="1px" bgColor="brand.secondary.8" mb="12px" />
       <HStack justifyContent={'space-between'} w="100%">
         <HStack>
           <Text textStyle={'regular.3'} color="brand.secondary.3">

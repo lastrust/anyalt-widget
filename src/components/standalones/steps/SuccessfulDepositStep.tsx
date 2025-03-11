@@ -44,7 +44,7 @@ export const SuccessfulDepositStep = ({ onConfigClick, onComplete }: Props) => {
         <Text
           fontSize="16px"
           fontWeight="400"
-          color="brand.secondary.100"
+          color="brand.secondary.9"
           textAlign="center"
         >
           You have got
@@ -65,18 +65,18 @@ export const SuccessfulDepositStep = ({ onConfigClick, onComplete }: Props) => {
           >
             {truncateToDecimals(finalTokenAmount, 4)}
           </Text>
-          <Text fontSize="16px" fontWeight="400" color="brand.secondary.100">
+          <Text fontSize="16px" fontWeight="400" color="brand.secondary.9">
             {protocolFinalToken?.symbol} On{' '}
             {protocolInputToken?.chain?.displayName}
           </Text>
         </Flex>
         <Button
           width={'100%'}
-          bg="brand.tertiary.100"
+          bg="brand.tertiary.1"
           _hover={{
-            bg: 'brand.tertiary.90',
+            bg: 'brand.tertiary.2',
           }}
-          color="brand.white"
+          color="white"
           fontSize="16px"
           fontWeight="bold"
           borderRadius="8px"

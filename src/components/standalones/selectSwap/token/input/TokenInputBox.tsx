@@ -64,8 +64,8 @@ export const TokenInputBox: FC<Props> = ({
             Balance: {balance ? truncateToDecimals(balance, 6) : ''}
           </Text>
           <Button
-            bg="brand.tertiary.20"
-            color="brand.tertiary.100"
+            bg="brand.tertiary.3"
+            color="brand.tertiary.1"
             fontSize="12px"
             fontWeight="bold"
             borderRadius="4px"
@@ -90,7 +90,7 @@ export const TokenInputBox: FC<Props> = ({
         border={!isValidAmountIn || failedToFetchRoute ? '1px solid' : 'none'}
         borderColor={
           !isValidAmountIn || failedToFetchRoute
-            ? 'brand.quinary.100'
+            ? 'brand.quinary.1'
             : 'transparent'
         }
       >
@@ -126,9 +126,9 @@ export const TokenInputBox: FC<Props> = ({
             />
             <Box
               cursor="pointer"
-              color={'brand.tertiary.100'}
+              color={'brand.tertiary.1'}
               _hover={{
-                color: 'brand.tertiary.90',
+                color: 'brand.tertiary.2',
               }}
             >
               <Icon as={SelectTokenIcon} />
@@ -182,11 +182,11 @@ export const TokenInputBox: FC<Props> = ({
       {tokenFetchError.isError && (
         <Box
           padding="4px"
-          bgColor="brand.quinary.10"
+          bgColor="brand.quinary.2"
           borderRadius="8px"
           width="100%"
         >
-          <Text color="brand.quinary.100" fontSize="14px" fontWeight="bold">
+          <Text color="brand.quinary.1" fontSize="14px" fontWeight="bold">
             {tokenFetchError.errorMessage}
           </Text>
         </Box>

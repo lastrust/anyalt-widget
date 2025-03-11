@@ -75,7 +75,7 @@ export const TransactionAccordion = () => {
           borderRadius={'10px'}
           borderWidth={'3px!important'}
           borderColor={
-            currentStep - 1 === index ? 'brand.tertiary.100' : 'transparent'
+            currentStep - 1 === index ? 'brand.tertiary.1' : 'transparent'
           }
           _hover={{
             bgColor: 'bg.secondary.1',
@@ -104,13 +104,13 @@ export const TransactionAccordion = () => {
                       'failed' &&
                     transactionsProgress![index]?.swap?.status !== 'failed',
                 ) && (
-                  <Text textStyle={'bold.2'} color="brand.tertiary.100">
+                  <Text textStyle={'bold.2'} color="brand.tertiary.1">
                     In Progress
                   </Text>
                 )}
             </HStack>
             <Box
-              bg="brand.tertiary.100"
+              bg="brand.tertiary.1"
               borderRadius={'50%'}
               w={'24px'}
               h={'24px'}

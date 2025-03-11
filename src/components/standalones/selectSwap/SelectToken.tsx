@@ -89,7 +89,7 @@ export const SelectToken = ({
 
         {!isTokenBuyTemplate && (
           <>
-            <Divider w="100%" h="1px" bgColor="brand.secondary.12" />
+            <Divider w="100%" h="1px" bgColor="brand.secondary.8" />
             <TokenQuoteBox
               loading={loading}
               headerText="What You Are Getting"

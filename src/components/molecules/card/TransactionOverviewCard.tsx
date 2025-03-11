@@ -59,7 +59,7 @@ export const TransactionOverviewCard = ({ operationId, to, from }: Props) => {
           />
         </HStack>
       </VStack>
-      <Divider w="100%" h="1px" bgColor="brand.secondary.12" />
+      <Divider w="100%" h="1px" bgColor="brand.secondary.8" />
       <HStack justifyContent={'space-between'} w="100%">
         <Text textStyle={'regular.3'} color="brand.secondary.3">
           OperationID: {isCopied ? 'Copied' : operationId}

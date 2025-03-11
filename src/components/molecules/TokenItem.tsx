@@ -98,7 +98,7 @@ export const TokenItem: FC<Props> = ({
           </Flex>
         </Box>
       </Box>
-      <Divider w="100%" h="1px" bgColor="brand.secondary.12" my="8px" />
+      <Divider w="100%" h="1px" bgColor="brand.secondary.8" my="8px" />
     </>
   );
 };

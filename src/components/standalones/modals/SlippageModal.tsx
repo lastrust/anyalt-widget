@@ -36,12 +36,12 @@ export const SlippageModal = ({ isOpen, onClose }: Props) => {
         minH="198px"
         padding="24px"
         borderRadius="16px 16px 12px 12px"
-        bgColor="brand.quaternary"
+        bgColor="brand.quaternary.1"
         color="brand.text.primary"
         overflow="hidden"
         position="relative"
         border="1px solid"
-        borderColor="brand.secondary.12"
+        borderColor="brand.secondary.8"
         borderBottom="none"
         zIndex="100"
       >
@@ -52,7 +52,7 @@ export const SlippageModal = ({ isOpen, onClose }: Props) => {
           right="16px"
           onClick={onClose}
         >
-          <Icon as={CloseIcon} color="brand.secondary.100" />
+          <Icon as={CloseIcon} color="brand.secondary.9" />
         </Box>
         <Box
           display="flex"
@@ -91,7 +91,7 @@ export const SlippageModal = ({ isOpen, onClose }: Props) => {
               bgColor="brand.primary"
               borderRadius="8px"
               border="1px solid"
-              borderColor="brand.secondary.12"
+              borderColor="brand.secondary.8"
               display="flex"
               flexDir="row"
               alignItems="center"
