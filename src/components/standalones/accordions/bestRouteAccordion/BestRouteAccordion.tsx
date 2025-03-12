@@ -63,6 +63,7 @@ export const BestRouteAccordion = ({
           borderRadius={'10px'}
           p={'16px'}
           cursor={'pointer'}
+          bg={'brand.bg.bestRoute'}
           onClick={handleRouteSelect}
         >
           <AccordionButton

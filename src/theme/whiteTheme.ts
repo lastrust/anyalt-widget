@@ -47,6 +47,8 @@ export const whiteTheme = extendTheme({
         cardBg: '#F2F3F4',
         selectToken: 'rgba(0, 0, 0, 0.5)',
         skeleton: '#919eab',
+        bestRoute: '#F2F3F4',
+        active: '#333333',
       },
       text: {
         primary: '#000000',
@@ -77,7 +79,7 @@ export const whiteTheme = extendTheme({
           hover: '#999',
           disabled: '#33333333',
         },
-        disabled: 'rgba(255, 255, 255, 0.5)',
+        disabled: '#999999',
       },
     },
   },
