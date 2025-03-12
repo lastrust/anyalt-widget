@@ -90,9 +90,7 @@ const App = () => {
           <Box maxW={'600px'}>
             <OpenModalButton onOpen={onOpen} />
             <AnyaltWidget
-              widgetTemplate={
-                isTokenBuyTemplate ? 'TOKEN_BUY' : 'DEPOSIT_TOKEN'
-              }
+              widgetTemplate={'DEPOSIT_TOKEN'}
               inputToken={usdtToken}
               finalToken={aarnaToken}
               apiKey={'pk_0xCYxjM8dFF0Vii7syrgpR6U4'}

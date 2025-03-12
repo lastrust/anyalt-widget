@@ -107,7 +107,7 @@ export const BestRouteAccordion = ({
                 />
                 <RouteTag
                   loading={loading}
-                  text={`${bestRoute.swapSteps.length + widgetTemplate}`}
+                  text={`${bestRoute.swapSteps.length + Number(widgetTemplate === 'DEPOSIT_TOKEN')}`}
                   icon={StepsIcon}
                   textColor="brand.text.active"
                   bgColor="brand.bg.tag"
