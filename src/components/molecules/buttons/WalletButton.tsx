@@ -188,8 +188,8 @@ export const WalletButton: FC<WalletButtonProps> = ({
       w="100%"
       h="auto"
       p="16px"
-      bg="brand.secondary.4"
-      _hover={{ bg: 'brand.secondary.12' }}
+      bg="brand.bg.cardBg"
+      _hover={{ bg: 'brand.bg.hover' }}
       onClick={handleClick}
     >
       <Flex w="100%" justify="space-between" align="center">
@@ -200,10 +200,10 @@ export const WalletButton: FC<WalletButtonProps> = ({
             </Text>
             <Circle
               size="8px"
-              bg={isWalletConnected ? 'brand.tertiary.100' : 'red'}
+              bg={isWalletConnected ? 'brand.border.active' : 'brand.bg.error'}
             />
           </Flex>
-          <Text color="brand.secondary.3" fontSize="14px">
+          <Text color="brand.text.secondary.2" fontSize="14px">
             {getDisplayAddress()}
           </Text>
         </Flex>

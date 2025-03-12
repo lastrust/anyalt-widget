@@ -20,7 +20,7 @@ export const ProgressItem: FC<Props> = ({ isApprove, progress }) => {
           progress.status === 'pending') && (
           <CircularProgress
             isIndeterminate
-            color="brand.tertiary.100"
+            color="brand.text.active"
             trackColor="transparent"
             size={'20px'}
           />
@@ -35,19 +35,23 @@ export const ProgressItem: FC<Props> = ({ isApprove, progress }) => {
             <FailIcon />
           </Box>
         )}
-        <Text textStyle={'regular.3'} color="brand.secondary.3" maxW={'370px'}>
+        <Text
+          textStyle={'regular.3'}
+          color="brand.text.secondary.2"
+          maxW={'370px'}
+        >
           {isApprove ? 'Approve' : 'Swap'}: {progress.message}
         </Text>
       </HStack>
       {/* {progress.txHash && progress.chainName && (
         <HStack justifyContent={'space-between'} w="100%">
           <HStack>
-            <Text textStyle={'regular.3'} color="brand.secondary.3">
+            <Text textStyle={'regular.3'} color="brand.text.secondary.2">
               Transaction Hash:
             </Text>
             <Link
               textStyle={'regular.3'}
-              color="brand.secondary.3"
+              color="brand.text.secondary.2"
               href={`${chainExplorers[progress.chainName as keyof typeof chainExplorers]}${progress.txHash}`}
               isExternal
             >

@@ -30,40 +30,36 @@ export const whiteTheme = extendTheme({
   colors: {
     brand: {
       primary: '#ffffff',
-      secondary: {
-        100: '#919eab',
-        1: '#000000',
-        2: '#999',
-        3: '#999',
-        4: '#F2F3F4',
-        5: '#ffffff',
-        6: '#F2F3F4',
-        7: 'rgba(0, 0, 0, 0.5)',
-        12: '#919eab1f',
-      },
-      tertiary: {
-        100: '#333',
-        90: '#999',
-        20: '#00808033',
-        30: '#0080801a',
-      },
-      quaternary: '#fff',
-      quinary: {
-        100: '#E53030',
-        10: '#E530301a',
-      },
-      white: '#FFFFFF',
       border: {
-        primary: 'rgba(145, 158, 171, 0.12)',
+        active: '#333',
         tag: 'transparent',
         bestRoute: '#333',
+        secondary: '#919eab1f',
+        error: '#E53030',
+        primary: 'rgba(145, 158, 171, 0.12)',
       },
       bg: {
+        primary: '#919eab1f',
+        hover: '#919eab1f',
+        error: 'E530301a',
         tag: '#fff',
+        modal: '#fff',
+        cardBg: '#F2F3F4',
+        selectToken: 'rgba(0, 0, 0, 0.5)',
+        skeleton: '#919eab',
       },
       text: {
         primary: '#000000',
         warning: '#ffcc00',
+        error: 'E53030',
+        active: '#333',
+        secondary: {
+          0: '#ffffff',
+          1: '#999',
+          2: '#999',
+          3: '#F2F3F4',
+          4: '#919eab',
+        },
       },
       footer: {
         text: '#333',
@@ -74,6 +70,12 @@ export const whiteTheme = extendTheme({
         },
         accordion: {
           primary: '#fff',
+        },
+        action: {
+          bg: '#333',
+          bgFaded: '#33333333',
+          hover: '#999',
+          disabled: '#33333333',
         },
         disabled: 'rgba(255, 255, 255, 0.5)',
       },

@@ -35,7 +35,7 @@ export const TokenQuoteBox: FC<Props> = ({
     >
       {headerText && (
         <Box>
-          <Text textStyle={'bold.5'} color="brand.secondary.3">
+          <Text textStyle={'bold.5'} color="brand.text.secondary.2">
             {headerText}
           </Text>
         </Box>
