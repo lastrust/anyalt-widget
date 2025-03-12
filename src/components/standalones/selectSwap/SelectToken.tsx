@@ -91,7 +91,7 @@ export const SelectToken = ({
 
         {widgetTemplate === 'DEPOSIT_TOKEN' && (
           <>
-            <Divider w="100%" h="1px" bgColor="brand.secondary.12" />
+            <Divider w="100%" h="1px" bgColor="brand.bg.primary" />
             <TokenQuoteBox
               loading={loading}
               headerText="What You Are Getting"

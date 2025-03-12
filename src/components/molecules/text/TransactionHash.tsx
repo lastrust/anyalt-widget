@@ -26,15 +26,15 @@ export const TransactionHash = ({ type, progress }: Props) => {
 
   return (
     <Box w="100%">
-      <Divider w="100%" h="1px" bgColor="brand.secondary.12" mb="12px" />
+      <Divider w="100%" h="1px" bgColor="brand.bg.primary" mb="12px" />
       <HStack justifyContent={'space-between'} w="100%">
         <HStack>
-          <Text textStyle={'regular.3'} color="brand.secondary.3">
+          <Text textStyle={'regular.3'} color="brand.text.secondary.2">
             {type} Tx Hash:
           </Text>
           <Link
             textStyle={'regular.3'}
-            color="brand.secondary.3"
+            color="brand.text.secondary.2"
             href={`${chainExplorers[progress.chainName as keyof typeof chainExplorers]}${progress.txHash}`}
             isExternal
           >

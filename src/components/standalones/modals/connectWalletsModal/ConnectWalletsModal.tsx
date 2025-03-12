@@ -59,10 +59,10 @@ export const ConnectWalletsModal: FC<Props> = ({
           alignItems="center"
         >
           {title}
-          <CloseButton onClick={onClose} color="brand.secondary.100" />
+          <CloseButton onClick={onClose} color="brand.buttons.close.primary" />
         </ModalHeader>
         <ModalBody p="0">
-          <Text color="brand.secondary.2" mb="16px">
+          <Text color="brand.text.secondary.1" mb="16px">
             {areWalletsConnected
               ? 'All wallets connected. You can proceed to the next step.'
               : 'Connect wallets to proceed to the next step.'}

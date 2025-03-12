@@ -28,7 +28,7 @@ export const SwapTokenCard = ({
         <Text color="white" textStyle={'extraBold.3'}>
           {tokenAmount}
         </Text>
-        <Text color="brand.secondary.3" textStyle={'regular.3'}>
+        <Text color="brand.text.secondary.2" textStyle={'regular.3'}>
           {tokenName} on {networkName}
         </Text>
       </VStack>
