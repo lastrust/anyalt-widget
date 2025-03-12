@@ -4,15 +4,15 @@ import {
   finalTokenEstimateAtom,
   inTokenAmountAtom,
   inTokenAtom,
-  isTokenBuyTemplateAtom,
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
+  widgetTemplateAtom,
 } from '../../../../store/stateStore';
 import { TokenWithAmount } from '../../../molecules/card/TransactionOverviewCard';
 
 export const useTransactionList = () => {
   const bestRoute = useAtomValue(bestRouteAtom);
-  const isTokenBuyTemplate = useAtomValue(isTokenBuyTemplateAtom);
+  const widgetTemplate = useAtomValue(widgetTemplateAtom);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
   const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
@@ -20,7 +20,7 @@ export const useTransactionList = () => {
   const inTokenAmount = useAtomValue(inTokenAmountAtom);
 
   const getToTokenDetails = () => {
-    if (isTokenBuyTemplate) {
+    if (widgetTemplate === 'TOKEN_BUY') {
       return {
         contractAddress: protocolInputToken?.tokenAddress || '',
         symbol: protocolInputToken?.symbol || '',

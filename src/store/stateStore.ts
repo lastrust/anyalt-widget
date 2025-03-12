@@ -6,6 +6,7 @@ import {
 } from '@anyalt/sdk';
 import { atom } from 'jotai';
 import { EstimateResponse, Token } from '..';
+import { WidgetTemplateType } from '../types/global';
 import {
   TransactionsProgress,
   TransactionStatusList,
@@ -54,7 +55,7 @@ export const transactionsListAtom = atom<TransactionStatusList | undefined>(
   undefined,
 );
 
-export const isTokenBuyTemplateAtom = atom<boolean>(false);
+export const widgetTemplateAtom = atom<WidgetTemplateType>('DEPOSIT_TOKEN');
 
 export const minDepositAmountAtom = atom<number>(0);
 

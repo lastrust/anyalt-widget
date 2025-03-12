@@ -14,12 +14,12 @@ import { useEffect, useState } from 'react';
 import {
   bestRouteAtom,
   finalTokenEstimateAtom,
-  isTokenBuyTemplateAtom,
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
   selectedRouteAtom,
   transactionIndexAtom,
   transactionsProgressAtom,
+  widgetTemplateAtom,
 } from '../../../store/stateStore';
 import { truncateToDecimals } from '../../../utils/truncateToDecimals';
 import { CheckIcon } from '../../atoms/icons/transaction/CheckIcon';
@@ -35,7 +35,7 @@ export const TransactionAccordion = () => {
 
   const bestRoute = useAtomValue(bestRouteAtom);
   const currentStep = useAtomValue(transactionIndexAtom);
-  const isTokenBuyTemplate = useAtomValue(isTokenBuyTemplateAtom);
+  const widgetTemplate = useAtomValue(widgetTemplateAtom);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
   const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
@@ -228,7 +228,7 @@ export const TransactionAccordion = () => {
         </AccordionItem>
       ))}
 
-      {!isTokenBuyTemplate && (
+      {widgetTemplate === 'DEPOSIT_TOKEN' && (
         <LastMileTxAccordion
           bestRoute={bestRoute}
           currentStep={currentStep}

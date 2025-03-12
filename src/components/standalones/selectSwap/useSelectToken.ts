@@ -10,10 +10,10 @@ import {
   finalTokenEstimateAtom,
   inTokenAmountAtom,
   inTokenAtom,
-  isTokenBuyTemplateAtom,
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
   tokenFetchErrorAtom,
+  widgetTemplateAtom,
 } from '../../../store/stateStore';
 
 export const useSelectToken = ({
@@ -26,7 +26,7 @@ export const useSelectToken = ({
   const [openTokenSelect, setOpenTokenSelect] = useState<boolean>(false);
 
   const [, setInToken] = useAtom(inTokenAtom);
-  const isTokenBuyTemplate = useAtomValue(isTokenBuyTemplateAtom);
+  const widgetTemplate = useAtomValue(widgetTemplateAtom);
   const bestRoute = useAtomValue(bestRouteAtom);
   const inTokenAmount = useAtomValue(inTokenAmountAtom);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
@@ -107,7 +107,7 @@ export const useSelectToken = ({
     outTokenPrice,
     onTokenSelect,
     openTokenSelect,
-    isTokenBuyTemplate,
+    widgetTemplate,
     setOpenTokenSelect,
     finalTokenEstimate,
     protocolInputToken,
