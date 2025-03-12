@@ -170,7 +170,7 @@ export const ClientWidgetWrapper = dynamic(
 | Prop                | Type                                          | Description                              |
 | ------------------- | --------------------------------------------- | ---------------------------------------- |
 | `isOpen`            | `boolean`                                     | Controls widget visibility               |
-| `widgetTemplate`    | `WidgetTemplateType`                          | Widget Mode                              |
+| `widgetTemplate?`   | `WidgetTemplateType`                          | Widget Mode                              |
 | `inputToken`        | `Token`                                       | Input token details                      |
 | `finalToken?`       | `Token`                                       | Output token details                     |
 | `apiKey`            | `string`                                      | API key for Anyalt services              |
@@ -180,7 +180,7 @@ export const ClientWidgetWrapper = dynamic(
 | `walletConnector?`  | `WalletConnector`                             | Optional custom wallet connector         |
 | `minDepositAmount?` | `number`                                      | Minimum deposit amount in USD equivalent |
 
-The `widgetTemplate` prop defines the available modes for the widget, determining its functionality based on the selected option. It supports the following modes:
+The `widgetTemplate` prop defines the available modes for the widget, determining its functionality based on the selected option. Default value is `DEPOSIT_TOKEN` It supports the following modes:
 
 `TOKEN_BUY`: Enables the widget for purchasing tokens, configuring the UI and logic to facilitate token acquisition.
 
