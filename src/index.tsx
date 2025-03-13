@@ -7,6 +7,7 @@ import {
 import { WalletsProviders } from './providers/WalletsProviders';
 import { WidgetProvider } from './providers/WidgetProvider';
 import { whiteTheme } from './theme/whiteTheme';
+import { WidgetTemplateType } from './types/global';
 
 export enum ChainType {
   EVM = 'EVM',
@@ -47,7 +48,14 @@ export interface WalletConnector {
   switchChain: (chainId: number) => Promise<void>;
 }
 
-export { defaultTheme, useModal, WalletsProviders, whiteTheme, WidgetProvider };
+export {
+  defaultTheme,
+  useModal,
+  WalletsProviders,
+  whiteTheme,
+  WidgetProvider,
+  WidgetTemplateType,
+};
 
 export type AnyaltWidgetProps = {
   isOpen: boolean;
@@ -55,7 +63,7 @@ export type AnyaltWidgetProps = {
   inputToken: Token;
   finalToken?: Token;
   minDepositAmount?: number;
-  isTokenBuyTemplate?: boolean;
+  widgetTemplate?: WidgetTemplateType;
   walletConnector?: WalletConnector;
   onClose: () => void;
   estimateCallback: (token: Token) => Promise<EstimateResponse>;

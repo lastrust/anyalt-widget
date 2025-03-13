@@ -4,11 +4,11 @@ import {
   bestRouteAtom,
   finalTokenEstimateAtom,
   inTokenAmountAtom,
-  isTokenBuyTemplateAtom,
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
   selectedRouteAtom,
   slippageAtom,
+  widgetTemplateAtom,
 } from '../../../../store/stateStore';
 import { truncateToDecimals } from '../../../../utils/truncateToDecimals';
 
@@ -16,7 +16,7 @@ export const useBestRouteAccordion = () => {
   const slippage = useAtomValue(slippageAtom);
   const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
   const [bestRoute] = useAtom(bestRouteAtom);
-  const isTokenBuyTemplate = useAtomValue(isTokenBuyTemplateAtom);
+  const widgetTemplate = useAtomValue(widgetTemplateAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const [, setSelectedRoute] = useAtom(selectedRouteAtom);
@@ -75,9 +75,9 @@ export const useBestRouteAccordion = () => {
     fees,
     slippage,
     bestRoute,
+    widgetTemplate,
     fromToken: areSwapsExists ? finalSwapToken : protocolDepositToken,
     handleRouteSelect,
-    isTokenBuyTemplate,
     protocolFinalToken,
     protocolInputToken,
     finalTokenEstimate,

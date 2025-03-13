@@ -25,7 +25,7 @@ export const AnyaltWidgetWrapper = ({
   estimateCallback,
   executeCallBack,
   walletConnector,
-  isTokenBuyTemplate = false,
+  widgetTemplate = 'DEPOSIT_TOKEN',
   minDepositAmount = 0,
 }: AnyaltWidgetProps) => {
   const {
@@ -53,7 +53,7 @@ export const AnyaltWidgetWrapper = ({
     minDepositAmount,
     estimateCallback,
     walletConnector,
-    isTokenBuyTemplate,
+    widgetTemplate,
     onClose,
   });
 
@@ -67,7 +67,7 @@ export const AnyaltWidgetWrapper = ({
       <Stepper activeStep={activeStep}>
         <SelectTokenStep
           loading={loading}
-          isTokenBuyTemplate={isTokenBuyTemplate}
+          widgetTemplate={widgetTemplate}
           isValidAmountIn={isValidAmountIn}
           onConfigClick={onConfigClick}
           failedToFetchRoute={failedToFetchRoute}

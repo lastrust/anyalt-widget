@@ -167,22 +167,26 @@ export const ClientWidgetWrapper = dynamic(
 
 ### Props
 
-| Prop                 | Type                                          | Description                              |
-| -------------------- | --------------------------------------------- | ---------------------------------------- |
-| `isOpen`             | `boolean`                                     | Controls widget visibility               |
-| `isTokenBuyTemplate` | `boolean`                                     | true, in case of token purchase          |
-| `inputToken`         | `Token`                                       | Input token details                      |
-| `finalToken?`        | `Token`                                       | Output token details                     |
-| `apiKey`             | `string`                                      | API key for Anyalt services              |
-| `onClose`            | `() => void`                                  | Callback triggered when widget is closed |
-| `estimateCallback`   | `(token: Token) => Promise<EstimateResponse>` | Function to estimate token swap          |
-| `executeCallBack`    | `(token: Token) => Promise<ExecuteResponse>`  | Function to execute token swap           |
-| `walletConnector?`   | `WalletConnector`                             | Optional custom wallet connector         |
-| `minDepositAmount?`  | `number`                                      | Minimum deposit amount in USD equivalent |
+| Prop                | Type                                          | Description                              |
+| ------------------- | --------------------------------------------- | ---------------------------------------- |
+| `isOpen`            | `boolean`                                     | Controls widget visibility               |
+| `widgetTemplate?`   | `WidgetTemplateType`                          | Widget Mode                              |
+| `inputToken`        | `Token`                                       | Input token details                      |
+| `finalToken?`       | `Token`                                       | Output token details                     |
+| `apiKey`            | `string`                                      | API key for Anyalt services              |
+| `onClose`           | `() => void`                                  | Callback triggered when widget is closed |
+| `estimateCallback`  | `(token: Token) => Promise<EstimateResponse>` | Function to estimate token swap          |
+| `executeCallBack`   | `(token: Token) => Promise<ExecuteResponse>`  | Function to execute token swap           |
+| `walletConnector?`  | `WalletConnector`                             | Optional custom wallet connector         |
+| `minDepositAmount?` | `number`                                      | Minimum deposit amount in USD equivalent |
 
-`isTokenBuyTemplate` is used to determine if the widget is in token buy template mode.
+The `widgetTemplate` prop defines the available modes for the widget, determining its functionality based on the selected option. Default value is `DEPOSIT_TOKEN` It supports the following modes:
 
-If true, the widget will be in token buy template mode. And `inputToken` will be the token that the user wants to buy. Also `finalToken` is not required.
+`TOKEN_BUY`: Enables the widget for purchasing tokens, configuring the UI and logic to facilitate token acquisition.
+
+`DEPOSIT_TOKEN`: Activates the widget for depositing tokens, allowing users to transfer tokens into a designated account or wallet.
+
+If `TOKEN_BUY` enabled, the widget will be in token buy template mode. And `inputToken` will be the token that the user wants to buy. Also `finalToken` is not required.
 
 #### Props Types
 
@@ -193,12 +197,18 @@ export type AnyaltWidgetProps = {
   inputToken: Token;
   finalToken?: Token;
   minDepositAmount?: number;
-  isTokenBuyTemplate?: boolean;
+  widgetTemplate?: WidgetTemplateType;
   walletConnector?: WalletConnector;
   onClose: () => void;
   estimateCallback: (token: Token) => Promise<EstimateResponse>;
   executeCallBack: (token: Token) => Promise<ExecuteResponse>;
 };
+```
+
+#### `WidgetTemplateType`
+
+```ts
+export type WidgetTemplateType = 'TOKEN_BUY' | 'DEPOSIT_TOKEN';
 ```
 
 #### `Token`

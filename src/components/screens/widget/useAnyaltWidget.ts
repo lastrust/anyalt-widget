@@ -20,7 +20,6 @@ import {
   finalTokenEstimateAtom,
   inTokenAmountAtom,
   inTokenAtom,
-  isTokenBuyTemplateAtom,
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
   selectedRouteAtom,
@@ -30,7 +29,9 @@ import {
   transactionIndexAtom,
   transactionsListAtom,
   transactionsProgressAtom,
+  widgetTemplateAtom,
 } from '../../../store/stateStore';
+import { WidgetTemplateType } from '../../../types/global';
 import { calculateWorstOutput } from '../../../utils';
 import { ChainIdToChainConstant } from '../../../utils/chains';
 import { useTokenInputBox } from '../../standalones/selectSwap/token/input/useTokenInputBox';
@@ -41,7 +42,7 @@ export const useAnyaltWidget = ({
   finalToken,
   walletConnector,
   minDepositAmount,
-  isTokenBuyTemplate: isTokenBuy = false,
+  widgetTemplate,
   estimateCallback,
   onClose,
 }: {
@@ -49,7 +50,7 @@ export const useAnyaltWidget = ({
   apiKey: string;
   inputToken: Token;
   finalToken?: Token;
-  isTokenBuyTemplate: boolean;
+  widgetTemplate: WidgetTemplateType;
   minDepositAmount: number;
   walletConnector?: WalletConnector;
   onClose: () => void;
@@ -82,7 +83,7 @@ export const useAnyaltWidget = ({
   const [, setCurrentUiStep] = useAtom(currentUiStepAtom);
   const [allChains, setAllChains] = useAtom(allChainsAtom);
   const [bestRoute, setBestRoute] = useAtom(bestRouteAtom);
-  const [, setIsTokenBuy] = useAtom(isTokenBuyTemplateAtom);
+  const [, setTemplate] = useAtom(widgetTemplateAtom);
   const [, setTokenFetchError] = useAtom(tokenFetchErrorAtom);
   const [, setTransactionsList] = useAtom(transactionsListAtom);
   const [, setTransactionIndex] = useAtom(transactionIndexAtom);
@@ -160,7 +161,7 @@ export const useAnyaltWidget = ({
       }
 
     setProtocolFinalToken(finalToken);
-    setIsTokenBuy(isTokenBuy);
+    setTemplate(widgetTemplate);
   }, []);
 
   useEffect(() => {

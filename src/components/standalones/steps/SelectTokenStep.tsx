@@ -1,3 +1,4 @@
+import { WidgetTemplateType } from '../../../types/global';
 import { SwappingTemplate } from '../../templates/SwappingTemplate';
 import { SelectToken } from '../selectSwap/SelectToken';
 
@@ -6,7 +7,7 @@ type Props = {
   loading: boolean;
   openSlippageModal: boolean;
   isValidAmountIn: boolean;
-  isTokenBuyTemplate: boolean;
+  widgetTemplate: WidgetTemplateType;
   onConfigClick: () => void;
   setOpenSlippageModal: (open: boolean) => void;
   isButtonDisabled: boolean;
@@ -19,12 +20,14 @@ export const SelectTokenStep = ({
   openSlippageModal,
   setOpenSlippageModal,
   isValidAmountIn,
-  isTokenBuyTemplate,
+  widgetTemplate,
   isButtonDisabled,
 }: Props) => {
   return (
     <SwappingTemplate
-      title={isTokenBuyTemplate ? 'Calculation' : 'Select Deposit Token'}
+      title={
+        widgetTemplate === 'TOKEN_BUY' ? 'Calculation' : 'Select Deposit Token'
+      }
       onConfigClick={onConfigClick}
     >
       <SelectToken

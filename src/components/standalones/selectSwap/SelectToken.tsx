@@ -48,7 +48,7 @@ export const SelectToken = ({
     bitcoinAccount,
     tokenFetchError,
     openTokenSelect,
-    isTokenBuyTemplate,
+    widgetTemplate,
     finalTokenEstimate,
     setOpenTokenSelect,
     protocolInputToken,
@@ -77,7 +77,9 @@ export const SelectToken = ({
         <TokenQuoteBox
           loading={loading}
           headerText={
-            isTokenBuyTemplate ? 'What You Are Getting' : 'Vault Is Expecting'
+            widgetTemplate === 'TOKEN_BUY'
+              ? 'What You Are Getting'
+              : 'Vault Is Expecting'
           }
           tokenName={protocolInputToken?.symbol ?? ''}
           tokenLogo={protocolInputToken?.logoUrl ?? ''}
@@ -87,7 +89,7 @@ export const SelectToken = ({
           price={truncateToDecimals(outTokenPrice ?? '0.00', 4)}
         />
 
-        {!isTokenBuyTemplate && (
+        {widgetTemplate === 'DEPOSIT_TOKEN' && (
           <>
             <Divider w="100%" h="1px" bgColor="brand.bg.primary" />
             <TokenQuoteBox

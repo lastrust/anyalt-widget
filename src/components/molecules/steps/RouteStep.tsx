@@ -128,11 +128,11 @@ export const RouteStep = ({
                 noOfLines={1}
               >
                 <span
+                  color={'brand.text.primary'}
                   style={{
                     fontSize: '12px',
                     fontWeight: '700',
                     lineHeight: '120%',
-                    color: 'white',
                     marginRight: '4px',
                   }}
                 >
@@ -180,11 +180,11 @@ export const RouteStep = ({
                 noOfLines={1}
               >
                 <span
+                  color={'brand.text.primary'}
                   style={{
                     fontSize: '12px',
                     fontWeight: '700',
                     lineHeight: '120%',
-                    color: 'white',
                     marginRight: '4px',
                   }}
                 >
