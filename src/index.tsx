@@ -48,7 +48,14 @@ export interface WalletConnector {
   switchChain: (chainId: number) => Promise<void>;
 }
 
-export { defaultTheme, useModal, WalletsProviders, whiteTheme, WidgetProvider, WidgetTemplateType };
+export {
+  defaultTheme,
+  useModal,
+  WalletsProviders,
+  whiteTheme,
+  WidgetProvider,
+  WidgetTemplateType,
+};
 
 export type AnyaltWidgetProps = {
   isOpen: boolean;
