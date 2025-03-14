@@ -129,7 +129,7 @@ const Widget = () => {
         <button onClick={() => setIsOpen(true)}>Open Widget</button>
         <AnyaltWidget
           isOpen={isOpen}
-          widgetTemplate={'TOKEN_BUY'}
+          widgetTemplate={WidgetTemplateType.TOKEN_BUY}
           inputToken={inputToken}
           finalToken={finalToken}
           apiKey="your-api-key"
@@ -208,7 +208,10 @@ export type AnyaltWidgetProps = {
 #### `WidgetTemplateType`
 
 ```ts
-export type WidgetTemplateType = 'TOKEN_BUY' | 'DEPOSIT_TOKEN';
+export enum WidgetTemplateType {
+  TOKEN_BUY = 'TOKEN_BUY',
+  DEPOSIT_TOKEN = 'DEPOSIT_TOKEN',
+}
 ```
 
 #### `Token`
