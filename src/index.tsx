@@ -7,7 +7,6 @@ import {
 import { WalletsProviders } from './providers/WalletsProviders';
 import { WidgetProvider } from './providers/WidgetProvider';
 import { whiteTheme } from './theme/whiteTheme';
-import { WidgetTemplateType } from './types/global';
 
 export enum ChainType {
   EVM = 'EVM',
@@ -47,15 +46,9 @@ export interface WalletConnector {
   getChain: () => Promise<number>;
   switchChain: (chainId: number) => Promise<void>;
 }
+export type WidgetTemplateType = 'TOKEN_BUY' | 'DEPOSIT_TOKEN';
 
-export {
-  defaultTheme,
-  useModal,
-  WalletsProviders,
-  whiteTheme,
-  WidgetProvider,
-  WidgetTemplateType,
-};
+export { defaultTheme, useModal, WalletsProviders, whiteTheme, WidgetProvider };
 
 export type AnyaltWidgetProps = {
   isOpen: boolean;

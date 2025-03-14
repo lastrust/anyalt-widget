@@ -1,4 +1,4 @@
-import { WidgetTemplateType } from '../../../types/global';
+import { WidgetTemplateType } from '../../..';
 import { SwappingTemplate } from '../../templates/SwappingTemplate';
 import { SelectToken } from '../selectSwap/SelectToken';
 
