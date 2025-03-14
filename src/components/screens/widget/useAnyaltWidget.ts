@@ -5,7 +5,13 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { useAtom, useAtomValue } from 'jotai';
 import { useEffect, useMemo, useState } from 'react';
 import { useAccount } from 'wagmi';
-import { ChainType, EstimateResponse, Token, WalletConnector, WidgetTemplateType } from '../../..';
+import {
+  ChainType,
+  EstimateResponse,
+  Token,
+  WalletConnector,
+  WidgetTemplateType,
+} from '../../..';
 import { ANYALT_PLACEHOLDER_LOGO } from '../../../constants/links';
 import {
   DEBOUNCE_TIMEOUT,
