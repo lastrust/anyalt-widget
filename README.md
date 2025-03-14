@@ -129,7 +129,7 @@ const Widget = () => {
         <button onClick={() => setIsOpen(true)}>Open Widget</button>
         <AnyaltWidget
           isOpen={isOpen}
-          isTokenBuyTemplate={false}
+          widgetTemplate={'TOKEN_BUY'}
           inputToken={inputToken}
           finalToken={finalToken}
           apiKey="your-api-key"
