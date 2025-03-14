@@ -1,4 +1,4 @@
-import { AnyaltWidgetProps } from '../../..';
+import { AnyaltWidgetProps, WidgetTemplateType } from '../../..';
 import { Footer } from '../../molecules/footer/Footer';
 import { Header } from '../../molecules/header/Header';
 import { ConnectWalletsModal } from '../../standalones/modals/connectWalletsModal/ConnectWalletsModal';
@@ -25,7 +25,7 @@ export const AnyaltWidgetWrapper = ({
   estimateCallback,
   executeCallBack,
   walletConnector,
-  widgetTemplate = 'DEPOSIT_TOKEN',
+  widgetTemplate = WidgetTemplateType.DEPOSIT_TOKEN,
   minDepositAmount = 0,
 }: AnyaltWidgetProps) => {
   const {

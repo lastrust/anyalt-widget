@@ -1,5 +1,5 @@
 import { BoxProps, Divider, Flex, VStack } from '@chakra-ui/react';
-import { WalletConnector } from '../../..';
+import { WalletConnector, WidgetTemplateType } from '../../..';
 import { truncateToDecimals } from '../../../utils/truncateToDecimals';
 import { CustomButton } from '../../atoms/buttons/CustomButton';
 import { TokenSelectModal } from '../modals/selectTokenModal/SelectTokenModal';
@@ -77,7 +77,7 @@ export const SelectToken = ({
         <TokenQuoteBox
           loading={loading}
           headerText={
-            widgetTemplate === 'TOKEN_BUY'
+            widgetTemplate === WidgetTemplateType.TOKEN_BUY
               ? 'What You Are Getting'
               : 'Vault Is Expecting'
           }
@@ -89,7 +89,7 @@ export const SelectToken = ({
           price={truncateToDecimals(outTokenPrice ?? '0.00', 4)}
         />
 
-        {widgetTemplate === 'DEPOSIT_TOKEN' && (
+        {widgetTemplate === WidgetTemplateType.DEPOSIT_TOKEN && (
           <>
             <Divider w="100%" h="1px" bgColor="brand.bg.primary" />
             <TokenQuoteBox

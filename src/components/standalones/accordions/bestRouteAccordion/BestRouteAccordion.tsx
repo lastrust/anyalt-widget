@@ -10,6 +10,7 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
+import { WidgetTemplateType } from '../../../..';
 import { RANGO_PLACEHOLDER_LOGO } from '../../../../constants/links';
 import { ChainIdToChainConstant } from '../../../../utils/chains';
 import { truncateToDecimals } from '../../../../utils/truncateToDecimals';
@@ -129,17 +130,17 @@ export const BestRouteAccordion = ({
             <TokenRouteInfo
               loading={loading}
               chainIcon={
-                widgetTemplate === 'TOKEN_BUY'
+                widgetTemplate === WidgetTemplateType.TOKEN_BUY
                   ? protocolInputToken?.chain?.logoUrl || ''
                   : protocolInputToken?.chain?.logoUrl || ''
               }
               tokenName={
-                widgetTemplate === 'TOKEN_BUY'
+                widgetTemplate === WidgetTemplateType.TOKEN_BUY
                   ? protocolInputToken?.name || ''
                   : protocolFinalToken?.name || ''
               }
               tokenIcon={
-                widgetTemplate === 'TOKEN_BUY'
+                widgetTemplate === WidgetTemplateType.TOKEN_BUY
                   ? protocolInputToken?.logoUrl || ''
                   : protocolFinalToken?.logoUrl || ''
               }
@@ -153,7 +154,7 @@ export const BestRouteAccordion = ({
               )}
               slippage={slippage}
               network={
-                widgetTemplate === 'TOKEN_BUY'
+                widgetTemplate === WidgetTemplateType.TOKEN_BUY
                   ? `${protocolFinalToken?.name} on ${protocolInputToken?.chain?.displayName}`
                   : bestRoute.swapSteps[0]?.swapperName
               }
@@ -185,7 +186,7 @@ export const BestRouteAccordion = ({
                       {swapStep.internalSwapSteps.map(
                         (internalSwap, internalIndex) => {
                           if (
-                            widgetTemplate === 'TOKEN_BUY' &&
+                            widgetTemplate === WidgetTemplateType.TOKEN_BUY &&
                             internalSwap.destinationToken.contractAddress.toLowerCase() ===
                               protocolInputToken?.tokenAddress?.toLowerCase() &&
                             internalSwap.destinationToken.logo ===
@@ -234,7 +235,7 @@ export const BestRouteAccordion = ({
                 })
               )}
 
-              {widgetTemplate === 'DEPOSIT_TOKEN' && (
+              {widgetTemplate === WidgetTemplateType.DEPOSIT_TOKEN && (
                 <>
                   {loading ? (
                     <Skeleton w={'180px'} h={'18px'} borderRadius="12px" />

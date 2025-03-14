@@ -5,6 +5,7 @@ import {
   ExecuteResponse,
   Token,
   WalletConnector,
+  WidgetTemplateType,
 } from '../../..';
 import { bestRouteAtom, widgetTemplateAtom } from '../../../store/stateStore';
 import { TransactionError } from '../../../types/transaction';
@@ -68,7 +69,7 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
         throw new TransactionError('Transaction failed');
     }
     // If the template is token buy, we don't need to execute the last mile transaction
-    if (widgetTemplate === 'TOKEN_BUY') return;
+    if (widgetTemplate === WidgetTemplateType.TOKEN_BUY) return;
 
     await executeLastMileTransaction(
       swapDataRef.current.currentStep,

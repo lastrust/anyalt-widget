@@ -12,6 +12,7 @@ import {
   ExecuteResponse,
   Token,
   WidgetProvider,
+  WidgetTemplateType,
 } from '../src/index';
 
 import '@fontsource/rethink-sans/400.css';
@@ -90,7 +91,7 @@ const App = () => {
           <Box maxW={'600px'}>
             <OpenModalButton onOpen={onOpen} />
             <AnyaltWidget
-              widgetTemplate={'DEPOSIT_TOKEN'}
+              widgetTemplate={WidgetTemplateType.DEPOSIT_TOKEN}
               inputToken={usdtToken}
               finalToken={aarnaToken}
               apiKey={'pk_0xCYxjM8dFF0Vii7syrgpR6U4'}

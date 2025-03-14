@@ -1,4 +1,5 @@
 import { useAtomValue } from 'jotai';
+import { WidgetTemplateType } from '../../../..';
 import {
   bestRouteAtom,
   finalTokenEstimateAtom,
@@ -20,7 +21,7 @@ export const useTransactionList = () => {
   const inTokenAmount = useAtomValue(inTokenAmountAtom);
 
   const getToTokenDetails = () => {
-    if (widgetTemplate === 'TOKEN_BUY') {
+    if (widgetTemplate === WidgetTemplateType.TOKEN_BUY) {
       return {
         contractAddress: protocolInputToken?.tokenAddress || '',
         symbol: protocolInputToken?.symbol || '',

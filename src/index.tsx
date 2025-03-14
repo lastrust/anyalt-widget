@@ -46,7 +46,11 @@ export interface WalletConnector {
   getChain: () => Promise<number>;
   switchChain: (chainId: number) => Promise<void>;
 }
-export type WidgetTemplateType = 'TOKEN_BUY' | 'DEPOSIT_TOKEN';
+
+export enum WidgetTemplateType {
+  TOKEN_BUY = 'TOKEN_BUY',
+  DEPOSIT_TOKEN = 'DEPOSIT_TOKEN',
+}
 
 export { defaultTheme, useModal, WalletsProviders, whiteTheme, WidgetProvider };
 

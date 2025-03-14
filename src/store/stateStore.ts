@@ -54,7 +54,9 @@ export const transactionsListAtom = atom<TransactionStatusList | undefined>(
   undefined,
 );
 
-export const widgetTemplateAtom = atom<WidgetTemplateType>('DEPOSIT_TOKEN');
+export const widgetTemplateAtom = atom<WidgetTemplateType>(
+  WidgetTemplateType.DEPOSIT_TOKEN,
+);
 
 export const minDepositAmountAtom = atom<number>(0);
 

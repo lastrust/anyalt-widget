@@ -26,7 +26,9 @@ export const SelectTokenStep = ({
   return (
     <SwappingTemplate
       title={
-        widgetTemplate === 'TOKEN_BUY' ? 'Calculation' : 'Select Deposit Token'
+        widgetTemplate === WidgetTemplateType.TOKEN_BUY
+          ? 'Calculation'
+          : 'Select Deposit Token'
       }
       onConfigClick={onConfigClick}
     >
