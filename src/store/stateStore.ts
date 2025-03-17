@@ -5,8 +5,7 @@ import {
   SupportedToken,
 } from '@anyalt/sdk';
 import { atom } from 'jotai';
-import { EstimateResponse, Token } from '..';
-import { WidgetTemplateType } from '../types/global';
+import { EstimateResponse, Token, WidgetTemplateType } from '..';
 import {
   TransactionsProgress,
   TransactionStatusList,
