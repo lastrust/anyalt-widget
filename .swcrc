@@ -10,10 +10,10 @@
         "development": false
       }
     },
-    "target": "es2015"
+    "target": "es2020"
   },
   "module": {
-    "type": "commonjs"
+    "type": "es6"
   },
   "minify": true
 }
