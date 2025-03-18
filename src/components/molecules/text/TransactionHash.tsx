@@ -21,6 +21,8 @@ export const TransactionHash = ({ type, progress }: Props) => {
     }, 2000);
   }, []);
 
+  console.log('~progress', progress);
+
   if (!progress || !progress.txHash || !progress.chainName) return null;
 
   return (
@@ -39,7 +41,7 @@ export const TransactionHash = ({ type, progress }: Props) => {
           >
             {isCopied
               ? 'Tx Hash Copied!'
-              : `${progress?.txHash?.slice(0, 10)}...${progress?.txHash?.slice(
+              : `${progress?.txHash?.slice?.(0, 10)}...${progress?.txHash?.slice(
                   -4,
                 )}`}
           </Link>

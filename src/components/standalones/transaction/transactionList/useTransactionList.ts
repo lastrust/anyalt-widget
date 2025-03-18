@@ -1,3 +1,4 @@
+import { BestRouteResponse } from '@anyalt/sdk';
 import { useAtomValue } from 'jotai';
 import {
   bestRouteAtom,
@@ -5,13 +6,19 @@ import {
   inTokenAmountAtom,
   inTokenAtom,
   isTokenBuyTemplateAtom,
+  pendingOperationAtom,
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
 } from '../../../../store/stateStore';
 import { TokenWithAmount } from '../../../molecules/card/TransactionOverviewCard';
 
-export const useTransactionList = () => {
+type Props = {
+  operationType: 'BEST' | 'PENDING';
+};
+
+export const useTransactionList = ({ operationType }: Props) => {
   const bestRoute = useAtomValue(bestRouteAtom);
+  const pendingOperation = useAtomValue(pendingOperationAtom);
   const isTokenBuyTemplate = useAtomValue(isTokenBuyTemplateAtom);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
@@ -70,24 +77,31 @@ export const useTransactionList = () => {
     };
   }
 
-  return {
-    bestRoute,
-    tokens: {
+  const getTokensFromOperation = (operation: BestRouteResponse) => {
+    return {
       from: {
         contractAddress:
-          bestRoute?.swapSteps[0].sourceToken.contractAddress || '',
-        symbol: bestRoute?.swapSteps[0].sourceToken.symbol || '',
-        logo: bestRoute?.swapSteps[0].sourceToken.logo || '',
-        blockchain: bestRoute?.swapSteps[0].sourceToken.blockchain || '',
-        amount: Number(bestRoute?.swapSteps[0].amount).toFixed(4) || '',
+          operation?.swapSteps[0].sourceToken.contractAddress || '',
+        symbol: operation?.swapSteps[0].sourceToken.symbol || '',
+        logo: operation?.swapSteps[0].sourceToken.logo || '',
+        blockchain: operation?.swapSteps[0].sourceToken.blockchain || '',
+        amount: Number(operation?.swapSteps[0].amount).toFixed(4) || '',
         blockchainLogo:
-          bestRoute?.swapSteps[0].sourceToken.blockchainLogo || '',
-        decimals: bestRoute?.swapSteps[0].sourceToken.decimals || 0,
-        tokenUsdPrice: bestRoute?.swapSteps[0].sourceToken.tokenUsdPrice || 0,
-      } as TokenWithAmount,
+          operation?.swapSteps[0].sourceToken.blockchainLogo || '',
+        decimals: operation?.swapSteps[0].sourceToken.decimals || 0,
+        tokenUsdPrice: operation?.swapSteps[0].sourceToken.tokenUsdPrice || 0,
+      },
       to: {
         ...getToTokenDetails(),
-      } as TokenWithAmount,
-    },
+      },
+    };
+  };
+
+  return {
+    bestRoute,
+    pendingOperation,
+    tokens: getTokensFromOperation(
+      operationType === 'BEST' ? bestRoute! : pendingOperation!,
+    ),
   };
 };

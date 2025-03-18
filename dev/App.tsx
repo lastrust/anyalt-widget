@@ -8,6 +8,7 @@ import {
   AnyaltWidget,
   ChainType,
   defaultTheme,
+  whiteTheme,
   EstimateResponse,
   ExecuteResponse,
   Token,
@@ -74,7 +75,7 @@ const App = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <WidgetProvider theme={defaultTheme}>
+      <WidgetProvider theme={whiteTheme}>
         <Center h={'100vh'}>
           <Box maxW={'600px'}>
             <OpenModalButton onOpen={onOpen} />

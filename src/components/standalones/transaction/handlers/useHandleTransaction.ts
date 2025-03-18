@@ -12,6 +12,11 @@ type UseHandleTransactionProps = {
   externalEvmWalletConnector?: WalletConnector;
 };
 
+export interface TransactionResult {
+  txHash: string;
+  nonce: number | null;
+}
+
 export const useHandleTransaction = ({
   externalEvmWalletConnector,
 }: UseHandleTransactionProps) => {
@@ -24,32 +29,32 @@ export const useHandleTransaction = ({
       | EVMTransactionDataResponse
       | SolanaTransactionDataResponse
       | BitcoinTransactionDataResponse,
-  ) => {
-    let txHash = '';
+  ): Promise<TransactionResult> => {
     switch (transactionData.type) {
       case 'EVM':
-        txHash = await handleEvmTransaction(
+        return await handleEvmTransaction(
           transactionData as EVMTransactionDataResponse,
         );
-        break;
       case 'SOLANA':
-        txHash =
-          (await handleSolanaTransaction(
-            transactionData as SolanaTransactionDataResponse,
-          )) || '';
-        break;
+        return {
+          txHash:
+            (await handleSolanaTransaction(
+              transactionData as SolanaTransactionDataResponse,
+            )) || '',
+          nonce: null,
+        };
       case 'TRANSFER':
-        txHash = await handleBitcoinTransaction(
-          transactionData as BitcoinTransactionDataResponse,
-        );
-        break;
+        return {
+          txHash: await handleBitcoinTransaction(
+            transactionData as BitcoinTransactionDataResponse,
+          ),
+          nonce: null,
+        };
       default:
         throw new Error(
           `Unsupported transaction type: ${transactionData.type}`,
         );
     }
-
-    return txHash;
   };
 
   return {

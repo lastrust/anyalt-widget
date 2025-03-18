@@ -3,13 +3,23 @@ import { TransactionOverviewCard } from '../../../molecules/card/TransactionOver
 import { TransactionAccordion } from '../../accordions/TransactionAccordion';
 import { useTransactionList } from './useTransactionList';
 
-export const TransactionList = () => {
-  const { tokens, bestRoute } = useTransactionList();
+type Props = {
+  operationType: 'BEST' | 'PENDING';
+};
+
+export const TransactionList = ({ operationType }: Props) => {
+  const { tokens, bestRoute, pendingOperation } = useTransactionList({
+    operationType,
+  });
 
   return (
     <VStack w="100%" alignItems="flex-start" spacing="16px">
       <TransactionOverviewCard
-        operationId={bestRoute?.operationId ?? ''}
+        operationId={
+          operationType === 'BEST'
+            ? (bestRoute?.operationId ?? '')
+            : (pendingOperation?.operationId ?? '')
+        }
         from={tokens.from}
         to={tokens.to}
       />

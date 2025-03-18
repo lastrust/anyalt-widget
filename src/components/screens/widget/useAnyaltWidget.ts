@@ -16,6 +16,7 @@ import {
   inTokenAmountAtom,
   inTokenAtom,
   isTokenBuyTemplateAtom,
+  pendingOperationAtom,
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
   selectedRouteAtom,
@@ -79,6 +80,7 @@ export const useAnyaltWidget = ({
   const [, setCurrentUiStep] = useAtom(currentUiStepAtom);
   const [allChains, setAllChains] = useAtom(allChainsAtom);
   const [bestRoute, setBestRoute] = useAtom(bestRouteAtom);
+  const [pendingOperation, setPendingOperation] = useAtom(pendingOperationAtom);
   const [, setIsTokenBuy] = useAtom(isTokenBuyTemplateAtom);
   const [, setTokenFetchError] = useAtom(tokenFetchErrorAtom);
   const [, setTransactionsList] = useAtom(transactionsListAtom);
@@ -94,6 +96,8 @@ export const useAnyaltWidget = ({
     protocolInputTokenAtom,
   );
   const { balance } = useTokenInputBox();
+  const [showPendingOperationDialog, setShowPendingOperationDialog] =
+    useState(false);
 
   useEffect(() => {
     onGetQuote(false);
@@ -105,30 +109,6 @@ export const useAnyaltWidget = ({
     }
     return Number(inTokenAmount ?? 0) == 0 || inToken == null;
   }, [inTokenAmount, inToken, bestRoute, activeStep]);
-
-  // const resetState = useCallback(() => {
-  //   setInTokenAmount('');
-  //   setActiveOperationId(undefined);
-  //   setFinalTokenEstimate(undefined);
-  //   setTransactionsList(undefined);
-  //   setTokenFetchError({ isError: false, errorMessage: '' });
-  //   setSelectedRoute(undefined);
-  //   setBestRoute(undefined);
-  // }, [
-  //   setInTokenAmount,
-  //   setActiveOperationId,
-  //   setFinalTokenEstimate,
-  //   setTransactionsList,
-  //   setTokenFetchError,
-  //   setSelectedRoute,
-  //   setBestRoute,
-  // ]);
-
-  // useEffect(() => {
-  //   if (activeStep === 0) {
-  //     resetState();
-  //   }
-  // }, [activeStep]);
 
   useEffect(() => {
     setCurrentUiStep(activeStep);
@@ -162,6 +142,37 @@ export const useAnyaltWidget = ({
     setProtocolFinalToken(finalToken);
     setIsTokenBuy(isTokenBuy);
   }, []);
+
+  useEffect(() => {
+    const pendingOperationId = isTokenBuy
+      ? localStorage.getItem('tokenBuyOperationId')
+      : localStorage.getItem('operationId');
+    if (anyaltInstance && pendingOperationId)
+      try {
+        anyaltInstance
+          .getPendingOperation({ operationId: pendingOperationId! })
+          .then((res) => {
+            if (res?.operationId) {
+              console.debug('~got a pending operation', res);
+              setShowPendingOperationDialog(true);
+              setPendingOperation({
+                missingWalletForSourceBlockchain: true,
+                operationId: res.operationId,
+                swapSteps: res.swapSteps!,
+                outputAmount: res.swapSteps![res.swapSteps!.length - 1].payout,
+              });
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      } catch (error) {
+        console.error(error);
+      }
+
+    setProtocolFinalToken(finalToken);
+    setIsTokenBuy(isTokenBuy);
+  }, [anyaltInstance, isTokenBuy]);
 
   useEffect(() => {
     if (selectedRoute) setBestRoute(selectedRoute);
@@ -563,6 +574,7 @@ export const useAnyaltWidget = ({
     loading,
     isButtonDisabled,
     activeRoute: bestRoute,
+    pendingOperation,
     activeStep,
     onGetQuote,
     onChooseRouteButtonClick,
@@ -580,5 +592,6 @@ export const useAnyaltWidget = ({
     setActiveStep,
     getChain,
     onComplete,
+    showPendingOperationDialog,
   };
 };

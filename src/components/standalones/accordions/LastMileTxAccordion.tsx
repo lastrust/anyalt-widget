@@ -50,8 +50,6 @@ export const LastMileTxAccordion = ({
       borderColor="brand.border.primary"
       borderRadius={'10px'}
       p={'16px'}
-      cursor={'pointer'}
-      onClick={onLastMileClick}
       bg={isLastMileExpanded ? 'brand.secondary.12' : 'transparent'}
       _hover={{
         bgColor: 'bg.secondary.1',
@@ -64,6 +62,7 @@ export const LastMileTxAccordion = ({
         justifyContent={'space-between'}
         gap="12px"
         p={'0px'}
+        onClick={onLastMileClick}
       >
         <HStack justifyContent={'flex-start'}>
           <Text textStyle={'bold.1'} mr="8px">

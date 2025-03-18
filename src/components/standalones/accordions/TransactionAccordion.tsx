@@ -66,7 +66,6 @@ export const TransactionAccordion = () => {
         <AccordionItem
           key={`${swapStep.executionOrder}-${index}`}
           p={'16px'}
-          cursor={'pointer'}
           bg="brand.secondary.6"
           onClick={handleRouteSelect}
           borderRadius={'10px'}
