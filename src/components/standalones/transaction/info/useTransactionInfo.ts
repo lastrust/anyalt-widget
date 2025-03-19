@@ -6,7 +6,7 @@ import {
   Token,
   WalletConnector,
 } from '../../../..';
-import { TX_MESSAGE } from '../../../../constants/transaction';
+import { TX_MESSAGE, TX_STATUS } from '../../../../constants/transaction';
 import {
   activeOperationIdAtom,
   anyaltInstanceAtom,
@@ -15,12 +15,14 @@ import {
   inTokenAmountAtom,
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
+  showStuckTransactionDialogAtom,
   slippageAtom,
   transactionIndexAtom,
   transactionsListAtom,
   transactionsProgressAtom,
 } from '../../../../store/stateStore';
 import { TransactionProgress } from '../../../../types/transaction';
+import { useStuckTransaction } from '../../stuckTransactionDialog/useStuckTransaction';
 import { useHandleSwap } from '../useHandleSwap';
 
 export const useTransactionInfo = ({
@@ -36,6 +38,9 @@ export const useTransactionInfo = ({
 }) => {
   const [isLoading, setIsLoading] = useState(false);
 
+  const showStuckTransactionDialog = useAtomValue(
+    showStuckTransactionDialogAtom,
+  );
   const slippage = useAtomValue(slippageAtom);
   const bestRoute = useAtomValue(bestRouteAtom);
   const currentStep = useAtomValue(transactionIndexAtom);
@@ -46,11 +51,14 @@ export const useTransactionInfo = ({
   const [transactionsProgress, setTransactionsProgress] = useAtom(
     transactionsProgressAtom,
   );
+
   const inTokenAmount = useAtomValue(inTokenAmountAtom);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
 
   const { executeSwap } = useHandleSwap(externalEvmWalletConnector);
+
+  const { keepPollingOnTxStuck } = useStuckTransaction();
 
   const isBridgeSwap = useMemo(() => {
     return bestRoute?.swapSteps?.[currentStep - 1]?.swapperType === 'BRIDGE';
@@ -75,7 +83,7 @@ export const useTransactionInfo = ({
     return text;
   }, [bestRoute, currentStep, transactionsList]);
 
-  const runTx = async () => {
+  const runTx = async (higherGasCost?: boolean) => {
     if (!anyaltInstance || !activeOperationId) return;
     setIsLoading(true);
     try {
@@ -86,6 +94,7 @@ export const useTransactionInfo = ({
         (bestRoute?.swapSteps ?? []).length,
         executeCallBack,
         estimateCallback,
+        higherGasCost,
       );
       onTxComplete();
       setIsLoading(false);
@@ -96,7 +105,9 @@ export const useTransactionInfo = ({
   };
 
   useEffect(() => {
+    let abortController: AbortController | null = new AbortController();
     if (
+      !showStuckTransactionDialog &&
       anyaltInstance &&
       activeOperationId &&
       !isLoading &&
@@ -109,15 +120,27 @@ export const useTransactionInfo = ({
       const keys = Object.keys(transactionsProgress);
       for (let i = keys.length - 1; i >= 0; i--) {
         const key = keys[i];
-        if (transactionsProgress[key]?.swap?.status === 'pending') {
+        if (transactionsProgress[key]?.swap?.status === TX_STATUS.pending) {
           latestLoadingAction = transactionsProgress[key].swap;
           keyOfLatestLoadingAction = key;
           break;
         }
-        if (transactionsProgress[key]?.approve?.status === 'pending') {
+        if (transactionsProgress[key]?.approve?.status === TX_STATUS.pending) {
           latestLoadingAction = transactionsProgress[key].approve;
           keyOfLatestLoadingAction = key;
           break;
+        } else {
+          if (
+            transactionsProgress[key]?.swap?.status === TX_STATUS.stuck ||
+            transactionsProgress[key]?.approve?.status === TX_STATUS.stuck
+          ) {
+            if (abortController) {
+              abortController.abort();
+              abortController = null;
+            }
+            runTx(true);
+            return;
+          }
         }
       }
 
@@ -125,7 +148,10 @@ export const useTransactionInfo = ({
 
       setIsLoading(true);
       anyaltInstance
-        .waitForTx({ operationId: activeOperationId })
+        .waitForTx(
+          { operationId: activeOperationId, keepPollingOnTxStuck },
+          abortController.signal,
+        )
         .then((res) => {
           setIsLoading(false);
           const txType = latestLoadingAction.isApproval ? 'approve' : 'swap';
@@ -133,22 +159,28 @@ export const useTransactionInfo = ({
             const newProgress = { ...prev };
 
             let newMessage: string;
+            let newStatus: string;
 
             switch (res.status) {
               case 'FAILED':
                 newMessage = TX_MESSAGE.failed;
+                newStatus = TX_STATUS.failed;
                 break;
               case 'PENDING':
                 newMessage = TX_MESSAGE.pending;
+                newStatus = TX_STATUS.pending;
                 break;
               case 'STUCK':
-                newMessage = TX_MESSAGE.pending;
+                newMessage = TX_MESSAGE.stuck;
+                newStatus = TX_STATUS.stuck;
                 break;
               case 'SUCCEEDED':
                 newMessage = TX_MESSAGE.confirmed;
+                newStatus = TX_STATUS.confirmed;
                 break;
               default:
                 newMessage = TX_MESSAGE.pending;
+                newStatus = TX_STATUS.pending;
                 break;
             }
 
@@ -156,7 +188,7 @@ export const useTransactionInfo = ({
               ...newProgress[keyOfLatestLoadingAction],
               [txType]: {
                 ...newProgress[keyOfLatestLoadingAction][txType],
-                status: res.status,
+                status: newStatus,
                 message: newMessage,
               },
             };
@@ -169,11 +201,21 @@ export const useTransactionInfo = ({
           });
         })
         .catch((error) => {
+          if (error instanceof DOMException && error.name === 'AbortError') {
+            console.debug('Aborted waiting for TX');
+            return;
+          }
           console.error(error);
           setIsLoading(false);
         });
     }
-  }, [anyaltInstance, activeOperationId]);
+    return () => {
+      if (abortController) {
+        abortController.abort();
+        abortController = null;
+      }
+    };
+  }, [anyaltInstance, activeOperationId, transactionsProgress, isLoading]);
 
   const estimatedTime = useMemo(() => {
     if (!bestRoute) return 0;

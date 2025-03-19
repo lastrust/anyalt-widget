@@ -29,11 +29,13 @@ export const useHandleTransaction = ({
       | EVMTransactionDataResponse
       | SolanaTransactionDataResponse
       | BitcoinTransactionDataResponse,
+    higherGasCost?: boolean,
   ): Promise<TransactionResult> => {
     switch (transactionData.type) {
       case 'EVM':
         return await handleEvmTransaction(
           transactionData as EVMTransactionDataResponse,
+          higherGasCost,
         );
       case 'SOLANA':
         return {
@@ -47,6 +49,7 @@ export const useHandleTransaction = ({
         return {
           txHash: await handleBitcoinTransaction(
             transactionData as BitcoinTransactionDataResponse,
+            higherGasCost,
           ),
           nonce: null,
         };

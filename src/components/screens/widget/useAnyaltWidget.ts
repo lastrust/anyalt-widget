@@ -119,7 +119,8 @@ export const useAnyaltWidget = ({
     return Number(inTokenAmount ?? 0) == 0 || inToken == null;
   }, [inTokenAmount, inToken, bestRoute, activeStep]);
 
-  const resetState = () => {
+  const resetState = useCallback(() => {
+    setActiveStep(0);
     setActiveOperationId(undefined);
     setFinalTokenEstimate(undefined);
     setTransactionsList(undefined);
@@ -138,7 +139,21 @@ export const useAnyaltWidget = ({
     setTransactionsList(undefined);
     setTransactionIndex(1);
     setCurrentUiStep(0);
-  };
+    localStorage.removeItem('operationId');
+    localStorage.removeItem('tokenBuyOperationId');
+  }, [
+    setActiveOperationId,
+    setFinalTokenEstimate,
+    setTransactionsList,
+    setInTokenAmount,
+    setTokenFetchError,
+    setBestRoute,
+    setSwapData,
+    setTransactionsProgress,
+    setTransactionsList,
+    setTransactionIndex,
+    setCurrentUiStep,
+  ]);
 
   useEffect(() => {
     setCurrentUiStep(activeStep);
@@ -672,5 +687,6 @@ export const useAnyaltWidget = ({
     setOpenSlippageModal,
     onChooseRouteButtonClick,
     setOperationToCurrentRoute,
+    resetState,
   };
 };

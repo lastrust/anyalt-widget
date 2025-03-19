@@ -25,6 +25,7 @@ import { mapBlockchainToChainType } from '../../../utils/chains';
 import { getTransactionData } from '../../../utils/getTransactionData';
 import { handleSignerAddress } from '../../../utils/handleSignerAddress';
 import { submitPendingTransaction } from '../../../utils/submitPendingTransaction';
+import { useStuckTransaction } from '../stuckTransactionDialog/useStuckTransaction';
 import { useHandleTransaction } from './handlers/useHandleTransaction';
 
 export const useExecuteTokensSwap = (
@@ -41,12 +42,15 @@ export const useExecuteTokensSwap = (
     useWallet();
   const { account: bitcoinAccount } = useBitcoinWallet();
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
+
   const [, setFinalTokenEstimate] = useAtom(finalTokenEstimateAtom);
   const [transactionsList, setTransactionsList] = useAtom(transactionsListAtom);
 
   const { handleTransaction } = useHandleTransaction({
     externalEvmWalletConnector,
   });
+
+  const { keepPollingOnTxStuck } = useStuckTransaction();
 
   const executeTokensSwap = async (
     aaInstance: AnyAlt,
@@ -61,6 +65,7 @@ export const useExecuteTokensSwap = (
       currentStep: number;
     }>,
     estimateCallback: (token: Token) => Promise<EstimateResponse>,
+    higherGasCost?: boolean,
   ) => {
     let isCrosschainSwapError = false;
     do {
@@ -134,8 +139,10 @@ export const useExecuteTokensSwap = (
           },
         });
 
-        const { nonce: nonceRes, txHash: txHashRes } =
-          await handleTransaction(transactionData);
+        const { nonce: nonceRes, txHash: txHashRes } = await handleTransaction(
+          transactionData,
+          higherGasCost,
+        );
 
         nonce = nonceRes!;
         txHash = txHashRes!;
@@ -176,7 +183,9 @@ export const useExecuteTokensSwap = (
 
         const waitForTxResponse = await aaInstance.waitForTx({
           operationId,
+          keepPollingOnTxStuck,
         });
+
         const swapIsFinished = waitForTxResponse.swapIsFinished;
         const crosschainSwapOutputAmount =
           waitForTxResponse?.outputAmount || '0';

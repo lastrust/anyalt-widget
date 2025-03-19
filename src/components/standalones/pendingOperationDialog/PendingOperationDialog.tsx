@@ -19,7 +19,7 @@ type Props = {
   allNecessaryWalletsConnected: boolean;
 };
 
-export const PendingOperation = ({
+export const PendingOperationDialog = ({
   setOperationToCurrentRoute,
   walletConnector,
   connectWalletsOpen,

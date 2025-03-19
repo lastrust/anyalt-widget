@@ -6,6 +6,7 @@ export const TX_MESSAGE = {
   pending: 'Waiting for confirmation on source and destination chains...',
   confirmed: 'Transaction confirmed successfully!',
   failed: 'Transaction failed',
+  stuck: 'Transaction is stuck due to low gas',
 };
 
 export const TX_STATUS: Record<string, TransactionStatus> = {
@@ -14,6 +15,7 @@ export const TX_STATUS: Record<string, TransactionStatus> = {
   pending: 'pending',
   confirmed: 'confirmed',
   failed: 'failed',
+  stuck: 'stuck',
 };
 
 export const STEP_DESCR = {
