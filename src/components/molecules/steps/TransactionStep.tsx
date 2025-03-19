@@ -9,8 +9,8 @@ import {
 import { ArrowRightIcon } from '../../atoms/icons/transaction/ArrowRightIcon';
 
 type Props = {
-  exchangeName: string;
-  exchangeLogo: string;
+  exchangeName?: string;
+  exchangeLogo?: string;
   fromToken: {
     name: string;
     amount: string;
@@ -25,6 +25,7 @@ type Props = {
     chainName: string;
     chainLogo: string;
   };
+  justify?: string;
 };
 
 export const TransactionStep = ({
@@ -32,31 +33,34 @@ export const TransactionStep = ({
   exchangeLogo,
   fromToken,
   toToken,
+  ...props
 }: Props) => {
   const textFirst = `${fromToken.amount} ${fromToken.name} on ${fromToken.chainName}`;
   const textSecond = `${toToken.amount} ${toToken.name} on ${toToken.chainName}`;
   return (
-    <Flex w={'full'}>
+    <Flex w={'full'} {...props}>
       <HStack gap={'20px'}>
-        <HStack mr="5px" gap="5px">
-          <Image
-            src={exchangeLogo}
-            alt={`${exchangeLogo} Icon`}
-            width="20px"
-            height="20px"
-            borderRadius={'50%'}
-            border="1px solid white"
-          />
-          <Text
-            color="brand.secondary.3"
-            textStyle={'bold.3'}
-            fontSize={'12px'}
-            lineHeight={'120%'}
-            whiteSpace={'nowrap'}
-          >
-            {exchangeName}:
-          </Text>
-        </HStack>
+        {Boolean(exchangeLogo && exchangeName) && (
+          <HStack mr="5px" gap="5px">
+            <Image
+              src={exchangeLogo}
+              alt={`${exchangeLogo} Icon`}
+              width="20px"
+              height="20px"
+              borderRadius={'50%'}
+              border="1px solid white"
+            />
+            <Text
+              color="brand.text.secondary.2"
+              textStyle={'bold.3'}
+              fontSize={'12px'}
+              lineHeight={'120%'}
+              whiteSpace={'nowrap'}
+            >
+              {exchangeName}:
+            </Text>
+          </HStack>
+        )}
         <HStack alignItems={'center'} gap="3px">
           <HStack gap={'5px'}>
             <Box position="relative" minW={'20px'} minH={'20px'}>
@@ -85,12 +89,12 @@ export const TransactionStep = ({
                     borderRadius="50%"
                   />
                 ) : (
-                  <SkeletonCircle size="14px" bgColor="brand.secondary.100" />
+                  <SkeletonCircle size="14px" bgColor="brand.bg.skeleton" />
                 )}
               </Box>
             </Box>
             <Text
-              color="brand.secondary.3"
+              color="brand.text.secondary.2"
               fontSize="12px"
               fontWeight="regular"
               noOfLines={1}
@@ -129,13 +133,13 @@ export const TransactionStep = ({
                     borderRadius="50%"
                   />
                 ) : (
-                  <SkeletonCircle size="14px" bgColor="brand.secondary.100" />
+                  <SkeletonCircle size="14px" bgColor="brand.bg.skeleton" />
                 )}
               </Box>
             </Box>
             <Box>
               <Text
-                color="brand.secondary.3"
+                color="brand.text.secondary.2"
                 textStyle={'regular.3'}
                 noOfLines={1}
                 maxW={'105px'}

@@ -10,11 +10,10 @@ import { useAtomValue } from 'jotai';
 import { useCallback } from 'react';
 import { useAccount } from 'wagmi';
 import { WalletConnector } from '../../../..';
-import { walletConfig } from '../../../../constants/configs';
+import { config } from '../../../../constants/configs';
 import { allChainsAtom } from '../../../../store/stateStore';
+import { chainIdsValues } from '../../../../utils/chains';
 import { TransactionResult } from './useHandleTransaction';
-
-// Define a return type for the transaction result
 
 export const useEvmHandler = (externalEvmWalletConnector?: WalletConnector) => {
   const { isConnected: isEvmConnected, address } = useAccount();
@@ -45,7 +44,7 @@ export const useEvmHandler = (externalEvmWalletConnector?: WalletConnector) => {
         const walletAddress = await externalEvmWalletConnector.address;
 
         // Get the current nonce for the address before transaction
-        const nonce = await getTransactionCount(walletConfig, {
+        const nonce = await getTransactionCount(config, {
           address: walletAddress as `0x${string}`,
         });
 
@@ -72,8 +71,8 @@ export const useEvmHandler = (externalEvmWalletConnector?: WalletConnector) => {
           );
         }
 
-        await switchChain(walletConfig, {
-          chainId: chain.chainId,
+        await switchChain(config, {
+          chainId: chain.chainId as chainIdsValues,
         });
 
         // Get the current nonce for the connected address
@@ -81,39 +80,39 @@ export const useEvmHandler = (externalEvmWalletConnector?: WalletConnector) => {
           throw new TransactionError('No wallet address available');
         }
 
-        const nonce = await getTransactionCount(walletConfig, {
+        const nonce = await getTransactionCount(config, {
           address,
         });
 
-        let txHash: `0x${string}`;
-
         if (transactionDetails.isApprovalTx) {
-          txHash = await sendTransaction(walletConfig, {
+          const txHash = await sendTransaction(config, {
             to: transactionDetails.to as `0x${string}`,
             data: transactionDetails.data! as `0x${string}`,
             nonce, // Explicitly set the nonce
           });
-
-          await waitForTransactionReceipt(walletConfig, {
+          await waitForTransactionReceipt(config, {
             hash: txHash,
           });
+
+          return {
+            txHash,
+            nonce,
+          };
         } else {
-          txHash = await sendTransaction(walletConfig, {
+          const txHash = await sendTransaction(config, {
             to: transactionDetails.to as `0x${string}`,
             value: BigInt(transactionDetails.value || 0),
             data: transactionDetails.data! as `0x${string}`,
             nonce, // Explicitly set the nonce
           });
-
-          await waitForTransactionReceipt(walletConfig, {
+          await waitForTransactionReceipt(config, {
             hash: txHash,
           });
+          return {
+            txHash,
+            nonce,
+          };
         }
-
-        return {
-          txHash,
-          nonce,
-        };
       } catch (error) {
         console.error(error);
         throw new TransactionError(

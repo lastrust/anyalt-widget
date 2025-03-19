@@ -1,31 +1,46 @@
 import { BestRouteResponse } from '@anyalt/sdk';
-import { BoxProps, Button, Flex, Icon, Image, Text } from '@chakra-ui/react';
+import { Box, BoxProps, Button, Flex, Icon, Text } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { Token } from '../../..';
+import { truncateToDecimals } from '../../../utils/truncateToDecimals';
 import { CustomButton } from '../../atoms/buttons/CustomButton';
 import { WarningIcon } from '../../atoms/icons/transaction/WarningIcon';
+import { TransactionStep } from '../../molecules/steps/TransactionStep';
 
 type Props = {
+  disableActions: boolean;
   onContinuePendingOperation: () => void;
   onDismissPendingOperation: () => void;
+  mainButtonText: string;
   pendingOperation: BestRouteResponse;
   destinationToken: Token;
 } & BoxProps;
 
 export const Actions = ({
+  disableActions,
   onContinuePendingOperation,
   onDismissPendingOperation,
+  mainButtonText,
   pendingOperation,
   destinationToken,
 }: Props) => {
-  const transactions = useMemo(() => {
+  const steps = useMemo(() => {
     return pendingOperation.swapSteps
-      .filter(({ status }) => status === 'SUCCESS' || status !== 'CANCELLED')
-      .map(({ sourceToken, destinationToken, amount, payout }) => ({
-        sourceToken,
-        destinationToken,
-        amount,
-        payout,
+      .filter(
+        ({ status, transactions }) =>
+          status === 'SUCCESS' &&
+          transactions.length &&
+          transactions.some(
+            ({ confirmedTimestamp, failureMessage }) =>
+              confirmedTimestamp && !failureMessage,
+          ),
+      )
+      .map((step) => ({
+        ...step,
+        transactions: step.transactions.filter(
+          ({ confirmedTimestamp, failureMessage }) =>
+            confirmedTimestamp && !failureMessage,
+        ),
       }));
   }, [pendingOperation]);
 
@@ -58,37 +73,30 @@ export const Actions = ({
           justifyItems={'center'}
           alignItems={'center'}
           justifyContent={'center'}
+          w={'full'}
         >
-          {transactions.length > 0 ? (
-            transactions.map((transaction) => (
-              <Flex
-                key={transaction.sourceToken.symbol}
-                justifyContent="center"
-                alignItems="center"
-                textStyle={'small.1'}
-                textColor="gray"
-              >
-                <Image
-                  width={4}
-                  height={4}
-                  src={transaction.sourceToken.logo}
-                  mr={1}
+          {steps.length > 0 ? (
+            steps.map((step, index) => (
+              <Box w="full" mb="6px">
+                <TransactionStep
+                  justify={'center'}
+                  key={index}
+                  fromToken={{
+                    name: step.sourceToken.symbol,
+                    amount: truncateToDecimals(step.amount, 3) || '0',
+                    tokenLogo: step.sourceToken.logo,
+                    chainName: step.sourceToken.blockchain,
+                    chainLogo: step.sourceToken.blockchainLogo,
+                  }}
+                  toToken={{
+                    name: step.destinationToken.symbol,
+                    amount: truncateToDecimals(step.payout, 3) || '0',
+                    chainName: step.destinationToken.blockchain,
+                    tokenLogo: step.destinationToken.logo,
+                    chainLogo: step.destinationToken.blockchainLogo,
+                  }}
                 />
-                <Text>
-                  {transaction.amount} {transaction.sourceToken.symbol} on{' '}
-                  {transaction.sourceToken.blockchain} →
-                </Text>
-                <Image
-                  width={4}
-                  height={4}
-                  src={transaction.destinationToken.logo}
-                  mx={1}
-                />
-                <Text>
-                  {transaction.payout} {transaction.destinationToken.symbol} on{' '}
-                  {transaction.destinationToken.blockchain}
-                </Text>
-              </Flex>
+              </Box>
             ))
           ) : (
             <Text textAlign={'center'} textStyle={'small.1'} textColor="gray">
@@ -104,10 +112,14 @@ export const Actions = ({
         </Text>
       </Flex>
 
-      <CustomButton onButtonClick={onContinuePendingOperation}>
-        Continue transaction(s)
+      <CustomButton
+        disabled={disableActions}
+        onButtonClick={onContinuePendingOperation}
+      >
+        {mainButtonText}
       </CustomButton>
       <Button
+        disabled={disableActions}
         p={'16px 20px'}
         width="100%"
         borderRadius="8px"
@@ -116,9 +128,9 @@ export const Actions = ({
         lineHeight="120%"
         height={'unset'}
         _hover={{
-          bg: 'brand.secondary.12',
+          bg: 'brand.buttons.outline.hover',
         }}
-        borderColor="brand.secondary.1"
+        borderColor="brand.buttons.outline.border"
         borderWidth="1px"
         background={'none'}
         backdropFilter={'blur(50px)'}

@@ -63,7 +63,7 @@ export const TransactionInfo: FC<Props> = ({
             <HStack justifyContent={'space-between'} w={'100%'}>
               <Text
                 textStyle={'regular.1'}
-                color="brand.secondary.3"
+                color="brand.text.secondary.2"
                 w={'100%'}
                 whiteSpace={'nowrap'}
               >
@@ -94,7 +94,7 @@ export const TransactionInfo: FC<Props> = ({
                 tokenLogo={recentTransaction?.from.tokenLogo || ''}
                 chainName={recentTransaction?.from.blockchain || ''}
                 chainLogo={recentTransaction?.from.blockchainLogo || ''}
-                amount={Number(recentTransaction?.from.tokenAmount).toFixed(4)}
+                amount={Number(recentTransaction?.from.tokenAmount).toFixed(5)}
                 price={(
                   Number(recentTransaction?.from.tokenUsdPrice) *
                   Number(recentTransaction?.from.tokenAmount)
@@ -120,7 +120,7 @@ export const TransactionInfo: FC<Props> = ({
             ))}
 
           <Box position="relative" w="100%">
-            <Divider w="100%" h="1px" bgColor="brand.secondary.12" />
+            <Divider w="100%" h="1px" bgColor="brand.bg.primary" />
             <Center
               position="absolute"
               top="50%"

@@ -1,14 +1,14 @@
-import { useEffect } from 'react';
-import { AnyaltWidgetProps, ChainType } from '../../..';
+import { AnyaltWidgetProps } from '../../..';
 import { Footer } from '../../molecules/footer/Footer';
 import { Header } from '../../molecules/header/Header';
-import { ConnectWalletsModal } from '../../standalones/modals/ConnectWalletsModal';
+import { ConnectWalletsModal } from '../../standalones/modals/connectWalletsModal/ConnectWalletsModal';
 import ModalWrapper from '../../standalones/modals/ModalWrapper';
-import { PendingOperation } from '../../standalones/pendingOperation';
+import { PendingOperation } from '../../standalones/pendingOperation/PendingOperation';
+import { usePendingOperation } from '../../standalones/pendingOperation/usePendingOperation';
 import Stepper from '../../standalones/stepper/Stepper';
 import { ChoosingRouteStep } from '../../standalones/steps/ChoosingRouteStep';
-import { CompleteStep } from '../../standalones/steps/CompleteStep';
 import { SelectTokenStep } from '../../standalones/steps/SelectTokenStep';
+import { SuccessfulDepositStep } from '../../standalones/steps/SuccessfulDepositStep';
 import { TransactionStep } from '../../standalones/steps/TransactionStep';
 import { useAnyaltWidget } from './useAnyaltWidget';
 export { useModal } from '../../../hooks/useModal';
@@ -27,14 +27,14 @@ export const AnyaltWidgetWrapper = ({
   estimateCallback,
   executeCallBack,
   walletConnector,
-  isTokenBuyTemplate = false,
+  widgetTemplate = 'DEPOSIT_TOKEN',
   minDepositAmount = 0,
 }: AnyaltWidgetProps) => {
   const {
     loading,
     activeStep,
+    setOperationToCurrentRoute,
     activeRoute,
-    pendingOperation,
     isValidAmountIn,
     isButtonDisabled,
     isConnectWalletsOpen,
@@ -49,7 +49,6 @@ export const AnyaltWidgetWrapper = ({
     connectWalletsClose,
     setOpenSlippageModal,
     onChooseRouteButtonClick,
-    showPendingOperationDialog,
   } = useAnyaltWidget({
     apiKey,
     inputToken,
@@ -57,13 +56,12 @@ export const AnyaltWidgetWrapper = ({
     minDepositAmount,
     estimateCallback,
     walletConnector,
-    isTokenBuyTemplate,
+    widgetTemplate,
     onClose,
   });
 
-  useEffect(() => {
-    console.debug('ACtiveswap', activeStep);
-  }, [activeStep]);
+  const { showPendingOperationDialog, allNecessaryWalletsConnected } =
+    usePendingOperation({ closeConnectWalletsModal: connectWalletsClose });
 
   return (
     <ModalWrapper
@@ -75,28 +73,22 @@ export const AnyaltWidgetWrapper = ({
           : '976px'
       }
     >
-      <Header activeStep={activeStep} />
+      <Header
+        showPendingOperationDialog={showPendingOperationDialog}
+        activeStep={activeStep}
+      />
       {showPendingOperationDialog ? (
         <PendingOperation
-          pendingOperation={pendingOperation!}
-          destinationToken={{
-            ...pendingOperation!.swapSteps![
-              pendingOperation!.swapSteps!.length - 1
-            ].destinationToken!,
-            address:
-              pendingOperation!.swapSteps![
-                pendingOperation!.swapSteps!.length - 1
-              ].destinationToken!.contractAddress,
-            chainType: pendingOperation!.swapSteps![
-              pendingOperation!.swapSteps!.length - 1
-            ].destinationToken!.chainType as ChainType,
-          }}
+          setOperationToCurrentRoute={setOperationToCurrentRoute}
+          walletConnector={walletConnector}
+          allNecessaryWalletsConnected={allNecessaryWalletsConnected}
+          connectWalletsOpen={connectWalletsOpen}
         />
       ) : (
-        <Stepper activeStep={showPendingOperationDialog ? 0 : activeStep}>
+        <Stepper activeStep={activeStep}>
           <SelectTokenStep
             loading={loading}
-            isTokenBuyTemplate={isTokenBuyTemplate}
+            widgetTemplate={widgetTemplate}
             isValidAmountIn={isValidAmountIn}
             onConfigClick={onConfigClick}
             failedToFetchRoute={failedToFetchRoute}
@@ -123,7 +115,10 @@ export const AnyaltWidgetWrapper = ({
             onTxComplete={onTxComplete}
             estimateCallback={estimateCallback}
           />
-          <CompleteStep onConfigClick={onConfigClick} onComplete={onComplete} />
+          <SuccessfulDepositStep
+            onConfigClick={onConfigClick}
+            onComplete={onComplete}
+          />
         </Stepper>
       )}
       <Footer />

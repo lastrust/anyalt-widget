@@ -5,6 +5,7 @@ import {
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
 } from '../../../store/stateStore';
+import { truncateToDecimals } from '../../../utils/truncateToDecimals';
 import { ThumbIcon } from '../../atoms/icons/transaction/ThumbIcon';
 import { TokenIconBox } from '../../molecules/TokenIconBox';
 import { SwappingTemplate } from '../../templates/SwappingTemplate';
@@ -14,7 +15,7 @@ type Props = {
   onComplete: () => void;
 };
 
-export const CompleteStep = ({ onConfigClick, onComplete }: Props) => {
+export const SuccessfulDepositStep = ({ onConfigClick, onComplete }: Props) => {
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
   const finalTokenAmount = useAtomValue(finalTokenAmountAtom);
@@ -43,7 +44,7 @@ export const CompleteStep = ({ onConfigClick, onComplete }: Props) => {
         <Text
           fontSize="16px"
           fontWeight="400"
-          color="brand.secondary.100"
+          color="brand.text.secondary.4"
           textAlign="center"
         >
           You have got
@@ -62,20 +63,20 @@ export const CompleteStep = ({ onConfigClick, onComplete }: Props) => {
             color="brand.text.primary"
             mr="4px"
           >
-            {finalTokenAmount}
+            {truncateToDecimals(finalTokenAmount, 4)}
           </Text>
-          <Text fontSize="16px" fontWeight="400" color="brand.secondary.100">
+          <Text fontSize="16px" fontWeight="400" color="brand.text.secondary.4">
             {protocolFinalToken?.symbol} On{' '}
             {protocolInputToken?.chain?.displayName}
           </Text>
         </Flex>
         <Button
           width={'100%'}
-          bg="brand.tertiary.100"
+          bg="brand.buttons.action.bg"
           _hover={{
-            bg: 'brand.tertiary.90',
+            bg: 'brand.buttons.action.hover',
           }}
-          color="brand.white"
+          color="white"
           fontSize="16px"
           fontWeight="bold"
           borderRadius="8px"

@@ -1,5 +1,6 @@
 import {
   Box,
+  BoxProps,
   Flex,
   HStack,
   Image,
@@ -30,7 +31,7 @@ type Props = {
     amount: string;
     chainName: string;
   };
-};
+} & BoxProps;
 
 export const RouteStep = ({
   exchangeIcon,
@@ -40,6 +41,7 @@ export const RouteStep = ({
   fromToken,
   toToken,
   loading,
+  ...props
 }: Props) => {
   return (
     <Flex
@@ -47,13 +49,14 @@ export const RouteStep = ({
       w={'full'}
       alignItems={'center'}
       width={'100%'}
+      {...props}
     >
       <VStack justifyContent={'space-between'} alignItems={'start'} gap={'8px'}>
         <HStack gap={'4px'}>
           {loading ? (
             <Skeleton w={'40px'} h={'16px'} mr={'4px'} borderRadius="12px" />
           ) : (
-            <Text textStyle={'extraBold.5'} color="brand.secondary.3">
+            <Text textStyle={'extraBold.5'} color="brand.text.secondary.2">
               Step {stepNumber}:
             </Text>
           )}
@@ -72,7 +75,7 @@ export const RouteStep = ({
           {loading ? (
             <Skeleton w={'180px'} h={'18px'} borderRadius="12px" />
           ) : (
-            <Text color="brand.secondary.3" textStyle={'regular.3'}>
+            <Text color="brand.text.secondary.2" textStyle={'regular.3'}>
               {exchangeType === 'BRIDGE'
                 ? 'Bridge token using'
                 : exchangeType === 'LAST_MILE'
@@ -114,22 +117,22 @@ export const RouteStep = ({
                       borderRadius="50%"
                     />
                   ) : (
-                    <SkeletonCircle size="14px" bgColor="brand.secondary.100" />
+                    <SkeletonCircle size="14px" bgColor="brand.bg.skeleton" />
                   )}
                 </Box>
               </Box>
 
               <Text
-                color="brand.secondary.3"
+                color="brand.text.secondary.2"
                 textStyle={'regular.3'}
                 noOfLines={1}
               >
                 <span
+                  color={'brand.text.primary'}
                   style={{
                     fontSize: '12px',
                     fontWeight: '700',
                     lineHeight: '120%',
-                    color: 'white',
                     marginRight: '4px',
                   }}
                 >
@@ -167,21 +170,21 @@ export const RouteStep = ({
                       borderRadius="50%"
                     />
                   ) : (
-                    <SkeletonCircle size="14px" bgColor="brand.secondary.100" />
+                    <SkeletonCircle size="14px" bgColor="brand.bg.skeleton" />
                   )}
                 </Box>
               </Box>
               <Text
-                color="brand.secondary.3"
+                color="brand.text.secondary.2"
                 textStyle={'regular.3'}
                 noOfLines={1}
               >
                 <span
+                  color={'brand.text.primary'}
                   style={{
                     fontSize: '12px',
                     fontWeight: '700',
                     lineHeight: '120%',
-                    color: 'white',
                     marginRight: '4px',
                   }}
                 >

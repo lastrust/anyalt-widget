@@ -1,15 +1,26 @@
 import { useProvider } from '@ant-design/web3';
 import { Button, Circle, Flex, Text } from '@chakra-ui/react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { FC } from 'react';
+import { FC, useEffect, useMemo } from 'react';
 import { useAccount, useDisconnect } from 'wagmi';
 import { WalletConnector } from '../../..';
 
 interface WalletButtonProps {
   walletType: string;
   network: string;
-  onConnect: () => void;
   isDisabled: boolean;
+  onConnect: () => void;
+  setWalletStatus: React.Dispatch<
+    React.SetStateAction<
+      | {
+          walletType: string;
+          network: string;
+          isDisabled: boolean;
+          isConnected: boolean;
+        }[]
+      | undefined
+    >
+  >;
   walletConnector?: WalletConnector;
 }
 
@@ -19,6 +30,7 @@ export const WalletButton: FC<WalletButtonProps> = ({
   onConnect,
   isDisabled,
   walletConnector,
+  setWalletStatus,
 }) => {
   if (isDisabled) {
     return null;
@@ -38,10 +50,56 @@ export const WalletButton: FC<WalletButtonProps> = ({
   const isSolanaWallet = walletType === 'Solana';
   const isBitcoinWallet = walletType === 'Bitcoin';
 
-  const isWalletConnected =
-    (isEvmWallet && isEvmConnected) ||
-    (isSolanaWallet && isSolanaConnected) ||
-    (isBitcoinWallet && bitcoinAccount != undefined);
+  const isWalletConnected = useMemo(() => {
+    return (
+      (isEvmWallet && isEvmConnected) ||
+      (isSolanaWallet && isSolanaConnected) ||
+      (isBitcoinWallet && bitcoinAccount != undefined)
+    );
+  }, [
+    isEvmConnected,
+    isSolanaConnected,
+    bitcoinAccount,
+    isEvmWallet,
+    isSolanaWallet,
+    isBitcoinWallet,
+  ]);
+
+  useEffect(() => {
+    if (isEvmWallet && evmAddress) {
+      console.log('called evm');
+      setWalletStatus((prev) =>
+        prev?.map((wallet) =>
+          wallet.walletType === 'EVM'
+            ? { ...wallet, isConnected: true }
+            : wallet,
+        ),
+      );
+    } else if (isSolanaWallet && publicKey) {
+      setWalletStatus((prev) =>
+        prev?.map((wallet) =>
+          wallet.walletType === 'Solana'
+            ? { ...wallet, isConnected: true }
+            : wallet,
+        ),
+      );
+    } else if (isBitcoinWallet && bitcoinAccount) {
+      setWalletStatus((prev) =>
+        prev?.map((wallet) =>
+          wallet.walletType === 'Bitcoin'
+            ? { ...wallet, isConnected: true }
+            : wallet,
+        ),
+      );
+    }
+  }, [
+    isEvmWallet,
+    isSolanaWallet,
+    isBitcoinWallet,
+    evmAddress,
+    publicKey,
+    bitcoinAccount,
+  ]);
 
   const formatAddress = (address: string) => {
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
@@ -59,10 +117,31 @@ export const WalletButton: FC<WalletButtonProps> = ({
     if (isWalletConnected) {
       if (isEvmWallet) {
         disconnectEvm();
+        setWalletStatus((prev) =>
+          prev?.map((wallet) =>
+            wallet.walletType === 'EVM'
+              ? { ...wallet, isConnected: false }
+              : wallet,
+          ),
+        );
       } else if (isSolanaWallet) {
         disconnectSolana();
+        setWalletStatus((prev) =>
+          prev?.map((wallet) =>
+            wallet.walletType === 'Solana'
+              ? { ...wallet, isConnected: false }
+              : wallet,
+          ),
+        );
       } else if (isBitcoinWallet) {
         disconnectBitcoin?.();
+        setWalletStatus((prev) =>
+          prev?.map((wallet) =>
+            wallet.walletType === 'Bitcoin'
+              ? { ...wallet, isConnected: false }
+              : wallet,
+          ),
+        );
       }
     } else {
       onConnect();
@@ -109,8 +188,8 @@ export const WalletButton: FC<WalletButtonProps> = ({
       w="100%"
       h="auto"
       p="16px"
-      bg="brand.secondary.4"
-      _hover={{ bg: 'brand.secondary.12' }}
+      bg="brand.bg.cardBg"
+      _hover={{ bg: 'brand.bg.hover' }}
       onClick={handleClick}
     >
       <Flex w="100%" justify="space-between" align="center">
@@ -119,9 +198,12 @@ export const WalletButton: FC<WalletButtonProps> = ({
             <Text color="brand.text.primary" fontSize="16px">
               {getButtonStatus()}
             </Text>
-            {isWalletConnected && <Circle size="8px" bg="brand.tertiary.100" />}
+            <Circle
+              size="8px"
+              bg={isWalletConnected ? 'brand.border.active' : 'brand.bg.error'}
+            />
           </Flex>
-          <Text color="brand.secondary.3" fontSize="14px">
+          <Text color="brand.text.secondary.2" fontSize="14px">
             {getDisplayAddress()}
           </Text>
         </Flex>

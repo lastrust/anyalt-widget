@@ -9,6 +9,9 @@ export const chainExplorers = {
   SCROLL: 'https://scrollscan.com//tx/',
   BLAST: 'https://blastscan.io/tx/',
   SOLANA: 'https://solscan.io/tx/',
+  BSC: 'https://bscscan.com/tx/',
+  AVALANCHE: 'https://snowtrace.io/tx/',
+  ZKSYNC: 'https://explorer.zksync.io/tx/',
 };
 
 export const chainIds = {
@@ -22,7 +25,22 @@ export const chainIds = {
   SCROLL: 534351,
   BLAST: 534352,
   SOLANA: 101,
+  BSC: 56,
+  AVALANCHE: 43114,
+  ZKSYNC: 324,
 };
+
+export type chainIdsValues =
+  | 1
+  | 42161
+  | 137
+  | 10
+  | 8453
+  | 59144
+  | 534352
+  | 324
+  | 56
+  | 43114;
 
 export const CHAIN_ETHEREUM = 'ETH';
 export const CHAIN_ARBITRUM = 'ARBITRUM';

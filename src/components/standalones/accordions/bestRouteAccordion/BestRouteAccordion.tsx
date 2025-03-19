@@ -10,26 +10,17 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
-import { useAtom, useAtomValue } from 'jotai';
-import {
-  bestRouteAtom,
-  finalTokenEstimateAtom,
-  inTokenAmountAtom,
-  isTokenBuyTemplateAtom,
-  protocolFinalTokenAtom,
-  protocolInputTokenAtom,
-  selectedRouteAtom,
-  slippageAtom,
-} from '../../../store/stateStore';
-import { ChainIdToChainConstant } from '../../../utils/chains';
-import { truncateToDecimals } from '../../../utils/truncateToDecimals';
-import { GasIcon } from '../../atoms/icons/GasIcon';
-import { StepsIcon } from '../../atoms/icons/StepsIcon';
-import { TimeIcon } from '../../atoms/icons/TimeIcon';
-import { NoRouteCard } from '../../molecules/card/NoRouteCard';
-import { RouteTag } from '../../molecules/routeTag/RouteTag';
-import { RouteStep } from '../../molecules/steps/RouteStep';
-import { TokenRouteInfo } from '../../molecules/TokenRouteInfo';
+import { RANGO_PLACEHOLDER_LOGO } from '../../../../constants/links';
+import { ChainIdToChainConstant } from '../../../../utils/chains';
+import { truncateToDecimals } from '../../../../utils/truncateToDecimals';
+import { GasIcon } from '../../../atoms/icons/GasIcon';
+import { StepsIcon } from '../../../atoms/icons/StepsIcon';
+import { TimeIcon } from '../../../atoms/icons/TimeIcon';
+import { NoRouteCard } from '../../../molecules/card/NoRouteCard';
+import { RouteTag } from '../../../molecules/routeTag/RouteTag';
+import { RouteStep } from '../../../molecules/steps/RouteStep';
+import { TokenRouteInfo } from '../../../molecules/TokenRouteInfo';
+import { useBestRouteAccordion } from './useBestRouteAccordion';
 
 type Props = {
   loading: boolean;
@@ -42,20 +33,19 @@ export const BestRouteAccordion = ({
   failedToFetchRoute,
   isButtonHidden = true,
 }: Props) => {
-  const slippage = useAtomValue(slippageAtom);
-  const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
-  const [bestRoute] = useAtom(bestRouteAtom);
-  const isTokenBuyTemplate = useAtomValue(isTokenBuyTemplateAtom);
-  const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
-  const protocolInputToken = useAtomValue(protocolInputTokenAtom);
-  const [, setSelectedRoute] = useAtom(selectedRouteAtom);
-  const inTokenAmount = useAtomValue(inTokenAmountAtom);
+  const {
+    fees,
+    slippage,
+    bestRoute,
+    fromToken,
+    widgetTemplate,
+    handleRouteSelect,
+    protocolFinalToken,
+    protocolInputToken,
+    finalTokenEstimate,
+  } = useBestRouteAccordion();
 
   if (!bestRoute) return <></>;
-
-  const handleRouteSelect = () => {
-    setSelectedRoute(bestRoute);
-  };
 
   if (failedToFetchRoute && !loading) {
     return <NoRouteCard />;
@@ -73,6 +63,7 @@ export const BestRouteAccordion = ({
           borderRadius={'10px'}
           p={'16px'}
           cursor={'pointer'}
+          bg={'brand.bg.bestRoute'}
           onClick={handleRouteSelect}
         >
           <AccordionButton
@@ -97,44 +88,29 @@ export const BestRouteAccordion = ({
                 <RouteTag
                   loading={loading}
                   text="Fastest"
-                  textColor="brand.secondary.5"
-                  bgColor="brand.tertiary.100"
+                  textColor="brand.text.secondary.0"
+                  bgColor="brand.bg.active"
                   withBorder={false}
                 />
                 <RouteTag
                   loading={loading}
                   text={`${bestRoute.swapSteps.reduce((acc, swap) => acc + swap.estimatedTimeInSeconds, 0 + Number(finalTokenEstimate?.estimatedTimeInSeconds ?? 0)) || finalTokenEstimate?.estimatedTimeInSeconds}s`}
                   icon={TimeIcon}
-                  textColor="brand.tertiary.100"
+                  textColor="brand.text.active"
                   bgColor="brand.bg.tag"
                 />
                 <RouteTag
                   loading={loading}
-                  text={`$${
-                    (
-                      bestRoute.swapSteps
-                        .flatMap((step) => step.fees)
-                        .reduce((acc, fee) => {
-                          const amount = parseFloat(fee.amount);
-                          const price = fee.price || 0;
-                          return acc + amount * price;
-                        }, 0) +
-                      parseFloat(finalTokenEstimate?.estimatedFeeInUSD ?? '0')
-                    )
-                      .toFixed(2)
-                      .toString() ||
-                    finalTokenEstimate?.estimatedFeeInUSD ||
-                    '0.00'
-                  }`}
+                  text={fees}
                   icon={GasIcon}
-                  textColor="brand.tertiary.100"
+                  textColor="brand.text.active"
                   bgColor="brand.bg.tag"
                 />
                 <RouteTag
                   loading={loading}
-                  text={`${bestRoute.swapSteps.length + Number(!isTokenBuyTemplate)}`}
+                  text={`${bestRoute.swapSteps.length + Number(widgetTemplate === 'DEPOSIT_TOKEN')}`}
                   icon={StepsIcon}
-                  textColor="brand.tertiary.100"
+                  textColor="brand.text.active"
                   bgColor="brand.bg.tag"
                 />
               </Flex>
@@ -143,7 +119,7 @@ export const BestRouteAccordion = ({
                   h={'24px'}
                   w={'24px'}
                   borderRadius={'50%'}
-                  bgColor="brand.tertiary.100"
+                  bgColor="brand.bg.active"
                   cursor="pointer"
                 >
                   <AccordionIcon w={'24px'} h={'24px'} />
@@ -153,29 +129,35 @@ export const BestRouteAccordion = ({
             <TokenRouteInfo
               loading={loading}
               chainIcon={
-                isTokenBuyTemplate
+                widgetTemplate === 'TOKEN_BUY'
                   ? protocolInputToken?.chain?.logoUrl || ''
                   : protocolInputToken?.chain?.logoUrl || ''
               }
               tokenName={
-                isTokenBuyTemplate
+                widgetTemplate === 'TOKEN_BUY'
                   ? protocolInputToken?.name || ''
                   : protocolFinalToken?.name || ''
               }
               tokenIcon={
-                isTokenBuyTemplate
+                widgetTemplate === 'TOKEN_BUY'
                   ? protocolInputToken?.logoUrl || ''
                   : protocolFinalToken?.logoUrl || ''
               }
-              amount={Number(finalTokenEstimate?.amountOut ?? '0.00')}
-              price={Number(finalTokenEstimate?.priceInUSD ?? '0.00')}
+              amount={truncateToDecimals(
+                finalTokenEstimate?.amountOut ?? '0.00',
+                4,
+              )}
+              price={truncateToDecimals(
+                finalTokenEstimate?.priceInUSD ?? '0.00',
+                4,
+              )}
               slippage={slippage}
               network={
-                !isTokenBuyTemplate
+                widgetTemplate === 'TOKEN_BUY'
                   ? `${protocolFinalToken?.name} on ${protocolInputToken?.chain?.displayName}`
                   : bestRoute.swapSteps[0]?.swapperName
               }
-              bg={'brand.secondary.6'}
+              bg={'brand.text.secondary.3'}
               p="12px"
               borderRadius={'8px'}
             />
@@ -184,19 +166,35 @@ export const BestRouteAccordion = ({
             <VStack
               gap={'12px'}
               alignItems={'flex-start'}
-              color="brand.secondary.3"
+              color="brand.text.secondary.2"
             >
               {loading ? (
                 <Skeleton w={'180px'} h={'18px'} borderRadius="12px" />
               ) : (
                 bestRoute.swapSteps.map((swapStep, index) => {
                   return (
-                    <>
+                    <VStack
+                      gap={'12px'}
+                      alignItems={'flex-start'}
+                      color="brand.text.secondary.2"
+                      key={`accordion-wrapper-${swapStep.executionOrder}-${index}`}
+                    >
                       <Text textStyle={'bold.2'} lineHeight={'120%'}>
                         Transaction {index + 1}: {swapStep.swapperName}
                       </Text>
                       {swapStep.internalSwapSteps.map(
                         (internalSwap, internalIndex) => {
+                          if (
+                            widgetTemplate === 'TOKEN_BUY' &&
+                            internalSwap.destinationToken.contractAddress.toLowerCase() ===
+                              protocolInputToken?.tokenAddress?.toLowerCase() &&
+                            internalSwap.destinationToken.logo ===
+                              RANGO_PLACEHOLDER_LOGO &&
+                            protocolInputToken?.logoUrl
+                          ) {
+                            internalSwap.destinationToken.logo =
+                              protocolInputToken?.logoUrl;
+                          }
                           return (
                             <RouteStep
                               loading={loading}
@@ -208,7 +206,7 @@ export const BestRouteAccordion = ({
                               fromToken={{
                                 name: internalSwap.sourceToken.symbol,
                                 amount:
-                                  truncateToDecimals(internalSwap.amount) ||
+                                  truncateToDecimals(internalSwap.amount, 4) ||
                                   '0',
                                 chainName: internalSwap.sourceToken.blockchain,
                                 icon: internalSwap.sourceToken.logo,
@@ -217,7 +215,10 @@ export const BestRouteAccordion = ({
                               }}
                               toToken={{
                                 name: internalSwap.destinationToken.symbol,
-                                amount: truncateToDecimals(internalSwap.payout),
+                                amount: truncateToDecimals(
+                                  internalSwap.payout,
+                                  4,
+                                ),
                                 chainName:
                                   internalSwap.destinationToken.blockchain,
                                 icon: internalSwap.destinationToken.logo,
@@ -228,12 +229,12 @@ export const BestRouteAccordion = ({
                           );
                         },
                       )}
-                    </>
+                    </VStack>
                   );
                 })
               )}
 
-              {!isTokenBuyTemplate && (
+              {widgetTemplate === 'DEPOSIT_TOKEN' && (
                 <>
                   {loading ? (
                     <Skeleton w={'180px'} h={'18px'} borderRadius="12px" />
@@ -250,41 +251,8 @@ export const BestRouteAccordion = ({
                     exchangeIcon={protocolFinalToken?.logoUrl || ''}
                     exchangeName={'Last Mile TX'}
                     exchangeType={'LAST_MILE'}
-                    fromToken={
-                      bestRoute.swapSteps.length
-                        ? {
-                            name: bestRoute.swapSteps.length
-                              ? bestRoute.swapSteps[
-                                  bestRoute.swapSteps.length - 1
-                                ].destinationToken.symbol
-                              : protocolInputToken?.symbol || '',
-                            amount:
-                              truncateToDecimals(
-                                bestRoute.swapSteps[
-                                  bestRoute.swapSteps.length - 1
-                                ].payout,
-                              ) || '0',
-                            chainName:
-                              bestRoute.swapSteps[
-                                bestRoute.swapSteps.length - 1
-                              ].destinationToken.blockchain,
-                            icon: bestRoute.swapSteps[
-                              bestRoute.swapSteps.length - 1
-                            ].destinationToken.logo,
-                            chainIcon:
-                              bestRoute.swapSteps[
-                                bestRoute.swapSteps.length - 1
-                              ].destinationToken.blockchainLogo,
-                          }
-                        : {
-                            name: protocolInputToken?.symbol || '',
-                            icon: protocolInputToken?.logoUrl || '',
-                            chainIcon: protocolInputToken?.logoUrl || '',
-                            amount: truncateToDecimals(inTokenAmount || '0', 4),
-                            chainName:
-                              protocolInputToken?.chain?.displayName || '',
-                          }
-                    }
+                    pb={'6px'}
+                    fromToken={fromToken}
                     toToken={{
                       name: protocolFinalToken?.name || '',
                       amount: truncateToDecimals(

@@ -49,7 +49,7 @@ export const TokenSelectModal = ({ isOpen, onClose, onTokenSelect }: Props) => {
       display="flex"
       flexDir="column"
       justifyContent="flex-end"
-      bgColor="brand.secondary.7"
+      bgColor="brand.bg.selectToken"
       backdropFilter="blur(10px)"
       zIndex="2000"
       _hover={{
@@ -77,12 +77,12 @@ export const TokenSelectModal = ({ isOpen, onClose, onTokenSelect }: Props) => {
         padding="24px"
         margin="0 auto"
         borderRadius="16px 16px 12px 12px"
-        bgColor="brand.quaternary"
+        bgColor="brand.bg.modal"
         color="brand.text.primary"
         overflow="hidden"
         position="relative"
         border="1px solid"
-        borderColor="brand.secondary.12"
+        borderColor="brand.border.secondary"
         borderBottom="none"
         zIndex="100"
       >
@@ -93,7 +93,7 @@ export const TokenSelectModal = ({ isOpen, onClose, onTokenSelect }: Props) => {
           right="16px"
           onClick={onClose}
         >
-          <Icon as={CloseIcon} color="brand.secondary.100" />
+          <Icon as={CloseIcon} color="brand.buttons.close.primary" />
         </Box>
         <Box mb="16px">
           <Text fontSize="20px" fontWeight="bold" mb="16px">
@@ -113,8 +113,8 @@ export const TokenSelectModal = ({ isOpen, onClose, onTokenSelect }: Props) => {
                 border="1px solid"
                 borderColor={
                   activeChain?.id === chain.id
-                    ? 'brand.tertiary.100'
-                    : 'brand.secondary.12'
+                    ? 'brand.border.active'
+                    : 'brand.border.secondary'
                 }
                 bgColor="brand.primary"
                 width="fit-content"
@@ -141,7 +141,7 @@ export const TokenSelectModal = ({ isOpen, onClose, onTokenSelect }: Props) => {
           <InputGroup
             borderRadius="32px"
             border="1px solid"
-            borderColor="brand.secondary.12"
+            borderColor="brand.border.secondary"
             bgColor="brand.primary"
             opacity="0.4"
             mb="16px"

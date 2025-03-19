@@ -21,7 +21,6 @@ import { TransactionStep } from '../../molecules/steps/TransactionStep';
 import { TransactionHash } from '../../molecules/text/TransactionHash';
 
 type Props = {
-  onLastMileClick: () => void;
   isLastMileExpanded: boolean;
   bestRoute: BestRouteResponse;
   currentStep: number;
@@ -29,10 +28,10 @@ type Props = {
   protocolFinalToken: Token | undefined;
   finalTokenEstimate: EstimateResponse | undefined;
   protocolInputToken: SupportedToken | undefined;
+  operationType: 'CURRENT' | 'PENDING';
 };
 
 export const LastMileTxAccordion = ({
-  onLastMileClick,
   isLastMileExpanded,
   bestRoute,
   currentStep,
@@ -40,6 +39,7 @@ export const LastMileTxAccordion = ({
   protocolFinalToken,
   protocolInputToken,
   finalTokenEstimate,
+  operationType,
 }: Props) => {
   const inTokenAmount = useAtomValue(inTokenAmountAtom);
 
@@ -50,7 +50,8 @@ export const LastMileTxAccordion = ({
       borderColor="brand.border.primary"
       borderRadius={'10px'}
       p={'16px'}
-      bg={isLastMileExpanded ? 'brand.secondary.12' : 'transparent'}
+      cursor={'pointer'}
+      bg={isLastMileExpanded ? 'brand.bg.primary' : 'transparent'}
       _hover={{
         bgColor: 'bg.secondary.1',
       }}
@@ -62,20 +63,26 @@ export const LastMileTxAccordion = ({
         justifyContent={'space-between'}
         gap="12px"
         p={'0px'}
-        onClick={onLastMileClick}
       >
         <HStack justifyContent={'flex-start'}>
           <Text textStyle={'bold.1'} mr="8px">
             Transaction {bestRoute.swapSteps.length + 1}
           </Text>
           {currentStep === bestRoute.swapSteps.length + 1 && (
-            <Text textStyle={'bold.1'} color="brand.tertiary.100">
-              In Progress
+            <Text
+              textStyle={'bold.1'}
+              color={
+                operationType === 'CURRENT'
+                  ? 'brand.text.active'
+                  : 'brand.text.warning'
+              }
+            >
+              {operationType === 'CURRENT' ? 'In Progress' : 'Pending'}
             </Text>
           )}
         </HStack>
         <Box
-          bg="brand.tertiary.100"
+          bg="brand.bg.active"
           borderRadius={'50%'}
           w={'24px'}
           h={'24px'}
@@ -89,7 +96,16 @@ export const LastMileTxAccordion = ({
           />
         </Box>
       </AccordionButton>
-      <AccordionPanel p={'0px'} mt="12px">
+      <AccordionPanel
+        p={'0px'}
+        mt="12px"
+        pb={
+          !finalTokenEstimate?.estimatedTimeInSeconds &&
+          !finalTokenEstimate?.estimatedFeeInUSD
+            ? '6px'
+            : '0px'
+        }
+      >
         <VStack gap={'12px'}>
           <TransactionStep
             exchangeLogo={protocolFinalToken?.logoUrl || ''}
@@ -100,7 +116,7 @@ export const LastMileTxAccordion = ({
                 bestRoute.swapSteps.length === 0
                   ? inTokenAmount || '0'
                   : bestRoute.swapSteps[bestRoute.swapSteps.length - 1]
-                      ?.amount || '0',
+                      ?.payout || '0',
                 3,
               ),
               tokenLogo: protocolInputToken?.logoUrl || '',
@@ -124,7 +140,7 @@ export const LastMileTxAccordion = ({
                 <HStack>
                   <TimeIcon />
                   <Text
-                    color={'brand.secondary.3'}
+                    color={'brand.text.secondary.2'}
                     lineHeight={'120%'}
                     textStyle={'regular.3'}
                   >
@@ -135,7 +151,7 @@ export const LastMileTxAccordion = ({
                 <HStack>
                   <GasIcon />
                   <Text
-                    color={'brand.secondary.3'}
+                    color={'brand.text.secondary.2'}
                     lineHeight={'120%'}
                     textStyle={'regular.3'}
                   >

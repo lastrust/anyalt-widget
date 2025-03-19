@@ -47,15 +47,17 @@ export interface WalletConnector {
   switchChain: (chainId: number) => Promise<void>;
 }
 
+export type WidgetTemplateType = 'TOKEN_BUY' | 'DEPOSIT_TOKEN';
+
 export { defaultTheme, useModal, WalletsProviders, whiteTheme, WidgetProvider };
 
 export type AnyaltWidgetProps = {
   isOpen: boolean;
   apiKey: string;
   inputToken: Token;
-  finalToken: Token;
+  finalToken?: Token;
   minDepositAmount?: number;
-  isTokenBuyTemplate?: boolean;
+  widgetTemplate?: WidgetTemplateType;
   walletConnector?: WalletConnector;
   onClose: () => void;
   estimateCallback: (token: Token) => Promise<EstimateResponse>;

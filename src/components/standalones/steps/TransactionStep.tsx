@@ -27,6 +27,7 @@ export const TransactionStep = ({
   onTxComplete,
 }: Props) => {
   const currentStep = useAtomValue(transactionIndexAtom);
+
   return (
     <Grid templateColumns="1fr 1fr" gap="16px" m="24px 0px 16px">
       <SwappingTemplate
@@ -45,7 +46,7 @@ export const TransactionStep = ({
         />
       </SwappingTemplate>
       <SwappingTemplate m="0" maxH={'520px'} overflow={'scroll'}>
-        <TransactionList />
+        <TransactionList operationType="CURRENT" />
       </SwappingTemplate>
     </Grid>
   );

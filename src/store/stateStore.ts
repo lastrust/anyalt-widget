@@ -5,7 +5,7 @@ import {
   SupportedToken,
 } from '@anyalt/sdk';
 import { atom } from 'jotai';
-import { EstimateResponse, Token } from '..';
+import { EstimateResponse, Token, WidgetTemplateType } from '..';
 import {
   TransactionsProgress,
   TransactionStatusList,
@@ -58,7 +58,7 @@ export const transactionsListAtom = atom<TransactionStatusList | undefined>(
   undefined,
 );
 
-export const isTokenBuyTemplateAtom = atom<boolean>(false);
+export const widgetTemplateAtom = atom<WidgetTemplateType>('DEPOSIT_TOKEN');
 
 export const minDepositAmountAtom = atom<number>(0);
 
@@ -73,7 +73,7 @@ export const swapDataAtom = atom<{
   isCrosschainSwapError: false,
   crosschainSwapOutputAmount: '0',
   totalSteps: 0,
-  currentStep: 0,
+  currentStep: 1,
 });
 
 export const tokenFetchErrorAtom = atom<{

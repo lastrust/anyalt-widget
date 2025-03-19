@@ -2,12 +2,13 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import { useAtomValue } from 'jotai';
 import { useEffect, useMemo, useState } from 'react';
-import { ChainType, WalletConnector } from '../../..';
+import { ChainType, WalletConnector } from '../../../..';
 import {
   allChainsAtom,
   bestRouteAtom,
+  pendingOperationAtom,
   protocolInputTokenAtom,
-} from '../../../store/stateStore';
+} from '../../../../store/stateStore';
 
 const WALLETS = [
   {
@@ -37,6 +38,7 @@ type UseConnectWalletsModalProps = {
 export const useConnectWalletsModal = ({
   walletConnector,
 }: UseConnectWalletsModalProps) => {
+  const [isWalletConnected, setIsWalletConnected] = useState(false);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const { openConnectModal } = useConnectModal();
   const { setVisible } = useWalletModal(); // Hook to control the Solana wallet modal
@@ -46,7 +48,18 @@ export const useConnectWalletsModal = ({
   const [isBitcoinRequired, setIsBitcoinRequired] = useState(false);
 
   const bestRoute = useAtomValue(bestRouteAtom);
+  const pendingOperation = useAtomValue(pendingOperationAtom);
   const allChains = useAtomValue(allChainsAtom);
+
+  const [walletStatus, setWalletStatus] = useState<
+    {
+      walletType: string;
+      network: string;
+      isDisabled: boolean;
+      isConnected: boolean;
+    }[]
+  >();
+
   const requiredWallets = useMemo(() => {
     return WALLETS.filter((wallet) => {
       if (wallet.walletType === 'EVM') {
@@ -58,13 +71,11 @@ export const useConnectWalletsModal = ({
       }
       return false;
     });
-  }, [
-    bestRoute,
-    allChains,
-    isEvmRequired,
-    isSolanaRequired,
-    isBitcoinRequired,
-  ]);
+  }, [allChains, isEvmRequired, isSolanaRequired, isBitcoinRequired]);
+
+  useEffect(() => {
+    setWalletStatus(requiredWallets);
+  }, [requiredWallets]);
 
   useEffect(() => {
     if (protocolInputToken?.chain?.chainType === ChainType.EVM) {
@@ -73,27 +84,29 @@ export const useConnectWalletsModal = ({
       setIsSolanaRequired(true);
     }
 
-    bestRoute?.swapSteps.forEach((swapStep) => {
-      const fromBlockchain = swapStep.sourceToken.blockchain;
-      const toBlockchain = swapStep.destinationToken.blockchain;
+    (pendingOperation?.swapSteps || [])
+      .concat(...(bestRoute?.swapSteps || []))
+      .forEach((swapStep) => {
+        const fromBlockchain = swapStep.sourceToken.blockchain;
+        const toBlockchain = swapStep.destinationToken.blockchain;
 
-      const isSolanaFrom = fromBlockchain === 'SOLANA';
-      const isSolanaTo = toBlockchain === 'SOLANA';
-      if (isSolanaFrom || isSolanaTo) setIsSolanaRequired(true);
+        const isSolanaFrom = fromBlockchain === 'SOLANA';
+        const isSolanaTo = toBlockchain === 'SOLANA';
+        if (isSolanaFrom || isSolanaTo) setIsSolanaRequired(true);
 
-      const isBitcoinFrom = fromBlockchain === 'BTC';
-      const isBitcoinTo = toBlockchain === 'BTC';
-      if (isBitcoinFrom || isBitcoinTo) setIsBitcoinRequired(true);
+        const isBitcoinFrom = fromBlockchain === 'BTC';
+        const isBitcoinTo = toBlockchain === 'BTC';
+        if (isBitcoinFrom || isBitcoinTo) setIsBitcoinRequired(true);
 
-      const toChain = allChains.find((chain) => chain.name === toBlockchain);
-      const fromChain = allChains.find(
-        (chain) => chain.name === fromBlockchain,
-      );
+        const toChain = allChains.find((chain) => chain.name === toBlockchain);
+        const fromChain = allChains.find(
+          (chain) => chain.name === fromBlockchain,
+        );
 
-      const isEvmFrom = fromChain?.chainType === ChainType.EVM;
-      const isEvmTo = toChain?.chainType === ChainType.EVM;
-      if (isEvmFrom || isEvmTo) setIsEvmRequired(true);
-    });
+        const isEvmFrom = fromChain?.chainType === ChainType.EVM;
+        const isEvmTo = toChain?.chainType === ChainType.EVM;
+        if (isEvmFrom || isEvmTo) setIsEvmRequired(true);
+      });
   }, [bestRoute, allChains]);
 
   const handleWalletClick = (walletType: string) => {
@@ -119,6 +132,10 @@ export const useConnectWalletsModal = ({
   };
 
   return {
+    walletStatus,
+    setWalletStatus,
+    isWalletConnected,
+    setIsWalletConnected,
     isBitcoinModalOpen,
     requiredWallets,
     setIsBitcoinModalOpen,

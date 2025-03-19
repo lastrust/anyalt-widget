@@ -19,14 +19,14 @@ export const TransactionInfoCard = ({ estimatedTime, fees }: Props) => {
     >
       <HStack>
         <TimeIcon />
-        <Text color={'brand.secondary.3'} textStyle={'regular.1'}>
+        <Text color={'brand.text.secondary.2'} textStyle={'regular.1'}>
           {estimatedTime} s
         </Text>
       </HStack>
       <DividerIcon />
       <HStack>
         <GasIcon />
-        <Text color={'brand.secondary.3'} textStyle={'regular.1'}>
+        <Text color={'brand.text.secondary.2'} textStyle={'regular.1'}>
           $ {fees}
         </Text>
       </HStack>

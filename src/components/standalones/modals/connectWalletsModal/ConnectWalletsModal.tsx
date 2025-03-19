@@ -10,9 +10,9 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { FC } from 'react';
-import { WalletConnector } from '../../..';
-import { CustomButton } from '../../atoms/buttons/CustomButton';
-import { WalletButton } from '../../molecules/buttons/WalletButton';
+import { WalletConnector } from '../../../..';
+import { CustomButton } from '../../../atoms/buttons/CustomButton';
+import { WalletButton } from '../../../molecules/buttons/WalletButton';
 import { useConnectWalletsModal } from './useConnectWalletsModal';
 
 interface Props {
@@ -31,8 +31,10 @@ export const ConnectWalletsModal: FC<Props> = ({
   walletConnector,
 }) => {
   const {
-    isBitcoinModalOpen,
     requiredWallets,
+    isBitcoinModalOpen,
+    walletStatus,
+    setWalletStatus,
     setIsBitcoinModalOpen,
     onBitcoinConnected,
     handleWalletClick,
@@ -57,10 +59,10 @@ export const ConnectWalletsModal: FC<Props> = ({
           alignItems="center"
         >
           {title}
-          <CloseButton onClick={onClose} color="brand.secondary.100" />
+          <CloseButton onClick={onClose} color="brand.buttons.close.primary" />
         </ModalHeader>
         <ModalBody p="0">
-          <Text color="brand.secondary.2" mb="16px">
+          <Text color="brand.text.secondary.1" mb="16px">
             {areWalletsConnected
               ? 'All wallets connected. You can proceed to the next step.'
               : 'Connect wallets to proceed to the next step.'}
@@ -74,10 +76,16 @@ export const ConnectWalletsModal: FC<Props> = ({
                 onConnect={() => handleWalletClick(wallet.walletType)}
                 isDisabled={wallet.isDisabled}
                 walletConnector={walletConnector}
+                setWalletStatus={setWalletStatus}
               />
             ))}
-            <CustomButton onButtonClick={() => onClose()}>
-              Continue
+            <CustomButton
+              isDisabled={!walletStatus?.every((wallet) => wallet.isConnected)}
+              onButtonClick={() => onClose()}
+            >
+              {walletStatus?.every((wallet) => wallet.isConnected)
+                ? 'Continue'
+                : 'Please Connect Required Wallets'}
             </CustomButton>
           </VStack>
           <Connector

@@ -1,6 +1,6 @@
 {
   "name": "@anyalt/widget",
-  "version": "1.0.6",
+  "version": "1.0.14",
   "description": "Anyalt Widget",
   "private": false,
   "files": [
@@ -38,8 +38,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@ant-design/web3": "^1.20.0",
-    "@ant-design/web3-bitcoin": "^1.5.0",
+    "@ant-design/web3": "^1.22.0",
+    "@ant-design/web3-bitcoin": "^1.5.2",
     "@anyalt/sdk": "file:../sdk/anyalt-sdk-1.0.18.tgz",
     "@chakra-ui/react": "2.10.4",
     "@emotion/react": "^11.14.0",
@@ -47,8 +47,6 @@
     "@fontsource/poppins": "^5.1.1",
     "@fontsource/rethink-sans": "^5.0.1",
     "@rainbow-me/rainbowkit": "^2.2.2",
-    "@reown/appkit": "^1.6.4",
-    "@reown/appkit-adapter-wagmi": "^1.6.4",
     "@solana/spl-token": "^0.1.8",
     "@solana/wallet-adapter-base": "^0.9.23",
     "@solana/wallet-adapter-react": "^0.15.35",

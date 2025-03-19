@@ -51,7 +51,7 @@ export const TokenInputBox: FC<Props> = ({
         alignItems="center"
         mb="12px"
       >
-        <Text color={'brand.secondary.3'} textStyle={'bold.2'}>
+        <Text color={'brand.text.secondary.2'} textStyle={'bold.2'}>
           Choose Your Deposit
         </Text>
         <Box
@@ -60,12 +60,16 @@ export const TokenInputBox: FC<Props> = ({
           alignItems="center"
           gap="4px"
         >
-          <Text color={'brand.secondary.3'} textStyle={'bold.3'} opacity={0.4}>
+          <Text
+            color={'brand.text.secondary.2'}
+            textStyle={'bold.3'}
+            opacity={0.4}
+          >
             Balance: {balance ? truncateToDecimals(balance, 6) : ''}
           </Text>
           <Button
-            bg="brand.tertiary.20"
-            color="brand.tertiary.100"
+            bg="brand.buttons.action.bgFaded"
+            color="brand.text.active"
             fontSize="12px"
             fontWeight="bold"
             borderRadius="4px"
@@ -84,13 +88,13 @@ export const TokenInputBox: FC<Props> = ({
         justifyContent="space-between"
         alignItems="center"
         gap="16px"
-        bgColor="brand.secondary.4"
+        bgColor="brand.bg.cardBg"
         padding="16px"
         borderRadius="8px"
         border={!isValidAmountIn || failedToFetchRoute ? '1px solid' : 'none'}
         borderColor={
           !isValidAmountIn || failedToFetchRoute
-            ? 'brand.quinary.100'
+            ? 'brand.border.error'
             : 'transparent'
         }
       >
@@ -126,9 +130,9 @@ export const TokenInputBox: FC<Props> = ({
             />
             <Box
               cursor="pointer"
-              color={'brand.tertiary.100'}
+              color={'brand.buttons.action.bg'}
               _hover={{
-                color: 'brand.tertiary.90',
+                color: 'brand.buttons.action.hover',
               }}
             >
               <Icon as={SelectTokenIcon} />
@@ -136,7 +140,8 @@ export const TokenInputBox: FC<Props> = ({
           </Box>
           <Box>
             <Input
-              type="number"
+              type="text"
+              pattern="[0-9]+([,\.][0-9]+)?"
               fontSize="32px"
               fontWeight="bold"
               border="none"
@@ -152,9 +157,18 @@ export const TokenInputBox: FC<Props> = ({
                 color: 'brand.text.primary',
                 opacity: 0.4,
               }}
-              value={inTokenAmount?.replace(',', '.')}
+              value={inTokenAmount}
               onChange={(e) => {
-                setInTokenAmount(e.target.value);
+                const inputValue = e.target.value.replace(',', '.');
+                const regex = /^\d*\.?\d*$/;
+                const isEmptyInput = inputValue === '';
+                const isOnlyNumberOrOneDot = new RegExp(regex, 'g').test(
+                  inputValue,
+                );
+
+                if (isEmptyInput || isOnlyNumberOrOneDot) {
+                  setInTokenAmount(inputValue);
+                }
               }}
               readOnly={readonly}
             />
@@ -182,11 +196,11 @@ export const TokenInputBox: FC<Props> = ({
       {tokenFetchError.isError && (
         <Box
           padding="4px"
-          bgColor="brand.quinary.10"
+          bgColor="brand.bg.error"
           borderRadius="8px"
           width="100%"
         >
-          <Text color="brand.quinary.100" fontSize="14px" fontWeight="bold">
+          <Text color="brand.text.error" fontSize="14px" fontWeight="bold">
             {tokenFetchError.errorMessage}
           </Text>
         </Box>

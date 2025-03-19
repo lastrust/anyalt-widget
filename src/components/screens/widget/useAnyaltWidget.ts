@@ -1,11 +1,22 @@
 import { useBitcoinWallet } from '@ant-design/web3-bitcoin';
-import { AnyAlt } from '@anyalt/sdk';
+import { AnyAlt, BestRouteResponse, SupportedToken } from '@anyalt/sdk';
 import { useDisclosure, useSteps } from '@chakra-ui/react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useAtom, useAtomValue } from 'jotai';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAccount } from 'wagmi';
-import { ChainType, EstimateResponse, Token, WalletConnector } from '../../..';
+import {
+  ChainType,
+  EstimateResponse,
+  Token,
+  WalletConnector,
+  WidgetTemplateType,
+} from '../../..';
+import { ANYALT_PLACEHOLDER_LOGO } from '../../../constants/links';
+import {
+  DEBOUNCE_TIMEOUT,
+  REFRESH_INTERVAL,
+} from '../../../constants/transaction';
 import {
   activeOperationIdAtom,
   allChainsAtom,
@@ -15,8 +26,6 @@ import {
   finalTokenEstimateAtom,
   inTokenAmountAtom,
   inTokenAtom,
-  isTokenBuyTemplateAtom,
-  pendingOperationAtom,
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
   selectedRouteAtom,
@@ -26,12 +35,15 @@ import {
   transactionIndexAtom,
   transactionsListAtom,
   transactionsProgressAtom,
+  widgetTemplateAtom,
 } from '../../../store/stateStore';
-import { calculateWorstOutput } from '../../../utils';
+import { TransactionsProgress } from '../../../types/transaction';
+import {
+  calculateWorstOutput,
+  convertSwapTransactionToTransactionProgress,
+} from '../../../utils';
 import { ChainIdToChainConstant } from '../../../utils/chains';
 import { useTokenInputBox } from '../../standalones/selectSwap/token/input/useTokenInputBox';
-
-const REFRESH_INTERVAL = 30000;
 
 export const useAnyaltWidget = ({
   apiKey,
@@ -39,15 +51,15 @@ export const useAnyaltWidget = ({
   finalToken,
   walletConnector,
   minDepositAmount,
-  isTokenBuyTemplate: isTokenBuy = false,
+  widgetTemplate,
   estimateCallback,
   onClose,
 }: {
   estimateCallback: (token: Token) => Promise<EstimateResponse>;
   apiKey: string;
   inputToken: Token;
-  finalToken: Token;
-  isTokenBuyTemplate: boolean;
+  finalToken?: Token;
+  widgetTemplate: WidgetTemplateType;
   minDepositAmount: number;
   walletConnector?: WalletConnector;
   onClose: () => void;
@@ -61,7 +73,7 @@ export const useAnyaltWidget = ({
   const { publicKey: solanaAddress, connected: isSolanaConnected } =
     useWallet();
   const { account: bitcoinAccount } = useBitcoinWallet();
-  const { activeStep, setActiveStep, goToNext, goToPrevious } = useSteps({
+  const { activeStep, setActiveStep, goToPrevious } = useSteps({
     index: 0,
   });
 
@@ -71,17 +83,16 @@ export const useAnyaltWidget = ({
     onOpen: connectWalletsOpen,
   } = useDisclosure();
 
-  const inToken = useAtomValue(inTokenAtom);
   const slippage = useAtomValue(slippageAtom);
-  const inTokenAmount = useAtomValue(inTokenAmountAtom);
   const selectedRoute = useAtomValue(selectedRouteAtom);
 
+  const [inTokenAmount, setInTokenAmount] = useAtom(inTokenAmountAtom);
+  const [inToken, setInToken] = useAtom(inTokenAtom);
   const [swapData, setSwapData] = useAtom(swapDataAtom);
   const [, setCurrentUiStep] = useAtom(currentUiStepAtom);
   const [allChains, setAllChains] = useAtom(allChainsAtom);
   const [bestRoute, setBestRoute] = useAtom(bestRouteAtom);
-  const [pendingOperation, setPendingOperation] = useAtom(pendingOperationAtom);
-  const [, setIsTokenBuy] = useAtom(isTokenBuyTemplateAtom);
+  const [, setTemplate] = useAtom(widgetTemplateAtom);
   const [, setTokenFetchError] = useAtom(tokenFetchErrorAtom);
   const [, setTransactionsList] = useAtom(transactionsListAtom);
   const [, setTransactionIndex] = useAtom(transactionIndexAtom);
@@ -96,8 +107,6 @@ export const useAnyaltWidget = ({
     protocolInputTokenAtom,
   );
   const { balance } = useTokenInputBox();
-  const [showPendingOperationDialog, setShowPendingOperationDialog] =
-    useState(false);
 
   useEffect(() => {
     onGetQuote(false);
@@ -109,6 +118,27 @@ export const useAnyaltWidget = ({
     }
     return Number(inTokenAmount ?? 0) == 0 || inToken == null;
   }, [inTokenAmount, inToken, bestRoute, activeStep]);
+
+  const resetState = () => {
+    setActiveOperationId(undefined);
+    setFinalTokenEstimate(undefined);
+    setTransactionsList(undefined);
+    setInTokenAmount(undefined);
+    setInToken(undefined);
+    setTokenFetchError({ isError: false, errorMessage: '' });
+    setBestRoute(undefined);
+    setSwapData({
+      swapIsFinished: false,
+      isCrosschainSwapError: false,
+      crosschainSwapOutputAmount: '',
+      totalSteps: 0,
+      currentStep: 1,
+    });
+    setTransactionsProgress({});
+    setTransactionsList(undefined);
+    setTransactionIndex(1);
+    setCurrentUiStep(0);
+  };
 
   useEffect(() => {
     setCurrentUiStep(activeStep);
@@ -140,39 +170,8 @@ export const useAnyaltWidget = ({
       }
 
     setProtocolFinalToken(finalToken);
-    setIsTokenBuy(isTokenBuy);
+    setTemplate(widgetTemplate);
   }, []);
-
-  useEffect(() => {
-    const pendingOperationId = isTokenBuy
-      ? localStorage.getItem('tokenBuyOperationId')
-      : localStorage.getItem('operationId');
-    if (anyaltInstance && pendingOperationId)
-      try {
-        anyaltInstance
-          .getPendingOperation({ operationId: pendingOperationId! })
-          .then((res) => {
-            if (res?.operationId) {
-              console.debug('~got a pending operation', res);
-              setShowPendingOperationDialog(true);
-              setPendingOperation({
-                missingWalletForSourceBlockchain: true,
-                operationId: res.operationId,
-                swapSteps: res.swapSteps!,
-                outputAmount: res.swapSteps![res.swapSteps!.length - 1].payout,
-              });
-            }
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      } catch (error) {
-        console.error(error);
-      }
-
-    setProtocolFinalToken(finalToken);
-    setIsTokenBuy(isTokenBuy);
-  }, [anyaltInstance, isTokenBuy]);
 
   useEffect(() => {
     if (selectedRoute) setBestRoute(selectedRoute);
@@ -191,12 +190,87 @@ export const useAnyaltWidget = ({
       anyaltInstance
         ?.getToken(inputTokenChain.name, inputToken.address)
         .then((res) => {
+          if (res.logoUrl === ANYALT_PLACEHOLDER_LOGO && inputToken.logoUrl) {
+            res.logoUrl = inputToken.logoUrl;
+          }
           setProtocolInputToken(res);
         });
     }
   }, [allChains, anyaltInstance]);
 
+  const setListOfTransactionsFromRoute = useCallback(
+    (route: BestRouteResponse, inputToken: Partial<SupportedToken>) => {
+      const lastStepOfOperation = route?.swapSteps[route?.swapSteps.length - 1];
+      const lastTokenOfOperation = lastStepOfOperation?.destinationToken;
+
+      setTransactionsList({
+        steps: [
+          ...(route?.swapSteps.map((step) => {
+            const toPayout = !isNaN(parseInt(step.payout))
+              ? step.payout
+              : step.quotePayout;
+            return {
+              from: {
+                tokenName: step.sourceToken.symbol,
+                tokenLogo: step.sourceToken.logo,
+                tokenAmount: step.amount,
+                tokenPrice: (
+                  parseFloat(step.amount) * step.sourceToken.tokenUsdPrice
+                ).toFixed(2),
+                tokenUsdPrice: step.sourceToken.tokenUsdPrice.toFixed(2),
+                tokenDecimals: step.sourceToken.decimals,
+                blockchain: step.sourceToken.blockchain,
+                blockchainLogo: step.sourceToken.blockchainLogo,
+              },
+              to: {
+                tokenName: step.destinationToken.symbol,
+                tokenLogo: step.destinationToken.logo,
+                tokenAmount: toPayout,
+                tokenPrice: (
+                  parseFloat(toPayout) * step.destinationToken.tokenUsdPrice
+                ).toFixed(2),
+                tokenUsdPrice: step.destinationToken.tokenUsdPrice.toFixed(2),
+                tokenDecimals: step.destinationToken.decimals,
+                blockchain: step.destinationToken.blockchain,
+                blockchainLogo: step.destinationToken.blockchainLogo,
+              },
+            };
+          }) || []),
+          {
+            from: {
+              tokenName: lastTokenOfOperation?.symbol || '',
+              tokenLogo: lastTokenOfOperation?.logo || '',
+              tokenAmount: lastStepOfOperation?.amount || '',
+              tokenPrice: lastStepOfOperation?.amount || '',
+              tokenUsdPrice:
+                lastTokenOfOperation?.tokenUsdPrice.toFixed(2) || '',
+              tokenDecimals: lastTokenOfOperation?.decimals || 0,
+              blockchain: lastTokenOfOperation?.blockchain || '',
+              blockchainLogo: lastTokenOfOperation?.blockchainLogo || '',
+            },
+            to: {
+              tokenName: finalToken?.name || '',
+              tokenLogo: finalToken?.logoUrl || '',
+              tokenAmount: finalEstimateToken?.amountOut || '',
+              tokenPrice:
+                (
+                  parseFloat(finalEstimateToken?.priceInUSD || '0') /
+                  parseFloat(finalEstimateToken?.amountOut || '1')
+                ).toFixed(2) || '',
+              tokenUsdPrice: finalEstimateToken?.priceInUSD || '0',
+              tokenDecimals: finalToken?.decimals || 0,
+              blockchain: inputToken.chain?.displayName || '',
+              blockchainLogo: inputToken.chain?.logoUrl || '',
+            },
+          },
+        ],
+      });
+    },
+    [finalEstimateToken, finalToken, protocolInputToken],
+  );
+
   const onGetQuote = async (withGoNext: boolean = true) => {
+    if (activeStep > 1) return;
     if (!inToken || !protocolInputToken || !inTokenAmount) return;
 
     if (inToken.id === protocolInputToken.id) {
@@ -234,64 +308,9 @@ export const useAnyaltWidget = ({
       });
       setBestRoute(route);
 
-      const lastStepOfOperation = route?.swapSteps[route?.swapSteps.length - 1];
-      const lastTokenOfOperation = lastStepOfOperation?.destinationToken;
-
-      setTransactionsList({
-        steps: [
-          ...(route?.swapSteps.map((step) => {
-            return {
-              from: {
-                tokenName: step.sourceToken.symbol,
-                tokenLogo: step.sourceToken.logo,
-                tokenAmount: step.amount,
-                tokenPrice: step.amount,
-                tokenUsdPrice: step.sourceToken.tokenUsdPrice.toFixed(2),
-                tokenDecimals: step.sourceToken.decimals,
-                blockchain: step.sourceToken.blockchain,
-                blockchainLogo: step.sourceToken.blockchainLogo,
-              },
-              to: {
-                tokenName: step.destinationToken.symbol,
-                tokenLogo: step.destinationToken.logo,
-                tokenAmount: step.payout,
-                tokenPrice: step.payout,
-                tokenUsdPrice: step.destinationToken.tokenUsdPrice.toFixed(2),
-                tokenDecimals: step.destinationToken.decimals,
-                blockchain: step.destinationToken.blockchain,
-                blockchainLogo: step.destinationToken.blockchainLogo,
-              },
-            };
-          }) || []),
-          {
-            from: {
-              tokenName: lastTokenOfOperation?.symbol || '',
-              tokenLogo: lastTokenOfOperation?.logo || '',
-              tokenAmount: lastStepOfOperation?.amount || '',
-              tokenPrice: lastStepOfOperation?.amount || '',
-              tokenUsdPrice:
-                lastTokenOfOperation?.tokenUsdPrice.toFixed(2) || '',
-              tokenDecimals: lastTokenOfOperation?.decimals || 0,
-              blockchain: lastTokenOfOperation?.blockchain || '',
-              blockchainLogo: lastTokenOfOperation?.blockchainLogo || '',
-            },
-            to: {
-              tokenName: finalToken.name,
-              tokenLogo: finalToken.logoUrl || '',
-              tokenAmount: finalEstimateToken?.amountOut || '',
-              tokenPrice:
-                (
-                  parseFloat(finalEstimateToken?.priceInUSD || '0') /
-                  parseFloat(finalEstimateToken?.amountOut || '1')
-                ).toFixed(2) || '',
-              tokenUsdPrice: finalEstimateToken?.priceInUSD || '0',
-              tokenDecimals: finalToken.decimals || 0,
-              blockchain: protocolInputToken.chain?.displayName || '',
-              blockchainLogo: protocolInputToken.chain?.logoUrl || '',
-            },
-          },
-        ],
-      });
+      if (route && protocolInputToken) {
+        setListOfTransactionsFromRoute(route, protocolInputToken);
+      }
 
       const tokensOut = parseFloat(route?.outputAmount || '0');
       let isEnoughDepositTokens = tokensOut > minDepositAmount;
@@ -325,8 +344,8 @@ export const useAnyaltWidget = ({
 
       setIsValidAmountIn(isEnoughDepositTokens);
       setFailedToFetchRoute(false);
-      if (activeStep === 0) goToNext();
-      if (withGoNext && isEnoughDepositTokens) goToNext();
+      if (activeStep === 0) setActiveStep(1);
+      if (withGoNext && isEnoughDepositTokens) setActiveStep(1);
     } catch (error) {
       console.error(error);
       setTokenFetchError({
@@ -340,39 +359,45 @@ export const useAnyaltWidget = ({
   };
 
   useEffect(() => {
+    //Show loading state immediatly instead of waiting for a delay
+    if (inTokenAmount && inToken) setLoading(true);
+
     const debounceTimeout = setTimeout(() => {
-      if (inTokenAmount) {
+      if (inTokenAmount && inToken) {
         onGetQuote(false);
       }
-    }, 500);
+    }, DEBOUNCE_TIMEOUT);
 
     return () => {
       clearTimeout(debounceTimeout);
     };
-  }, [inTokenAmount]);
+  }, [inToken, protocolInputToken, inTokenAmount]);
 
   const onConfigClick = () => {
     setOpenSlippageModal(true);
   };
 
   const onChooseRouteButtonClick = async () => {
-    if (areWalletsConnected) {
-      // await onGetQuote(false);
-      await connectWalletsAndConfirmRoute();
-      setTransactionsProgress({});
-    } else {
-      if (walletConnector) {
-        walletConnector.connect();
+    try {
+      if (areWalletsConnected) {
+        await confirmSelectedRoute();
+        setTransactionsProgress({});
       } else {
-        connectWalletsOpen();
+        if (walletConnector) {
+          walletConnector.connect();
+        } else {
+          connectWalletsOpen();
+        }
       }
+    } catch (error) {
+      console.error(error);
     }
   };
 
   const getChain = (blockchain: string) =>
     allChains.find((chain) => chain.name === blockchain);
 
-  const connectWalletsAndConfirmRoute = async () => {
+  const confirmSelectedRoute = async () => {
     try {
       setLoading(true);
 
@@ -457,10 +482,15 @@ export const useAnyaltWidget = ({
 
         setActiveOperationId(res?.operationId);
         setBestRoute(bestRoute);
+        const localStorageKey =
+          widgetTemplate === 'TOKEN_BUY'
+            ? 'tokenBuyOperationId'
+            : 'operationId';
+        localStorage.setItem(localStorageKey, res.operationId);
       }
 
       connectWalletsClose();
-      goToNext();
+      setActiveStep(2);
     } catch (error) {
       console.error(error);
     } finally {
@@ -487,25 +517,26 @@ export const useAnyaltWidget = ({
   };
 
   useEffect(() => {
-    if (activeStep === 1) {
+    if (activeStep === 1 && bestRoute) {
       const interval = setInterval(() => {
         // Capture latest values inside the interval callback
         const currentInToken = inToken;
         const currentProtocolInputToken = protocolInputToken;
         const currentInTokenAmount = inTokenAmount;
-
-        if (
+        const userSelectedToken =
           currentInToken &&
           currentProtocolInputToken &&
-          currentInTokenAmount
-        ) {
+          currentInTokenAmount &&
+          bestRoute;
+
+        if (userSelectedToken) {
           onGetQuote(false);
         }
       }, REFRESH_INTERVAL);
 
       return () => clearInterval(interval);
     }
-  }, [activeStep, inToken, protocolInputToken, inTokenAmount, onGetQuote]);
+  }, [bestRoute]);
 
   const areWalletsConnected = useMemo(() => {
     let isSolanaRequired = false;
@@ -546,15 +577,10 @@ export const useAnyaltWidget = ({
     });
 
     let isWalletConnected = true;
-    if (isSolanaRequired && !isSolanaConnected) {
-      isWalletConnected = false;
-    }
-    if (isEvmRequired && !isEvmConnected) {
-      isWalletConnected = false;
-    }
-    if (isBitcoinRequired && !bitcoinAccount) {
-      isWalletConnected = false;
-    }
+    if (isSolanaRequired && !isSolanaConnected) isWalletConnected = false;
+    if (isEvmRequired && !isEvmConnected) isWalletConnected = false;
+    if (isBitcoinRequired && !bitcoinAccount) isWalletConnected = false;
+
     return isWalletConnected;
   }, [isSolanaConnected, isEvmConnected, bestRoute, bitcoinAccount]);
 
@@ -568,30 +594,83 @@ export const useAnyaltWidget = ({
     onClose();
     setActiveStep(0);
     setTransactionIndex(1);
+    resetState();
   };
+
+  const setOperationToCurrentRoute = useCallback(
+    (operation: BestRouteResponse) => {
+      setBestRoute(operation);
+      setActiveOperationId(operation.operationId);
+      setActiveStep(2);
+
+      const newTransactionProgress = {} as TransactionsProgress;
+      let lastFinishedTransactionIndex = 0;
+
+      operation.swapSteps.forEach((step, index) => {
+        step.transactions
+          .sort(
+            (a, b) =>
+              (Number(a.confirmedTimestamp) || 0) -
+              (Number(b.confirmedTimestamp) || 0),
+          )
+          .forEach((transaction) => {
+            newTransactionProgress[index] = {};
+            switch (transaction.type) {
+              case 'MAIN':
+                newTransactionProgress[index].swap =
+                  convertSwapTransactionToTransactionProgress(
+                    step,
+                    transaction,
+                  );
+
+                if (
+                  newTransactionProgress[index].swap?.status === 'confirmed'
+                ) {
+                  lastFinishedTransactionIndex = index + 1;
+                }
+
+                break;
+              case 'APPROVE':
+                newTransactionProgress[index].approve =
+                  convertSwapTransactionToTransactionProgress(
+                    step,
+                    transaction,
+                  );
+                break;
+              default:
+                break;
+            }
+          });
+      });
+
+      setTransactionsProgress(newTransactionProgress);
+      setTransactionIndex(lastFinishedTransactionIndex + 1);
+      setListOfTransactionsFromRoute(
+        operation,
+        operation.swapSteps[operation.swapSteps.length - 1].destinationToken,
+      );
+    },
+    [],
+  );
 
   return {
     loading,
-    isButtonDisabled,
-    activeRoute: bestRoute,
-    pendingOperation,
     activeStep,
-    onGetQuote,
-    onChooseRouteButtonClick,
+    activeRoute: bestRoute,
+    isValidAmountIn,
+    isButtonDisabled,
+    isConnectWalletsOpen,
+    failedToFetchRoute,
+    areWalletsConnected,
+    onBackClick,
+    onComplete,
+    onTxComplete,
     onConfigClick,
     openSlippageModal,
-    setOpenSlippageModal,
-    isConnectWalletsOpen,
-    connectWalletsClose,
-    failedToFetchRoute,
-    isValidAmountIn,
     connectWalletsOpen,
-    onBackClick,
-    onTxComplete,
-    areWalletsConnected,
-    setActiveStep,
-    getChain,
-    onComplete,
-    showPendingOperationDialog,
+    connectWalletsClose,
+    setOpenSlippageModal,
+    onChooseRouteButtonClick,
+    setOperationToCurrentRoute,
   };
 };

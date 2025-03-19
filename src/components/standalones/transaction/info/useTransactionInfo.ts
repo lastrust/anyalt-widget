@@ -1,11 +1,12 @@
-import { useAtomValue } from 'jotai';
-import { useMemo, useState } from 'react';
+import { useAtom, useAtomValue } from 'jotai';
+import { useEffect, useMemo, useState } from 'react';
 import {
   EstimateResponse,
   ExecuteResponse,
   Token,
   WalletConnector,
 } from '../../../..';
+import { TX_MESSAGE } from '../../../../constants/transaction';
 import {
   activeOperationIdAtom,
   anyaltInstanceAtom,
@@ -19,6 +20,7 @@ import {
   transactionsListAtom,
   transactionsProgressAtom,
 } from '../../../../store/stateStore';
+import { TransactionProgress } from '../../../../types/transaction';
 import { useHandleSwap } from '../useHandleSwap';
 
 export const useTransactionInfo = ({
@@ -41,7 +43,9 @@ export const useTransactionInfo = ({
   const activeOperationId = useAtomValue(activeOperationIdAtom);
   const transactionsList = useAtomValue(transactionsListAtom);
   const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
-  const transactionsProgress = useAtomValue(transactionsProgressAtom);
+  const [transactionsProgress, setTransactionsProgress] = useAtom(
+    transactionsProgressAtom,
+  );
   const inTokenAmount = useAtomValue(inTokenAmountAtom);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
@@ -56,9 +60,9 @@ export const useTransactionInfo = ({
     const isSwaps = bestRoute?.swapSteps?.length;
 
     const swapperType = isBridgeSwap ? 'Bridge' : 'Swap';
-    const swapperName = bestRoute?.swapSteps[currentStep - 1].swapperName;
+    const swapperName = bestRoute?.swapSteps[currentStep - 1]?.swapperName;
     const depositToken =
-      transactionsList?.steps?.[currentStep - 1]?.to.tokenName;
+      transactionsList?.steps?.[currentStep - 1]?.to?.tokenName;
 
     const swappingText =
       isSwaps && isSwaps >= currentStep
@@ -90,6 +94,86 @@ export const useTransactionInfo = ({
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (
+      anyaltInstance &&
+      activeOperationId &&
+      !isLoading &&
+      Object.keys(transactionsProgress).length
+    ) {
+      // If the last transaction is pending, wait for it to complete
+      let keyOfLatestLoadingAction: string | number | undefined;
+      let latestLoadingAction: TransactionProgress | undefined;
+
+      const keys = Object.keys(transactionsProgress);
+      for (let i = keys.length - 1; i >= 0; i--) {
+        const key = keys[i];
+        if (transactionsProgress[key]?.swap?.status === 'pending') {
+          latestLoadingAction = transactionsProgress[key].swap;
+          keyOfLatestLoadingAction = key;
+          break;
+        }
+        if (transactionsProgress[key]?.approve?.status === 'pending') {
+          latestLoadingAction = transactionsProgress[key].approve;
+          keyOfLatestLoadingAction = key;
+          break;
+        }
+      }
+
+      if (!latestLoadingAction || !keyOfLatestLoadingAction) return;
+
+      setIsLoading(true);
+      anyaltInstance
+        .waitForTx({ operationId: activeOperationId })
+        .then((res) => {
+          setIsLoading(false);
+          const txType = latestLoadingAction.isApproval ? 'approve' : 'swap';
+          setTransactionsProgress((prev) => {
+            const newProgress = { ...prev };
+
+            let newMessage: string;
+
+            switch (res.status) {
+              case 'FAILED':
+                newMessage = TX_MESSAGE.failed;
+                break;
+              case 'PENDING':
+                newMessage = TX_MESSAGE.pending;
+                break;
+              case 'STUCK':
+                newMessage = TX_MESSAGE.pending;
+                break;
+              case 'SUCCEEDED':
+                newMessage = TX_MESSAGE.confirmed;
+                break;
+              default:
+                newMessage = TX_MESSAGE.pending;
+                break;
+            }
+
+            newProgress[keyOfLatestLoadingAction] = {
+              ...newProgress[keyOfLatestLoadingAction],
+              [txType]: {
+                ...newProgress[keyOfLatestLoadingAction][txType],
+                status: res.status,
+                message: newMessage,
+              },
+            };
+
+            if (txType === 'swap' && res.status === 'SUCCEEDED') {
+              onTxComplete();
+            }
+
+            return newProgress;
+          });
+        })
+        .catch((error) => {
+          console.error(error);
+          setIsLoading(false);
+        });
+    }
+  }, [anyaltInstance, activeOperationId]);
 
   const estimatedTime = useMemo(() => {
     if (!bestRoute) return 0;

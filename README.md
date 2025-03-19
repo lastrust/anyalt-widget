@@ -94,12 +94,14 @@ const Widget = () => {
     address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
     chainId: 1,
     chainType: ChainType.EVM,
+    logoUrl: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png',
   };
 
   const finalToken: Token = {
     symbol: 'SOL',
     address: 'So11111111111111111111111111111111111111112',
     chainType: ChainType.SOLANA,
+    logoUrl: 'https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png',
   };
 
   const estimateCallback = async (token: Token): Promise<EstimateResponse> => {
@@ -127,6 +129,7 @@ const Widget = () => {
         <button onClick={() => setIsOpen(true)}>Open Widget</button>
         <AnyaltWidget
           isOpen={isOpen}
+          isTokenBuyTemplate={false}
           inputToken={inputToken}
           finalToken={finalToken}
           apiKey="your-api-key"
@@ -167,8 +170,9 @@ export const ClientWidgetWrapper = dynamic(
 | Prop                | Type                                          | Description                              |
 | ------------------- | --------------------------------------------- | ---------------------------------------- |
 | `isOpen`            | `boolean`                                     | Controls widget visibility               |
+| `widgetTemplate?`   | `WidgetTemplateType`                          | Widget Mode                              |
 | `inputToken`        | `Token`                                       | Input token details                      |
-| `finalToken`        | `Token`                                       | Output token details                     |
+| `finalToken?`       | `Token`                                       | Output token details                     |
 | `apiKey`            | `string`                                      | API key for Anyalt services              |
 | `onClose`           | `() => void`                                  | Callback triggered when widget is closed |
 | `estimateCallback`  | `(token: Token) => Promise<EstimateResponse>` | Function to estimate token swap          |
@@ -176,7 +180,38 @@ export const ClientWidgetWrapper = dynamic(
 | `walletConnector?`  | `WalletConnector`                             | Optional custom wallet connector         |
 | `minDepositAmount?` | `number`                                      | Minimum deposit amount in USD equivalent |
 
-### `Token`
+The `widgetTemplate` prop defines the available modes for the widget, determining its functionality based on the selected option. Default value is `DEPOSIT_TOKEN` It supports the following modes:
+
+`TOKEN_BUY`: Enables the widget for purchasing tokens, configuring the UI and logic to facilitate token acquisition.
+
+`DEPOSIT_TOKEN`: Activates the widget for depositing tokens, allowing users to transfer tokens into a designated account or wallet.
+
+If `TOKEN_BUY` enabled, the widget will be in token buy template mode. And `inputToken` will be the token that the user wants to buy. Also `finalToken` is not required.
+
+#### Props Types
+
+```ts
+export type AnyaltWidgetProps = {
+  isOpen: boolean;
+  apiKey: string;
+  inputToken: Token;
+  finalToken?: Token;
+  minDepositAmount?: number;
+  widgetTemplate?: WidgetTemplateType;
+  walletConnector?: WalletConnector;
+  onClose: () => void;
+  estimateCallback: (token: Token) => Promise<EstimateResponse>;
+  executeCallBack: (token: Token) => Promise<ExecuteResponse>;
+};
+```
+
+#### `WidgetTemplateType`
+
+```ts
+export type WidgetTemplateType = 'TOKEN_BUY' | 'DEPOSIT_TOKEN';
+```
+
+#### `Token`
 
 ```ts
 export interface Token {
@@ -227,13 +262,145 @@ export interface WalletConnector {
 
 ## Theming
 
-You can customize the widget’s appearance by modifying `defaultTheme`.
+You can customize the widget's appearance by extending the default theme. The widget uses Chakra UI's theming system under the hood.
 
-```ts
+### Color Customization
+
+```tsx
 import { defaultTheme } from '@anyalt/widget';
+import { WidgetProvider } from '@anyalt/widget';
 
-defaultTheme.colors.primary = '#ff5733';
+const customTheme = {
+  ...defaultTheme,
+  colors: {
+    brand: {
+      primary: '#121212', // Main background color
+      border: {
+        tag: '#008080', // Tag border color
+        active: '#008080', // Active state border
+        bestRoute: '#008080', // Best route indicator
+        secondary: '#919eab1f', // Secondary borders
+        error: '#E53030', // Error state border
+        primary: 'rgba(145, 158, 171, 0.12)', // Primary border color
+      },
+      bg: {
+        primary: '#919eab1f', // Primary background
+        active: '#008080', // Active state background
+        hover: '#919eab1f', // Hover state background
+        error: '#E530301a', // Error state background
+        tag: 'transparent', // Tag background
+        modal: '#0C0600', // Modal background
+        cardBg: '#919eab0a', // Card background
+        selectToken: 'rgba(0, 0, 0, 0.5)', // Token selector background
+        skeleton: '#919eab', // Loading skeleton color
+      },
+      text: {
+        primary: '#fff', // Primary text color
+        warning: '#f9e154', // Warning text color
+        error: '#E53030', // Error text color
+        active: '#008080', // Active state text
+        secondary: {
+          0: '#ffffff', // Pure white text
+          1: 'rgba(255, 255, 255, 0.80)', // High emphasis text
+          2: 'rgba(255, 255, 255, 0.40)', // Medium emphasis text
+          3: 'rgba(255, 255, 255, 0.08)', // Low emphasis text
+          4: '#919eab', // Muted text
+        },
+      },
+      buttons: {
+        close: {
+          primary: '#919eab', // Close button color
+        },
+        back: {
+          primary: '#fff', // Back button color
+        },
+        accordion: {
+          primary: '#fff', // Accordion button color
+        },
+        action: {
+          bg: '#008080', // Action button background
+          bgFaded: '#00808033', // Faded action button
+          hover: '#006666', // Action button hover
+          disabled: '#00808033', // Disabled action button
+        },
+        disabled: '#0B3E3E', // General disabled state
+      },
+      footer: {
+        text: '#fff', // Footer text color
+      },
+    },
+  },
+};
+
+// Use the custom theme in your app
+const App = () => {
+  return (
+    <WidgetProvider theme={customTheme}>
+      <AnyaltWidget
+      // ... other props
+      />
+    </WidgetProvider>
+  );
+};
 ```
+
+### Quick Theme Customization Examples
+
+Here are some common customization scenarios:
+
+#### Change Primary Colors
+
+```tsx
+const customTheme = {
+  ...defaultTheme,
+  colors: {
+    brand: {
+      ...defaultTheme.colors.brand,
+      primary: '#000000', // Main background
+      bg: {
+        ...defaultTheme.colors.brand.bg,
+        active: '#3498db', // Active states
+        hover: 'rgba(52, 152, 219, 0.1)', // Hover states
+      },
+      buttons: {
+        ...defaultTheme.colors.brand.buttons,
+        action: {
+          bg: '#3498db', // Main action button
+          bgFaded: '#3498db33', // Faded state
+          hover: '#2980b9', // Hover state
+          disabled: '#3498db33', // Disabled state
+        },
+      },
+    },
+  },
+};
+```
+
+#### Customize Text Colors
+
+```tsx
+const customTheme = {
+  ...defaultTheme,
+  colors: {
+    brand: {
+      ...defaultTheme.colors.brand,
+      text: {
+        primary: '#ffffff', // Main text
+        warning: '#f39c12', // Warnings
+        error: '#e74c3c', // Errors
+        secondary: {
+          1: 'rgba(255, 255, 255, 0.9)', // Primary text
+          2: 'rgba(255, 255, 255, 0.6)', // Secondary text
+          3: 'rgba(255, 255, 255, 0.1)', // Disabled text
+          4: '#95a5a6', // Muted text
+        },
+      },
+    },
+  },
+};
+```
+
+Remember to maintain sufficient contrast ratios for accessibility when customizing colors.
 
 ---
 

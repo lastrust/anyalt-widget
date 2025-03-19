@@ -1,9 +1,15 @@
 import { BestRouteResponse } from '@anyalt/sdk';
+import {
+  SwapOperationStep,
+  SwapTransaction,
+} from '@anyalt/sdk/dist/adapter/api/api';
 import { PublicKey } from '@solana/web3.js';
 import { getBalance } from '@wagmi/core';
 import { ethers } from 'ethers';
 import { formatUnits, zeroAddress } from 'viem';
-import { walletConfig } from '../constants/configs';
+import { config } from '../constants/configs';
+import { TransactionProgress } from '../types/transaction';
+import { chainIdsValues } from './chains';
 
 export function isValidEthereumAddress(address: string): boolean {
   return ethers.isAddress(address);
@@ -29,16 +35,16 @@ export const getEvmTokenBalance = async (
     tokenAddress === zeroAddress ||
     tokenAddress.toLowerCase() === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
   ) {
-    const res = await getBalance(walletConfig, {
-      chainId: chainId,
+    const res = await getBalance(config, {
+      chainId: chainId as chainIdsValues,
       address: walletAddress as `0x${string}`,
     });
     const balance = formatUnits(res.value, res.decimals);
     return balance;
   }
 
-  const res = await getBalance(walletConfig, {
-    chainId: chainId,
+  const res = await getBalance(config, {
+    chainId: chainId as chainIdsValues,
     token: tokenAddress as `0x${string}`,
     address: walletAddress as `0x${string}`,
   });
@@ -87,4 +93,32 @@ export const calculateWorstOutput = (
     humanReadable: ethers.formatUnits(worstOutput, decimals),
     raw: worstOutput,
   };
+};
+
+export const convertSwapTransactionToTransactionProgress = (
+  swapStep: SwapOperationStep,
+  swapTransaction: SwapTransaction,
+): TransactionProgress => {
+  const progress = {
+    message: swapTransaction.failureMessage || '',
+    isApproval: swapTransaction.type === 'APPROVE',
+    chainName: swapStep.sourceToken.blockchain,
+    txHash: swapTransaction.transactionHash,
+    error: swapTransaction.failureMessage,
+  } as Partial<TransactionProgress>;
+
+  switch (true) {
+    case swapTransaction.confirmedTimestamp && !swapTransaction.failureMessage:
+      (progress as TransactionProgress).status = 'confirmed';
+      break;
+    case Boolean(
+      swapTransaction.confirmedTimestamp && swapTransaction.failureMessage,
+    ):
+      (progress as TransactionProgress).status = 'failed';
+      break;
+    default:
+      (progress as TransactionProgress).status = 'pending';
+  }
+
+  return progress as TransactionProgress;
 };
