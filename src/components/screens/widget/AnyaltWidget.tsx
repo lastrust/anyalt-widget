@@ -1,4 +1,5 @@
 import { useAtomValue } from 'jotai';
+import { useMemo } from 'react';
 import { AnyaltWidgetProps } from '../../..';
 import { showStuckTransactionDialogAtom } from '../../../store/stateStore';
 import { Footer } from '../../molecules/footer/Footer';
@@ -70,94 +71,81 @@ export const AnyaltWidgetWrapper = ({
   const showStuckTransactionDialog = useAtomValue(
     showStuckTransactionDialogAtom,
   );
+  const Content = () => {
+    switch (true) {
+      case showPendingOperationDialog:
+        return (
+          <PendingOperationDialog
+            setOperationToCurrentRoute={setOperationToCurrentRoute}
+            walletConnector={walletConnector}
+            allNecessaryWalletsConnected={allNecessaryWalletsConnected}
+            connectWalletsOpen={connectWalletsOpen}
+          />
+        );
+      case showStuckTransactionDialog:
+        return <StuckTransactionDialog resetState={resetState} />;
+      default:
+        return (
+          <Stepper activeStep={activeStep}>
+            <SelectTokenStep
+              loading={loading}
+              widgetTemplate={widgetTemplate}
+              isValidAmountIn={isValidAmountIn}
+              onConfigClick={onConfigClick}
+              failedToFetchRoute={failedToFetchRoute}
+              openSlippageModal={openSlippageModal}
+              setOpenSlippageModal={setOpenSlippageModal}
+              isButtonDisabled={isButtonDisabled}
+            />
+            <ChoosingRouteStep
+              loading={loading}
+              activeRoute={activeRoute}
+              walletConnector={walletConnector}
+              failedToFetchRoute={failedToFetchRoute}
+              areWalletsConnected={areWalletsConnected}
+              onConfigClick={onConfigClick}
+              openSlippageModal={openSlippageModal}
+              setOpenSlippageModal={setOpenSlippageModal}
+              connectWalletsOpen={connectWalletsOpen}
+              onChooseRouteButtonClick={onChooseRouteButtonClick}
+            />
+            <TransactionStep
+              onBackClick={onBackClick}
+              walletConnector={walletConnector}
+              executeCallBack={executeCallBack}
+              onTxComplete={onTxComplete}
+              estimateCallback={estimateCallback}
+            />
+            <SuccessfulDepositStep
+              onConfigClick={onConfigClick}
+              onComplete={onComplete}
+            />
+          </Stepper>
+        );
+    }
+  };
 
-  if (showPendingOperationDialog) {
-    return (
-      <ModalWrapper isOpen={isOpen} onClose={onClose} maxWidthCustom={'976px'}>
-        <Header customText={'Transaction'} activeStep={-1} />
-        <PendingOperationDialog
-          setOperationToCurrentRoute={setOperationToCurrentRoute}
-          walletConnector={walletConnector}
-          allNecessaryWalletsConnected={allNecessaryWalletsConnected}
-          connectWalletsOpen={connectWalletsOpen}
-        />
-        <Footer />
+  const maxWidth = useMemo(() => {
+    if (showPendingOperationDialog || showStuckTransactionDialog) {
+      return '976px';
+    }
+    if (activeStep === 0 || activeStep === 3) {
+      return '512px';
+    }
+    return '976px';
+  }, [showPendingOperationDialog, showStuckTransactionDialog, activeStep]);
 
-        <ConnectWalletsModal
-          title="Connect Wallets"
-          isOpen={isConnectWalletsOpen}
-          onClose={connectWalletsClose}
-          areWalletsConnected={areWalletsConnected}
-          walletConnector={walletConnector}
-        />
-      </ModalWrapper>
-    );
-  }
-
-  if (showStuckTransactionDialog) {
-    return (
-      <ModalWrapper isOpen={isOpen} onClose={onClose} maxWidthCustom={'976px'}>
-        <Header customText={'Transaction'} activeStep={-1} />
-        <StuckTransactionDialog resetState={resetState} />
-        <Footer />
-
-        <ConnectWalletsModal
-          title="Connect Wallets"
-          isOpen={isConnectWalletsOpen}
-          onClose={connectWalletsClose}
-          areWalletsConnected={areWalletsConnected}
-          walletConnector={walletConnector}
-        />
-      </ModalWrapper>
-    );
-  }
+  const customText = useMemo(() => {
+    if (showPendingOperationDialog || showStuckTransactionDialog) {
+      return 'Transaction';
+    }
+    return undefined;
+  }, [showPendingOperationDialog, showStuckTransactionDialog, activeStep]);
 
   return (
-    <ModalWrapper
-      isOpen={isOpen}
-      onClose={onClose}
-      maxWidthCustom={
-        (activeStep === 0 || activeStep === 3) && !showPendingOperationDialog
-          ? '512px'
-          : '976px'
-      }
-    >
-      <Header activeStep={activeStep} />
-      <Stepper activeStep={activeStep}>
-        <SelectTokenStep
-          loading={loading}
-          widgetTemplate={widgetTemplate}
-          isValidAmountIn={isValidAmountIn}
-          onConfigClick={onConfigClick}
-          failedToFetchRoute={failedToFetchRoute}
-          openSlippageModal={openSlippageModal}
-          setOpenSlippageModal={setOpenSlippageModal}
-          isButtonDisabled={isButtonDisabled}
-        />
-        <ChoosingRouteStep
-          loading={loading}
-          activeRoute={activeRoute}
-          walletConnector={walletConnector}
-          failedToFetchRoute={failedToFetchRoute}
-          areWalletsConnected={areWalletsConnected}
-          onConfigClick={onConfigClick}
-          openSlippageModal={openSlippageModal}
-          setOpenSlippageModal={setOpenSlippageModal}
-          connectWalletsOpen={connectWalletsOpen}
-          onChooseRouteButtonClick={onChooseRouteButtonClick}
-        />
-        <TransactionStep
-          onBackClick={onBackClick}
-          walletConnector={walletConnector}
-          executeCallBack={executeCallBack}
-          onTxComplete={onTxComplete}
-          estimateCallback={estimateCallback}
-        />
-        <SuccessfulDepositStep
-          onConfigClick={onConfigClick}
-          onComplete={onComplete}
-        />
-      </Stepper>
+    <ModalWrapper isOpen={isOpen} onClose={onClose} maxWidthCustom={maxWidth}>
+      <Header activeStep={activeStep} customText={customText} />
+      <Content />
       <Footer />
 
       <ConnectWalletsModal
