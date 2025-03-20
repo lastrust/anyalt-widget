@@ -78,6 +78,11 @@ export const defaultTheme = extendTheme({
           hover: '#006666',
           disabled: '00808033',
         },
+        outline: {
+          border: '#ffffff',
+          text: '#fffffff',
+          hover: 'rgba(255, 255, 255, 0.1)',
+        },
         disabled: '#0B3E3E',
       },
       footer: {

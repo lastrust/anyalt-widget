@@ -14,7 +14,6 @@ export const TransactionHash = ({ type, progress }: Props) => {
 
   const handleCopy = () => {
     setIsCopied(true);
-    console.log('progress', progress);
     navigator.clipboard.writeText(progress?.txHash ?? '');
 
     setTimeout(() => {
@@ -40,7 +39,7 @@ export const TransactionHash = ({ type, progress }: Props) => {
           >
             {isCopied
               ? 'Tx Hash Copied!'
-              : `${progress?.txHash?.slice(0, 10)}...${progress?.txHash?.slice(
+              : `${progress?.txHash?.slice?.(0, 10)}...${progress?.txHash?.slice(
                   -4,
                 )}`}
           </Link>

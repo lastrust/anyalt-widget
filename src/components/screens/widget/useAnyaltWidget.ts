@@ -1,9 +1,9 @@
 import { useBitcoinWallet } from '@ant-design/web3-bitcoin';
-import { AnyAlt } from '@anyalt/sdk';
+import { AnyAlt, BestRouteResponse, SupportedToken } from '@anyalt/sdk';
 import { useDisclosure, useSteps } from '@chakra-ui/react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useAtom, useAtomValue } from 'jotai';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAccount } from 'wagmi';
 import {
   ChainType,
@@ -37,7 +37,11 @@ import {
   transactionsProgressAtom,
   widgetTemplateAtom,
 } from '../../../store/stateStore';
-import { calculateWorstOutput } from '../../../utils';
+import { TransactionsProgress } from '../../../types/transaction';
+import {
+  calculateWorstOutput,
+  convertSwapTransactionToTransactionProgress,
+} from '../../../utils';
 import { ChainIdToChainConstant } from '../../../utils/chains';
 import { useTokenInputBox } from '../../standalones/selectSwap/token/input/useTokenInputBox';
 
@@ -69,7 +73,7 @@ export const useAnyaltWidget = ({
   const { publicKey: solanaAddress, connected: isSolanaConnected } =
     useWallet();
   const { account: bitcoinAccount } = useBitcoinWallet();
-  const { activeStep, setActiveStep, goToNext, goToPrevious } = useSteps({
+  const { activeStep, setActiveStep, goToPrevious } = useSteps({
     index: 0,
   });
 
@@ -115,7 +119,8 @@ export const useAnyaltWidget = ({
     return Number(inTokenAmount ?? 0) == 0 || inToken == null;
   }, [inTokenAmount, inToken, bestRoute, activeStep]);
 
-  const resetState = () => {
+  const resetState = useCallback(() => {
+    setActiveStep(0);
     setActiveOperationId(undefined);
     setFinalTokenEstimate(undefined);
     setTransactionsList(undefined);
@@ -134,7 +139,21 @@ export const useAnyaltWidget = ({
     setTransactionsList(undefined);
     setTransactionIndex(1);
     setCurrentUiStep(0);
-  };
+    localStorage.removeItem('operationId');
+    localStorage.removeItem('tokenBuyOperationId');
+  }, [
+    setActiveOperationId,
+    setFinalTokenEstimate,
+    setTransactionsList,
+    setInTokenAmount,
+    setTokenFetchError,
+    setBestRoute,
+    setSwapData,
+    setTransactionsProgress,
+    setTransactionsList,
+    setTransactionIndex,
+    setCurrentUiStep,
+  ]);
 
   useEffect(() => {
     setCurrentUiStep(activeStep);
@@ -194,7 +213,79 @@ export const useAnyaltWidget = ({
     }
   }, [allChains, anyaltInstance]);
 
+  const setListOfTransactionsFromRoute = useCallback(
+    (route: BestRouteResponse, inputToken: Partial<SupportedToken>) => {
+      const lastStepOfOperation = route?.swapSteps[route?.swapSteps.length - 1];
+      const lastTokenOfOperation = lastStepOfOperation?.destinationToken;
+
+      setTransactionsList({
+        steps: [
+          ...(route?.swapSteps.map((step) => {
+            const toPayout = !isNaN(parseInt(step.payout))
+              ? step.payout
+              : step.quotePayout;
+            return {
+              from: {
+                tokenName: step.sourceToken.symbol,
+                tokenLogo: step.sourceToken.logo,
+                tokenAmount: step.amount,
+                tokenPrice: (
+                  parseFloat(step.amount) * step.sourceToken.tokenUsdPrice
+                ).toFixed(2),
+                tokenUsdPrice: step.sourceToken.tokenUsdPrice.toFixed(2),
+                tokenDecimals: step.sourceToken.decimals,
+                blockchain: step.sourceToken.blockchain,
+                blockchainLogo: step.sourceToken.blockchainLogo,
+              },
+              to: {
+                tokenName: step.destinationToken.symbol,
+                tokenLogo: step.destinationToken.logo,
+                tokenAmount: toPayout,
+                tokenPrice: (
+                  parseFloat(toPayout) * step.destinationToken.tokenUsdPrice
+                ).toFixed(2),
+                tokenUsdPrice: step.destinationToken.tokenUsdPrice.toFixed(2),
+                tokenDecimals: step.destinationToken.decimals,
+                blockchain: step.destinationToken.blockchain,
+                blockchainLogo: step.destinationToken.blockchainLogo,
+              },
+            };
+          }) || []),
+          {
+            from: {
+              tokenName: lastTokenOfOperation?.symbol || '',
+              tokenLogo: lastTokenOfOperation?.logo || '',
+              tokenAmount: lastStepOfOperation?.amount || '',
+              tokenPrice: lastStepOfOperation?.amount || '',
+              tokenUsdPrice:
+                lastTokenOfOperation?.tokenUsdPrice.toFixed(2) || '',
+              tokenDecimals: lastTokenOfOperation?.decimals || 0,
+              blockchain: lastTokenOfOperation?.blockchain || '',
+              blockchainLogo: lastTokenOfOperation?.blockchainLogo || '',
+            },
+            to: {
+              tokenName: finalToken?.name || '',
+              tokenLogo: finalToken?.logoUrl || '',
+              tokenAmount: finalEstimateToken?.amountOut || '',
+              tokenPrice:
+                (
+                  parseFloat(finalEstimateToken?.priceInUSD || '0') /
+                  parseFloat(finalEstimateToken?.amountOut || '1')
+                ).toFixed(2) || '',
+              tokenUsdPrice: finalEstimateToken?.priceInUSD || '0',
+              tokenDecimals: finalToken?.decimals || 0,
+              blockchain: inputToken.chain?.displayName || '',
+              blockchainLogo: inputToken.chain?.logoUrl || '',
+            },
+          },
+        ],
+      });
+    },
+    [finalEstimateToken, finalToken, protocolInputToken],
+  );
+
   const onGetQuote = async (withGoNext: boolean = true) => {
+    if (activeStep > 1) return;
     if (!inToken || !protocolInputToken || !inTokenAmount) return;
 
     if (inToken.id === protocolInputToken.id) {
@@ -232,64 +323,9 @@ export const useAnyaltWidget = ({
       });
       setBestRoute(route);
 
-      const lastStepOfOperation = route?.swapSteps[route?.swapSteps.length - 1];
-      const lastTokenOfOperation = lastStepOfOperation?.destinationToken;
-
-      setTransactionsList({
-        steps: [
-          ...(route?.swapSteps.map((step) => {
-            return {
-              from: {
-                tokenName: step.sourceToken.symbol,
-                tokenLogo: step.sourceToken.logo,
-                tokenAmount: step.amount,
-                tokenPrice: step.amount,
-                tokenUsdPrice: step.sourceToken.tokenUsdPrice.toFixed(2),
-                tokenDecimals: step.sourceToken.decimals,
-                blockchain: step.sourceToken.blockchain,
-                blockchainLogo: step.sourceToken.blockchainLogo,
-              },
-              to: {
-                tokenName: step.destinationToken.symbol,
-                tokenLogo: step.destinationToken.logo,
-                tokenAmount: step.payout,
-                tokenPrice: step.payout,
-                tokenUsdPrice: step.destinationToken.tokenUsdPrice.toFixed(2),
-                tokenDecimals: step.destinationToken.decimals,
-                blockchain: step.destinationToken.blockchain,
-                blockchainLogo: step.destinationToken.blockchainLogo,
-              },
-            };
-          }) || []),
-          {
-            from: {
-              tokenName: lastTokenOfOperation?.symbol || '',
-              tokenLogo: lastTokenOfOperation?.logo || '',
-              tokenAmount: lastStepOfOperation?.amount || '',
-              tokenPrice: lastStepOfOperation?.amount || '',
-              tokenUsdPrice:
-                lastTokenOfOperation?.tokenUsdPrice.toFixed(2) || '',
-              tokenDecimals: lastTokenOfOperation?.decimals || 0,
-              blockchain: lastTokenOfOperation?.blockchain || '',
-              blockchainLogo: lastTokenOfOperation?.blockchainLogo || '',
-            },
-            to: {
-              tokenName: finalToken?.name || '',
-              tokenLogo: finalToken?.logoUrl || '',
-              tokenAmount: finalEstimateToken?.amountOut || '',
-              tokenPrice:
-                (
-                  parseFloat(finalEstimateToken?.priceInUSD || '0') /
-                  parseFloat(finalEstimateToken?.amountOut || '1')
-                ).toFixed(2) || '',
-              tokenUsdPrice: finalEstimateToken?.priceInUSD || '0',
-              tokenDecimals: finalToken?.decimals || 0,
-              blockchain: protocolInputToken.chain?.displayName || '',
-              blockchainLogo: protocolInputToken.chain?.logoUrl || '',
-            },
-          },
-        ],
-      });
+      if (route && protocolInputToken) {
+        setListOfTransactionsFromRoute(route, protocolInputToken);
+      }
 
       const tokensOut = parseFloat(route?.outputAmount || '0');
       let isEnoughDepositTokens = tokensOut > minDepositAmount;
@@ -461,10 +497,15 @@ export const useAnyaltWidget = ({
 
         setActiveOperationId(res?.operationId);
         setBestRoute(bestRoute);
+        const localStorageKey =
+          widgetTemplate === 'TOKEN_BUY'
+            ? 'tokenBuyOperationId'
+            : 'operationId';
+        localStorage.setItem(localStorageKey, res.operationId);
       }
 
       connectWalletsClose();
-      goToNext();
+      setActiveStep(2);
     } catch (error) {
       console.error(error);
     } finally {
@@ -571,6 +612,62 @@ export const useAnyaltWidget = ({
     resetState();
   };
 
+  const setOperationToCurrentRoute = useCallback(
+    (operation: BestRouteResponse) => {
+      setBestRoute(operation);
+      setActiveOperationId(operation.operationId);
+      setActiveStep(2);
+
+      const newTransactionProgress = {} as TransactionsProgress;
+      let lastFinishedTransactionIndex = 0;
+
+      operation.swapSteps.forEach((step, index) => {
+        step.transactions
+          .sort(
+            (a, b) =>
+              (Number(a.confirmedTimestamp) || 0) -
+              (Number(b.confirmedTimestamp) || 0),
+          )
+          .forEach((transaction) => {
+            newTransactionProgress[index] = {};
+            switch (transaction.type) {
+              case 'MAIN':
+                newTransactionProgress[index].swap =
+                  convertSwapTransactionToTransactionProgress(
+                    step,
+                    transaction,
+                  );
+
+                if (
+                  newTransactionProgress[index].swap?.status === 'confirmed'
+                ) {
+                  lastFinishedTransactionIndex = index + 1;
+                }
+
+                break;
+              case 'APPROVE':
+                newTransactionProgress[index].approve =
+                  convertSwapTransactionToTransactionProgress(
+                    step,
+                    transaction,
+                  );
+                break;
+              default:
+                break;
+            }
+          });
+      });
+
+      setTransactionsProgress(newTransactionProgress);
+      setTransactionIndex(lastFinishedTransactionIndex + 1);
+      setListOfTransactionsFromRoute(
+        operation,
+        operation.swapSteps[operation.swapSteps.length - 1].destinationToken,
+      );
+    },
+    [],
+  );
+
   return {
     loading,
     activeStep,
@@ -589,5 +686,7 @@ export const useAnyaltWidget = ({
     connectWalletsClose,
     setOpenSlippageModal,
     onChooseRouteButtonClick,
+    setOperationToCurrentRoute,
+    resetState,
   };
 };

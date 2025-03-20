@@ -6,6 +6,7 @@ import { ChainType, WalletConnector } from '../../../..';
 import {
   allChainsAtom,
   bestRouteAtom,
+  pendingOperationAtom,
   protocolInputTokenAtom,
 } from '../../../../store/stateStore';
 
@@ -47,6 +48,7 @@ export const useConnectWalletsModal = ({
   const [isBitcoinRequired, setIsBitcoinRequired] = useState(false);
 
   const bestRoute = useAtomValue(bestRouteAtom);
+  const pendingOperation = useAtomValue(pendingOperationAtom);
   const allChains = useAtomValue(allChainsAtom);
 
   const [walletStatus, setWalletStatus] = useState<
@@ -69,13 +71,7 @@ export const useConnectWalletsModal = ({
       }
       return false;
     });
-  }, [
-    bestRoute,
-    allChains,
-    isEvmRequired,
-    isSolanaRequired,
-    isBitcoinRequired,
-  ]);
+  }, [allChains, isEvmRequired, isSolanaRequired, isBitcoinRequired]);
 
   useEffect(() => {
     setWalletStatus(requiredWallets);
@@ -88,27 +84,29 @@ export const useConnectWalletsModal = ({
       setIsSolanaRequired(true);
     }
 
-    bestRoute?.swapSteps.forEach((swapStep) => {
-      const fromBlockchain = swapStep.sourceToken.blockchain;
-      const toBlockchain = swapStep.destinationToken.blockchain;
+    (pendingOperation?.swapSteps || [])
+      .concat(...(bestRoute?.swapSteps || []))
+      .forEach((swapStep) => {
+        const fromBlockchain = swapStep.sourceToken.blockchain;
+        const toBlockchain = swapStep.destinationToken.blockchain;
 
-      const isSolanaFrom = fromBlockchain === 'SOLANA';
-      const isSolanaTo = toBlockchain === 'SOLANA';
-      if (isSolanaFrom || isSolanaTo) setIsSolanaRequired(true);
+        const isSolanaFrom = fromBlockchain === 'SOLANA';
+        const isSolanaTo = toBlockchain === 'SOLANA';
+        if (isSolanaFrom || isSolanaTo) setIsSolanaRequired(true);
 
-      const isBitcoinFrom = fromBlockchain === 'BTC';
-      const isBitcoinTo = toBlockchain === 'BTC';
-      if (isBitcoinFrom || isBitcoinTo) setIsBitcoinRequired(true);
+        const isBitcoinFrom = fromBlockchain === 'BTC';
+        const isBitcoinTo = toBlockchain === 'BTC';
+        if (isBitcoinFrom || isBitcoinTo) setIsBitcoinRequired(true);
 
-      const toChain = allChains.find((chain) => chain.name === toBlockchain);
-      const fromChain = allChains.find(
-        (chain) => chain.name === fromBlockchain,
-      );
+        const toChain = allChains.find((chain) => chain.name === toBlockchain);
+        const fromChain = allChains.find(
+          (chain) => chain.name === fromBlockchain,
+        );
 
-      const isEvmFrom = fromChain?.chainType === ChainType.EVM;
-      const isEvmTo = toChain?.chainType === ChainType.EVM;
-      if (isEvmFrom || isEvmTo) setIsEvmRequired(true);
-    });
+        const isEvmFrom = fromChain?.chainType === ChainType.EVM;
+        const isEvmTo = toChain?.chainType === ChainType.EVM;
+        if (isEvmFrom || isEvmTo) setIsEvmRequired(true);
+      });
   }, [bestRoute, allChains]);
 
   const handleWalletClick = (walletType: string) => {

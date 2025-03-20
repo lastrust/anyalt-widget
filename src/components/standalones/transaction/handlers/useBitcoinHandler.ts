@@ -3,6 +3,8 @@ import { BitcoinTransactionDataResponse } from '@anyalt/sdk';
 import { TransactionError } from '@anyalt/sdk/dist/types/types';
 import { useCallback } from 'react';
 
+const HIGH_PRIORITY_FEE_RATE = 15; // idk honestly
+
 export const useBitcoinHandler = () => {
   const { sendTransfer: sendBitcoinTransfer, account: bitcoinAccount } =
     useBitcoinWallet();
@@ -10,6 +12,7 @@ export const useBitcoinHandler = () => {
   const handleBitcoinTransaction = useCallback(
     async (
       transactionDetails: BitcoinTransactionDataResponse,
+      higherGasCost?: boolean,
     ): Promise<string> => {
       try {
         if (!bitcoinAccount) {
@@ -17,9 +20,7 @@ export const useBitcoinHandler = () => {
             'No Bitcoin accounts found. Please connect your wallet.',
           );
         }
-
         console.log('amountInSats: ', transactionDetails.amount);
-
         const amount = Number(transactionDetails.amount);
         if (!Number.isFinite(amount) || amount <= 0) {
           throw new Error('Amount must be a positive number.');
@@ -28,8 +29,12 @@ export const useBitcoinHandler = () => {
         const res = await sendBitcoinTransfer({
           to: transactionDetails.recipientAddress,
           sats: amount,
+          ...(higherGasCost && {
+            options: {
+              feeRate: HIGH_PRIORITY_FEE_RATE,
+            },
+          }),
         });
-
         return res;
       } catch (error) {
         console.error('Error processing Bitcoin transaction:', error);
