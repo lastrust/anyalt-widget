@@ -16,7 +16,7 @@ import { allChainsAtom } from '../../../../store/stateStore';
 import { chainIdsValues } from '../../../../utils/chains';
 import { TransactionResult } from './useHandleTransaction';
 
-const GAS_PRICE_INCREASE_FACTOR = 2; // set gas price to 2x
+const GAS_PRICE_INCREASE_FACTOR = 1.2; // 20% increase
 
 const EIP1559_SUPPORTED_CHAINS = [
   1, // Ethereum

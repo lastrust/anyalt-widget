@@ -49,7 +49,7 @@ export const useHandleTransaction = ({
         return {
           txHash: await handleBitcoinTransaction(
             transactionData as BitcoinTransactionDataResponse,
-            higherGasCost,
+            higherGasCost ? 'fastest' : undefined,
           ),
           nonce: null,
         };
