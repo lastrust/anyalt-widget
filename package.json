@@ -1,6 +1,6 @@
 {
   "name": "@anyalt/widget",
-  "version": "1.0.14-dev.1",
+  "version": "1.0.15-dev.1",
   "description": "Anyalt Widget",
   "private": false,
   "files": [
@@ -57,7 +57,6 @@
     "@wallet-standard/core": "^1.1.0",
     "@wallet-standard/features": "^1.1.0",
     "antd": "^5.24.0",
-    "anyalt-sdk-1.0.18": "link:../sdk/anyalt-sdk-1.0.18",
     "ethers": "^6.13.5",
     "framer-motion": "^11.17.0",
     "jotai": "^2.11.0",
