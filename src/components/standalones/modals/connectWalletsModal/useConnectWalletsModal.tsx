@@ -38,9 +38,9 @@ export const useConnectWalletsModal = ({
   walletConnector,
 }: UseConnectWalletsModalProps) => {
   const [isWalletConnected, setIsWalletConnected] = useState(false);
-  
+
   const swapResultToken = useAtomValue(swapResultTokenAtom);
-  
+
   const { openConnectModal } = useConnectModal();
   const { setVisible } = useWalletModal(); // Hook to control the Solana wallet modal
   const [isBitcoinModalOpen, setIsBitcoinModalOpen] = useState(false);
