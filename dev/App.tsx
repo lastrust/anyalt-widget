@@ -91,8 +91,8 @@ const App = () => {
             <OpenModalButton onOpen={onOpen} />
             <AnyaltWidget
               widgetTemplate={'DEPOSIT_TOKEN'}
-              inputToken={usdtToken}
-              finalToken={aarnaToken}
+              outputToken={usdtToken}
+              depositToken={aarnaToken}
               apiKey={'pk_0xCYxjM8dFF0Vii7syrgpR6U4'}
               isOpen={isOpen}
               onClose={onClose}
