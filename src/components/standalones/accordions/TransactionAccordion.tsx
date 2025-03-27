@@ -13,8 +13,8 @@ import { useAtom, useAtomValue } from 'jotai';
 import { useEffect, useState } from 'react';
 import {
   bestRouteAtom,
+  depositTokenAtom,
   finalTokenEstimateAtom,
-  protocolFinalTokenAtom,
   selectedRouteAtom,
   swapResultTokenAtom,
   transactionIndexAtom,
@@ -38,8 +38,8 @@ export const TransactionAccordion = () => {
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
 
   const swapResultToken = useAtomValue(swapResultTokenAtom);
+  const depositToken = useAtomValue(depositTokenAtom);
 
-  const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
   const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
   const transactionsProgress = useAtomValue(transactionsProgressAtom);
 
@@ -235,7 +235,7 @@ export const TransactionAccordion = () => {
           bestRoute={bestRoute}
           currentStep={currentStep}
           isLastMileExpanded={expandedIndexes.includes(currentStep - 1)}
-          protocolFinalToken={protocolFinalToken}
+          protocolFinalToken={depositToken}
           swapResultToken={swapResultToken}
           finalTokenEstimate={finalTokenEstimate}
           transactionsProgress={transactionsProgress}

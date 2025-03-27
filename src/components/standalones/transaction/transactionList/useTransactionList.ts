@@ -1,8 +1,8 @@
 import { useAtomValue } from 'jotai';
 import {
   bestRouteAtom,
+  depositTokenAtom,
   finalTokenEstimateAtom,
-  protocolFinalTokenAtom,
   selectedTokenAmountAtom,
   selectedTokenAtom,
   swapResultTokenAtom,
@@ -14,7 +14,7 @@ export const useTransactionList = () => {
   const bestRoute = useAtomValue(bestRouteAtom);
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
   const swapResultToken = useAtomValue(swapResultTokenAtom);
-  const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
+  const depositToken = useAtomValue(depositTokenAtom);
   const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
 
   const selectedToken = useAtomValue(selectedTokenAtom);
@@ -39,13 +39,13 @@ export const useTransactionList = () => {
     }
 
     return {
-      contractAddress: protocolFinalToken?.address || '',
-      symbol: protocolFinalToken?.symbol || '',
-      logo: protocolFinalToken?.logoUrl || '',
+      contractAddress: depositToken?.address || '',
+      symbol: depositToken?.symbol || '',
+      logo: depositToken?.logoUrl || '',
       blockchain: swapResultToken?.chain?.displayName || '',
       amount: Number(finalTokenEstimate?.amountOut).toFixed(4) || '',
       blockchainLogo: swapResultToken?.chain?.logoUrl || '',
-      decimals: protocolFinalToken?.decimals || 0,
+      decimals: depositToken?.decimals || 0,
       tokenUsdPrice: Number(finalTokenEstimate?.priceInUSD) || 0,
     };
   };

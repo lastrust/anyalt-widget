@@ -23,8 +23,8 @@ import {
   anyaltInstanceAtom,
   bestRouteAtom,
   currentUiStepAtom,
+  depositTokenAtom,
   finalTokenEstimateAtom,
-  protocolFinalTokenAtom,
   selectedRouteAtom,
   selectedTokenAmountAtom,
   selectedTokenAtom,
@@ -86,8 +86,8 @@ export const useAnyaltWidget = ({
   const [selectedTokenAmount, setSelectedTokenAmount] = useAtom(
     selectedTokenAmountAtom,
   );
-
   const [swapResultToken, setSwapResultToken] = useAtom(swapResultTokenAtom);
+  const [, setDepositToken] = useAtom(depositTokenAtom);
 
   const [, setTemplate] = useAtom(widgetTemplateAtom);
   const [swapData, setSwapData] = useAtom(swapDataAtom);
@@ -98,7 +98,8 @@ export const useAnyaltWidget = ({
   const [, setTransactionsList] = useAtom(transactionsListAtom);
   const [, setTransactionIndex] = useAtom(transactionIndexAtom);
   const [, setActiveOperationId] = useAtom(activeOperationIdAtom);
-  const [, setProtocolFinalToken] = useAtom(protocolFinalTokenAtom);
+  
+
   const [, setTransactionsProgress] = useAtom(transactionsProgressAtom);
   const [anyaltInstance, setAnyaltInstance] = useAtom(anyaltInstanceAtom);
   const [finalEstimateToken, setFinalTokenEstimate] = useAtom(
@@ -173,7 +174,7 @@ export const useAnyaltWidget = ({
         console.error(error);
       }
 
-    setProtocolFinalToken(depositToken);
+    setDepositToken(depositToken);
     setTemplate(widgetTemplate);
   }, []);
 

@@ -18,11 +18,10 @@ export const anyaltInstanceAtom = atom<AnyAlt | undefined>(undefined);
  */
 export const selectedTokenAtom = atom<SupportedToken | undefined>(undefined);
 export const selectedTokenAmountAtom = atom<string | undefined>('');
+export const swapResultTokenAtom = atom<SupportedToken | undefined>(undefined); // It's same as outputToken, which comes from props on AnyaltWidget
+export const depositTokenAtom = atom<Token | undefined>(undefined);
 
-// It should be same as outputToken, which comes from props on AnyaltWidget
-export const swapResultTokenAtom = atom<SupportedToken | undefined>(undefined);
-
-export const protocolFinalTokenAtom = atom<Token | undefined>(undefined);
+export const finalTokenAmountAtom = atom<string>('');
 
 export const allChainsAtom = atom<SupportedChain[]>([]);
 
@@ -47,7 +46,6 @@ export const transactionsProgressAtom = atom<TransactionsProgress>({
   },
 });
 
-export const finalTokenAmountAtom = atom<string>('');
 
 export const currentUiStepAtom = atom<number>(0);
 

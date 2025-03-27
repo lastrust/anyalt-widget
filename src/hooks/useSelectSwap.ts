@@ -3,8 +3,8 @@ import { useAtom, useAtomValue } from 'jotai';
 import { useMemo, useState } from 'react';
 import {
   bestRouteAtom,
+  depositTokenAtom,
   finalTokenEstimateAtom,
-  protocolFinalTokenAtom,
   selectedTokenAmountAtom,
   selectedTokenAtom,
   swapResultTokenAtom,
@@ -14,7 +14,7 @@ export const useSelectSwap = () => {
   const [openTokenSelect, setOpenTokenSelect] = useState<boolean>(false);
   const [, setSelectedToken] = useAtom(selectedTokenAtom);
   const swapResultToken = useAtomValue(swapResultTokenAtom);
-  const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
+  const depositToken = useAtomValue(depositTokenAtom);
 
   const bestRoute = useAtomValue(bestRouteAtom);
   const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
@@ -53,7 +53,7 @@ export const useSelectSwap = () => {
     openTokenSelect,
     setOpenTokenSelect,
     protocolInputToken: swapResultToken,
-    protocolFinalToken,
+    protocolFinalToken: depositToken,
     activeRoute: bestRoute,
     inTokenAmount: selectedTokenAmount,
   };

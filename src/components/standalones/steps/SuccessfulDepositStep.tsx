@@ -1,8 +1,8 @@
 import { Box, Button, Flex, Text } from '@chakra-ui/react';
 import { useAtomValue } from 'jotai';
 import {
+  depositTokenAtom,
   finalTokenAmountAtom,
-  protocolFinalTokenAtom,
   swapResultTokenAtom,
 } from '../../../store/stateStore';
 import { truncateToDecimals } from '../../../utils/truncateToDecimals';
@@ -17,7 +17,7 @@ type Props = {
 
 export const SuccessfulDepositStep = ({ onConfigClick, onComplete }: Props) => {
   const swapResultToken = useAtomValue(swapResultTokenAtom);
-  const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
+  const depositToken = useAtomValue(depositTokenAtom);
   const finalTokenAmount = useAtomValue(finalTokenAmountAtom);
 
   return (
@@ -51,8 +51,8 @@ export const SuccessfulDepositStep = ({ onConfigClick, onComplete }: Props) => {
         </Text>
         <Flex flexDirection="row" alignItems="center" mb="64px">
           <TokenIconBox
-            tokenName={protocolFinalToken?.symbol || ''}
-            tokenIcon={protocolFinalToken?.logoUrl || ''}
+            tokenName={depositToken?.symbol || ''}
+            tokenIcon={depositToken?.logoUrl || ''}
             chainName={swapResultToken?.chain?.displayName || ''}
             chainIcon={swapResultToken?.chain?.logoUrl || ''}
             mr="8px"
@@ -66,7 +66,7 @@ export const SuccessfulDepositStep = ({ onConfigClick, onComplete }: Props) => {
             {truncateToDecimals(finalTokenAmount, 4)}
           </Text>
           <Text fontSize="16px" fontWeight="400" color="brand.text.secondary.4">
-            {protocolFinalToken?.symbol} On{' '}
+            {depositToken?.symbol} On{' '}
             {swapResultToken?.chain?.displayName}
           </Text>
         </Flex>

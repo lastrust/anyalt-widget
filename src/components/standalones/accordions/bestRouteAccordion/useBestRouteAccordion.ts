@@ -2,8 +2,8 @@ import { useAtom, useAtomValue } from 'jotai';
 import { useMemo } from 'react';
 import {
   bestRouteAtom,
+  depositTokenAtom,
   finalTokenEstimateAtom,
-  protocolFinalTokenAtom,
   selectedRouteAtom,
   selectedTokenAmountAtom,
   slippageAtom,
@@ -17,7 +17,7 @@ export const useBestRouteAccordion = () => {
   const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
   const bestRoute = useAtomValue(bestRouteAtom);
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
-  const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
+  const depositToken = useAtomValue(depositTokenAtom);
 
   const swapResultToken = useAtomValue(swapResultTokenAtom);
 
@@ -81,7 +81,7 @@ export const useBestRouteAccordion = () => {
     widgetTemplate,
     fromToken: areSwapsExists ? finalSwapToken : protocolDepositToken,
     handleRouteSelect,
-    protocolFinalToken,
+    protocolFinalToken: depositToken,
     protocolInputToken: swapResultToken,
     finalTokenEstimate,
     finalSwapToken,
