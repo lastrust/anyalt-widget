@@ -6,7 +6,7 @@ import { ChainType, WalletConnector } from '../../../..';
 import {
   allChainsAtom,
   bestRouteAtom,
-  protocolInputTokenAtom,
+  swapResultTokenAtom,
 } from '../../../../store/stateStore';
 
 const WALLETS = [
@@ -38,7 +38,9 @@ export const useConnectWalletsModal = ({
   walletConnector,
 }: UseConnectWalletsModalProps) => {
   const [isWalletConnected, setIsWalletConnected] = useState(false);
-  const protocolInputToken = useAtomValue(protocolInputTokenAtom);
+  
+  const swapResultToken = useAtomValue(swapResultTokenAtom);
+  
   const { openConnectModal } = useConnectModal();
   const { setVisible } = useWalletModal(); // Hook to control the Solana wallet modal
   const [isBitcoinModalOpen, setIsBitcoinModalOpen] = useState(false);
@@ -82,9 +84,9 @@ export const useConnectWalletsModal = ({
   }, [requiredWallets]);
 
   useEffect(() => {
-    if (protocolInputToken?.chain?.chainType === ChainType.EVM) {
+    if (swapResultToken?.chain?.chainType === ChainType.EVM) {
       setIsEvmRequired(true);
-    } else if (protocolInputToken?.chain?.chainType === ChainType.SOLANA) {
+    } else if (swapResultToken?.chain?.chainType === ChainType.SOLANA) {
       setIsSolanaRequired(true);
     }
 

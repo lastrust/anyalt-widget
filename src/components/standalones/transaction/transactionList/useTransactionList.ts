@@ -3,9 +3,9 @@ import {
   bestRouteAtom,
   finalTokenEstimateAtom,
   protocolFinalTokenAtom,
-  protocolInputTokenAtom,
   selectedTokenAmountAtom,
   selectedTokenAtom,
+  swapResultTokenAtom,
   widgetTemplateAtom,
 } from '../../../../store/stateStore';
 import { TokenWithAmount } from '../../../molecules/card/TransactionOverviewCard';
@@ -13,7 +13,7 @@ import { TokenWithAmount } from '../../../molecules/card/TransactionOverviewCard
 export const useTransactionList = () => {
   const bestRoute = useAtomValue(bestRouteAtom);
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
-  const protocolInputToken = useAtomValue(protocolInputTokenAtom);
+  const swapResultToken = useAtomValue(swapResultTokenAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
   const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
 
@@ -23,13 +23,13 @@ export const useTransactionList = () => {
   const getToTokenDetails = () => {
     if (widgetTemplate === 'TOKEN_BUY') {
       return {
-        contractAddress: protocolInputToken?.tokenAddress || '',
-        symbol: protocolInputToken?.symbol || '',
-        logo: protocolInputToken?.logoUrl || '',
-        blockchain: protocolInputToken?.chain?.displayName || '',
+        contractAddress: swapResultToken?.tokenAddress || '',
+        symbol: swapResultToken?.symbol || '',
+        logo: swapResultToken?.logoUrl || '',
+        blockchain: swapResultToken?.chain?.displayName || '',
         amount: Number(bestRoute?.outputAmount).toFixed(4) || '',
-        blockchainLogo: protocolInputToken?.chain?.logoUrl || '',
-        decimals: protocolInputToken?.decimals || 0,
+        blockchainLogo: swapResultToken?.chain?.logoUrl || '',
+        decimals: swapResultToken?.decimals || 0,
         tokenUsdPrice:
           Number(
             bestRoute?.swapSteps[bestRoute.swapSteps.length - 1]
@@ -42,9 +42,9 @@ export const useTransactionList = () => {
       contractAddress: protocolFinalToken?.address || '',
       symbol: protocolFinalToken?.symbol || '',
       logo: protocolFinalToken?.logoUrl || '',
-      blockchain: protocolInputToken?.chain?.displayName || '',
+      blockchain: swapResultToken?.chain?.displayName || '',
       amount: Number(finalTokenEstimate?.amountOut).toFixed(4) || '',
-      blockchainLogo: protocolInputToken?.chain?.logoUrl || '',
+      blockchainLogo: swapResultToken?.chain?.logoUrl || '',
       decimals: protocolFinalToken?.decimals || 0,
       tokenUsdPrice: Number(finalTokenEstimate?.priceInUSD) || 0,
     };

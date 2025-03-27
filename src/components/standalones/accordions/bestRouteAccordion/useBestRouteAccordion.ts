@@ -4,10 +4,10 @@ import {
   bestRouteAtom,
   finalTokenEstimateAtom,
   protocolFinalTokenAtom,
-  protocolInputTokenAtom,
   selectedRouteAtom,
   selectedTokenAmountAtom,
   slippageAtom,
+  swapResultTokenAtom,
   widgetTemplateAtom,
 } from '../../../../store/stateStore';
 import { truncateToDecimals } from '../../../../utils/truncateToDecimals';
@@ -15,10 +15,12 @@ import { truncateToDecimals } from '../../../../utils/truncateToDecimals';
 export const useBestRouteAccordion = () => {
   const slippage = useAtomValue(slippageAtom);
   const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
-  const [bestRoute] = useAtom(bestRouteAtom);
+  const bestRoute = useAtomValue(bestRouteAtom);
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
-  const protocolInputToken = useAtomValue(protocolInputTokenAtom);
+
+  const swapResultToken = useAtomValue(swapResultTokenAtom);
+
   const [, setSelectedRoute] = useAtom(selectedRouteAtom);
 
   const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
@@ -64,13 +66,13 @@ export const useBestRouteAccordion = () => {
 
   const protocolDepositToken = useMemo(() => {
     return {
-      name: protocolInputToken?.symbol || '',
-      icon: protocolInputToken?.logoUrl || '',
-      chainIcon: protocolInputToken?.logoUrl || '',
+      name: swapResultToken?.symbol || '',
+      icon: swapResultToken?.logoUrl || '',
+      chainIcon: swapResultToken?.logoUrl || '',
       amount: truncateToDecimals(selectedTokenAmount || '0', 4),
-      chainName: protocolInputToken?.chain?.displayName || '',
+      chainName: swapResultToken?.chain?.displayName || '',
     };
-  }, [protocolInputToken, selectedTokenAmount]);
+  }, [swapResultToken, selectedTokenAmount]);
 
   return {
     fees,
@@ -80,7 +82,7 @@ export const useBestRouteAccordion = () => {
     fromToken: areSwapsExists ? finalSwapToken : protocolDepositToken,
     handleRouteSelect,
     protocolFinalToken,
-    protocolInputToken,
+    protocolInputToken: swapResultToken,
     finalTokenEstimate,
     finalSwapToken,
   };

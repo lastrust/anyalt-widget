@@ -13,16 +13,18 @@ import {
 
 export const anyaltInstanceAtom = atom<AnyAlt | undefined>(undefined);
 
+/*
+ * Tokens
+ */
 export const selectedTokenAtom = atom<SupportedToken | undefined>(undefined);
 export const selectedTokenAmountAtom = atom<string | undefined>('');
 
-export const allChainsAtom = atom<SupportedChain[]>([]);
-
-export const protocolInputTokenAtom = atom<SupportedToken | undefined>(
-  undefined,
-);
+// It should be same as outputToken, which comes from props on AnyaltWidget
+export const swapResultTokenAtom = atom<SupportedToken | undefined>(undefined);
 
 export const protocolFinalTokenAtom = atom<Token | undefined>(undefined);
+
+export const allChainsAtom = atom<SupportedChain[]>([]);
 
 export const slippageAtom = atom<string>('3');
 

@@ -25,12 +25,12 @@ import {
   currentUiStepAtom,
   finalTokenEstimateAtom,
   protocolFinalTokenAtom,
-  protocolInputTokenAtom,
   selectedRouteAtom,
   selectedTokenAmountAtom,
   selectedTokenAtom,
   slippageAtom,
   swapDataAtom,
+  swapResultTokenAtom,
   tokenFetchErrorAtom,
   transactionIndexAtom,
   transactionsListAtom,
@@ -87,6 +87,8 @@ export const useAnyaltWidget = ({
     selectedTokenAmountAtom,
   );
 
+  const [swapResultToken, setSwapResultToken] = useAtom(swapResultTokenAtom);
+
   const [, setTemplate] = useAtom(widgetTemplateAtom);
   const [swapData, setSwapData] = useAtom(swapDataAtom);
   const [, setCurrentUiStep] = useAtom(currentUiStepAtom);
@@ -102,9 +104,7 @@ export const useAnyaltWidget = ({
   const [finalEstimateToken, setFinalTokenEstimate] = useAtom(
     finalTokenEstimateAtom,
   );
-  const [protocolInputToken, setProtocolInputToken] = useAtom(
-    protocolInputTokenAtom,
-  );
+
   const { balance } = useTokenInputBox();
 
   useEffect(() => {
@@ -184,7 +184,7 @@ export const useAnyaltWidget = ({
 
   //TODO: Related to the 1st step of the widget. Can be moved to the another hook.
   useEffect(() => {
-    const inputTokenChain = allChains.find(
+    const outputTokenChain = allChains.find(
       (chain) =>
         (outputToken.chainId &&
           chain.chainId === outputToken.chainId &&
@@ -192,22 +192,22 @@ export const useAnyaltWidget = ({
         (!outputToken.chainId && chain.chainType === outputToken.chainType),
     );
 
-    if (inputTokenChain) {
+    if (outputTokenChain) {
       anyaltInstance
-        ?.getToken(inputTokenChain.name, outputToken.address)
+        ?.getToken(outputTokenChain.name, outputToken.address)
         .then((res) => {
           if (res.logoUrl === ANYALT_PLACEHOLDER_LOGO && outputToken.logoUrl) {
             res.logoUrl = outputToken.logoUrl;
           }
-          setProtocolInputToken(res);
+          setSwapResultToken(res);
         });
     }
   }, [allChains, anyaltInstance]);
 
   const onGetQuote = async (withGoNext: boolean = true) => {
-    if (!selectedToken || !protocolInputToken || !selectedTokenAmount) return;
+    if (!selectedToken || !swapResultToken || !selectedTokenAmount) return;
 
-    if (selectedToken.id === protocolInputToken.id) {
+    if (selectedToken.id === swapResultToken.id) {
       setBestRoute({
         outputAmount: selectedTokenAmount,
         swapSteps: [],
@@ -297,8 +297,8 @@ export const useAnyaltWidget = ({
                 ).toFixed(2) || '',
               tokenUsdPrice: finalEstimateToken?.priceInUSD || '0',
               tokenDecimals: depositToken?.decimals || 0,
-              blockchain: protocolInputToken.chain?.displayName || '',
-              blockchainLogo: protocolInputToken.chain?.logoUrl || '',
+              blockchain: swapResultToken.chain?.displayName || '',
+              blockchainLogo: swapResultToken.chain?.logoUrl || '',
             },
           },
         ],
@@ -364,7 +364,7 @@ export const useAnyaltWidget = ({
     return () => {
       clearTimeout(debounceTimeout);
     };
-  }, [selectedToken, protocolInputToken, selectedTokenAmount]);
+  }, [selectedToken, swapResultToken, selectedTokenAmount]);
 
   //TODO: This code is realted to modal, can be move to another places
   const onConfigClick = () => {
@@ -511,7 +511,7 @@ export const useAnyaltWidget = ({
       const interval = setInterval(() => {
         // Capture latest values inside the interval callback
         const currentInToken = selectedToken;
-        const currentProtocolInputToken = protocolInputToken;
+        const currentProtocolInputToken = swapResultToken;
         const currentInTokenAmount = selectedTokenAmount;
         const userSelectedToken =
           currentInToken &&
@@ -538,9 +538,9 @@ export const useAnyaltWidget = ({
     }
 
     // Set chain flags for last mile tx
-    if (protocolInputToken?.chain?.chainType === ChainType.EVM) {
+    if (swapResultToken?.chain?.chainType === ChainType.EVM) {
       isEvmRequired = true;
-    } else if (protocolInputToken?.chain?.chainType === ChainType.SOLANA) {
+    } else if (swapResultToken?.chain?.chainType === ChainType.SOLANA) {
       isSolanaRequired = true;
     }
 

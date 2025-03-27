@@ -12,9 +12,9 @@ import {
   bestRouteAtom,
   finalTokenEstimateAtom,
   protocolFinalTokenAtom,
-  protocolInputTokenAtom,
   selectedTokenAmountAtom,
   slippageAtom,
+  swapResultTokenAtom,
   transactionIndexAtom,
   transactionsListAtom,
   transactionsProgressAtom,
@@ -43,7 +43,7 @@ export const useTransactionInfo = ({
   const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
   const transactionsProgress = useAtomValue(transactionsProgressAtom);
 
-  const protocolInputToken = useAtomValue(protocolInputTokenAtom);
+  const swapResultToken = useAtomValue(swapResultTokenAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
 
   const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
@@ -131,7 +131,7 @@ export const useTransactionInfo = ({
     estimatedTime,
     transactionsList,
     finalTokenEstimate,
-    protocolInputToken,
+    protocolInputToken: swapResultToken,
     protocolFinalToken,
     transactionsProgress,
     headerText,

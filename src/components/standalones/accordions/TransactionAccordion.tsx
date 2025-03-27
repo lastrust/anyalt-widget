@@ -15,8 +15,8 @@ import {
   bestRouteAtom,
   finalTokenEstimateAtom,
   protocolFinalTokenAtom,
-  protocolInputTokenAtom,
   selectedRouteAtom,
+  swapResultTokenAtom,
   transactionIndexAtom,
   transactionsProgressAtom,
   widgetTemplateAtom,
@@ -36,7 +36,9 @@ export const TransactionAccordion = () => {
   const bestRoute = useAtomValue(bestRouteAtom);
   const currentStep = useAtomValue(transactionIndexAtom);
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
-  const protocolInputToken = useAtomValue(protocolInputTokenAtom);
+
+  const swapResultToken = useAtomValue(swapResultTokenAtom);
+
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
   const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
   const transactionsProgress = useAtomValue(transactionsProgressAtom);
@@ -234,7 +236,7 @@ export const TransactionAccordion = () => {
           currentStep={currentStep}
           isLastMileExpanded={expandedIndexes.includes(currentStep - 1)}
           protocolFinalToken={protocolFinalToken}
-          protocolInputToken={protocolInputToken}
+          swapResultToken={swapResultToken}
           finalTokenEstimate={finalTokenEstimate}
           transactionsProgress={transactionsProgress}
         />

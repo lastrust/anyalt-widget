@@ -27,7 +27,7 @@ type Props = {
   transactionsProgress: TransactionsProgress | undefined;
   protocolFinalToken: Token | undefined;
   finalTokenEstimate: EstimateResponse | undefined;
-  protocolInputToken: SupportedToken | undefined;
+  swapResultToken: SupportedToken | undefined;
 };
 
 export const LastMileTxAccordion = ({
@@ -36,7 +36,7 @@ export const LastMileTxAccordion = ({
   currentStep,
   transactionsProgress,
   protocolFinalToken,
-  protocolInputToken,
+  swapResultToken,
   finalTokenEstimate,
 }: Props) => {
   const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
@@ -102,7 +102,7 @@ export const LastMileTxAccordion = ({
             exchangeLogo={protocolFinalToken?.logoUrl || ''}
             exchangeName={'Final tx'}
             fromToken={{
-              name: protocolInputToken?.symbol || '',
+              name: swapResultToken?.symbol || '',
               amount: truncateToDecimals(
                 bestRoute.swapSteps.length === 0
                   ? selectedTokenAmount || '0'
@@ -110,9 +110,9 @@ export const LastMileTxAccordion = ({
                       ?.payout || '0',
                 3,
               ),
-              tokenLogo: protocolInputToken?.logoUrl || '',
-              chainName: protocolInputToken?.chain?.displayName || '',
-              chainLogo: protocolInputToken?.chain?.logoUrl || '',
+              tokenLogo: swapResultToken?.logoUrl || '',
+              chainName: swapResultToken?.chain?.displayName || '',
+              chainLogo: swapResultToken?.chain?.logoUrl || '',
             }}
             toToken={{
               name: protocolFinalToken?.symbol || '',
@@ -121,8 +121,8 @@ export const LastMileTxAccordion = ({
                 3,
               ),
               tokenLogo: protocolFinalToken?.logoUrl || '',
-              chainName: protocolInputToken?.chain?.displayName || '',
-              chainLogo: protocolInputToken?.chain?.logoUrl || '',
+              chainName: swapResultToken?.chain?.displayName || '',
+              chainLogo: swapResultToken?.chain?.logoUrl || '',
             }}
           />
           {finalTokenEstimate?.estimatedTimeInSeconds &&

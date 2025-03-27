@@ -3,7 +3,7 @@ import { useAtomValue } from 'jotai';
 import {
   finalTokenAmountAtom,
   protocolFinalTokenAtom,
-  protocolInputTokenAtom,
+  swapResultTokenAtom,
 } from '../../../store/stateStore';
 import { truncateToDecimals } from '../../../utils/truncateToDecimals';
 import { ThumbIcon } from '../../atoms/icons/transaction/ThumbIcon';
@@ -16,7 +16,7 @@ type Props = {
 };
 
 export const SuccessfulDepositStep = ({ onConfigClick, onComplete }: Props) => {
-  const protocolInputToken = useAtomValue(protocolInputTokenAtom);
+  const swapResultToken = useAtomValue(swapResultTokenAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
   const finalTokenAmount = useAtomValue(finalTokenAmountAtom);
 
@@ -53,8 +53,8 @@ export const SuccessfulDepositStep = ({ onConfigClick, onComplete }: Props) => {
           <TokenIconBox
             tokenName={protocolFinalToken?.symbol || ''}
             tokenIcon={protocolFinalToken?.logoUrl || ''}
-            chainName={protocolInputToken?.chain?.displayName || ''}
-            chainIcon={protocolInputToken?.chain?.logoUrl || ''}
+            chainName={swapResultToken?.chain?.displayName || ''}
+            chainIcon={swapResultToken?.chain?.logoUrl || ''}
             mr="8px"
           />
           <Text
@@ -67,7 +67,7 @@ export const SuccessfulDepositStep = ({ onConfigClick, onComplete }: Props) => {
           </Text>
           <Text fontSize="16px" fontWeight="400" color="brand.text.secondary.4">
             {protocolFinalToken?.symbol} On{' '}
-            {protocolInputToken?.chain?.displayName}
+            {swapResultToken?.chain?.displayName}
           </Text>
         </Flex>
         <Button

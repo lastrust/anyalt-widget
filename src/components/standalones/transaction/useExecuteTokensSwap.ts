@@ -15,8 +15,8 @@ import {
 import {
   bestRouteAtom,
   finalTokenEstimateAtom,
-  protocolInputTokenAtom,
   swapDataAtom,
+  swapResultTokenAtom,
   transactionIndexAtom,
   transactionsListAtom,
 } from '../../../store/stateStore';
@@ -35,14 +35,14 @@ export const useExecuteTokensSwap = (
   const transactionIndex = useAtomValue(transactionIndexAtom);
   const [swapData, setSwapData] = useAtom(swapDataAtom);
   const bestRoute = useAtomValue(bestRouteAtom);
+  const swapResultToken = useAtomValue(swapResultTokenAtom);
+  const [, setFinalTokenEstimate] = useAtom(finalTokenEstimateAtom);
+  const [transactionsList, setTransactionsList] = useAtom(transactionsListAtom);
 
   const { address: evmAddress, isConnected: isEvmConnected } = useAccount();
   const { publicKey: solanaAddress, connected: isSolanaConnected } =
     useWallet();
   const { account: bitcoinAccount } = useBitcoinWallet();
-  const protocolInputToken = useAtomValue(protocolInputTokenAtom);
-  const [, setFinalTokenEstimate] = useAtom(finalTokenEstimateAtom);
-  const [transactionsList, setTransactionsList] = useAtom(transactionsListAtom);
 
   const { handleTransaction } = useHandleTransaction({
     externalEvmWalletConnector,
@@ -182,15 +182,14 @@ export const useExecuteTokensSwap = (
           }
 
           const res = await estimateCallback({
-            name: protocolInputToken?.name ?? '',
-            symbol: protocolInputToken?.symbol ?? '',
-            address: protocolInputToken?.tokenAddress ?? '',
-            chainId: Number(protocolInputToken?.chain?.id ?? 0),
-            decimals: protocolInputToken?.decimals ?? 0,
+            name: swapResultToken?.name ?? '',
+            symbol: swapResultToken?.symbol ?? '',
+            address: swapResultToken?.tokenAddress ?? '',
+            chainId: Number(swapResultToken?.chain?.id ?? 0),
+            decimals: swapResultToken?.decimals ?? 0,
             amount: crosschainSwapOutputAmount,
             chainType:
-              (protocolInputToken?.chain?.chainType as ChainType) ??
-              ChainType.EVM,
+              (swapResultToken?.chain?.chainType as ChainType) ?? ChainType.EVM,
           });
           updateTransactionsList(crosschainSwapOutputAmount, res);
           updateTransactionProgress({

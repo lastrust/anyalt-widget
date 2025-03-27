@@ -9,9 +9,9 @@ import {
   bestRouteAtom,
   finalTokenEstimateAtom,
   protocolFinalTokenAtom,
-  protocolInputTokenAtom,
   selectedTokenAmountAtom,
   selectedTokenAtom,
+  swapResultTokenAtom,
   tokenFetchErrorAtom,
   widgetTemplateAtom,
 } from '../../../store/stateStore';
@@ -29,7 +29,7 @@ export const useSelectToken = ({
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
   const bestRoute = useAtomValue(bestRouteAtom);
   const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
-  const protocolInputToken = useAtomValue(protocolInputTokenAtom);
+  const swapResultToken = useAtomValue(swapResultTokenAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
 
   const tokenFetchError = useAtomValue(tokenFetchErrorAtom);
@@ -110,7 +110,7 @@ export const useSelectToken = ({
     widgetTemplate,
     setOpenTokenSelect,
     finalTokenEstimate,
-    protocolInputToken,
+    protocolInputToken: swapResultToken,
     protocolFinalToken,
     bestRoute,
     inTokenAmount: selectedTokenAmount,

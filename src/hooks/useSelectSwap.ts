@@ -5,15 +5,15 @@ import {
   bestRouteAtom,
   finalTokenEstimateAtom,
   protocolFinalTokenAtom,
-  protocolInputTokenAtom,
   selectedTokenAmountAtom,
   selectedTokenAtom,
+  swapResultTokenAtom,
 } from '../store/stateStore';
 
 export const useSelectSwap = () => {
   const [openTokenSelect, setOpenTokenSelect] = useState<boolean>(false);
   const [, setSelectedToken] = useAtom(selectedTokenAtom);
-  const protocolInputToken = useAtomValue(protocolInputTokenAtom);
+  const swapResultToken = useAtomValue(swapResultTokenAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
 
   const bestRoute = useAtomValue(bestRouteAtom);
@@ -52,7 +52,7 @@ export const useSelectSwap = () => {
     onTokenSelect,
     openTokenSelect,
     setOpenTokenSelect,
-    protocolInputToken,
+    protocolInputToken: swapResultToken,
     protocolFinalToken,
     activeRoute: bestRoute,
     inTokenAmount: selectedTokenAmount,
