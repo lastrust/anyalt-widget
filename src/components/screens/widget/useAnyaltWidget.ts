@@ -83,7 +83,9 @@ export const useAnyaltWidget = ({
   const selectedRoute = useAtomValue(selectedRouteAtom);
 
   const [outputTokenGlobal, setOutputToken] = useAtom(outputTokenAtom);
-  const [outputTokenAmount, setOutputTokenAmount] = useAtom(outputTokenAmountAtom);
+  const [outputTokenAmount, setOutputTokenAmount] = useAtom(
+    outputTokenAmountAtom,
+  );
 
   const [, setTemplate] = useAtom(widgetTemplateAtom);
   const [swapData, setSwapData] = useAtom(swapDataAtom);
@@ -111,7 +113,11 @@ export const useAnyaltWidget = ({
 
   const isButtonDisabled = useMemo(() => {
     if (activeStep === 0) {
-      return Number(outputTokenAmount ?? 0) == 0 || outputTokenGlobal == null || !bestRoute;
+      return (
+        Number(outputTokenAmount ?? 0) == 0 ||
+        outputTokenGlobal == null ||
+        !bestRoute
+      );
     }
     return Number(outputTokenAmount ?? 0) == 0 || outputTokenGlobal == null;
   }, [outputTokenAmount, outputTokenGlobal, bestRoute, activeStep]);
