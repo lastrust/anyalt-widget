@@ -7,8 +7,8 @@ import { useAccount } from 'wagmi';
 import { useSolana } from '../../../../../providers/useSolana';
 import {
   currentUiStepAtom,
-  outputTokenAmountAtom,
-  outputTokenAtom,
+  selectedTokenAmountAtom,
+  selectedTokenAtom,
   tokenFetchErrorAtom,
 } from '../../../../../store/stateStore';
 import { getEvmTokenBalance } from '../../../../../utils';
@@ -16,12 +16,12 @@ import { getEvmTokenBalance } from '../../../../../utils';
 export const useTokenInputBox = () => {
   const [balance, setBalance] = useState<string | undefined>(undefined);
 
-  const outputToken = useAtomValue(outputTokenAtom);
+  const selectedToken = useAtomValue(selectedTokenAtom);
   const currentStep = useAtomValue(currentUiStepAtom);
   const tokenFetchError = useAtomValue(tokenFetchErrorAtom);
   const [, setTokenFetchError] = useAtom(tokenFetchErrorAtom);
-  const [outputTokenAmount, setOutputTokenAmount] = useAtom(
-    outputTokenAmountAtom,
+  const [selectedTokenAmount, setSelectedTokenAmount] = useAtom(
+    selectedTokenAmountAtom,
   );
 
   const { publicKey } = useWallet();
@@ -31,31 +31,31 @@ export const useTokenInputBox = () => {
     useBitcoinWallet();
 
   const isWalletConnected = useMemo(() => {
-    const tokenType = outputToken?.chain?.chainType;
+    const tokenType = selectedToken?.chain?.chainType;
     const isEvmWallet = tokenType === 'EVM' && evmAddress;
     const isSolanaWallet = tokenType === 'SOLANA' && publicKey;
     const isBtcWallet = tokenType === 'BTC' && bitcoinAccount;
     return isEvmWallet || isSolanaWallet || isBtcWallet;
-  }, [outputToken, evmAddress, publicKey, bitcoinAccount]);
+  }, [selectedToken, evmAddress, publicKey, bitcoinAccount]);
 
   const getBalance = async () => {
-    const tokenType = outputToken?.chain?.chainType;
+    const tokenType = selectedToken?.chain?.chainType;
     const isEvmWallet = tokenType === 'EVM' && evmAddress;
     const isSolanaWallet = tokenType === 'SOLANA' && publicKey;
     const isBtcWallet = tokenType === 'BTC' && bitcoinAccount;
 
-    if (outputToken) {
+    if (selectedToken) {
       if (isSolanaWallet) {
         const balance = await getSolanaTokenBalance(
-          outputToken.tokenAddress ?? '',
+          selectedToken.tokenAddress ?? '',
           publicKey.toString(),
         );
 
         setBalance(balance);
       } else if (isEvmWallet) {
         const balance = await getEvmTokenBalance(
-          outputToken.chain?.chainId ?? 1,
-          outputToken.tokenAddress ?? '',
+          selectedToken.chain?.chainId ?? 1,
+          selectedToken.tokenAddress ?? '',
           evmAddress,
         );
 
@@ -70,12 +70,12 @@ export const useTokenInputBox = () => {
   };
 
   const maxButtonClick = async () => {
-    setOutputTokenAmount(balance);
+    setSelectedTokenAmount(balance);
   };
 
   useEffect(() => {
-    if (currentStep === 1 && balance && outputTokenAmount) {
-      if (parseFloat(balance) < parseFloat(outputTokenAmount)) {
+    if (currentStep === 1 && balance && selectedTokenAmount) {
+      if (parseFloat(balance) < parseFloat(selectedTokenAmount)) {
         setTokenFetchError({
           isError: true,
           errorMessage: `Not enough balance.`,
@@ -87,23 +87,23 @@ export const useTokenInputBox = () => {
         });
       }
     }
-  }, [outputTokenAmount, balance, currentStep]);
+  }, [selectedTokenAmount, balance, currentStep]);
 
   useEffect(() => {
     getBalance();
-  }, [outputToken, evmAddress, publicKey, bitcoinAccount, solanaConnection]);
+  }, [selectedToken, evmAddress, publicKey, bitcoinAccount, solanaConnection]);
 
   useEffect(() => {
-    if (outputTokenAmount) {
-      setOutputTokenAmount(outputTokenAmount.toString());
+    if (selectedTokenAmount) {
+      setSelectedTokenAmount(selectedTokenAmount.toString());
     }
-  }, [outputTokenAmount]);
+  }, [selectedTokenAmount]);
 
   return {
     currentStep,
-    inToken: outputToken,
-    inTokenAmount: outputTokenAmount,
-    setInTokenAmount: setOutputTokenAmount,
+    inToken: selectedToken,
+    inTokenAmount: selectedTokenAmount,
+    setInTokenAmount: setSelectedTokenAmount,
     tokenFetchError,
     maxButtonClick,
     balance,

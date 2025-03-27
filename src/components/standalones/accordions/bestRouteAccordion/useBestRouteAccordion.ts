@@ -3,10 +3,10 @@ import { useMemo } from 'react';
 import {
   bestRouteAtom,
   finalTokenEstimateAtom,
-  outputTokenAmountAtom,
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
   selectedRouteAtom,
+  selectedTokenAmountAtom,
   slippageAtom,
   widgetTemplateAtom,
 } from '../../../../store/stateStore';
@@ -21,7 +21,7 @@ export const useBestRouteAccordion = () => {
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const [, setSelectedRoute] = useAtom(selectedRouteAtom);
 
-  const outputTokenAmount = useAtomValue(outputTokenAmountAtom);
+  const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
 
   const fees = useMemo(() => {
     if (!bestRoute) return '0.00';
@@ -67,10 +67,10 @@ export const useBestRouteAccordion = () => {
       name: protocolInputToken?.symbol || '',
       icon: protocolInputToken?.logoUrl || '',
       chainIcon: protocolInputToken?.logoUrl || '',
-      amount: truncateToDecimals(outputTokenAmount || '0', 4),
+      amount: truncateToDecimals(selectedTokenAmount || '0', 4),
       chainName: protocolInputToken?.chain?.displayName || '',
     };
-  }, [protocolInputToken, outputTokenAmount]);
+  }, [protocolInputToken, selectedTokenAmount]);
 
   return {
     fees,

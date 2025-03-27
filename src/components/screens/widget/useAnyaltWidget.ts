@@ -24,11 +24,11 @@ import {
   bestRouteAtom,
   currentUiStepAtom,
   finalTokenEstimateAtom,
-  outputTokenAmountAtom,
-  outputTokenAtom,
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
   selectedRouteAtom,
+  selectedTokenAmountAtom,
+  selectedTokenAtom,
   slippageAtom,
   swapDataAtom,
   tokenFetchErrorAtom,
@@ -82,9 +82,9 @@ export const useAnyaltWidget = ({
   const slippage = useAtomValue(slippageAtom);
   const selectedRoute = useAtomValue(selectedRouteAtom);
 
-  const [outputTokenGlobal, setOutputToken] = useAtom(outputTokenAtom);
-  const [outputTokenAmount, setOutputTokenAmount] = useAtom(
-    outputTokenAmountAtom,
+  const [selectedToken, setSelectedToken] = useAtom(selectedTokenAtom);
+  const [selectedTokenAmount, setSelectedTokenAmount] = useAtom(
+    selectedTokenAmountAtom,
   );
 
   const [, setTemplate] = useAtom(widgetTemplateAtom);
@@ -109,25 +109,25 @@ export const useAnyaltWidget = ({
 
   useEffect(() => {
     onGetQuote(false);
-  }, [outputTokenGlobal, slippage, balance]);
+  }, [selectedToken, slippage, balance]);
 
   const isButtonDisabled = useMemo(() => {
     if (activeStep === 0) {
       return (
-        Number(outputTokenAmount ?? 0) == 0 ||
-        outputTokenGlobal == null ||
+        Number(selectedTokenAmount ?? 0) == 0 ||
+        selectedToken == null ||
         !bestRoute
       );
     }
-    return Number(outputTokenAmount ?? 0) == 0 || outputTokenGlobal == null;
-  }, [outputTokenAmount, outputTokenGlobal, bestRoute, activeStep]);
+    return Number(selectedTokenAmount ?? 0) == 0 || selectedToken == null;
+  }, [selectedTokenAmount, selectedToken, bestRoute, activeStep]);
 
   const resetState = () => {
     setActiveOperationId(undefined);
     setFinalTokenEstimate(undefined);
     setTransactionsList(undefined);
-    setOutputTokenAmount(undefined);
-    setOutputToken(undefined);
+    setSelectedTokenAmount(undefined);
+    setSelectedToken(undefined);
     setTokenFetchError({ isError: false, errorMessage: '' });
     setBestRoute(undefined);
     setSwapData({
@@ -205,11 +205,11 @@ export const useAnyaltWidget = ({
   }, [allChains, anyaltInstance]);
 
   const onGetQuote = async (withGoNext: boolean = true) => {
-    if (!outputTokenGlobal || !protocolInputToken || !outputTokenAmount) return;
+    if (!selectedToken || !protocolInputToken || !selectedTokenAmount) return;
 
-    if (outputTokenGlobal.id === protocolInputToken.id) {
+    if (selectedToken.id === protocolInputToken.id) {
       setBestRoute({
-        outputAmount: outputTokenAmount,
+        outputAmount: selectedTokenAmount,
         swapSteps: [],
         operationId: '',
         missingWalletForSourceBlockchain: false,
@@ -227,8 +227,8 @@ export const useAnyaltWidget = ({
 
       const route = await anyaltInstance?.getBestRoute({
         fromToken: {
-          address: outputTokenGlobal.tokenAddress ?? '',
-          chainName: outputTokenGlobal.chainName,
+          address: selectedToken.tokenAddress ?? '',
+          chainName: selectedToken.chainName,
         },
         toToken: {
           address: outputToken.address,
@@ -237,7 +237,7 @@ export const useAnyaltWidget = ({
               outputToken.chainId! as keyof typeof ChainIdToChainConstant
             ],
         },
-        amount: outputTokenAmount,
+        amount: selectedTokenAmount,
         slippage,
       });
 
@@ -327,7 +327,7 @@ export const useAnyaltWidget = ({
         }
       }
 
-      if (balance && parseFloat(balance) < parseFloat(outputTokenAmount)) {
+      if (balance && parseFloat(balance) < parseFloat(selectedTokenAmount)) {
         setTokenFetchError({
           isError: true,
           errorMessage: `You don't have enough tokens in your wallet.`,
@@ -353,10 +353,10 @@ export const useAnyaltWidget = ({
   //TODO: Can be part of getting routes hook.
   useEffect(() => {
     //Show loading state immediatly instead of waiting for a delay
-    if (outputTokenAmount && outputTokenGlobal) setLoading(true);
+    if (selectedTokenAmount && selectedToken) setLoading(true);
 
     const debounceTimeout = setTimeout(() => {
-      if (outputTokenAmount && outputTokenGlobal) {
+      if (selectedTokenAmount && selectedToken) {
         onGetQuote(false);
       }
     }, DEBOUNCE_TIMEOUT);
@@ -364,7 +364,7 @@ export const useAnyaltWidget = ({
     return () => {
       clearTimeout(debounceTimeout);
     };
-  }, [outputTokenGlobal, protocolInputToken, outputTokenAmount]);
+  }, [selectedToken, protocolInputToken, selectedTokenAmount]);
 
   //TODO: This code is realted to modal, can be move to another places
   const onConfigClick = () => {
@@ -510,9 +510,9 @@ export const useAnyaltWidget = ({
     if (activeStep === 1 && bestRoute) {
       const interval = setInterval(() => {
         // Capture latest values inside the interval callback
-        const currentInToken = outputTokenGlobal;
+        const currentInToken = selectedToken;
         const currentProtocolInputToken = protocolInputToken;
-        const currentInTokenAmount = outputTokenAmount;
+        const currentInTokenAmount = selectedTokenAmount;
         const userSelectedToken =
           currentInToken &&
           currentProtocolInputToken &&

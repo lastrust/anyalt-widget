@@ -11,9 +11,9 @@ import {
   anyaltInstanceAtom,
   bestRouteAtom,
   finalTokenEstimateAtom,
-  outputTokenAmountAtom,
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
+  selectedTokenAmountAtom,
   slippageAtom,
   transactionIndexAtom,
   transactionsListAtom,
@@ -46,7 +46,7 @@ export const useTransactionInfo = ({
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
 
-  const outputTokenAmount = useAtomValue(outputTokenAmountAtom);
+  const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
 
   const { executeSwap } = useHandleSwap(externalEvmWalletConnector);
 
@@ -127,7 +127,7 @@ export const useTransactionInfo = ({
     bestRoute,
     currentStep,
     isBridgeSwap,
-    inTokenAmount: outputTokenAmount,
+    inTokenAmount: selectedTokenAmount,
     estimatedTime,
     transactionsList,
     finalTokenEstimate,

@@ -2,10 +2,10 @@ import { useAtomValue } from 'jotai';
 import {
   bestRouteAtom,
   finalTokenEstimateAtom,
-  outputTokenAmountAtom,
-  outputTokenAtom,
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
+  selectedTokenAmountAtom,
+  selectedTokenAtom,
   widgetTemplateAtom,
 } from '../../../../store/stateStore';
 import { TokenWithAmount } from '../../../molecules/card/TransactionOverviewCard';
@@ -17,8 +17,8 @@ export const useTransactionList = () => {
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
   const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
 
-  const outputToken = useAtomValue(outputTokenAtom);
-  const outputTokenAmount = useAtomValue(outputTokenAmountAtom);
+  const selectedToken = useAtomValue(selectedTokenAtom);
+  const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
 
   const getToTokenDetails = () => {
     if (widgetTemplate === 'TOKEN_BUY') {
@@ -55,13 +55,13 @@ export const useTransactionList = () => {
       bestRoute,
       tokens: {
         from: {
-          contractAddress: outputToken?.tokenAddress || '',
-          symbol: outputToken?.symbol || '',
-          logo: outputToken?.logoUrl || '',
-          blockchain: outputToken?.chain?.displayName || '',
-          amount: Number(outputTokenAmount).toFixed(4) || '',
-          blockchainLogo: outputToken?.chain?.logoUrl || '',
-          decimals: outputToken?.decimals || 0,
+          contractAddress: selectedToken?.tokenAddress || '',
+          symbol: selectedToken?.symbol || '',
+          logo: selectedToken?.logoUrl || '',
+          blockchain: selectedToken?.chain?.displayName || '',
+          amount: Number(selectedTokenAmount).toFixed(4) || '',
+          blockchainLogo: selectedToken?.chain?.logoUrl || '',
+          decimals: selectedToken?.decimals || 0,
           tokenUsdPrice: 0,
         } as TokenWithAmount,
         to: {

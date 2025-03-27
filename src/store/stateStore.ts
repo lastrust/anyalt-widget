@@ -13,8 +13,8 @@ import {
 
 export const anyaltInstanceAtom = atom<AnyAlt | undefined>(undefined);
 
-export const outputTokenAtom = atom<SupportedToken | undefined>(undefined);
-export const outputTokenAmountAtom = atom<string | undefined>('');
+export const selectedTokenAtom = atom<SupportedToken | undefined>(undefined);
+export const selectedTokenAmountAtom = atom<string | undefined>('');
 
 export const allChainsAtom = atom<SupportedChain[]>([]);
 

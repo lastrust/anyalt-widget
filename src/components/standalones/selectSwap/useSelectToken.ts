@@ -8,10 +8,10 @@ import { WalletConnector } from '../../..';
 import {
   bestRouteAtom,
   finalTokenEstimateAtom,
-  outputTokenAmountAtom,
-  outputTokenAtom,
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
+  selectedTokenAmountAtom,
+  selectedTokenAtom,
   tokenFetchErrorAtom,
   widgetTemplateAtom,
 } from '../../../store/stateStore';
@@ -25,10 +25,10 @@ export const useSelectToken = ({
 }) => {
   const [openTokenSelect, setOpenTokenSelect] = useState<boolean>(false);
 
-  const [, setOutputToken] = useAtom(outputTokenAtom);
+  const [, setSelectedToken] = useAtom(selectedTokenAtom);
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
   const bestRoute = useAtomValue(bestRouteAtom);
-  const outputTokenAmount = useAtomValue(outputTokenAmountAtom);
+  const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
 
@@ -54,19 +54,19 @@ export const useSelectToken = ({
   ]);
 
   const onTokenSelect = (token: SupportedToken, callback: () => void) => {
-    setOutputToken(token);
+    setSelectedToken(token);
     setOpenTokenSelect(false);
     callback();
   };
 
   const inTokenPrice = useMemo(() => {
-    if (!bestRoute || !outputTokenAmount || bestRoute.swapSteps.length === 0)
+    if (!bestRoute || !selectedTokenAmount || bestRoute.swapSteps.length === 0)
       return '';
     const tokenPrice = bestRoute.swapSteps[0].sourceToken.tokenUsdPrice;
 
     if (!tokenPrice) return '';
-    return (tokenPrice * parseFloat(outputTokenAmount)).toFixed(2);
-  }, [bestRoute, outputTokenAmount]);
+    return (tokenPrice * parseFloat(selectedTokenAmount)).toFixed(2);
+  }, [bestRoute, selectedTokenAmount]);
 
   const outTokenPrice = useMemo(() => {
     if (!bestRoute || bestRoute.swapSteps.length === 0) return '';
@@ -113,6 +113,6 @@ export const useSelectToken = ({
     protocolInputToken,
     protocolFinalToken,
     bestRoute,
-    inTokenAmount: outputTokenAmount,
+    inTokenAmount: selectedTokenAmount,
   };
 };
