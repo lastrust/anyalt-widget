@@ -1,3 +1,1 @@
-export const useSelectToken = () => {
-    
-}
+export const useSelectToken = () => {};
