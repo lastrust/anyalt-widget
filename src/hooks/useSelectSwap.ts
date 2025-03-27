@@ -44,7 +44,6 @@ export const useSelectSwap = () => {
     return (tokenPrice * parseFloat(bestRoute.outputAmount)).toFixed(2);
   }, [bestRoute]);
 
-
   return {
     depositTokenEstimate,
     inTokenPrice,
