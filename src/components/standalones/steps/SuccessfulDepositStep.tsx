@@ -66,8 +66,7 @@ export const SuccessfulDepositStep = ({ onConfigClick, onComplete }: Props) => {
             {truncateToDecimals(finalTokenAmount, 4)}
           </Text>
           <Text fontSize="16px" fontWeight="400" color="brand.text.secondary.4">
-            {depositToken?.symbol} On{' '}
-            {swapResultToken?.chain?.displayName}
+            {depositToken?.symbol} On {swapResultToken?.chain?.displayName}
           </Text>
         </Flex>
         <Button

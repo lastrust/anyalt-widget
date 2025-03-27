@@ -98,7 +98,6 @@ export const useAnyaltWidget = ({
   const [, setTransactionsList] = useAtom(transactionsListAtom);
   const [, setTransactionIndex] = useAtom(transactionIndexAtom);
   const [, setActiveOperationId] = useAtom(activeOperationIdAtom);
-  
 
   const [, setTransactionsProgress] = useAtom(transactionsProgressAtom);
   const [anyaltInstance, setAnyaltInstance] = useAtom(anyaltInstanceAtom);

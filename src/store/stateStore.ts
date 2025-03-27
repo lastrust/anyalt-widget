@@ -46,7 +46,6 @@ export const transactionsProgressAtom = atom<TransactionsProgress>({
   },
 });
 
-
 export const currentUiStepAtom = atom<number>(0);
 
 export const transactionsListAtom = atom<TransactionStatusList | undefined>(
