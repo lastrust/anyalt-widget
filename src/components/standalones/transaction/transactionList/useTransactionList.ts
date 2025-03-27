@@ -2,8 +2,8 @@ import { useAtomValue } from 'jotai';
 import {
   bestRouteAtom,
   finalTokenEstimateAtom,
-  inTokenAmountAtom,
-  inTokenAtom,
+  outputTokenAmountAtom,
+  outputTokenAtom,
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
   widgetTemplateAtom,
@@ -16,8 +16,8 @@ export const useTransactionList = () => {
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
   const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
-  const inToken = useAtomValue(inTokenAtom);
-  const inTokenAmount = useAtomValue(inTokenAmountAtom);
+  const inToken = useAtomValue(outputTokenAtom);
+  const inTokenAmount = useAtomValue(outputTokenAmountAtom);
 
   const getToTokenDetails = () => {
     if (widgetTemplate === 'TOKEN_BUY') {

@@ -11,7 +11,7 @@ import {
   anyaltInstanceAtom,
   bestRouteAtom,
   finalTokenEstimateAtom,
-  inTokenAmountAtom,
+  outputTokenAmountAtom,
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
   slippageAtom,
@@ -42,7 +42,7 @@ export const useTransactionInfo = ({
   const transactionsList = useAtomValue(transactionsListAtom);
   const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
   const transactionsProgress = useAtomValue(transactionsProgressAtom);
-  const inTokenAmount = useAtomValue(inTokenAmountAtom);
+  const inTokenAmount = useAtomValue(outputTokenAmountAtom);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
 

@@ -8,8 +8,8 @@ import { WalletConnector } from '../../..';
 import {
   bestRouteAtom,
   finalTokenEstimateAtom,
-  inTokenAmountAtom,
-  inTokenAtom,
+  outputTokenAmountAtom,
+  outputTokenAtom,
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
   tokenFetchErrorAtom,
@@ -25,10 +25,10 @@ export const useSelectToken = ({
 }) => {
   const [openTokenSelect, setOpenTokenSelect] = useState<boolean>(false);
 
-  const [, setInToken] = useAtom(inTokenAtom);
+  const [, setInToken] = useAtom(outputTokenAtom);
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
   const bestRoute = useAtomValue(bestRouteAtom);
-  const inTokenAmount = useAtomValue(inTokenAmountAtom);
+  const outputTokenAmount = useAtomValue(outputTokenAmountAtom);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
 
@@ -60,13 +60,13 @@ export const useSelectToken = ({
   };
 
   const inTokenPrice = useMemo(() => {
-    if (!bestRoute || !inTokenAmount || bestRoute.swapSteps.length === 0)
+    if (!bestRoute || !outputTokenAmount || bestRoute.swapSteps.length === 0)
       return '';
     const tokenPrice = bestRoute.swapSteps[0].sourceToken.tokenUsdPrice;
 
     if (!tokenPrice) return '';
-    return (tokenPrice * parseFloat(inTokenAmount)).toFixed(2);
-  }, [bestRoute, inTokenAmount]);
+    return (tokenPrice * parseFloat(outputTokenAmount)).toFixed(2);
+  }, [bestRoute, outputTokenAmount]);
 
   const outTokenPrice = useMemo(() => {
     if (!bestRoute || bestRoute.swapSteps.length === 0) return '';
@@ -113,6 +113,6 @@ export const useSelectToken = ({
     protocolInputToken,
     protocolFinalToken,
     bestRoute,
-    inTokenAmount,
+    inTokenAmount: outputTokenAmount,
   };
 };

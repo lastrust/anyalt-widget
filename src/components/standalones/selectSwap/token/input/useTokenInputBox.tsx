@@ -7,8 +7,8 @@ import { useAccount } from 'wagmi';
 import { useSolana } from '../../../../../providers/useSolana';
 import {
   currentUiStepAtom,
-  inTokenAmountAtom,
-  inTokenAtom,
+  outputTokenAmountAtom,
+  outputTokenAtom,
   tokenFetchErrorAtom,
 } from '../../../../../store/stateStore';
 import { getEvmTokenBalance } from '../../../../../utils';
@@ -16,11 +16,11 @@ import { getEvmTokenBalance } from '../../../../../utils';
 export const useTokenInputBox = () => {
   const [balance, setBalance] = useState<string | undefined>(undefined);
 
-  const inToken = useAtomValue(inTokenAtom);
+  const inToken = useAtomValue(outputTokenAtom);
   const currentStep = useAtomValue(currentUiStepAtom);
   const tokenFetchError = useAtomValue(tokenFetchErrorAtom);
   const [, setTokenFetchError] = useAtom(tokenFetchErrorAtom);
-  const [inTokenAmount, setInTokenAmount] = useAtom(inTokenAmountAtom);
+  const [inTokenAmount, setInTokenAmount] = useAtom(outputTokenAmountAtom);
 
   const { publicKey } = useWallet();
   const { getSolanaTokenBalance, connection: solanaConnection } = useSolana();

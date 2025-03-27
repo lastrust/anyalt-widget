@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { useAtomValue } from 'jotai';
 import { EstimateResponse, Token } from '../../..';
-import { inTokenAmountAtom } from '../../../store/stateStore';
+import { outputTokenAmountAtom } from '../../../store/stateStore';
 import { TransactionsProgress } from '../../../types/transaction';
 import { truncateToDecimals } from '../../../utils/truncateToDecimals';
 import { DividerIcon } from '../../atoms/icons/transaction/DividerIcon';
@@ -39,7 +39,7 @@ export const LastMileTxAccordion = ({
   protocolInputToken,
   finalTokenEstimate,
 }: Props) => {
-  const inTokenAmount = useAtomValue(inTokenAmountAtom);
+  const inTokenAmount = useAtomValue(outputTokenAmountAtom);
 
   return (
     <AccordionItem

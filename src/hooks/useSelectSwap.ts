@@ -4,19 +4,19 @@ import { useMemo, useState } from 'react';
 import {
   bestRouteAtom,
   finalTokenEstimateAtom,
-  inTokenAmountAtom,
-  inTokenAtom,
+  outputTokenAmountAtom,
+  outputTokenAtom,
   protocolFinalTokenAtom,
   protocolInputTokenAtom,
 } from '../store/stateStore';
 
 export const useSelectSwap = () => {
   const [openTokenSelect, setOpenTokenSelect] = useState<boolean>(false);
-  const [, setInToken] = useAtom(inTokenAtom);
+  const [, setInToken] = useAtom(outputTokenAtom);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
   const activeRoute = useAtomValue(bestRouteAtom);
-  const inTokenAmount = useAtomValue(inTokenAmountAtom);
+  const inTokenAmount = useAtomValue(outputTokenAmountAtom);
 
   const onTokenSelect = (token: SupportedToken) => {
     setInToken(token);

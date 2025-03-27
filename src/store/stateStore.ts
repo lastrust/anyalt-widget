@@ -13,7 +13,8 @@ import {
 
 export const anyaltInstanceAtom = atom<AnyAlt | undefined>(undefined);
 
-export const inTokenAtom = atom<SupportedToken | undefined>(undefined);
+export const outputTokenAtom = atom<SupportedToken | undefined>(undefined);
+export const outputTokenAmountAtom = atom<string | undefined>('');
 
 export const allChainsAtom = atom<SupportedChain[]>([]);
 
@@ -24,8 +25,6 @@ export const protocolInputTokenAtom = atom<SupportedToken | undefined>(
 export const protocolFinalTokenAtom = atom<Token | undefined>(undefined);
 
 export const slippageAtom = atom<string>('3');
-
-export const inTokenAmountAtom = atom<string | undefined>('');
 
 export const bestRouteAtom = atom<BestRouteResponse | undefined>(undefined);
 
