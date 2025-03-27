@@ -4,6 +4,7 @@ import { AnyaltWidgetProps } from '../../..';
 import { showStuckTransactionDialogAtom } from '../../../store/stateStore';
 import { Footer } from '../../molecules/footer/Footer';
 import { Header } from '../../molecules/header/Header';
+import { ConnectWalletsModal } from '../../standalones/modals/connectWalletsModal/ConnectWalletsModal';
 import ModalWrapper from '../../standalones/modals/ModalWrapper';
 import { usePendingOperation } from '../../standalones/pendingOperationDialog/usePendingOperation';
 import Stepper from '../../standalones/stepper/Stepper';
@@ -13,7 +14,6 @@ import { SuccessfulDepositStep } from '../../standalones/steps/SuccessfulDeposit
 import { TransactionStep } from '../../standalones/steps/TransactionStep';
 import { HandlerTransactions } from './TransactionHandler';
 import { useAnyaltWidget } from './useAnyaltWidget';
-import { ConnectWalletsModal } from '../../standalones/modals/connectWalletsModal/ConnectWalletsModal';
 export { useModal } from '../../../hooks/useModal';
 export {
   defaultTheme,
