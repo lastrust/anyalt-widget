@@ -22,7 +22,7 @@ import {
   allChainsAtom,
   anyaltInstanceAtom,
   bestRouteAtom,
-  currentUiStepAtom,
+  currentStepAtom,
   depositTokenAtom,
   depositTokenEstimateAtom,
   selectedRouteAtom,
@@ -92,9 +92,11 @@ export const useAnyaltWidget = ({
     depositTokenEstimateAtom,
   );
 
+  const [, setCurrentStep] = useAtom(currentStepAtom);
+
   const [, setTemplate] = useAtom(widgetTemplateAtom);
+  
   const [swapData, setSwapData] = useAtom(swapDataAtom);
-  const [, setCurrentUiStep] = useAtom(currentUiStepAtom);
   const [allChains, setAllChains] = useAtom(allChainsAtom);
   const [bestRoute, setBestRoute] = useAtom(bestRouteAtom);
   const [, setTokenFetchError] = useAtom(tokenFetchErrorAtom);
@@ -139,11 +141,11 @@ export const useAnyaltWidget = ({
     });
     setTransactionsProgress({});
     setTransactionIndex(1);
-    setCurrentUiStep(0);
+    setCurrentStep(0);
   };
 
   useEffect(() => {
-    setCurrentUiStep(activeStep);
+    setCurrentStep(activeStep);
   }, [activeStep]);
 
   //TODO: Should be triggered, once all routes has been setted. Also figure out how to handle for multiple routes.

@@ -16,10 +16,10 @@ export const anyaltInstanceAtom = atom<AnyAlt | undefined>(undefined);
 /*
  * Tokens
  */
-export const selectedTokenAtom = atom<SupportedToken | undefined>(undefined);
+export const selectedTokenAtom = atom<SupportedToken | undefined>(undefined); //Token, which user selects
 export const selectedTokenAmountAtom = atom<string | undefined>('');
 export const swapResultTokenAtom = atom<SupportedToken | undefined>(undefined); // It's same as outputToken, which comes from props on AnyaltWidget
-export const depositTokenAtom = atom<Token | undefined>(undefined);
+export const depositTokenAtom = atom<Token | undefined>(undefined); //Token, which will be deposited
 export const depositTokenAmountAtom = atom<string>('');
 export const depositTokenEstimateAtom = atom<EstimateResponse | undefined>(
   undefined,
@@ -27,32 +27,27 @@ export const depositTokenEstimateAtom = atom<EstimateResponse | undefined>(
 
 export const allChainsAtom = atom<SupportedChain[]>([]);
 
-export const slippageAtom = atom<string>('3');
-
 export const bestRouteAtom = atom<BestRouteResponse | undefined>(undefined);
-
 export const selectedRouteAtom = atom<BestRouteResponse | undefined>(undefined);
 
+// Transaction informations:
+export const slippageAtom = atom<string>('3');
 export const activeOperationIdAtom = atom<string | undefined>(undefined);
-
-export const transactionIndexAtom = atom<number>(1);
-
+export const transactionIndexAtom = atom<number>(1); // Recent index of transactions
+export const transactionsListAtom = atom<TransactionStatusList | undefined>( // List of transactions to show on transactions screen
+  undefined,
+);
 export const transactionsProgressAtom = atom<TransactionsProgress>({
   0: {
     approve: undefined,
     swap: undefined,
   },
-});
+}); // Controlling and storing information about transactions progress
 
-export const currentUiStepAtom = atom<number>(0);
-
-export const transactionsListAtom = atom<TransactionStatusList | undefined>(
-  undefined,
-);
-
+// Widget configurations:
 export const widgetTemplateAtom = atom<WidgetTemplateType>('DEPOSIT_TOKEN');
-
 export const minDepositAmountAtom = atom<number>(0);
+export const currentStepAtom = atom<number>(0);
 
 export const swapDataAtom = atom<{
   swapIsFinished: boolean;
