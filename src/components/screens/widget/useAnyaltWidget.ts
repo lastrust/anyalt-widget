@@ -95,7 +95,7 @@ export const useAnyaltWidget = ({
   const [, setCurrentStep] = useAtom(currentStepAtom);
 
   const [, setTemplate] = useAtom(widgetTemplateAtom);
-  
+
   const [swapData, setSwapData] = useAtom(swapDataAtom);
   const [allChains, setAllChains] = useAtom(allChainsAtom);
   const [bestRoute, setBestRoute] = useAtom(bestRouteAtom);
