@@ -20,6 +20,7 @@ export const useBestRouteAccordion = () => {
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const [, setSelectedRoute] = useAtom(selectedRouteAtom);
+  
   const outputTokenAmount = useAtomValue(outputTokenAmountAtom);
 
   const fees = useMemo(() => {

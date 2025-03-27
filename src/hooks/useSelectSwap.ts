@@ -12,35 +12,36 @@ import {
 
 export const useSelectSwap = () => {
   const [openTokenSelect, setOpenTokenSelect] = useState<boolean>(false);
-  const [, setInToken] = useAtom(outputTokenAtom);
+  const [, setOutputToken] = useAtom(outputTokenAtom);
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
-  const activeRoute = useAtomValue(bestRouteAtom);
-  const inTokenAmount = useAtomValue(outputTokenAmountAtom);
+
+  const bestRoute = useAtomValue(bestRouteAtom);
+  const outputTokenAmount = useAtomValue(outputTokenAmountAtom);
 
   const onTokenSelect = (token: SupportedToken) => {
-    setInToken(token);
+    setOutputToken(token);
     setOpenTokenSelect(false);
   };
 
   const inTokenPrice = useMemo(() => {
-    if (!activeRoute || !inTokenAmount) return '';
+    if (!bestRoute || !outputTokenAmount) return '';
 
-    const tokenPrice = activeRoute.swapSteps[0].sourceToken.tokenUsdPrice;
+    const tokenPrice = bestRoute.swapSteps[0].sourceToken.tokenUsdPrice;
     if (!tokenPrice) return '';
 
-    return (tokenPrice * parseFloat(inTokenAmount)).toFixed(2);
-  }, [activeRoute, inTokenAmount]);
+    return (tokenPrice * parseFloat(outputTokenAmount)).toFixed(2);
+  }, [bestRoute, outputTokenAmount]);
 
   // This is just copy pasted code from `src/components/standalones/selectSwap/useSelectToken.ts`
   const outTokenPrice = useMemo(() => {
-    if (!activeRoute) return '';
+    if (!bestRoute) return '';
 
-    const lastStep = activeRoute.swapSteps[activeRoute.swapSteps.length - 1];
+    const lastStep = bestRoute.swapSteps[bestRoute.swapSteps.length - 1];
     const tokenPrice = lastStep.destinationToken.tokenUsdPrice || 0;
 
-    return (tokenPrice * parseFloat(activeRoute.outputAmount)).toFixed(2);
-  }, [activeRoute]);
+    return (tokenPrice * parseFloat(bestRoute.outputAmount)).toFixed(2);
+  }, [bestRoute]);
 
   const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
 
@@ -53,7 +54,7 @@ export const useSelectSwap = () => {
     setOpenTokenSelect,
     protocolInputToken,
     protocolFinalToken,
-    activeRoute,
-    inTokenAmount,
+    activeRoute: bestRoute,
+    inTokenAmount: outputTokenAmount,
   };
 };

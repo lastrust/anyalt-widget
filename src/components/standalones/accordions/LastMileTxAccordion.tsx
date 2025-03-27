@@ -39,7 +39,7 @@ export const LastMileTxAccordion = ({
   protocolInputToken,
   finalTokenEstimate,
 }: Props) => {
-  const inTokenAmount = useAtomValue(outputTokenAmountAtom);
+  const outputTokenAmount = useAtomValue(outputTokenAmountAtom);
 
   return (
     <AccordionItem
@@ -105,7 +105,7 @@ export const LastMileTxAccordion = ({
               name: protocolInputToken?.symbol || '',
               amount: truncateToDecimals(
                 bestRoute.swapSteps.length === 0
-                  ? inTokenAmount || '0'
+                  ? outputTokenAmount || '0'
                   : bestRoute.swapSteps[bestRoute.swapSteps.length - 1]
                       ?.payout || '0',
                 3,

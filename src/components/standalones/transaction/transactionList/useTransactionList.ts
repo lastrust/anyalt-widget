@@ -16,8 +16,9 @@ export const useTransactionList = () => {
   const protocolInputToken = useAtomValue(protocolInputTokenAtom);
   const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
   const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
-  const inToken = useAtomValue(outputTokenAtom);
-  const inTokenAmount = useAtomValue(outputTokenAmountAtom);
+
+  const outputToken = useAtomValue(outputTokenAtom);
+  const outputTokenAmount = useAtomValue(outputTokenAmountAtom);
 
   const getToTokenDetails = () => {
     if (widgetTemplate === 'TOKEN_BUY') {
@@ -54,13 +55,13 @@ export const useTransactionList = () => {
       bestRoute,
       tokens: {
         from: {
-          contractAddress: inToken?.tokenAddress || '',
-          symbol: inToken?.symbol || '',
-          logo: inToken?.logoUrl || '',
-          blockchain: inToken?.chain?.displayName || '',
-          amount: Number(inTokenAmount).toFixed(4) || '',
-          blockchainLogo: inToken?.chain?.logoUrl || '',
-          decimals: inToken?.decimals || 0,
+          contractAddress: outputToken?.tokenAddress || '',
+          symbol: outputToken?.symbol || '',
+          logo: outputToken?.logoUrl || '',
+          blockchain: outputToken?.chain?.displayName || '',
+          amount: Number(outputTokenAmount).toFixed(4) || '',
+          blockchainLogo: outputToken?.chain?.logoUrl || '',
+          decimals: outputToken?.decimals || 0,
           tokenUsdPrice: 0,
         } as TokenWithAmount,
         to: {

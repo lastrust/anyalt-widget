@@ -25,7 +25,7 @@ export const useSelectToken = ({
 }) => {
   const [openTokenSelect, setOpenTokenSelect] = useState<boolean>(false);
 
-  const [, setInToken] = useAtom(outputTokenAtom);
+  const [, setOutputToken] = useAtom(outputTokenAtom);
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
   const bestRoute = useAtomValue(bestRouteAtom);
   const outputTokenAmount = useAtomValue(outputTokenAmountAtom);
@@ -54,7 +54,7 @@ export const useSelectToken = ({
   ]);
 
   const onTokenSelect = (token: SupportedToken, callback: () => void) => {
-    setInToken(token);
+    setOutputToken(token);
     setOpenTokenSelect(false);
     callback();
   };

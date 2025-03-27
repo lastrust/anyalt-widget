@@ -16,11 +16,13 @@ import { getEvmTokenBalance } from '../../../../../utils';
 export const useTokenInputBox = () => {
   const [balance, setBalance] = useState<string | undefined>(undefined);
 
-  const inToken = useAtomValue(outputTokenAtom);
+  const outputToken = useAtomValue(outputTokenAtom);
   const currentStep = useAtomValue(currentUiStepAtom);
   const tokenFetchError = useAtomValue(tokenFetchErrorAtom);
   const [, setTokenFetchError] = useAtom(tokenFetchErrorAtom);
-  const [inTokenAmount, setInTokenAmount] = useAtom(outputTokenAmountAtom);
+  const [outputTokenAmount, setOutputTokenAmount] = useAtom(
+    outputTokenAmountAtom,
+  );
 
   const { publicKey } = useWallet();
   const { getSolanaTokenBalance, connection: solanaConnection } = useSolana();
@@ -29,31 +31,31 @@ export const useTokenInputBox = () => {
     useBitcoinWallet();
 
   const isWalletConnected = useMemo(() => {
-    const tokenType = inToken?.chain?.chainType;
+    const tokenType = outputToken?.chain?.chainType;
     const isEvmWallet = tokenType === 'EVM' && evmAddress;
     const isSolanaWallet = tokenType === 'SOLANA' && publicKey;
     const isBtcWallet = tokenType === 'BTC' && bitcoinAccount;
     return isEvmWallet || isSolanaWallet || isBtcWallet;
-  }, [inToken, evmAddress, publicKey, bitcoinAccount]);
+  }, [outputToken, evmAddress, publicKey, bitcoinAccount]);
 
   const getBalance = async () => {
-    const tokenType = inToken?.chain?.chainType;
+    const tokenType = outputToken?.chain?.chainType;
     const isEvmWallet = tokenType === 'EVM' && evmAddress;
     const isSolanaWallet = tokenType === 'SOLANA' && publicKey;
     const isBtcWallet = tokenType === 'BTC' && bitcoinAccount;
 
-    if (inToken) {
+    if (outputToken) {
       if (isSolanaWallet) {
         const balance = await getSolanaTokenBalance(
-          inToken.tokenAddress ?? '',
+          outputToken.tokenAddress ?? '',
           publicKey.toString(),
         );
 
         setBalance(balance);
       } else if (isEvmWallet) {
         const balance = await getEvmTokenBalance(
-          inToken.chain?.chainId ?? 1,
-          inToken.tokenAddress ?? '',
+          outputToken.chain?.chainId ?? 1,
+          outputToken.tokenAddress ?? '',
           evmAddress,
         );
 
@@ -68,12 +70,12 @@ export const useTokenInputBox = () => {
   };
 
   const maxButtonClick = async () => {
-    setInTokenAmount(balance);
+    setOutputTokenAmount(balance);
   };
 
   useEffect(() => {
-    if (currentStep === 1 && balance && inTokenAmount) {
-      if (parseFloat(balance) < parseFloat(inTokenAmount)) {
+    if (currentStep === 1 && balance && outputTokenAmount) {
+      if (parseFloat(balance) < parseFloat(outputTokenAmount)) {
         setTokenFetchError({
           isError: true,
           errorMessage: `Not enough balance.`,
@@ -85,23 +87,23 @@ export const useTokenInputBox = () => {
         });
       }
     }
-  }, [inTokenAmount, balance, currentStep]);
+  }, [outputTokenAmount, balance, currentStep]);
 
   useEffect(() => {
     getBalance();
-  }, [inToken, evmAddress, publicKey, bitcoinAccount, solanaConnection]);
+  }, [outputToken, evmAddress, publicKey, bitcoinAccount, solanaConnection]);
 
   useEffect(() => {
-    if (inTokenAmount) {
-      setInTokenAmount(inTokenAmount.toString());
+    if (outputTokenAmount) {
+      setOutputTokenAmount(outputTokenAmount.toString());
     }
-  }, [inTokenAmount]);
+  }, [outputTokenAmount]);
 
   return {
     currentStep,
-    inToken,
-    inTokenAmount,
-    setInTokenAmount,
+    inToken: outputToken,
+    inTokenAmount: outputTokenAmount,
+    setInTokenAmount: setOutputTokenAmount,
     tokenFetchError,
     maxButtonClick,
     balance,
