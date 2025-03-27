@@ -11,7 +11,7 @@ import {
   anyaltInstanceAtom,
   bestRouteAtom,
   depositTokenAtom,
-  finalTokenEstimateAtom,
+  depositTokenEstimateAtom,
   selectedTokenAmountAtom,
   slippageAtom,
   swapResultTokenAtom,
@@ -40,13 +40,12 @@ export const useTransactionInfo = ({
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
   const activeOperationId = useAtomValue(activeOperationIdAtom);
   const transactionsList = useAtomValue(transactionsListAtom);
-  const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
   const transactionsProgress = useAtomValue(transactionsProgressAtom);
 
+  const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
   const swapResultToken = useAtomValue(swapResultTokenAtom);
   const depositToken = useAtomValue(depositTokenAtom);
-
-  const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
+  const depositTokenEstimate = useAtomValue(depositTokenEstimateAtom);
 
   const { executeSwap } = useHandleSwap(externalEvmWalletConnector);
 
@@ -97,16 +96,16 @@ export const useTransactionInfo = ({
     if (!bestRoute) return 0;
 
     if (currentStep > bestRoute.swapSteps.length)
-      return finalTokenEstimate?.estimatedTimeInSeconds || 0;
+      return depositTokenEstimate?.estimatedTimeInSeconds || 0;
 
     return bestRoute.swapSteps[currentStep - 1]?.estimatedTimeInSeconds || 0;
-  }, [bestRoute, currentStep, finalTokenEstimate]);
+  }, [bestRoute, currentStep, depositTokenEstimate]);
 
   const fees = useMemo(() => {
     if (!bestRoute) return '0';
 
     if (currentStep > bestRoute.swapSteps.length)
-      return finalTokenEstimate?.estimatedFeeInUSD || '0';
+      return depositTokenEstimate?.estimatedFeeInUSD || '0';
 
     return (
       bestRoute.swapSteps[currentStep - 1]?.fees
@@ -118,7 +117,7 @@ export const useTransactionInfo = ({
         .toFixed(2)
         .toString() || '0'
     );
-  }, [bestRoute, currentStep, finalTokenEstimate]);
+  }, [bestRoute, currentStep, depositTokenEstimate]);
 
   return {
     fees,
@@ -130,7 +129,7 @@ export const useTransactionInfo = ({
     inTokenAmount: selectedTokenAmount,
     estimatedTime,
     transactionsList,
-    finalTokenEstimate,
+    finalTokenEstimate: depositTokenEstimate,
     protocolInputToken: swapResultToken,
     protocolFinalToken: depositToken,
     transactionsProgress,

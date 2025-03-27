@@ -14,7 +14,7 @@ import { useEffect, useState } from 'react';
 import {
   bestRouteAtom,
   depositTokenAtom,
-  finalTokenEstimateAtom,
+  depositTokenEstimateAtom,
   selectedRouteAtom,
   swapResultTokenAtom,
   transactionIndexAtom,
@@ -39,8 +39,8 @@ export const TransactionAccordion = () => {
 
   const swapResultToken = useAtomValue(swapResultTokenAtom);
   const depositToken = useAtomValue(depositTokenAtom);
+  const depositTokenEstimate = useAtomValue(depositTokenEstimateAtom);
 
-  const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
   const transactionsProgress = useAtomValue(transactionsProgressAtom);
 
   const [, setSelectedRoute] = useAtom(selectedRouteAtom);
@@ -237,7 +237,7 @@ export const TransactionAccordion = () => {
           isLastMileExpanded={expandedIndexes.includes(currentStep - 1)}
           protocolFinalToken={depositToken}
           swapResultToken={swapResultToken}
-          finalTokenEstimate={finalTokenEstimate}
+          finalTokenEstimate={depositTokenEstimate}
           transactionsProgress={transactionsProgress}
         />
       )}

@@ -2,7 +2,7 @@ import { useAtomValue } from 'jotai';
 import {
   bestRouteAtom,
   depositTokenAtom,
-  finalTokenEstimateAtom,
+  depositTokenEstimateAtom,
   selectedTokenAmountAtom,
   selectedTokenAtom,
   swapResultTokenAtom,
@@ -13,12 +13,12 @@ import { TokenWithAmount } from '../../../molecules/card/TransactionOverviewCard
 export const useTransactionList = () => {
   const bestRoute = useAtomValue(bestRouteAtom);
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
-  const swapResultToken = useAtomValue(swapResultTokenAtom);
-  const depositToken = useAtomValue(depositTokenAtom);
-  const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
 
   const selectedToken = useAtomValue(selectedTokenAtom);
   const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
+  const swapResultToken = useAtomValue(swapResultTokenAtom);
+  const depositToken = useAtomValue(depositTokenAtom);
+  const depositTokenEstimate = useAtomValue(depositTokenEstimateAtom);
 
   const getToTokenDetails = () => {
     if (widgetTemplate === 'TOKEN_BUY') {
@@ -43,10 +43,10 @@ export const useTransactionList = () => {
       symbol: depositToken?.symbol || '',
       logo: depositToken?.logoUrl || '',
       blockchain: swapResultToken?.chain?.displayName || '',
-      amount: Number(finalTokenEstimate?.amountOut).toFixed(4) || '',
+      amount: Number(depositTokenEstimate?.amountOut).toFixed(4) || '',
       blockchainLogo: swapResultToken?.chain?.logoUrl || '',
       decimals: depositToken?.decimals || 0,
-      tokenUsdPrice: Number(finalTokenEstimate?.priceInUSD) || 0,
+      tokenUsdPrice: Number(depositTokenEstimate?.priceInUSD) || 0,
     };
   };
 

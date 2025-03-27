@@ -14,7 +14,7 @@ import {
 } from '../../../constants/transaction';
 import {
   bestRouteAtom,
-  finalTokenEstimateAtom,
+  depositTokenEstimateAtom,
   swapDataAtom,
   swapResultTokenAtom,
   transactionIndexAtom,
@@ -35,8 +35,10 @@ export const useExecuteTokensSwap = (
   const transactionIndex = useAtomValue(transactionIndexAtom);
   const [swapData, setSwapData] = useAtom(swapDataAtom);
   const bestRoute = useAtomValue(bestRouteAtom);
+
   const swapResultToken = useAtomValue(swapResultTokenAtom);
-  const [, setFinalTokenEstimate] = useAtom(finalTokenEstimateAtom);
+  const [, setDepositTokenEstimate] = useAtom(depositTokenEstimateAtom);
+
   const [transactionsList, setTransactionsList] = useAtom(transactionsListAtom);
 
   const { address: evmAddress, isConnected: isEvmConnected } = useAccount();
@@ -204,7 +206,7 @@ export const useExecuteTokensSwap = (
               stepDescription: STEP_DESCR.complete,
             },
           });
-          setFinalTokenEstimate(res);
+          setDepositTokenEstimate(res);
           setSwapData((prev) => {
             const newData = {
               ...prev,

@@ -8,7 +8,7 @@ import { WalletConnector } from '../../..';
 import {
   bestRouteAtom,
   depositTokenAtom,
-  finalTokenEstimateAtom,
+  depositTokenEstimateAtom,
   selectedTokenAmountAtom,
   selectedTokenAtom,
   swapResultTokenAtom,
@@ -25,13 +25,14 @@ export const useSelectToken = ({
 }) => {
   const [openTokenSelect, setOpenTokenSelect] = useState<boolean>(false);
 
-  const widgetTemplate = useAtomValue(widgetTemplateAtom);
   const bestRoute = useAtomValue(bestRouteAtom);
+  const widgetTemplate = useAtomValue(widgetTemplateAtom);
   const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
 
   const [, setSelectedToken] = useAtom(selectedTokenAtom);
   const swapResultToken = useAtomValue(swapResultTokenAtom);
   const depositToken = useAtomValue(depositTokenAtom);
+  const depositTokenEstimate = useAtomValue(depositTokenEstimateAtom);
 
   const tokenFetchError = useAtomValue(tokenFetchErrorAtom);
 
@@ -78,8 +79,6 @@ export const useSelectToken = ({
     return (tokenPrice * parseFloat(bestRoute.outputAmount)).toFixed(2);
   }, [bestRoute]);
 
-  const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
-
   const isEvmWalletConnected = useMemo(() => {
     return (
       showConnectedWallets &&
@@ -110,7 +109,7 @@ export const useSelectToken = ({
     openTokenSelect,
     widgetTemplate,
     setOpenTokenSelect,
-    finalTokenEstimate,
+    finalTokenEstimate: depositTokenEstimate,
     protocolInputToken: swapResultToken,
     protocolFinalToken: depositToken,
     bestRoute,

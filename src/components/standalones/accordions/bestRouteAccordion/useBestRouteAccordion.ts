@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import {
   bestRouteAtom,
   depositTokenAtom,
-  finalTokenEstimateAtom,
+  depositTokenEstimateAtom,
   selectedRouteAtom,
   selectedTokenAmountAtom,
   slippageAtom,
@@ -14,16 +14,15 @@ import { truncateToDecimals } from '../../../../utils/truncateToDecimals';
 
 export const useBestRouteAccordion = () => {
   const slippage = useAtomValue(slippageAtom);
-  const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
   const bestRoute = useAtomValue(bestRouteAtom);
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
-  const depositToken = useAtomValue(depositTokenAtom);
-
-  const swapResultToken = useAtomValue(swapResultTokenAtom);
-
-  const [, setSelectedRoute] = useAtom(selectedRouteAtom);
 
   const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
+  const swapResultToken = useAtomValue(swapResultTokenAtom);
+  const depositToken = useAtomValue(depositTokenAtom);
+  const depositTokenEstimate = useAtomValue(depositTokenEstimateAtom);
+
+  const [, setSelectedRoute] = useAtom(selectedRouteAtom);
 
   const fees = useMemo(() => {
     if (!bestRoute) return '0.00';
@@ -37,10 +36,10 @@ export const useBestRouteAccordion = () => {
       }, 0);
 
     const totalWithFinalFees =
-      totalFees + parseFloat(finalTokenEstimate?.estimatedFeeInUSD ?? '0');
+      totalFees + parseFloat(depositTokenEstimate?.estimatedFeeInUSD ?? '0');
 
     return `$${totalWithFinalFees.toFixed(2).toString() || '0.00'}`;
-  }, [bestRoute, finalTokenEstimate]);
+  }, [bestRoute, depositTokenEstimate]);
 
   const areSwapsExists = useMemo(() => {
     return Boolean(bestRoute?.swapSteps?.length);
@@ -83,7 +82,7 @@ export const useBestRouteAccordion = () => {
     handleRouteSelect,
     protocolFinalToken: depositToken,
     protocolInputToken: swapResultToken,
-    finalTokenEstimate,
+    finalTokenEstimate: depositTokenEstimate,
     finalSwapToken,
   };
 };

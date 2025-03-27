@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import {
   bestRouteAtom,
   depositTokenAtom,
-  finalTokenEstimateAtom,
+  depositTokenEstimateAtom,
   selectedTokenAmountAtom,
   selectedTokenAtom,
   swapResultTokenAtom,
@@ -18,6 +18,7 @@ export const useSelectSwap = () => {
 
   const bestRoute = useAtomValue(bestRouteAtom);
   const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
+  const depositTokenEstimate = useAtomValue(depositTokenEstimateAtom);
 
   const onTokenSelect = (token: SupportedToken) => {
     setSelectedToken(token);
@@ -43,10 +44,9 @@ export const useSelectSwap = () => {
     return (tokenPrice * parseFloat(bestRoute.outputAmount)).toFixed(2);
   }, [bestRoute]);
 
-  const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
 
   return {
-    finalTokenEstimate,
+    depositTokenEstimate,
     inTokenPrice,
     outTokenPrice,
     onTokenSelect,

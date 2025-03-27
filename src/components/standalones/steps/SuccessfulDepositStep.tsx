@@ -1,8 +1,8 @@
 import { Box, Button, Flex, Text } from '@chakra-ui/react';
 import { useAtomValue } from 'jotai';
 import {
+  depositTokenAmountAtom,
   depositTokenAtom,
-  finalTokenAmountAtom,
   swapResultTokenAtom,
 } from '../../../store/stateStore';
 import { truncateToDecimals } from '../../../utils/truncateToDecimals';
@@ -18,7 +18,7 @@ type Props = {
 export const SuccessfulDepositStep = ({ onConfigClick, onComplete }: Props) => {
   const swapResultToken = useAtomValue(swapResultTokenAtom);
   const depositToken = useAtomValue(depositTokenAtom);
-  const finalTokenAmount = useAtomValue(finalTokenAmountAtom);
+  const depositTokenAmount = useAtomValue(depositTokenAmountAtom);
 
   return (
     <SwappingTemplate onConfigClick={onConfigClick}>
@@ -63,7 +63,7 @@ export const SuccessfulDepositStep = ({ onConfigClick, onComplete }: Props) => {
             color="brand.text.primary"
             mr="4px"
           >
-            {truncateToDecimals(finalTokenAmount, 4)}
+            {truncateToDecimals(depositTokenAmount, 4)}
           </Text>
           <Text fontSize="16px" fontWeight="400" color="brand.text.secondary.4">
             {depositToken?.symbol} On {swapResultToken?.chain?.displayName}

@@ -20,18 +20,16 @@ export const selectedTokenAtom = atom<SupportedToken | undefined>(undefined);
 export const selectedTokenAmountAtom = atom<string | undefined>('');
 export const swapResultTokenAtom = atom<SupportedToken | undefined>(undefined); // It's same as outputToken, which comes from props on AnyaltWidget
 export const depositTokenAtom = atom<Token | undefined>(undefined);
-
-export const finalTokenAmountAtom = atom<string>('');
+export const depositTokenAmountAtom = atom<string>('');
+export const depositTokenEstimateAtom = atom<EstimateResponse | undefined>(
+  undefined,
+);
 
 export const allChainsAtom = atom<SupportedChain[]>([]);
 
 export const slippageAtom = atom<string>('3');
 
 export const bestRouteAtom = atom<BestRouteResponse | undefined>(undefined);
-
-export const finalTokenEstimateAtom = atom<EstimateResponse | undefined>(
-  undefined,
-);
 
 export const selectedRouteAtom = atom<BestRouteResponse | undefined>(undefined);
 

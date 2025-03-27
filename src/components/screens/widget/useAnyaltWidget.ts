@@ -24,7 +24,7 @@ import {
   bestRouteAtom,
   currentUiStepAtom,
   depositTokenAtom,
-  finalTokenEstimateAtom,
+  depositTokenEstimateAtom,
   selectedRouteAtom,
   selectedTokenAmountAtom,
   selectedTokenAtom,
@@ -88,6 +88,9 @@ export const useAnyaltWidget = ({
   );
   const [swapResultToken, setSwapResultToken] = useAtom(swapResultTokenAtom);
   const [, setDepositToken] = useAtom(depositTokenAtom);
+  const [depositTokenEstimate, setDepositTokenEstimate] = useAtom(
+    depositTokenEstimateAtom,
+  );
 
   const [, setTemplate] = useAtom(widgetTemplateAtom);
   const [swapData, setSwapData] = useAtom(swapDataAtom);
@@ -101,9 +104,6 @@ export const useAnyaltWidget = ({
 
   const [, setTransactionsProgress] = useAtom(transactionsProgressAtom);
   const [anyaltInstance, setAnyaltInstance] = useAtom(anyaltInstanceAtom);
-  const [finalEstimateToken, setFinalTokenEstimate] = useAtom(
-    finalTokenEstimateAtom,
-  );
 
   const { balance } = useTokenInputBox();
 
@@ -124,7 +124,7 @@ export const useAnyaltWidget = ({
 
   const resetState = () => {
     setActiveOperationId(undefined);
-    setFinalTokenEstimate(undefined);
+    setDepositTokenEstimate(undefined);
     setTransactionsList(undefined);
     setSelectedTokenAmount(undefined);
     setSelectedToken(undefined);
@@ -154,7 +154,7 @@ export const useAnyaltWidget = ({
         amount: bestRoute.outputAmount.toString(),
       };
       estimateCallback(token).then((res) => {
-        setFinalTokenEstimate(res);
+        setDepositTokenEstimate(res);
       });
     }
   }, [bestRoute]);
@@ -289,13 +289,13 @@ export const useAnyaltWidget = ({
             to: {
               tokenName: depositToken?.name || '',
               tokenLogo: depositToken?.logoUrl || '',
-              tokenAmount: finalEstimateToken?.amountOut || '',
+              tokenAmount: depositTokenEstimate?.amountOut || '',
               tokenPrice:
                 (
-                  parseFloat(finalEstimateToken?.priceInUSD || '0') /
-                  parseFloat(finalEstimateToken?.amountOut || '1')
+                  parseFloat(depositTokenEstimate?.priceInUSD || '0') /
+                  parseFloat(depositTokenEstimate?.amountOut || '1')
                 ).toFixed(2) || '',
-              tokenUsdPrice: finalEstimateToken?.priceInUSD || '0',
+              tokenUsdPrice: depositTokenEstimate?.priceInUSD || '0',
               tokenDecimals: depositToken?.decimals || 0,
               blockchain: swapResultToken.chain?.displayName || '',
               blockchainLogo: swapResultToken.chain?.logoUrl || '',
