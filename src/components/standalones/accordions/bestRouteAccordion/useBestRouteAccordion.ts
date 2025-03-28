@@ -2,8 +2,8 @@ import { useAtom, useAtomValue } from 'jotai';
 import { useMemo } from 'react';
 import {
   bestRouteAtom,
-  depositTokenAtom,
-  depositTokenEstimateAtom,
+  lastMileTokenAtom,
+  lastMileTokenEstimateAtom,
   selectedRouteAtom,
   selectedTokenAmountAtom,
   slippageAtom,
@@ -19,8 +19,8 @@ export const useBestRouteAccordion = () => {
 
   const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
   const swapResultToken = useAtomValue(swapResultTokenAtom);
-  const depositToken = useAtomValue(depositTokenAtom);
-  const depositTokenEstimate = useAtomValue(depositTokenEstimateAtom);
+  const lastMileToken = useAtomValue(lastMileTokenAtom);
+  const lastMileTokenEstimate = useAtomValue(lastMileTokenEstimateAtom);
 
   const [, setSelectedRoute] = useAtom(selectedRouteAtom);
 
@@ -36,10 +36,10 @@ export const useBestRouteAccordion = () => {
       }, 0);
 
     const totalWithFinalFees =
-      totalFees + parseFloat(depositTokenEstimate?.estimatedFeeInUSD ?? '0');
+      totalFees + parseFloat(lastMileTokenEstimate?.estimatedFeeInUSD ?? '0');
 
     return `$${totalWithFinalFees.toFixed(2).toString() || '0.00'}`;
-  }, [bestRoute, depositTokenEstimate]);
+  }, [bestRoute, lastMileTokenEstimate]);
 
   const areSwapsExists = useMemo(() => {
     return Boolean(bestRoute?.swapSteps?.length);
@@ -80,9 +80,9 @@ export const useBestRouteAccordion = () => {
     widgetTemplate,
     fromToken: areSwapsExists ? finalSwapToken : protocolDepositToken,
     handleRouteSelect,
-    protocolFinalToken: depositToken,
+    protocolFinalToken: lastMileToken,
     protocolInputToken: swapResultToken,
-    finalTokenEstimate: depositTokenEstimate,
+    finalTokenEstimate: lastMileTokenEstimate,
     finalSwapToken,
   };
 };

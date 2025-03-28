@@ -19,9 +19,9 @@ export const anyaltInstanceAtom = atom<AnyAlt | undefined>(undefined);
 export const selectedTokenAtom = atom<SupportedToken | undefined>(undefined); //Token, which user selects
 export const selectedTokenAmountAtom = atom<string | undefined>('');
 export const swapResultTokenAtom = atom<SupportedToken | undefined>(undefined); // It's same as outputToken, which comes from props on AnyaltWidget
-export const depositTokenAtom = atom<Token | undefined>(undefined); //Token, which will be deposited
-export const depositTokenAmountAtom = atom<string>('');
-export const depositTokenEstimateAtom = atom<EstimateResponse | undefined>(
+export const lastMileTokenAtom = atom<Token | undefined>(undefined); //Token, which will be deposited
+export const lastMileTokenAmountAtom = atom<string>('');
+export const lastMileTokenEstimateAtom = atom<EstimateResponse | undefined>(
   undefined,
 );
 

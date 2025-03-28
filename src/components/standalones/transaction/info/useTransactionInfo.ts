@@ -10,8 +10,8 @@ import {
   activeOperationIdAtom,
   anyaltInstanceAtom,
   bestRouteAtom,
-  depositTokenAtom,
-  depositTokenEstimateAtom,
+  lastMileTokenAtom,
+  lastMileTokenEstimateAtom,
   selectedTokenAmountAtom,
   slippageAtom,
   swapResultTokenAtom,
@@ -44,8 +44,8 @@ export const useTransactionInfo = ({
 
   const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
   const swapResultToken = useAtomValue(swapResultTokenAtom);
-  const depositToken = useAtomValue(depositTokenAtom);
-  const depositTokenEstimate = useAtomValue(depositTokenEstimateAtom);
+  const lastMileToken = useAtomValue(lastMileTokenAtom);
+  const lastMileTokenEstimate = useAtomValue(lastMileTokenEstimateAtom);
 
   const { executeSwap } = useHandleSwap(externalEvmWalletConnector);
 
@@ -96,16 +96,16 @@ export const useTransactionInfo = ({
     if (!bestRoute) return 0;
 
     if (currentStep > bestRoute.swapSteps.length)
-      return depositTokenEstimate?.estimatedTimeInSeconds || 0;
+      return lastMileTokenEstimate?.estimatedTimeInSeconds || 0;
 
     return bestRoute.swapSteps[currentStep - 1]?.estimatedTimeInSeconds || 0;
-  }, [bestRoute, currentStep, depositTokenEstimate]);
+  }, [bestRoute, currentStep, lastMileTokenEstimate]);
 
   const fees = useMemo(() => {
     if (!bestRoute) return '0';
 
     if (currentStep > bestRoute.swapSteps.length)
-      return depositTokenEstimate?.estimatedFeeInUSD || '0';
+      return lastMileTokenEstimate?.estimatedFeeInUSD || '0';
 
     return (
       bestRoute.swapSteps[currentStep - 1]?.fees
@@ -117,7 +117,7 @@ export const useTransactionInfo = ({
         .toFixed(2)
         .toString() || '0'
     );
-  }, [bestRoute, currentStep, depositTokenEstimate]);
+  }, [bestRoute, currentStep, lastMileTokenEstimate]);
 
   return {
     fees,
@@ -129,9 +129,9 @@ export const useTransactionInfo = ({
     inTokenAmount: selectedTokenAmount,
     estimatedTime,
     transactionsList,
-    finalTokenEstimate: depositTokenEstimate,
+    finalTokenEstimate: lastMileTokenEstimate,
     protocolInputToken: swapResultToken,
-    protocolFinalToken: depositToken,
+    protocolFinalToken: lastMileToken,
     transactionsProgress,
     headerText,
     recentTransaction: transactionsList?.steps?.[currentStep - 1],

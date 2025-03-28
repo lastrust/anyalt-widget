@@ -14,7 +14,7 @@ import {
 } from '../../../constants/transaction';
 import {
   bestRouteAtom,
-  depositTokenEstimateAtom,
+  lastMileTokenEstimateAtom,
   swapDataAtom,
   swapResultTokenAtom,
   transactionIndexAtom,
@@ -37,7 +37,7 @@ export const useExecuteTokensSwap = (
   const bestRoute = useAtomValue(bestRouteAtom);
 
   const swapResultToken = useAtomValue(swapResultTokenAtom);
-  const [, setDepositTokenEstimate] = useAtom(depositTokenEstimateAtom);
+  const [, setDepositTokenEstimate] = useAtom(lastMileTokenEstimateAtom);
 
   const [transactionsList, setTransactionsList] = useAtom(transactionsListAtom);
 

@@ -10,7 +10,7 @@ import {
 } from '../../../constants/transaction';
 import {
   bestRouteAtom,
-  depositTokenAmountAtom,
+  lastMileTokenAmountAtom,
   swapResultTokenAtom,
 } from '../../../store/stateStore';
 import {
@@ -37,7 +37,7 @@ export const useLastMileTransaction = ({
   const bestRoute = useAtomValue(bestRouteAtom);
   const swapResultToken = useAtomValue(swapResultTokenAtom);
 
-  const [, setDepositTokenAmount] = useAtom(depositTokenAmountAtom);
+  const [, setLastMileTokenAmount] = useAtom(lastMileTokenAmountAtom);
 
   const executeLastMileTransaction = async (
     stepIndex: number,
@@ -82,7 +82,7 @@ export const useLastMileTransaction = ({
         chainType: isEvm ? ChainType.EVM : ChainType.SOLANA,
       });
 
-      setDepositTokenAmount(executeResponse.amountOut);
+      setLastMileTokenAmount(executeResponse.amountOut);
 
       if (executeResponse.approvalTxHash) {
         updateTransactionProgress({

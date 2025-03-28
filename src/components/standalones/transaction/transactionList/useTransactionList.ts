@@ -1,8 +1,8 @@
 import { useAtomValue } from 'jotai';
 import {
   bestRouteAtom,
-  depositTokenAtom,
-  depositTokenEstimateAtom,
+  lastMileTokenAtom,
+  lastMileTokenEstimateAtom,
   selectedTokenAmountAtom,
   selectedTokenAtom,
   swapResultTokenAtom,
@@ -17,8 +17,8 @@ export const useTransactionList = () => {
   const selectedToken = useAtomValue(selectedTokenAtom);
   const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
   const swapResultToken = useAtomValue(swapResultTokenAtom);
-  const depositToken = useAtomValue(depositTokenAtom);
-  const depositTokenEstimate = useAtomValue(depositTokenEstimateAtom);
+  const lastMileToken = useAtomValue(lastMileTokenAtom);
+  const lastMileTokenEstimate = useAtomValue(lastMileTokenEstimateAtom);
 
   const getToTokenDetails = () => {
     if (widgetTemplate === 'TOKEN_BUY') {
@@ -39,14 +39,14 @@ export const useTransactionList = () => {
     }
 
     return {
-      contractAddress: depositToken?.address || '',
-      symbol: depositToken?.symbol || '',
-      logo: depositToken?.logoUrl || '',
+      contractAddress: lastMileToken?.address || '',
+      symbol: lastMileToken?.symbol || '',
+      logo: lastMileToken?.logoUrl || '',
       blockchain: swapResultToken?.chain?.displayName || '',
-      amount: Number(depositTokenEstimate?.amountOut).toFixed(4) || '',
+      amount: Number(lastMileTokenEstimate?.amountOut).toFixed(4) || '',
       blockchainLogo: swapResultToken?.chain?.logoUrl || '',
-      decimals: depositToken?.decimals || 0,
-      tokenUsdPrice: Number(depositTokenEstimate?.priceInUSD) || 0,
+      decimals: lastMileToken?.decimals || 0,
+      tokenUsdPrice: Number(lastMileTokenEstimate?.priceInUSD) || 0,
     };
   };
 

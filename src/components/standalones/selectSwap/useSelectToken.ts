@@ -7,8 +7,8 @@ import { useAccount } from 'wagmi';
 import { WalletConnector } from '../../..';
 import {
   bestRouteAtom,
-  depositTokenAtom,
-  depositTokenEstimateAtom,
+  lastMileTokenAtom,
+  lastMileTokenEstimateAtom,
   selectedTokenAmountAtom,
   selectedTokenAtom,
   swapResultTokenAtom,
@@ -31,8 +31,8 @@ export const useSelectToken = ({
 
   const [, setSelectedToken] = useAtom(selectedTokenAtom);
   const swapResultToken = useAtomValue(swapResultTokenAtom);
-  const depositToken = useAtomValue(depositTokenAtom);
-  const depositTokenEstimate = useAtomValue(depositTokenEstimateAtom);
+  const lastMileToken = useAtomValue(lastMileTokenAtom);
+  const lastMileTokenEstimate = useAtomValue(lastMileTokenEstimateAtom);
 
   const tokenFetchError = useAtomValue(tokenFetchErrorAtom);
 
@@ -109,9 +109,9 @@ export const useSelectToken = ({
     openTokenSelect,
     widgetTemplate,
     setOpenTokenSelect,
-    finalTokenEstimate: depositTokenEstimate,
+    finalTokenEstimate: lastMileTokenEstimate,
     protocolInputToken: swapResultToken,
-    protocolFinalToken: depositToken,
+    protocolFinalToken: lastMileToken,
     bestRoute,
     inTokenAmount: selectedTokenAmount,
   };
