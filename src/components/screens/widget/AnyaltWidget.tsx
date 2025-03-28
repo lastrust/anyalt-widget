@@ -8,6 +8,7 @@ import { ChoosingRouteStep } from '../../standalones/steps/ChoosingRouteStep';
 import { SelectTokenStep } from '../../standalones/steps/SelectTokenStep';
 import { SuccessfulDepositStep } from '../../standalones/steps/SuccessfulDepositStep';
 import { TransactionStep } from '../../standalones/steps/TransactionStep';
+import { HandlerTransactions } from './TransactionHandler';
 import { useAnyaltWidget } from './useAnyaltWidget';
 export { useModal } from '../../../hooks/useModal';
 export {
@@ -31,6 +32,7 @@ export const AnyaltWidgetWrapper = ({
   const {
     loading,
     activeStep,
+    setOperationToCurrentRoute,
     activeRoute,
     isValidAmountIn,
     isButtonDisabled,
@@ -46,6 +48,12 @@ export const AnyaltWidgetWrapper = ({
     connectWalletsClose,
     setOpenSlippageModal,
     onChooseRouteButtonClick,
+    resetState,
+    showPendingOperationDialog,
+    allNecessaryWalletsConnected,
+    showStuckTransactionDialog,
+    modalWrapperMaxWidth,
+    headerCustomText,
   } = useAnyaltWidget({
     apiKey,
     swapResultToken,
@@ -61,48 +69,57 @@ export const AnyaltWidgetWrapper = ({
     <ModalWrapper
       isOpen={isOpen}
       onClose={onClose}
-      maxWidthCustom={activeStep === 0 || activeStep === 3 ? '512px' : '976px'}
+      maxWidthCustom={modalWrapperMaxWidth}
     >
-      <Header activeStep={activeStep} />
-      <Stepper activeStep={activeStep}>
-        <SelectTokenStep
-          loading={loading}
-          widgetTemplate={widgetTemplate}
-          isValidAmountIn={isValidAmountIn}
-          onConfigClick={onConfigClick}
-          failedToFetchRoute={failedToFetchRoute}
-          openSlippageModal={openSlippageModal}
-          setOpenSlippageModal={setOpenSlippageModal}
-          isButtonDisabled={isButtonDisabled}
-        />
-        <ChoosingRouteStep
-          loading={loading}
-          activeRoute={activeRoute}
-          walletConnector={walletConnector}
-          failedToFetchRoute={failedToFetchRoute}
-          areWalletsConnected={areWalletsConnected}
-          onConfigClick={onConfigClick}
-          openSlippageModal={openSlippageModal}
-          setOpenSlippageModal={setOpenSlippageModal}
-          connectWalletsOpen={connectWalletsOpen}
-          onChooseRouteButtonClick={onChooseRouteButtonClick}
-        />
-        <TransactionStep
-          onBackClick={onBackClick}
-          walletConnector={walletConnector}
-          executeCallBack={executeCallBack}
-          onTxComplete={onTxComplete}
-          estimateCallback={estimateCallback}
-        />
-        <SuccessfulDepositStep
-          onConfigClick={onConfigClick}
-          onComplete={onComplete}
-        />
-      </Stepper>
+      <Header activeStep={activeStep} customText={headerCustomText} />
+      <HandlerTransactions
+        showPendingOperationDialog={showPendingOperationDialog}
+        showStuckTransactionDialog={showStuckTransactionDialog}
+        setOperationToCurrentRoute={setOperationToCurrentRoute}
+        walletConnector={walletConnector}
+        allNecessaryWalletsConnected={allNecessaryWalletsConnected}
+        connectWalletsOpen={connectWalletsOpen}
+        resetState={resetState}
+      >
+        <Stepper activeStep={activeStep}>
+          <SelectTokenStep
+            loading={loading}
+            widgetTemplate={widgetTemplate}
+            isValidAmountIn={isValidAmountIn}
+            onConfigClick={onConfigClick}
+            failedToFetchRoute={failedToFetchRoute}
+            openSlippageModal={openSlippageModal}
+            setOpenSlippageModal={setOpenSlippageModal}
+            isButtonDisabled={isButtonDisabled}
+          />
+          <ChoosingRouteStep
+            loading={loading}
+            activeRoute={activeRoute}
+            walletConnector={walletConnector}
+            failedToFetchRoute={failedToFetchRoute}
+            areWalletsConnected={areWalletsConnected}
+            onConfigClick={onConfigClick}
+            openSlippageModal={openSlippageModal}
+            setOpenSlippageModal={setOpenSlippageModal}
+            connectWalletsOpen={connectWalletsOpen}
+            onChooseRouteButtonClick={onChooseRouteButtonClick}
+          />
+          <TransactionStep
+            onBackClick={onBackClick}
+            walletConnector={walletConnector}
+            executeCallBack={executeCallBack}
+            onTxComplete={onTxComplete}
+            estimateCallback={estimateCallback}
+          />
+          <SuccessfulDepositStep
+            onConfigClick={onConfigClick}
+            onComplete={onComplete}
+          />
+        </Stepper>
+      </HandlerTransactions>
       <Footer />
-
       <ConnectWalletsModal
-        title="Connect Wallet's"
+        title="Connect Wallets"
         isOpen={isConnectWalletsOpen}
         onClose={connectWalletsClose}
         areWalletsConnected={areWalletsConnected}

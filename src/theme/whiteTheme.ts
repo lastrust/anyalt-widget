@@ -55,6 +55,7 @@ export const whiteTheme = extendTheme({
         warning: '#ffcc00',
         error: 'E53030',
         active: '#333',
+        highlight: '#3777F7',
         secondary: {
           0: '#ffffff',
           1: '#999',
@@ -70,6 +71,9 @@ export const whiteTheme = extendTheme({
         close: {
           primary: '#000000',
         },
+        cancel: {
+          bg: '#ff3f3', // TEMP
+        },
         accordion: {
           primary: '#fff',
         },
@@ -78,6 +82,11 @@ export const whiteTheme = extendTheme({
           bgFaded: '#33333333',
           hover: '#999',
           disabled: '#33333333',
+        },
+        outline: {
+          border: '#000000',
+          text: '#000000',
+          hover: 'rgba(0, 0, 0, 0.1)',
         },
         disabled: '#999999',
       },
