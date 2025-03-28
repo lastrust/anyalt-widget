@@ -43,8 +43,8 @@ import { useTokenInputBox } from '../../standalones/selectSwap/token/input/useTo
 
 export const useAnyaltWidget = ({
   apiKey,
-  outputToken,
-  depositToken,
+  swapResultToken,
+  finalToken,
   walletConnector,
   minDepositAmount,
   widgetTemplate,
@@ -53,8 +53,8 @@ export const useAnyaltWidget = ({
 }: {
   estimateCallback: (token: Token) => Promise<EstimateResponse>;
   apiKey: string;
-  outputToken: Token;
-  depositToken?: Token;
+  swapResultToken: Token;
+  finalToken?: Token;
   widgetTemplate: WidgetTemplateType;
   minDepositAmount: number;
   walletConnector?: WalletConnector;
@@ -86,7 +86,8 @@ export const useAnyaltWidget = ({
   const [selectedTokenAmount, setSelectedTokenAmount] = useAtom(
     selectedTokenAmountAtom,
   );
-  const [swapResultToken, setSwapResultToken] = useAtom(swapResultTokenAtom);
+  const [swapResultTokenGlobal, setSwapResultToken] =
+    useAtom(swapResultTokenAtom);
   const [, setDepositToken] = useAtom(depositTokenAtom);
   const [depositTokenEstimate, setDepositTokenEstimate] = useAtom(
     depositTokenEstimateAtom,
@@ -152,7 +153,7 @@ export const useAnyaltWidget = ({
   useEffect(() => {
     if (bestRoute) {
       const token = {
-        ...outputToken,
+        ...swapResultToken,
         amount: bestRoute.outputAmount.toString(),
       };
       estimateCallback(token).then((res) => {
@@ -175,7 +176,7 @@ export const useAnyaltWidget = ({
         console.error(error);
       }
 
-    setDepositToken(depositToken);
+    setDepositToken(finalToken);
     setTemplate(widgetTemplate);
   }, []);
 
@@ -188,18 +189,22 @@ export const useAnyaltWidget = ({
   useEffect(() => {
     const outputTokenChain = allChains.find(
       (chain) =>
-        (outputToken.chainId &&
-          chain.chainId === outputToken.chainId &&
-          chain.chainType === outputToken.chainType) ||
-        (!outputToken.chainId && chain.chainType === outputToken.chainType),
+        (swapResultToken.chainId &&
+          chain.chainId === swapResultToken.chainId &&
+          chain.chainType === swapResultToken.chainType) ||
+        (!swapResultToken.chainId &&
+          chain.chainType === swapResultToken.chainType),
     );
 
     if (outputTokenChain) {
       anyaltInstance
-        ?.getToken(outputTokenChain.name, outputToken.address)
+        ?.getToken(outputTokenChain.name, swapResultToken.address)
         .then((res) => {
-          if (res.logoUrl === ANYALT_PLACEHOLDER_LOGO && outputToken.logoUrl) {
-            res.logoUrl = outputToken.logoUrl;
+          if (
+            res.logoUrl === ANYALT_PLACEHOLDER_LOGO &&
+            swapResultToken.logoUrl
+          ) {
+            res.logoUrl = swapResultToken.logoUrl;
           }
           setSwapResultToken(res);
         });
@@ -207,9 +212,10 @@ export const useAnyaltWidget = ({
   }, [allChains, anyaltInstance]);
 
   const onGetQuote = async (withGoNext: boolean = true) => {
-    if (!selectedToken || !swapResultToken || !selectedTokenAmount) return;
+    if (!selectedToken || !swapResultTokenGlobal || !selectedTokenAmount)
+      return;
 
-    if (selectedToken.id === swapResultToken.id) {
+    if (selectedToken.id === swapResultTokenGlobal.id) {
       setBestRoute({
         outputAmount: selectedTokenAmount,
         swapSteps: [],
@@ -233,10 +239,10 @@ export const useAnyaltWidget = ({
           chainName: selectedToken.chainName,
         },
         toToken: {
-          address: outputToken.address,
+          address: swapResultToken.address,
           chainName:
             ChainIdToChainConstant[
-              outputToken.chainId! as keyof typeof ChainIdToChainConstant
+              swapResultToken.chainId! as keyof typeof ChainIdToChainConstant
             ],
         },
         amount: selectedTokenAmount,
@@ -289,8 +295,8 @@ export const useAnyaltWidget = ({
               blockchainLogo: lastTokenOfOperation?.blockchainLogo || '',
             },
             to: {
-              tokenName: depositToken?.name || '',
-              tokenLogo: depositToken?.logoUrl || '',
+              tokenName: finalToken?.name || '',
+              tokenLogo: finalToken?.logoUrl || '',
               tokenAmount: depositTokenEstimate?.amountOut || '',
               tokenPrice:
                 (
@@ -298,9 +304,9 @@ export const useAnyaltWidget = ({
                   parseFloat(depositTokenEstimate?.amountOut || '1')
                 ).toFixed(2) || '',
               tokenUsdPrice: depositTokenEstimate?.priceInUSD || '0',
-              tokenDecimals: depositToken?.decimals || 0,
-              blockchain: swapResultToken.chain?.displayName || '',
-              blockchainLogo: swapResultToken.chain?.logoUrl || '',
+              tokenDecimals: finalToken?.decimals || 0,
+              blockchain: swapResultTokenGlobal.chain?.displayName || '',
+              blockchainLogo: swapResultTokenGlobal.chain?.logoUrl || '',
             },
           },
         ],
@@ -311,7 +317,7 @@ export const useAnyaltWidget = ({
 
       setTokenFetchError({
         isError: !isEnoughDepositTokens,
-        errorMessage: `Amount should be equal or greater than ${minDepositAmount} ${outputToken?.symbol}`,
+        errorMessage: `Amount should be equal or greater than ${minDepositAmount} ${swapResultToken?.symbol}`,
       });
 
       if (isEnoughDepositTokens && route) {
@@ -324,7 +330,7 @@ export const useAnyaltWidget = ({
           isEnoughDepositTokens = false;
           setTokenFetchError({
             isError: true,
-            errorMessage: `Output possibly low, the transaction might not get executed due to slippage. The protocol expects a minimum of ${minDepositAmount} ${outputToken?.symbol} please increase the input amount.`,
+            errorMessage: `Output possibly low, the transaction might not get executed due to slippage. The protocol expects a minimum of ${minDepositAmount} ${swapResultToken?.symbol} please increase the input amount.`,
           });
         }
       }
@@ -366,7 +372,7 @@ export const useAnyaltWidget = ({
     return () => {
       clearTimeout(debounceTimeout);
     };
-  }, [selectedToken, swapResultToken, selectedTokenAmount]);
+  }, [selectedToken, swapResultTokenGlobal, selectedTokenAmount]);
 
   //TODO: This code is realted to modal, can be move to another places
   const onConfigClick = () => {
@@ -513,7 +519,7 @@ export const useAnyaltWidget = ({
       const interval = setInterval(() => {
         // Capture latest values inside the interval callback
         const currentInToken = selectedToken;
-        const currentProtocolInputToken = swapResultToken;
+        const currentProtocolInputToken = swapResultTokenGlobal;
         const currentInTokenAmount = selectedTokenAmount;
         const userSelectedToken =
           currentInToken &&
@@ -540,9 +546,9 @@ export const useAnyaltWidget = ({
     }
 
     // Set chain flags for last mile tx
-    if (swapResultToken?.chain?.chainType === ChainType.EVM) {
+    if (swapResultTokenGlobal?.chain?.chainType === ChainType.EVM) {
       isEvmRequired = true;
-    } else if (swapResultToken?.chain?.chainType === ChainType.SOLANA) {
+    } else if (swapResultTokenGlobal?.chain?.chainType === ChainType.SOLANA) {
       isSolanaRequired = true;
     }
 
