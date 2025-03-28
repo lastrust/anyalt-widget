@@ -54,6 +54,7 @@ export const defaultTheme = extendTheme({
         warning: '#f9e154',
         error: '#E53030',
         active: '#008080',
+        highlight: '#3777F7',
         secondary: {
           0: '#ffffff',
           1: 'rgba(255, 255, 255, 0.80)',

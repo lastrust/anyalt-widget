@@ -1,12 +1,8 @@
-import { useAtomValue } from 'jotai';
-import { useMemo } from 'react';
 import { AnyaltWidgetProps } from '../../..';
-import { showStuckTransactionDialogAtom } from '../../../store/stateStore';
 import { Footer } from '../../molecules/footer/Footer';
 import { Header } from '../../molecules/header/Header';
 import { ConnectWalletsModal } from '../../standalones/modals/connectWalletsModal/ConnectWalletsModal';
 import ModalWrapper from '../../standalones/modals/ModalWrapper';
-import { usePendingOperation } from '../../standalones/pendingOperationDialog/usePendingOperation';
 import Stepper from '../../standalones/stepper/Stepper';
 import { ChoosingRouteStep } from '../../standalones/steps/ChoosingRouteStep';
 import { SelectTokenStep } from '../../standalones/steps/SelectTokenStep';
@@ -53,6 +49,11 @@ export const AnyaltWidgetWrapper = ({
     setOpenSlippageModal,
     onChooseRouteButtonClick,
     resetState,
+    showPendingOperationDialog,
+    allNecessaryWalletsConnected,
+    showStuckTransactionDialog,
+    modalWrapperMaxWidth,
+    headerCustomText,
   } = useAnyaltWidget({
     apiKey,
     swapResultToken,
@@ -64,33 +65,12 @@ export const AnyaltWidgetWrapper = ({
     onClose,
   });
 
-  const { showPendingOperationDialog, allNecessaryWalletsConnected } =
-    usePendingOperation({ closeConnectWalletsModal: connectWalletsClose });
-
-  const showStuckTransactionDialog = useAtomValue(
-    showStuckTransactionDialogAtom,
-  );
-
-  // Memoize values that determine rendering to prevent unnecessary re-renders
-  const maxWidth = useMemo(() => {
-    if (showPendingOperationDialog || showStuckTransactionDialog) {
-      return '976px';
-    }
-    if (activeStep === 0 || activeStep === 3) {
-      return '512px';
-    }
-    return '976px';
-  }, [showPendingOperationDialog, showStuckTransactionDialog, activeStep]);
-
-  const headerCustomText = useMemo(() => {
-    if (showPendingOperationDialog || showStuckTransactionDialog) {
-      return 'Transaction';
-    }
-    return undefined;
-  }, [showPendingOperationDialog, showStuckTransactionDialog]);
-
   return (
-    <ModalWrapper isOpen={isOpen} onClose={onClose} maxWidthCustom={maxWidth}>
+    <ModalWrapper
+      isOpen={isOpen}
+      onClose={onClose}
+      maxWidthCustom={modalWrapperMaxWidth}
+    >
       <Header activeStep={activeStep} customText={headerCustomText} />
       <HandlerTransactions
         showPendingOperationDialog={showPendingOperationDialog}

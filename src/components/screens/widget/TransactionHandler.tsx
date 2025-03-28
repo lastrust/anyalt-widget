@@ -3,6 +3,17 @@ import { WalletConnector } from '../../..';
 import { PendingOperationDialog } from '../../standalones/pendingOperationDialog/PendingOperationDialog';
 import { StuckTransactionDialog } from '../../standalones/stuckTransactionDialog/StuckTransactionDialog';
 
+type Props = {
+  showPendingOperationDialog: boolean;
+  showStuckTransactionDialog: boolean;
+  setOperationToCurrentRoute: (operation: BestRouteResponse) => void;
+  walletConnector?: WalletConnector;
+  allNecessaryWalletsConnected: boolean;
+  connectWalletsOpen: () => void;
+  resetState: () => void;
+  children: React.ReactNode;
+};
+
 export const HandlerTransactions = ({
   showPendingOperationDialog,
   showStuckTransactionDialog,
@@ -12,16 +23,7 @@ export const HandlerTransactions = ({
   connectWalletsOpen,
   resetState,
   children,
-}: {
-  showPendingOperationDialog: boolean;
-  showStuckTransactionDialog: boolean;
-  setOperationToCurrentRoute: (operation: BestRouteResponse) => void;
-  walletConnector?: WalletConnector;
-  allNecessaryWalletsConnected: boolean;
-  connectWalletsOpen: () => void;
-  resetState: () => void;
-  children: React.ReactNode;
-}) => {
+}: Props) => {
   if (showPendingOperationDialog) {
     return (
       <PendingOperationDialog

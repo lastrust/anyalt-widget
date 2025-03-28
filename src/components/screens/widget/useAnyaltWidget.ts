@@ -28,6 +28,7 @@ import {
   selectedRouteAtom,
   selectedTokenAmountAtom,
   selectedTokenAtom,
+  showStuckTransactionDialogAtom,
   slippageAtom,
   swapDataAtom,
   swapResultTokenAtom,
@@ -43,7 +44,19 @@ import {
   convertSwapTransactionToTransactionProgress,
 } from '../../../utils';
 import { ChainIdToChainConstant } from '../../../utils/chains';
+import { usePendingOperation } from '../../standalones/pendingOperationDialog/usePendingOperation';
 import { useTokenInputBox } from '../../standalones/selectSwap/token/input/useTokenInputBox';
+
+type Props = {
+  estimateCallback: (token: Token) => Promise<EstimateResponse>;
+  apiKey: string;
+  swapResultToken: Token;
+  finalToken?: Token;
+  widgetTemplate: WidgetTemplateType;
+  minDepositAmount: number;
+  walletConnector?: WalletConnector;
+  onClose: () => void;
+};
 
 export const useAnyaltWidget = ({
   apiKey,
@@ -54,16 +67,7 @@ export const useAnyaltWidget = ({
   widgetTemplate,
   estimateCallback,
   onClose,
-}: {
-  estimateCallback: (token: Token) => Promise<EstimateResponse>;
-  apiKey: string;
-  swapResultToken: Token;
-  finalToken?: Token;
-  widgetTemplate: WidgetTemplateType;
-  minDepositAmount: number;
-  walletConnector?: WalletConnector;
-  onClose: () => void;
-}) => {
+}: Props) => {
   const [loading, setLoading] = useState(false);
   const [isValidAmountIn, setIsValidAmountIn] = useState(true);
   const [openSlippageModal, setOpenSlippageModal] = useState(false);
@@ -153,7 +157,7 @@ export const useAnyaltWidget = ({
     setActiveOperationId,
     setActiveOperationId,
     setLastMileTokenEstimate,
-    setTransactionsList,   
+    setTransactionsList,
     setSelectedTokenAmount,
     setSelectedToken,
     setTokenFetchError,
@@ -690,6 +694,31 @@ export const useAnyaltWidget = ({
     [],
   );
 
+  const { showPendingOperationDialog, allNecessaryWalletsConnected } =
+    usePendingOperation({ closeConnectWalletsModal: connectWalletsClose });
+
+  const showStuckTransactionDialog = useAtomValue(
+    showStuckTransactionDialogAtom,
+  );
+
+  // Memoize values that determine rendering to prevent unnecessary re-renders
+  const modalWrapperMaxWidth = useMemo(() => {
+    if (showPendingOperationDialog || showStuckTransactionDialog) {
+      return '976px';
+    }
+    if (activeStep === 0 || activeStep === 3) {
+      return '512px';
+    }
+    return '976px';
+  }, [showPendingOperationDialog, showStuckTransactionDialog, activeStep]);
+
+  const headerCustomText = useMemo(() => {
+    if (showPendingOperationDialog || showStuckTransactionDialog) {
+      return 'Transaction';
+    }
+    return undefined;
+  }, [showPendingOperationDialog, showStuckTransactionDialog]);
+
   return {
     loading,
     activeStep,
@@ -710,5 +739,10 @@ export const useAnyaltWidget = ({
     onChooseRouteButtonClick,
     setOperationToCurrentRoute,
     resetState,
+    showPendingOperationDialog,
+    showStuckTransactionDialog,
+    allNecessaryWalletsConnected,
+    modalWrapperMaxWidth,
+    headerCustomText,
   };
 };
