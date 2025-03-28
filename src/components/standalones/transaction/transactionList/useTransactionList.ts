@@ -1,11 +1,11 @@
 import { useAtomValue } from 'jotai';
 import {
   bestRouteAtom,
-  finalTokenEstimateAtom,
-  inTokenAmountAtom,
-  inTokenAtom,
-  protocolFinalTokenAtom,
-  protocolInputTokenAtom,
+  lastMileTokenAtom,
+  lastMileTokenEstimateAtom,
+  selectedTokenAmountAtom,
+  selectedTokenAtom,
+  swapResultTokenAtom,
   widgetTemplateAtom,
 } from '../../../../store/stateStore';
 import { TokenWithAmount } from '../../../molecules/card/TransactionOverviewCard';
@@ -13,22 +13,23 @@ import { TokenWithAmount } from '../../../molecules/card/TransactionOverviewCard
 export const useTransactionList = () => {
   const bestRoute = useAtomValue(bestRouteAtom);
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
-  const protocolInputToken = useAtomValue(protocolInputTokenAtom);
-  const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
-  const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
-  const inToken = useAtomValue(inTokenAtom);
-  const inTokenAmount = useAtomValue(inTokenAmountAtom);
+
+  const selectedToken = useAtomValue(selectedTokenAtom);
+  const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
+  const swapResultToken = useAtomValue(swapResultTokenAtom);
+  const lastMileToken = useAtomValue(lastMileTokenAtom);
+  const lastMileTokenEstimate = useAtomValue(lastMileTokenEstimateAtom);
 
   const getToTokenDetails = () => {
     if (widgetTemplate === 'TOKEN_BUY') {
       return {
-        contractAddress: protocolInputToken?.tokenAddress || '',
-        symbol: protocolInputToken?.symbol || '',
-        logo: protocolInputToken?.logoUrl || '',
-        blockchain: protocolInputToken?.chain?.displayName || '',
+        contractAddress: swapResultToken?.tokenAddress || '',
+        symbol: swapResultToken?.symbol || '',
+        logo: swapResultToken?.logoUrl || '',
+        blockchain: swapResultToken?.chain?.displayName || '',
         amount: Number(bestRoute?.outputAmount).toFixed(4) || '',
-        blockchainLogo: protocolInputToken?.chain?.logoUrl || '',
-        decimals: protocolInputToken?.decimals || 0,
+        blockchainLogo: swapResultToken?.chain?.logoUrl || '',
+        decimals: swapResultToken?.decimals || 0,
         tokenUsdPrice:
           Number(
             bestRoute?.swapSteps[bestRoute.swapSteps.length - 1]
@@ -38,14 +39,14 @@ export const useTransactionList = () => {
     }
 
     return {
-      contractAddress: protocolFinalToken?.address || '',
-      symbol: protocolFinalToken?.symbol || '',
-      logo: protocolFinalToken?.logoUrl || '',
-      blockchain: protocolInputToken?.chain?.displayName || '',
-      amount: Number(finalTokenEstimate?.amountOut).toFixed(4) || '',
-      blockchainLogo: protocolInputToken?.chain?.logoUrl || '',
-      decimals: protocolFinalToken?.decimals || 0,
-      tokenUsdPrice: Number(finalTokenEstimate?.priceInUSD) || 0,
+      contractAddress: lastMileToken?.address || '',
+      symbol: lastMileToken?.symbol || '',
+      logo: lastMileToken?.logoUrl || '',
+      blockchain: swapResultToken?.chain?.displayName || '',
+      amount: Number(lastMileTokenEstimate?.amountOut).toFixed(4) || '',
+      blockchainLogo: swapResultToken?.chain?.logoUrl || '',
+      decimals: lastMileToken?.decimals || 0,
+      tokenUsdPrice: Number(lastMileTokenEstimate?.priceInUSD) || 0,
     };
   };
 
@@ -54,13 +55,13 @@ export const useTransactionList = () => {
       bestRoute,
       tokens: {
         from: {
-          contractAddress: inToken?.tokenAddress || '',
-          symbol: inToken?.symbol || '',
-          logo: inToken?.logoUrl || '',
-          blockchain: inToken?.chain?.displayName || '',
-          amount: Number(inTokenAmount).toFixed(4) || '',
-          blockchainLogo: inToken?.chain?.logoUrl || '',
-          decimals: inToken?.decimals || 0,
+          contractAddress: selectedToken?.tokenAddress || '',
+          symbol: selectedToken?.symbol || '',
+          logo: selectedToken?.logoUrl || '',
+          blockchain: selectedToken?.chain?.displayName || '',
+          amount: Number(selectedTokenAmount).toFixed(4) || '',
+          blockchainLogo: selectedToken?.chain?.logoUrl || '',
+          decimals: selectedToken?.decimals || 0,
           tokenUsdPrice: 0,
         } as TokenWithAmount,
         to: {

@@ -22,15 +22,15 @@ import {
   allChainsAtom,
   anyaltInstanceAtom,
   bestRouteAtom,
-  currentUiStepAtom,
-  finalTokenEstimateAtom,
-  inTokenAmountAtom,
-  inTokenAtom,
-  protocolFinalTokenAtom,
-  protocolInputTokenAtom,
+  currentStepAtom,
+  lastMileTokenAtom,
+  lastMileTokenEstimateAtom,
   selectedRouteAtom,
+  selectedTokenAmountAtom,
+  selectedTokenAtom,
   slippageAtom,
   swapDataAtom,
+  swapResultTokenAtom,
   tokenFetchErrorAtom,
   transactionIndexAtom,
   transactionsListAtom,
@@ -43,7 +43,7 @@ import { useTokenInputBox } from '../../standalones/selectSwap/token/input/useTo
 
 export const useAnyaltWidget = ({
   apiKey,
-  inputToken,
+  swapResultToken,
   finalToken,
   walletConnector,
   minDepositAmount,
@@ -53,7 +53,7 @@ export const useAnyaltWidget = ({
 }: {
   estimateCallback: (token: Token) => Promise<EstimateResponse>;
   apiKey: string;
-  inputToken: Token;
+  swapResultToken: Token;
   finalToken?: Token;
   widgetTemplate: WidgetTemplateType;
   minDepositAmount: number;
@@ -82,45 +82,55 @@ export const useAnyaltWidget = ({
   const slippage = useAtomValue(slippageAtom);
   const selectedRoute = useAtomValue(selectedRouteAtom);
 
-  const [inTokenAmount, setInTokenAmount] = useAtom(inTokenAmountAtom);
-  const [inToken, setInToken] = useAtom(inTokenAtom);
+  const [selectedToken, setSelectedToken] = useAtom(selectedTokenAtom);
+  const [selectedTokenAmount, setSelectedTokenAmount] = useAtom(
+    selectedTokenAmountAtom,
+  );
+  const [swapResultTokenGlobal, setSwapResultToken] =
+    useAtom(swapResultTokenAtom);
+  const [, setLastMileToken] = useAtom(lastMileTokenAtom);
+  const [lastMileTokenEstimate, setLastMileTokenEstimate] = useAtom(
+    lastMileTokenEstimateAtom,
+  );
+
+  const [, setCurrentStep] = useAtom(currentStepAtom);
+
+  const [, setTemplate] = useAtom(widgetTemplateAtom);
+
   const [swapData, setSwapData] = useAtom(swapDataAtom);
-  const [, setCurrentUiStep] = useAtom(currentUiStepAtom);
   const [allChains, setAllChains] = useAtom(allChainsAtom);
   const [bestRoute, setBestRoute] = useAtom(bestRouteAtom);
-  const [, setTemplate] = useAtom(widgetTemplateAtom);
   const [, setTokenFetchError] = useAtom(tokenFetchErrorAtom);
   const [, setTransactionsList] = useAtom(transactionsListAtom);
   const [, setTransactionIndex] = useAtom(transactionIndexAtom);
   const [, setActiveOperationId] = useAtom(activeOperationIdAtom);
-  const [, setProtocolFinalToken] = useAtom(protocolFinalTokenAtom);
+
   const [, setTransactionsProgress] = useAtom(transactionsProgressAtom);
   const [anyaltInstance, setAnyaltInstance] = useAtom(anyaltInstanceAtom);
-  const [finalEstimateToken, setFinalTokenEstimate] = useAtom(
-    finalTokenEstimateAtom,
-  );
-  const [protocolInputToken, setProtocolInputToken] = useAtom(
-    protocolInputTokenAtom,
-  );
+
   const { balance } = useTokenInputBox();
 
   useEffect(() => {
     onGetQuote(false);
-  }, [inToken, slippage, balance]);
+  }, [selectedToken, slippage, balance]);
 
   const isButtonDisabled = useMemo(() => {
     if (activeStep === 0) {
-      return Number(inTokenAmount ?? 0) == 0 || inToken == null || !bestRoute;
+      return (
+        Number(selectedTokenAmount ?? 0) == 0 ||
+        selectedToken == null ||
+        !bestRoute
+      );
     }
-    return Number(inTokenAmount ?? 0) == 0 || inToken == null;
-  }, [inTokenAmount, inToken, bestRoute, activeStep]);
+    return Number(selectedTokenAmount ?? 0) == 0 || selectedToken == null;
+  }, [selectedTokenAmount, selectedToken, bestRoute, activeStep]);
 
   const resetState = () => {
     setActiveOperationId(undefined);
-    setFinalTokenEstimate(undefined);
+    setLastMileTokenEstimate(undefined);
     setTransactionsList(undefined);
-    setInTokenAmount(undefined);
-    setInToken(undefined);
+    setSelectedTokenAmount(undefined);
+    setSelectedToken(undefined);
     setTokenFetchError({ isError: false, errorMessage: '' });
     setBestRoute(undefined);
     setSwapData({
@@ -131,27 +141,28 @@ export const useAnyaltWidget = ({
       currentStep: 1,
     });
     setTransactionsProgress({});
-    setTransactionsList(undefined);
     setTransactionIndex(1);
-    setCurrentUiStep(0);
+    setCurrentStep(0);
   };
 
   useEffect(() => {
-    setCurrentUiStep(activeStep);
+    setCurrentStep(activeStep);
   }, [activeStep]);
 
+  //TODO: Should be triggered, once all routes has been setted. Also figure out how to handle for multiple routes.
   useEffect(() => {
     if (bestRoute) {
       const token = {
-        ...inputToken,
+        ...swapResultToken,
         amount: bestRoute.outputAmount.toString(),
       };
       estimateCallback(token).then((res) => {
-        setFinalTokenEstimate(res);
+        setLastMileTokenEstimate(res);
       });
     }
   }, [bestRoute]);
 
+  //TODO: Related to the 1st step of the widget. Intial call to setup widget.
   useEffect(() => {
     const anyaltInstance = new AnyAlt(apiKey);
     setAnyaltInstance(anyaltInstance);
@@ -165,41 +176,48 @@ export const useAnyaltWidget = ({
         console.error(error);
       }
 
-    setProtocolFinalToken(finalToken);
+    setLastMileToken(finalToken);
     setTemplate(widgetTemplate);
   }, []);
 
+  //TODO: Should be refactored to handle it to handle selected route. Probably can be deleted
   useEffect(() => {
     if (selectedRoute) setBestRoute(selectedRoute);
   }, [selectedRoute]);
 
+  //TODO: Related to the 1st step of the widget. Can be moved to the another hook.
   useEffect(() => {
-    const inputTokenChain = allChains.find(
+    const outputTokenChain = allChains.find(
       (chain) =>
-        (inputToken.chainId &&
-          chain.chainId === inputToken.chainId &&
-          chain.chainType === inputToken.chainType) ||
-        (!inputToken.chainId && chain.chainType === inputToken.chainType),
+        (swapResultToken.chainId &&
+          chain.chainId === swapResultToken.chainId &&
+          chain.chainType === swapResultToken.chainType) ||
+        (!swapResultToken.chainId &&
+          chain.chainType === swapResultToken.chainType),
     );
 
-    if (inputTokenChain) {
+    if (outputTokenChain) {
       anyaltInstance
-        ?.getToken(inputTokenChain.name, inputToken.address)
+        ?.getToken(outputTokenChain.name, swapResultToken.address)
         .then((res) => {
-          if (res.logoUrl === ANYALT_PLACEHOLDER_LOGO && inputToken.logoUrl) {
-            res.logoUrl = inputToken.logoUrl;
+          if (
+            res.logoUrl === ANYALT_PLACEHOLDER_LOGO &&
+            swapResultToken.logoUrl
+          ) {
+            res.logoUrl = swapResultToken.logoUrl;
           }
-          setProtocolInputToken(res);
+          setSwapResultToken(res);
         });
     }
   }, [allChains, anyaltInstance]);
 
   const onGetQuote = async (withGoNext: boolean = true) => {
-    if (!inToken || !protocolInputToken || !inTokenAmount) return;
+    if (!selectedToken || !swapResultTokenGlobal || !selectedTokenAmount)
+      return;
 
-    if (inToken.id === protocolInputToken.id) {
+    if (selectedToken.id === swapResultTokenGlobal.id) {
       setBestRoute({
-        outputAmount: inTokenAmount,
+        outputAmount: selectedTokenAmount,
         swapSteps: [],
         operationId: '',
         missingWalletForSourceBlockchain: false,
@@ -217,24 +235,27 @@ export const useAnyaltWidget = ({
 
       const route = await anyaltInstance?.getBestRoute({
         fromToken: {
-          address: inToken.tokenAddress ?? '',
-          chainName: inToken.chainName,
+          address: selectedToken.tokenAddress ?? '',
+          chainName: selectedToken.chainName,
         },
         toToken: {
-          address: inputToken.address,
+          address: swapResultToken.address,
           chainName:
             ChainIdToChainConstant[
-              inputToken.chainId! as keyof typeof ChainIdToChainConstant
+              swapResultToken.chainId! as keyof typeof ChainIdToChainConstant
             ],
         },
-        amount: inTokenAmount,
+        amount: selectedTokenAmount,
         slippage,
       });
+
+      //TODO: Instead of setting best route. It should set all routes.
       setBestRoute(route);
 
       const lastStepOfOperation = route?.swapSteps[route?.swapSteps.length - 1];
       const lastTokenOfOperation = lastStepOfOperation?.destinationToken;
 
+      //TODO: This logic must be a part of handler for selecting route.
       setTransactionsList({
         steps: [
           ...(route?.swapSteps.map((step) => {
@@ -276,16 +297,16 @@ export const useAnyaltWidget = ({
             to: {
               tokenName: finalToken?.name || '',
               tokenLogo: finalToken?.logoUrl || '',
-              tokenAmount: finalEstimateToken?.amountOut || '',
+              tokenAmount: lastMileTokenEstimate?.amountOut || '',
               tokenPrice:
                 (
-                  parseFloat(finalEstimateToken?.priceInUSD || '0') /
-                  parseFloat(finalEstimateToken?.amountOut || '1')
+                  parseFloat(lastMileTokenEstimate?.priceInUSD || '0') /
+                  parseFloat(lastMileTokenEstimate?.amountOut || '1')
                 ).toFixed(2) || '',
-              tokenUsdPrice: finalEstimateToken?.priceInUSD || '0',
+              tokenUsdPrice: lastMileTokenEstimate?.priceInUSD || '0',
               tokenDecimals: finalToken?.decimals || 0,
-              blockchain: protocolInputToken.chain?.displayName || '',
-              blockchainLogo: protocolInputToken.chain?.logoUrl || '',
+              blockchain: swapResultTokenGlobal.chain?.displayName || '',
+              blockchainLogo: swapResultTokenGlobal.chain?.logoUrl || '',
             },
           },
         ],
@@ -296,7 +317,7 @@ export const useAnyaltWidget = ({
 
       setTokenFetchError({
         isError: !isEnoughDepositTokens,
-        errorMessage: `Amount should be equal or greater than ${minDepositAmount} ${inputToken?.symbol}`,
+        errorMessage: `Amount should be equal or greater than ${minDepositAmount} ${swapResultToken?.symbol}`,
       });
 
       if (isEnoughDepositTokens && route) {
@@ -309,12 +330,12 @@ export const useAnyaltWidget = ({
           isEnoughDepositTokens = false;
           setTokenFetchError({
             isError: true,
-            errorMessage: `Output possibly low, the transaction might not get executed due to slippage. The protocol expects a minimum of ${minDepositAmount} ${inputToken?.symbol} please increase the input amount.`,
+            errorMessage: `Output possibly low, the transaction might not get executed due to slippage. The protocol expects a minimum of ${minDepositAmount} ${swapResultToken?.symbol} please increase the input amount.`,
           });
         }
       }
 
-      if (balance && parseFloat(balance) < parseFloat(inTokenAmount)) {
+      if (balance && parseFloat(balance) < parseFloat(selectedTokenAmount)) {
         setTokenFetchError({
           isError: true,
           errorMessage: `You don't have enough tokens in your wallet.`,
@@ -337,12 +358,13 @@ export const useAnyaltWidget = ({
     }
   };
 
+  //TODO: Can be part of getting routes hook.
   useEffect(() => {
     //Show loading state immediatly instead of waiting for a delay
-    if (inTokenAmount && inToken) setLoading(true);
+    if (selectedTokenAmount && selectedToken) setLoading(true);
 
     const debounceTimeout = setTimeout(() => {
-      if (inTokenAmount && inToken) {
+      if (selectedTokenAmount && selectedToken) {
         onGetQuote(false);
       }
     }, DEBOUNCE_TIMEOUT);
@@ -350,8 +372,9 @@ export const useAnyaltWidget = ({
     return () => {
       clearTimeout(debounceTimeout);
     };
-  }, [inToken, protocolInputToken, inTokenAmount]);
+  }, [selectedToken, swapResultTokenGlobal, selectedTokenAmount]);
 
+  //TODO: This code is realted to modal, can be move to another places
   const onConfigClick = () => {
     setOpenSlippageModal(true);
   };
@@ -383,6 +406,7 @@ export const useAnyaltWidget = ({
       let destination = '';
 
       const selectedWallets: Record<string, string> = {};
+      //TODO: It shoudl read data from selected route.
       bestRoute?.swapSteps.forEach((swapStep, index) => {
         const fromBlockchain = swapStep.sourceToken.blockchain;
         const toBlockchain = swapStep.destinationToken.blockchain;
@@ -494,9 +518,9 @@ export const useAnyaltWidget = ({
     if (activeStep === 1 && bestRoute) {
       const interval = setInterval(() => {
         // Capture latest values inside the interval callback
-        const currentInToken = inToken;
-        const currentProtocolInputToken = protocolInputToken;
-        const currentInTokenAmount = inTokenAmount;
+        const currentInToken = selectedToken;
+        const currentProtocolInputToken = swapResultTokenGlobal;
+        const currentInTokenAmount = selectedTokenAmount;
         const userSelectedToken =
           currentInToken &&
           currentProtocolInputToken &&
@@ -522,9 +546,9 @@ export const useAnyaltWidget = ({
     }
 
     // Set chain flags for last mile tx
-    if (protocolInputToken?.chain?.chainType === ChainType.EVM) {
+    if (swapResultTokenGlobal?.chain?.chainType === ChainType.EVM) {
       isEvmRequired = true;
-    } else if (protocolInputToken?.chain?.chainType === ChainType.SOLANA) {
+    } else if (swapResultTokenGlobal?.chain?.chainType === ChainType.SOLANA) {
       isSolanaRequired = true;
     }
 

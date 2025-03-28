@@ -54,7 +54,7 @@ export { defaultTheme, useModal, WalletsProviders, whiteTheme, WidgetProvider };
 export type AnyaltWidgetProps = {
   isOpen: boolean;
   apiKey: string;
-  inputToken: Token;
+  swapResultToken: Token;
   finalToken?: Token;
   minDepositAmount?: number;
   widgetTemplate?: WidgetTemplateType;

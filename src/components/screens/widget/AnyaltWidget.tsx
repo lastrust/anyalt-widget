@@ -20,7 +20,7 @@ export const AnyaltWidgetWrapper = ({
   isOpen,
   onClose,
   apiKey,
-  inputToken,
+  swapResultToken,
   finalToken,
   estimateCallback,
   executeCallBack,
@@ -48,7 +48,7 @@ export const AnyaltWidgetWrapper = ({
     onChooseRouteButtonClick,
   } = useAnyaltWidget({
     apiKey,
-    inputToken,
+    swapResultToken,
     finalToken,
     minDepositAmount,
     estimateCallback,

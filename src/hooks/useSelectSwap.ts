@@ -3,57 +3,57 @@ import { useAtom, useAtomValue } from 'jotai';
 import { useMemo, useState } from 'react';
 import {
   bestRouteAtom,
-  finalTokenEstimateAtom,
-  inTokenAmountAtom,
-  inTokenAtom,
-  protocolFinalTokenAtom,
-  protocolInputTokenAtom,
+  lastMileTokenAtom,
+  lastMileTokenEstimateAtom,
+  selectedTokenAmountAtom,
+  selectedTokenAtom,
+  swapResultTokenAtom,
 } from '../store/stateStore';
 
 export const useSelectSwap = () => {
   const [openTokenSelect, setOpenTokenSelect] = useState<boolean>(false);
-  const [, setInToken] = useAtom(inTokenAtom);
-  const protocolInputToken = useAtomValue(protocolInputTokenAtom);
-  const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
-  const activeRoute = useAtomValue(bestRouteAtom);
-  const inTokenAmount = useAtomValue(inTokenAmountAtom);
+  const [, setSelectedToken] = useAtom(selectedTokenAtom);
+  const swapResultToken = useAtomValue(swapResultTokenAtom);
+  const lastMileToken = useAtomValue(lastMileTokenAtom);
+  const lastMileTokenEstimate = useAtomValue(lastMileTokenEstimateAtom);
+
+  const bestRoute = useAtomValue(bestRouteAtom);
+  const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
 
   const onTokenSelect = (token: SupportedToken) => {
-    setInToken(token);
+    setSelectedToken(token);
     setOpenTokenSelect(false);
   };
 
   const inTokenPrice = useMemo(() => {
-    if (!activeRoute || !inTokenAmount) return '';
+    if (!bestRoute || !selectedTokenAmount) return '';
 
-    const tokenPrice = activeRoute.swapSteps[0].sourceToken.tokenUsdPrice;
+    const tokenPrice = bestRoute.swapSteps[0].sourceToken.tokenUsdPrice;
     if (!tokenPrice) return '';
 
-    return (tokenPrice * parseFloat(inTokenAmount)).toFixed(2);
-  }, [activeRoute, inTokenAmount]);
+    return (tokenPrice * parseFloat(selectedTokenAmount)).toFixed(2);
+  }, [bestRoute, selectedTokenAmount]);
 
   // This is just copy pasted code from `src/components/standalones/selectSwap/useSelectToken.ts`
   const outTokenPrice = useMemo(() => {
-    if (!activeRoute) return '';
+    if (!bestRoute) return '';
 
-    const lastStep = activeRoute.swapSteps[activeRoute.swapSteps.length - 1];
+    const lastStep = bestRoute.swapSteps[bestRoute.swapSteps.length - 1];
     const tokenPrice = lastStep.destinationToken.tokenUsdPrice || 0;
 
-    return (tokenPrice * parseFloat(activeRoute.outputAmount)).toFixed(2);
-  }, [activeRoute]);
-
-  const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
+    return (tokenPrice * parseFloat(bestRoute.outputAmount)).toFixed(2);
+  }, [bestRoute]);
 
   return {
-    finalTokenEstimate,
+    depositTokenEstimate: lastMileTokenEstimate,
     inTokenPrice,
     outTokenPrice,
     onTokenSelect,
     openTokenSelect,
     setOpenTokenSelect,
-    protocolInputToken,
-    protocolFinalToken,
-    activeRoute,
-    inTokenAmount,
+    protocolInputToken: swapResultToken,
+    protocolFinalToken: lastMileToken,
+    activeRoute: bestRoute,
+    inTokenAmount: selectedTokenAmount,
   };
 };

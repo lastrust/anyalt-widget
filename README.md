@@ -89,7 +89,7 @@ const queryClient = new QueryClient();
 const Widget = () => {
   const [isOpen, setIsOpen] = useState(true);
 
-  const inputToken: Token = {
+  const swapResultToken: Token = {
     symbol: 'ETH',
     address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
     chainId: 1,
@@ -130,7 +130,7 @@ const Widget = () => {
         <AnyaltWidget
           isOpen={isOpen}
           isTokenBuyTemplate={false}
-          inputToken={inputToken}
+          swapResultToken={swapResultToken}
           finalToken={finalToken}
           apiKey="your-api-key"
           onClose={() => setIsOpen(false)}
@@ -171,7 +171,7 @@ export const ClientWidgetWrapper = dynamic(
 | ------------------- | --------------------------------------------- | ---------------------------------------- |
 | `isOpen`            | `boolean`                                     | Controls widget visibility               |
 | `widgetTemplate?`   | `WidgetTemplateType`                          | Widget Mode                              |
-| `inputToken`        | `Token`                                       | Input token details                      |
+| `swapResultToken`   | `Token`                                       | Details of token after swap              |
 | `finalToken?`       | `Token`                                       | Output token details                     |
 | `apiKey`            | `string`                                      | API key for Anyalt services              |
 | `onClose`           | `() => void`                                  | Callback triggered when widget is closed |
@@ -186,7 +186,7 @@ The `widgetTemplate` prop defines the available modes for the widget, determinin
 
 `DEPOSIT_TOKEN`: Activates the widget for depositing tokens, allowing users to transfer tokens into a designated account or wallet.
 
-If `TOKEN_BUY` enabled, the widget will be in token buy template mode. And `inputToken` will be the token that the user wants to buy. Also `finalToken` is not required.
+If `TOKEN_BUY` enabled, the widget will be in token buy template mode. And `swapResultToken` will be the token that the user wants to buy. Also `finalToken` is not required.
 
 #### Props Types
 
@@ -194,7 +194,7 @@ If `TOKEN_BUY` enabled, the widget will be in token buy template mode. And `inpu
 export type AnyaltWidgetProps = {
   isOpen: boolean;
   apiKey: string;
-  inputToken: Token;
+  swapResultToken: Token;
   finalToken?: Token;
   minDepositAmount?: number;
   widgetTemplate?: WidgetTemplateType;

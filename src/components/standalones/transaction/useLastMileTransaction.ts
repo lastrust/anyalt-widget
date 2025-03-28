@@ -10,8 +10,8 @@ import {
 } from '../../../constants/transaction';
 import {
   bestRouteAtom,
-  finalTokenAmountAtom,
-  protocolInputTokenAtom,
+  lastMileTokenAmountAtom,
+  swapResultTokenAtom,
 } from '../../../store/stateStore';
 import {
   TransactionError,
@@ -35,9 +35,9 @@ export const useLastMileTransaction = ({
   updateTransactionProgress,
 }: UseLastMileTransactionProps) => {
   const bestRoute = useAtomValue(bestRouteAtom);
-  const protocolInputToken = useAtomValue(protocolInputTokenAtom);
+  const swapResultToken = useAtomValue(swapResultTokenAtom);
 
-  const [, setFinalTokenAmount] = useAtom(finalTokenAmountAtom);
+  const [, setLastMileTokenAmount] = useAtom(lastMileTokenAmountAtom);
 
   const executeLastMileTransaction = async (
     stepIndex: number,
@@ -53,11 +53,11 @@ export const useLastMileTransaction = ({
       throw new TransactionError('Swap is not finished');
 
     try {
-      const isEvm = protocolInputToken?.chain?.chainType === ChainType.EVM;
+      const isEvm = swapResultToken?.chain?.chainType === ChainType.EVM;
 
-      if (isEvm && protocolInputToken?.chain?.chainId) {
+      if (isEvm && swapResultToken?.chain?.chainId) {
         await switchChain(config, {
-          chainId: protocolInputToken.chain.chainId as chainIdsValues,
+          chainId: swapResultToken.chain.chainId as chainIdsValues,
         });
       }
 
@@ -74,15 +74,15 @@ export const useLastMileTransaction = ({
 
       const executeResponse = await executeCallBack({
         amount: swapDataRef.current.crosschainSwapOutputAmount,
-        address: protocolInputToken?.tokenAddress || '',
-        decimals: protocolInputToken?.decimals || 0,
-        chainId: protocolInputToken?.chain?.chainId || 1,
-        name: protocolInputToken?.symbol || '',
-        symbol: protocolInputToken?.symbol || '',
+        address: swapResultToken?.tokenAddress || '',
+        decimals: swapResultToken?.decimals || 0,
+        chainId: swapResultToken?.chain?.chainId || 1,
+        name: swapResultToken?.symbol || '',
+        symbol: swapResultToken?.symbol || '',
         chainType: isEvm ? ChainType.EVM : ChainType.SOLANA,
       });
 
-      setFinalTokenAmount(executeResponse.amountOut);
+      setLastMileTokenAmount(executeResponse.amountOut);
 
       if (executeResponse.approvalTxHash) {
         updateTransactionProgress({
@@ -90,7 +90,7 @@ export const useLastMileTransaction = ({
           status: TX_STATUS.confirmed,
           message: TX_MESSAGE.confirmed,
           txHash: executeResponse.approvalTxHash,
-          chainName: protocolInputToken?.chain?.name,
+          chainName: swapResultToken?.chain?.name,
           details: {
             currentStep: stepIndex + 1,
             totalSteps: swapDataRef.current.totalSteps,
@@ -102,7 +102,7 @@ export const useLastMileTransaction = ({
           vmType: isEvm ? 'EVM' : 'SOLANA',
           operationId,
           order: 0,
-          chainId: isEvm ? protocolInputToken?.chain?.chainId || 1 : 101,
+          chainId: isEvm ? swapResultToken?.chain?.chainId || 1 : 101,
           transactionHash: executeResponse.approvalTxHash,
         });
       }
@@ -113,7 +113,7 @@ export const useLastMileTransaction = ({
           status: TX_STATUS.confirmed,
           message: TX_MESSAGE.confirmed,
           txHash: executeResponse.executeTxHash,
-          chainName: protocolInputToken?.chain?.name,
+          chainName: swapResultToken?.chain?.name,
           details: {
             currentStep: stepIndex + 1,
             totalSteps: swapDataRef.current.totalSteps,
@@ -125,7 +125,7 @@ export const useLastMileTransaction = ({
           vmType: isEvm ? 'EVM' : 'SOLANA',
           operationId,
           order: 1,
-          chainId: isEvm ? protocolInputToken?.chain?.chainId || 1 : 101,
+          chainId: isEvm ? swapResultToken?.chain?.chainId || 1 : 101,
           transactionHash: executeResponse.executeTxHash,
         });
       }

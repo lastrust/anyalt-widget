@@ -1,9 +1,9 @@
 import { Box, Button, Flex, Text } from '@chakra-ui/react';
 import { useAtomValue } from 'jotai';
 import {
-  finalTokenAmountAtom,
-  protocolFinalTokenAtom,
-  protocolInputTokenAtom,
+  lastMileTokenAmountAtom,
+  lastMileTokenAtom,
+  swapResultTokenAtom,
 } from '../../../store/stateStore';
 import { truncateToDecimals } from '../../../utils/truncateToDecimals';
 import { ThumbIcon } from '../../atoms/icons/transaction/ThumbIcon';
@@ -16,9 +16,9 @@ type Props = {
 };
 
 export const SuccessfulDepositStep = ({ onConfigClick, onComplete }: Props) => {
-  const protocolInputToken = useAtomValue(protocolInputTokenAtom);
-  const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
-  const finalTokenAmount = useAtomValue(finalTokenAmountAtom);
+  const swapResultToken = useAtomValue(swapResultTokenAtom);
+  const lastMileToken = useAtomValue(lastMileTokenAtom);
+  const lastMileTokenAmount = useAtomValue(lastMileTokenAmountAtom);
 
   return (
     <SwappingTemplate onConfigClick={onConfigClick}>
@@ -51,10 +51,10 @@ export const SuccessfulDepositStep = ({ onConfigClick, onComplete }: Props) => {
         </Text>
         <Flex flexDirection="row" alignItems="center" mb="64px">
           <TokenIconBox
-            tokenName={protocolFinalToken?.symbol || ''}
-            tokenIcon={protocolFinalToken?.logoUrl || ''}
-            chainName={protocolInputToken?.chain?.displayName || ''}
-            chainIcon={protocolInputToken?.chain?.logoUrl || ''}
+            tokenName={lastMileToken?.symbol || ''}
+            tokenIcon={lastMileToken?.logoUrl || ''}
+            chainName={swapResultToken?.chain?.displayName || ''}
+            chainIcon={swapResultToken?.chain?.logoUrl || ''}
             mr="8px"
           />
           <Text
@@ -63,11 +63,10 @@ export const SuccessfulDepositStep = ({ onConfigClick, onComplete }: Props) => {
             color="brand.text.primary"
             mr="4px"
           >
-            {truncateToDecimals(finalTokenAmount, 4)}
+            {truncateToDecimals(lastMileTokenAmount, 4)}
           </Text>
           <Text fontSize="16px" fontWeight="400" color="brand.text.secondary.4">
-            {protocolFinalToken?.symbol} On{' '}
-            {protocolInputToken?.chain?.displayName}
+            {lastMileToken?.symbol} On {swapResultToken?.chain?.displayName}
           </Text>
         </Flex>
         <Button
