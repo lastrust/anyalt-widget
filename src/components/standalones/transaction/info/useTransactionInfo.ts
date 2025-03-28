@@ -11,12 +11,12 @@ import {
   activeOperationIdAtom,
   anyaltInstanceAtom,
   bestRouteAtom,
-  finalTokenEstimateAtom,
-  inTokenAmountAtom,
-  protocolFinalTokenAtom,
-  protocolInputTokenAtom,
+  lastMileTokenAtom,
+  lastMileTokenEstimateAtom,
+  selectedTokenAmountAtom,
   showStuckTransactionDialogAtom,
   slippageAtom,
+  swapResultTokenAtom,
   transactionIndexAtom,
   transactionsListAtom,
   transactionsProgressAtom,
@@ -47,14 +47,14 @@ export const useTransactionInfo = ({
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
   const activeOperationId = useAtomValue(activeOperationIdAtom);
   const transactionsList = useAtomValue(transactionsListAtom);
-  const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
+  const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
+  const swapResultToken = useAtomValue(swapResultTokenAtom);
+  const lastMileToken = useAtomValue(lastMileTokenAtom);
+  const lastMileTokenEstimate = useAtomValue(lastMileTokenEstimateAtom);
+
   const [transactionsProgress, setTransactionsProgress] = useAtom(
     transactionsProgressAtom,
   );
-
-  const inTokenAmount = useAtomValue(inTokenAmountAtom);
-  const protocolInputToken = useAtomValue(protocolInputTokenAtom);
-  const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
 
   const { executeSwap } = useHandleSwap(externalEvmWalletConnector);
 
@@ -221,16 +221,16 @@ export const useTransactionInfo = ({
     if (!bestRoute) return 0;
 
     if (currentStep > bestRoute.swapSteps.length)
-      return finalTokenEstimate?.estimatedTimeInSeconds || 0;
+      return lastMileTokenEstimate?.estimatedTimeInSeconds || 0;
 
     return bestRoute.swapSteps[currentStep - 1]?.estimatedTimeInSeconds || 0;
-  }, [bestRoute, currentStep, finalTokenEstimate]);
+  }, [bestRoute, currentStep, lastMileTokenEstimate]);
 
   const fees = useMemo(() => {
     if (!bestRoute) return '0';
 
     if (currentStep > bestRoute.swapSteps.length)
-      return finalTokenEstimate?.estimatedFeeInUSD || '0';
+      return lastMileTokenEstimate?.estimatedFeeInUSD || '0';
 
     return (
       bestRoute.swapSteps[currentStep - 1]?.fees
@@ -242,7 +242,7 @@ export const useTransactionInfo = ({
         .toFixed(2)
         .toString() || '0'
     );
-  }, [bestRoute, currentStep, finalTokenEstimate]);
+  }, [bestRoute, currentStep, lastMileTokenEstimate]);
 
   return {
     fees,
@@ -251,12 +251,12 @@ export const useTransactionInfo = ({
     bestRoute,
     currentStep,
     isBridgeSwap,
-    inTokenAmount,
+    inTokenAmount: selectedTokenAmount,
     estimatedTime,
     transactionsList,
-    finalTokenEstimate,
-    protocolInputToken,
-    protocolFinalToken,
+    finalTokenEstimate: lastMileTokenEstimate,
+    protocolInputToken: swapResultToken,
+    protocolFinalToken: lastMileToken,
     transactionsProgress,
     headerText,
     recentTransaction: transactionsList?.steps?.[currentStep - 1],

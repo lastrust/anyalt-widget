@@ -7,11 +7,11 @@ import { useAccount } from 'wagmi';
 import { WalletConnector } from '../../..';
 import {
   bestRouteAtom,
-  finalTokenEstimateAtom,
-  inTokenAmountAtom,
-  inTokenAtom,
-  protocolFinalTokenAtom,
-  protocolInputTokenAtom,
+  lastMileTokenAtom,
+  lastMileTokenEstimateAtom,
+  selectedTokenAmountAtom,
+  selectedTokenAtom,
+  swapResultTokenAtom,
   tokenFetchErrorAtom,
   widgetTemplateAtom,
 } from '../../../store/stateStore';
@@ -25,12 +25,14 @@ export const useSelectToken = ({
 }) => {
   const [openTokenSelect, setOpenTokenSelect] = useState<boolean>(false);
 
-  const [, setInToken] = useAtom(inTokenAtom);
-  const widgetTemplate = useAtomValue(widgetTemplateAtom);
   const bestRoute = useAtomValue(bestRouteAtom);
-  const inTokenAmount = useAtomValue(inTokenAmountAtom);
-  const protocolInputToken = useAtomValue(protocolInputTokenAtom);
-  const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
+  const widgetTemplate = useAtomValue(widgetTemplateAtom);
+  const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
+
+  const [, setSelectedToken] = useAtom(selectedTokenAtom);
+  const swapResultToken = useAtomValue(swapResultTokenAtom);
+  const lastMileToken = useAtomValue(lastMileTokenAtom);
+  const lastMileTokenEstimate = useAtomValue(lastMileTokenEstimateAtom);
 
   const tokenFetchError = useAtomValue(tokenFetchErrorAtom);
 
@@ -54,19 +56,19 @@ export const useSelectToken = ({
   ]);
 
   const onTokenSelect = (token: SupportedToken, callback: () => void) => {
-    setInToken(token);
+    setSelectedToken(token);
     setOpenTokenSelect(false);
     callback();
   };
 
   const inTokenPrice = useMemo(() => {
-    if (!bestRoute || !inTokenAmount || bestRoute.swapSteps.length === 0)
+    if (!bestRoute || !selectedTokenAmount || bestRoute.swapSteps.length === 0)
       return '';
     const tokenPrice = bestRoute.swapSteps[0].sourceToken.tokenUsdPrice;
 
     if (!tokenPrice) return '';
-    return (tokenPrice * parseFloat(inTokenAmount)).toFixed(2);
-  }, [bestRoute, inTokenAmount]);
+    return (tokenPrice * parseFloat(selectedTokenAmount)).toFixed(2);
+  }, [bestRoute, selectedTokenAmount]);
 
   const outTokenPrice = useMemo(() => {
     if (!bestRoute || bestRoute.swapSteps.length === 0) return '';
@@ -76,8 +78,6 @@ export const useSelectToken = ({
     if (!tokenPrice) return '';
     return (tokenPrice * parseFloat(bestRoute.outputAmount)).toFixed(2);
   }, [bestRoute]);
-
-  const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
 
   const isEvmWalletConnected = useMemo(() => {
     return (
@@ -109,10 +109,10 @@ export const useSelectToken = ({
     openTokenSelect,
     widgetTemplate,
     setOpenTokenSelect,
-    finalTokenEstimate,
-    protocolInputToken,
-    protocolFinalToken,
+    finalTokenEstimate: lastMileTokenEstimate,
+    protocolInputToken: swapResultToken,
+    protocolFinalToken: lastMileToken,
     bestRoute,
-    inTokenAmount,
+    inTokenAmount: selectedTokenAmount,
   };
 };

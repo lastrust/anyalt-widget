@@ -14,9 +14,9 @@ import {
 import { useAtomValue } from 'jotai';
 import { useEffect, useState } from 'react';
 import {
-  finalTokenEstimateAtom,
-  protocolFinalTokenAtom,
-  protocolInputTokenAtom,
+  lastMileTokenAtom,
+  lastMileTokenEstimateAtom,
+  swapResultTokenAtom,
   transactionsProgressAtom,
   widgetTemplateAtom,
 } from '../../../store/stateStore';
@@ -44,9 +44,11 @@ export const TransactionAccordion = ({
   const [expandedIndexes, setExpandedIndexes] = useState<number[]>([]);
 
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
-  const protocolInputToken = useAtomValue(protocolInputTokenAtom);
-  const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
-  const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
+
+  const swapResultToken = useAtomValue(swapResultTokenAtom);
+  const lastMileToken = useAtomValue(lastMileTokenAtom);
+  const lastMileTokenEstimate = useAtomValue(lastMileTokenEstimateAtom);
+
   const transactionsProgress = useAtomValue(transactionsProgressAtom);
 
   useEffect(() => {
@@ -300,9 +302,9 @@ export const TransactionAccordion = ({
           bestRoute={operation}
           currentStep={currentStep}
           isLastMileExpanded={expandedIndexes.includes(currentStep - 1)}
-          protocolFinalToken={protocolFinalToken}
-          protocolInputToken={protocolInputToken}
-          finalTokenEstimate={finalTokenEstimate}
+          protocolFinalToken={lastMileToken}
+          swapResultToken={swapResultToken}
+          finalTokenEstimate={lastMileTokenEstimate}
           transactionsProgress={transactionsProgress}
           operationType={operationType}
         />

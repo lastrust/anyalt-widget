@@ -4,12 +4,12 @@ import { useMemo } from 'react';
 import { ChainType } from '../../../..';
 import {
   bestRouteAtom,
-  finalTokenEstimateAtom,
-  inTokenAmountAtom,
-  inTokenAtom,
+  lastMileTokenAtom,
+  lastMileTokenEstimateAtom,
   pendingOperationAtom,
-  protocolFinalTokenAtom,
-  protocolInputTokenAtom,
+  selectedTokenAmountAtom,
+  selectedTokenAtom,
+  swapResultTokenAtom,
   transactionIndexAtom,
   widgetTemplateAtom,
 } from '../../../../store/stateStore';
@@ -24,28 +24,29 @@ export const useTransactionList = ({ operationType }: Props) => {
   const bestRoute = useAtomValue(bestRouteAtom);
   const pendingOperation = useAtomValue(pendingOperationAtom);
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
-  const protocolInputToken = useAtomValue(protocolInputTokenAtom);
-  const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
-  const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
-  const inToken = useAtomValue(inTokenAtom);
-  const inTokenAmount = useAtomValue(inTokenAmountAtom);
+
+  const selectedToken = useAtomValue(selectedTokenAtom);
+  const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
+  const swapResultToken = useAtomValue(swapResultTokenAtom);
+  const lastMileToken = useAtomValue(lastMileTokenAtom);
+  const lastMileTokenEstimate = useAtomValue(lastMileTokenEstimateAtom);
   const currentStep = useAtomValue(transactionIndexAtom);
 
   const destinationTokenDetails: TokenWithAmount = useMemo(() => {
     if (widgetTemplate === 'TOKEN_BUY') {
-      const chainType = protocolInputToken?.chainName
-        ? mapBlockchainToChainType(protocolInputToken?.chainName)
+      const chainType = swapResultToken?.chainName
+        ? mapBlockchainToChainType(swapResultToken?.chainName)
         : ChainType.EVM;
 
       return {
-        name: protocolFinalToken?.name || '',
-        contractAddress: protocolInputToken?.tokenAddress || '',
-        symbol: protocolInputToken?.symbol || '',
-        logo: protocolInputToken?.logoUrl || '',
-        blockchain: protocolInputToken?.chain?.displayName || '',
+        name: swapResultToken?.name || '',
+        contractAddress: swapResultToken?.tokenAddress || '',
+        symbol: swapResultToken?.symbol || '',
+        logo: swapResultToken?.logoUrl || '',
+        blockchain: swapResultToken?.chain?.displayName || '',
         amount: Number(bestRoute?.outputAmount).toFixed(4) || '',
-        blockchainLogo: protocolInputToken?.chain?.logoUrl || '',
-        decimals: protocolInputToken?.decimals || 0,
+        blockchainLogo: swapResultToken?.chain?.logoUrl || '',
+        decimals: swapResultToken?.decimals || 0,
         tokenUsdPrice:
           Number(
             bestRoute?.swapSteps[bestRoute.swapSteps.length - 1]
@@ -56,23 +57,23 @@ export const useTransactionList = ({ operationType }: Props) => {
     }
 
     return {
-      name: protocolFinalToken?.name || '',
-      contractAddress: protocolFinalToken?.address || '',
-      symbol: protocolFinalToken?.symbol || '',
-      logo: protocolFinalToken?.logoUrl || '',
-      blockchain: protocolInputToken?.chain?.displayName || '',
-      amount: Number(finalTokenEstimate?.amountOut).toFixed(4) || '',
-      blockchainLogo: protocolInputToken?.chain?.logoUrl || '',
-      decimals: protocolFinalToken?.decimals || 0,
-      tokenUsdPrice: Number(finalTokenEstimate?.priceInUSD) || 0,
-      chainType: protocolFinalToken?.chainType || ChainType.EVM,
+      name: lastMileToken?.name || '',
+      chainType: lastMileToken?.chainType || ChainType.EVM,
+      contractAddress: lastMileToken?.address || '',
+      symbol: lastMileToken?.symbol || '',
+      logo: lastMileToken?.logoUrl || '',
+      blockchain: swapResultToken?.chain?.displayName || '',
+      amount: Number(lastMileTokenEstimate?.amountOut).toFixed(4) || '',
+      blockchainLogo: swapResultToken?.chain?.logoUrl || '',
+      decimals: lastMileToken?.decimals || 0,
+      tokenUsdPrice: Number(lastMileTokenEstimate?.priceInUSD) || 0,
     };
   }, [
     bestRoute,
-    finalTokenEstimate,
-    protocolFinalToken,
-    protocolInputToken,
     widgetTemplate,
+    swapResultToken,
+    lastMileToken,
+    lastMileTokenEstimate,
   ]);
 
   const sourceTokenDetails: TokenWithAmount = useMemo(() => {
@@ -80,19 +81,19 @@ export const useTransactionList = ({ operationType }: Props) => {
       operationType === 'CURRENT' ? bestRoute : pendingOperation;
 
     if (!sourceOfInfo || sourceOfInfo?.swapSteps.length === 0) {
-      const chainType = inToken?.chainName
-        ? mapBlockchainToChainType(inToken?.chainName)
+      const chainType = selectedToken?.chainName
+        ? mapBlockchainToChainType(selectedToken?.chainName)
         : ChainType.EVM;
 
       return {
-        name: inToken?.name || '',
-        contractAddress: inToken?.tokenAddress || '',
-        symbol: inToken?.symbol || '',
-        logo: inToken?.logoUrl || '',
-        blockchain: inToken?.chain?.displayName || '',
-        amount: Number(inTokenAmount).toFixed(4) || '',
-        blockchainLogo: inToken?.chain?.logoUrl || '',
-        decimals: inToken?.decimals || 0,
+        name: selectedToken?.name || '',
+        contractAddress: selectedToken?.tokenAddress || '',
+        symbol: selectedToken?.symbol || '',
+        logo: selectedToken?.logoUrl || '',
+        blockchain: selectedToken?.chain?.displayName || '',
+        amount: Number(selectedTokenAmount).toFixed(4) || '',
+        blockchainLogo: selectedToken?.chain?.logoUrl || '',
+        decimals: selectedToken?.decimals || 0,
         tokenUsdPrice: 0,
         chainType: chainType!,
       };
@@ -112,7 +113,7 @@ export const useTransactionList = ({ operationType }: Props) => {
         )!,
       };
     }
-  }, [operationType, bestRoute, pendingOperation, inToken]);
+  }, [operationType, bestRoute, pendingOperation, selectedToken]);
 
   const getStepOfPendingOperation = (
     pendingOperation: BestRouteResponse | undefined,

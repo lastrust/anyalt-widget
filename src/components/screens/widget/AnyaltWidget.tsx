@@ -25,7 +25,7 @@ export const AnyaltWidgetWrapper = ({
   isOpen,
   onClose,
   apiKey,
-  inputToken,
+  swapResultToken,
   finalToken,
   estimateCallback,
   executeCallBack,
@@ -55,7 +55,7 @@ export const AnyaltWidgetWrapper = ({
     resetState,
   } = useAnyaltWidget({
     apiKey,
-    inputToken,
+    swapResultToken,
     finalToken,
     minDepositAmount,
     estimateCallback,

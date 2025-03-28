@@ -2,25 +2,27 @@ import { useAtom, useAtomValue } from 'jotai';
 import { useMemo } from 'react';
 import {
   bestRouteAtom,
-  finalTokenEstimateAtom,
-  inTokenAmountAtom,
-  protocolFinalTokenAtom,
-  protocolInputTokenAtom,
+  lastMileTokenAtom,
+  lastMileTokenEstimateAtom,
   selectedRouteAtom,
+  selectedTokenAmountAtom,
   slippageAtom,
+  swapResultTokenAtom,
   widgetTemplateAtom,
 } from '../../../../store/stateStore';
 import { truncateToDecimals } from '../../../../utils/truncateToDecimals';
 
 export const useBestRouteAccordion = () => {
   const slippage = useAtomValue(slippageAtom);
-  const finalTokenEstimate = useAtomValue(finalTokenEstimateAtom);
-  const [bestRoute] = useAtom(bestRouteAtom);
+  const bestRoute = useAtomValue(bestRouteAtom);
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
-  const protocolFinalToken = useAtomValue(protocolFinalTokenAtom);
-  const protocolInputToken = useAtomValue(protocolInputTokenAtom);
+
+  const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
+  const swapResultToken = useAtomValue(swapResultTokenAtom);
+  const lastMileToken = useAtomValue(lastMileTokenAtom);
+  const lastMileTokenEstimate = useAtomValue(lastMileTokenEstimateAtom);
+
   const [, setSelectedRoute] = useAtom(selectedRouteAtom);
-  const inTokenAmount = useAtomValue(inTokenAmountAtom);
 
   const fees = useMemo(() => {
     if (!bestRoute) return '0.00';
@@ -34,10 +36,10 @@ export const useBestRouteAccordion = () => {
       }, 0);
 
     const totalWithFinalFees =
-      totalFees + parseFloat(finalTokenEstimate?.estimatedFeeInUSD ?? '0');
+      totalFees + parseFloat(lastMileTokenEstimate?.estimatedFeeInUSD ?? '0');
 
     return `$${totalWithFinalFees.toFixed(2).toString() || '0.00'}`;
-  }, [bestRoute, finalTokenEstimate]);
+  }, [bestRoute, lastMileTokenEstimate]);
 
   const areSwapsExists = useMemo(() => {
     return Boolean(bestRoute?.swapSteps?.length);
@@ -63,13 +65,13 @@ export const useBestRouteAccordion = () => {
 
   const protocolDepositToken = useMemo(() => {
     return {
-      name: protocolInputToken?.symbol || '',
-      icon: protocolInputToken?.logoUrl || '',
-      chainIcon: protocolInputToken?.logoUrl || '',
-      amount: truncateToDecimals(inTokenAmount || '0', 4),
-      chainName: protocolInputToken?.chain?.displayName || '',
+      name: swapResultToken?.symbol || '',
+      icon: swapResultToken?.logoUrl || '',
+      chainIcon: swapResultToken?.logoUrl || '',
+      amount: truncateToDecimals(selectedTokenAmount || '0', 4),
+      chainName: swapResultToken?.chain?.displayName || '',
     };
-  }, [protocolInputToken, inTokenAmount]);
+  }, [swapResultToken, selectedTokenAmount]);
 
   return {
     fees,
@@ -78,9 +80,9 @@ export const useBestRouteAccordion = () => {
     widgetTemplate,
     fromToken: areSwapsExists ? finalSwapToken : protocolDepositToken,
     handleRouteSelect,
-    protocolFinalToken,
-    protocolInputToken,
-    finalTokenEstimate,
+    protocolFinalToken: lastMileToken,
+    protocolInputToken: swapResultToken,
+    finalTokenEstimate: lastMileTokenEstimate,
     finalSwapToken,
   };
 };

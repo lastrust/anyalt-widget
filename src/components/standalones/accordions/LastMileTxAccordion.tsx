@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { useAtomValue } from 'jotai';
 import { EstimateResponse, Token } from '../../..';
-import { inTokenAmountAtom } from '../../../store/stateStore';
+import { selectedTokenAmountAtom } from '../../../store/stateStore';
 import { TransactionsProgress } from '../../../types/transaction';
 import { truncateToDecimals } from '../../../utils/truncateToDecimals';
 import { DividerIcon } from '../../atoms/icons/transaction/DividerIcon';
@@ -27,7 +27,7 @@ type Props = {
   transactionsProgress: TransactionsProgress | undefined;
   protocolFinalToken: Token | undefined;
   finalTokenEstimate: EstimateResponse | undefined;
-  protocolInputToken: SupportedToken | undefined;
+  swapResultToken: SupportedToken | undefined;
   operationType: 'CURRENT' | 'PENDING';
 };
 
@@ -37,11 +37,11 @@ export const LastMileTxAccordion = ({
   currentStep,
   transactionsProgress,
   protocolFinalToken,
-  protocolInputToken,
+  swapResultToken,
   finalTokenEstimate,
   operationType,
 }: Props) => {
-  const inTokenAmount = useAtomValue(inTokenAmountAtom);
+  const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
 
   return (
     <AccordionItem
@@ -111,17 +111,17 @@ export const LastMileTxAccordion = ({
             exchangeLogo={protocolFinalToken?.logoUrl || ''}
             exchangeName={'Final tx'}
             fromToken={{
-              name: protocolInputToken?.symbol || '',
+              name: swapResultToken?.symbol || '',
               amount: truncateToDecimals(
                 bestRoute.swapSteps.length === 0
-                  ? inTokenAmount || '0'
+                  ? selectedTokenAmount || '0'
                   : bestRoute.swapSteps[bestRoute.swapSteps.length - 1]
                       ?.payout || '0',
                 3,
               ),
-              tokenLogo: protocolInputToken?.logoUrl || '',
-              chainName: protocolInputToken?.chain?.displayName || '',
-              chainLogo: protocolInputToken?.chain?.logoUrl || '',
+              tokenLogo: swapResultToken?.logoUrl || '',
+              chainName: swapResultToken?.chain?.displayName || '',
+              chainLogo: swapResultToken?.chain?.logoUrl || '',
             }}
             toToken={{
               name: protocolFinalToken?.symbol || '',
@@ -130,8 +130,8 @@ export const LastMileTxAccordion = ({
                 3,
               ),
               tokenLogo: protocolFinalToken?.logoUrl || '',
-              chainName: protocolInputToken?.chain?.displayName || '',
-              chainLogo: protocolInputToken?.chain?.logoUrl || '',
+              chainName: swapResultToken?.chain?.displayName || '',
+              chainLogo: swapResultToken?.chain?.logoUrl || '',
             }}
           />
           {finalTokenEstimate?.estimatedTimeInSeconds &&
