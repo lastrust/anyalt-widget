@@ -6,7 +6,7 @@ import { useMemo, useState } from 'react';
 import { useAccount } from 'wagmi';
 import { WalletConnector } from '../../..';
 import {
-  bestRouteAtom,
+  allRoutesAtom,
   lastMileTokenAtom,
   lastMileTokenEstimateAtom,
   selectedTokenAmountAtom,
@@ -25,7 +25,7 @@ export const useSelectToken = ({
 }) => {
   const [openTokenSelect, setOpenTokenSelect] = useState<boolean>(false);
 
-  const bestRoute = useAtomValue(bestRouteAtom);
+  const allRoutes = useAtomValue(allRoutesAtom);
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
   const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
 
@@ -62,22 +62,22 @@ export const useSelectToken = ({
   };
 
   const inTokenPrice = useMemo(() => {
-    if (!bestRoute || !selectedTokenAmount || bestRoute.swapSteps.length === 0)
+    if (!allRoutes || !selectedTokenAmount || allRoutes.swapSteps.length === 0)
       return '';
-    const tokenPrice = bestRoute.swapSteps[0].sourceToken.tokenUsdPrice;
+    const tokenPrice = allRoutes.swapSteps[0].sourceToken.tokenUsdPrice;
 
     if (!tokenPrice) return '';
     return (tokenPrice * parseFloat(selectedTokenAmount)).toFixed(2);
-  }, [bestRoute, selectedTokenAmount]);
+  }, [allRoutes, selectedTokenAmount]);
 
   const outTokenPrice = useMemo(() => {
-    if (!bestRoute || bestRoute.swapSteps.length === 0) return '';
-    const lastStep = bestRoute.swapSteps[bestRoute.swapSteps.length - 1];
+    if (!allRoutes || allRoutes.swapSteps.length === 0) return '';
+    const lastStep = allRoutes.swapSteps[allRoutes.swapSteps.length - 1];
     const tokenPrice = lastStep.destinationToken.tokenUsdPrice;
 
     if (!tokenPrice) return '';
-    return (tokenPrice * parseFloat(bestRoute.outputAmount)).toFixed(2);
-  }, [bestRoute]);
+    return (tokenPrice * parseFloat(allRoutes.outputAmount)).toFixed(2);
+  }, [allRoutes]);
 
   const isEvmWalletConnected = useMemo(() => {
     return (
@@ -112,7 +112,7 @@ export const useSelectToken = ({
     finalTokenEstimate: lastMileTokenEstimate,
     protocolInputToken: swapResultToken,
     protocolFinalToken: lastMileToken,
-    bestRoute,
+    bestRoute: allRoutes,
     inTokenAmount: selectedTokenAmount,
   };
 };

@@ -9,7 +9,7 @@ import {
   WidgetTemplateType,
 } from '../../..';
 import {
-  bestRouteAtom,
+  allRoutesAtom,
   selectedRouteAtom,
   showStuckTransactionDialogAtom,
 } from '../../../store/stateStore';
@@ -35,7 +35,7 @@ type Props = {
 type ReturnType = {
   loading: boolean;
   activeStep: number;
-  activeRoute: BestRouteResponse | undefined;
+  allRoutes: BestRouteResponse | undefined;
   isValidAmountIn: boolean;
   isButtonDisabled: boolean;
   openSlippageModal: boolean;
@@ -69,8 +69,8 @@ export const useAnyaltWidget = ({
   estimateCallback,
   onClose,
 }: Props): ReturnType => {
-  const selectedRoute = useAtomValue(selectedRouteAtom);
-  const [bestRoute, setBestRoute] = useAtom(bestRouteAtom);
+  const [allRoutes, setAllRoutes] = useAtom(allRoutesAtom);
+  const [selectedRoute] = useAtom(selectedRouteAtom);
   const showStuckTransactionDialog = useAtomValue(
     showStuckTransactionDialogAtom,
   );
@@ -156,7 +156,7 @@ export const useAnyaltWidget = ({
 
   //TODO: Should be refactored to handle it to handle selected route. Probably can be deleted
   useEffect(() => {
-    if (selectedRoute) setBestRoute(selectedRoute);
+    if (selectedRoute) setAllRoutes(selectedRoute);
   }, [selectedRoute]);
 
   const { setCurrentRoute } = useSetRoute({
@@ -167,7 +167,7 @@ export const useAnyaltWidget = ({
   return {
     loading,
     activeStep,
-    activeRoute: bestRoute,
+    allRoutes,
     isValidAmountIn,
     isButtonDisabled,
     headerCustomText,

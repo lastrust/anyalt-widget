@@ -31,8 +31,8 @@ export const AnyaltWidgetWrapper = ({
 }: AnyaltWidgetProps) => {
   const {
     loading,
+    allRoutes,
     activeStep,
-    activeRoute,
     isValidAmountIn,
     headerCustomText,
     isButtonDisabled,
@@ -94,7 +94,7 @@ export const AnyaltWidgetWrapper = ({
           />
           <ChoosingRouteStep
             loading={loading}
-            activeRoute={activeRoute}
+            activeRoute={allRoutes}
             walletConnector={walletConnector}
             failedToFetchRoute={failedToFetchRoute}
             areWalletsConnected={areWalletsConnected}

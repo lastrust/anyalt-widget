@@ -6,7 +6,7 @@ import { useAccount } from 'wagmi';
 import { ChainType, WalletConnector } from '../../..';
 import {
   allChainsAtom,
-  bestRouteAtom,
+  allRoutesAtom,
   swapResultTokenAtom,
 } from '../../../store/stateStore';
 
@@ -22,7 +22,7 @@ export const useWidgetWallets = ({
   connectWalletsClose,
 }: Props) => {
   const allChains = useAtomValue(allChainsAtom);
-  const bestRoute = useAtomValue(bestRouteAtom);
+  const bestRoute = useAtomValue(allRoutesAtom);
   const swapResultTokenGlobal = useAtomValue(swapResultTokenAtom);
 
   const { address: evmAddress, isConnected: isEvmConnected } = useAccount();

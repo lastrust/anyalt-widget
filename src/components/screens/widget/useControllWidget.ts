@@ -2,7 +2,7 @@ import { useAtom, useSetAtom } from 'jotai';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   activeOperationIdAtom,
-  bestRouteAtom,
+  allRoutesAtom,
   currentStepAtom,
   lastMileTokenEstimateAtom,
   selectedTokenAmountAtom,
@@ -31,7 +31,7 @@ export const useControllWidget = ({
 }: ControllWidgetProps) => {
   const [openSlippageModal, setOpenSlippageModal] = useState(false);
 
-  const [bestRoute, setBestRoute] = useAtom(bestRouteAtom);
+  const [bestRoute, setBestRoute] = useAtom(allRoutesAtom);
   const [, setCurrentStep] = useAtom(currentStepAtom);
   const [swapData, setSwapData] = useAtom(swapDataAtom);
   const [selectedToken, setSelectedToken] = useAtom(selectedTokenAtom);

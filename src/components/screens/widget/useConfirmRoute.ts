@@ -5,8 +5,8 @@ import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { ChainType, WalletConnector, WidgetTemplateType } from '../../..';
 import {
   activeOperationIdAtom,
+  allRoutesAtom,
   anyaltInstanceAtom,
-  bestRouteAtom,
   transactionsProgressAtom,
 } from '../../../store/stateStore';
 
@@ -38,7 +38,7 @@ export const useConfirmRoute = ({
   connectWalletsClose,
 }: UseConfirmRouteProps) => {
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
-  const [bestRoute, setBestRoute] = useAtom(bestRouteAtom);
+  const [allRoutes, setAllRoutes] = useAtom(allRoutesAtom);
 
   const setActiveOperationId = useSetAtom(activeOperationIdAtom);
   const setTransactionsProgress = useSetAtom(transactionsProgressAtom);
@@ -68,7 +68,7 @@ export const useConfirmRoute = ({
 
       const selectedWallets: Record<string, string> = {};
       //TODO: It shoudl read data from selected route.
-      bestRoute?.swapSteps.forEach((swapStep, index) => {
+      allRoutes?.swapSteps.forEach((swapStep, index) => {
         const fromBlockchain = swapStep.sourceToken.blockchain;
         const toBlockchain = swapStep.destinationToken.blockchain;
 
@@ -111,7 +111,7 @@ export const useConfirmRoute = ({
         if (isEvmFrom) selectedWallets[fromBlockchain] = evmAddress!;
         if (isEvmTo) selectedWallets[toBlockchain] = evmAddress!;
 
-        if (index === bestRoute.swapSteps.length - 1) {
+        if (index === allRoutes.swapSteps.length - 1) {
           switch (true) {
             case isEvmTo:
               destination = evmAddress!;
@@ -128,15 +128,15 @@ export const useConfirmRoute = ({
         }
       });
 
-      if (bestRoute?.swapSteps.length === 0) {
+      if (allRoutes?.swapSteps.length === 0) {
         const res = await anyaltInstance?.createOperation();
         if (!res?.operationId) throw new Error('Failed to create operation');
 
         setActiveOperationId(res?.operationId);
       } else {
-        if (!bestRoute?.operationId) return;
+        if (!allRoutes?.operationId) return;
         const res = await anyaltInstance?.confirmRoute({
-          operationId: bestRoute?.operationId,
+          operationId: allRoutes?.operationId,
           selectedWallets,
           destination: destination,
         });
@@ -145,7 +145,7 @@ export const useConfirmRoute = ({
           throw new Error('Failed to confirm route');
 
         setActiveOperationId(res?.operationId);
-        setBestRoute(bestRoute);
+        setAllRoutes(allRoutes);
         const localStorageKey =
           widgetTemplate === 'TOKEN_BUY'
             ? 'tokenBuyOperationId'

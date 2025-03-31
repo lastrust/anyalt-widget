@@ -3,7 +3,7 @@ import { useAtomValue } from 'jotai';
 import { useMemo } from 'react';
 import { ChainType } from '../../../..';
 import {
-  bestRouteAtom,
+  allRoutesAtom,
   lastMileTokenAtom,
   lastMileTokenEstimateAtom,
   pendingRouteAtom,
@@ -21,7 +21,7 @@ type Props = {
 };
 
 export const useTransactionList = ({ operationType }: Props) => {
-  const bestRoute = useAtomValue(bestRouteAtom);
+  const allRoutes = useAtomValue(allRoutesAtom);
   const pendingRoute = useAtomValue(pendingRouteAtom);
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
 
@@ -44,12 +44,12 @@ export const useTransactionList = ({ operationType }: Props) => {
         symbol: swapResultToken?.symbol || '',
         logo: swapResultToken?.logoUrl || '',
         blockchain: swapResultToken?.chain?.displayName || '',
-        amount: Number(bestRoute?.outputAmount).toFixed(4) || '',
+        amount: Number(allRoutes?.outputAmount).toFixed(4) || '',
         blockchainLogo: swapResultToken?.chain?.logoUrl || '',
         decimals: swapResultToken?.decimals || 0,
         tokenUsdPrice:
           Number(
-            bestRoute?.swapSteps[bestRoute.swapSteps.length - 1]
+            allRoutes?.swapSteps[allRoutes.swapSteps.length - 1]
               .destinationToken.tokenUsdPrice,
           ) || 0,
         chainType: chainType!,
@@ -69,7 +69,7 @@ export const useTransactionList = ({ operationType }: Props) => {
       tokenUsdPrice: Number(lastMileTokenEstimate?.priceInUSD) || 0,
     };
   }, [
-    bestRoute,
+    allRoutes,
     widgetTemplate,
     swapResultToken,
     lastMileToken,
@@ -77,7 +77,7 @@ export const useTransactionList = ({ operationType }: Props) => {
   ]);
 
   const sourceTokenDetails: TokenWithAmount = useMemo(() => {
-    const sourceOfInfo = operationType === 'CURRENT' ? bestRoute : pendingRoute;
+    const sourceOfInfo = operationType === 'CURRENT' ? allRoutes : pendingRoute;
 
     if (!sourceOfInfo || sourceOfInfo?.swapSteps.length === 0) {
       const chainType = selectedToken?.chainName
@@ -112,7 +112,7 @@ export const useTransactionList = ({ operationType }: Props) => {
         )!,
       };
     }
-  }, [operationType, bestRoute, pendingRoute, selectedToken]);
+  }, [operationType, allRoutes, pendingRoute, selectedToken]);
 
   const getStepOfPendingOperation = (
     pendingOperation: BestRouteResponse | undefined,
@@ -125,7 +125,7 @@ export const useTransactionList = ({ operationType }: Props) => {
   };
 
   return {
-    operation: operationType === 'CURRENT' ? bestRoute : pendingRoute,
+    operation: operationType === 'CURRENT' ? allRoutes : pendingRoute,
     currentStep:
       operationType === 'CURRENT'
         ? currentStep

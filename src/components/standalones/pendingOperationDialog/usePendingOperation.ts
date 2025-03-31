@@ -4,8 +4,8 @@ import { useAtom, useAtomValue } from 'jotai';
 import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 import {
+  allRoutesAtom,
   anyaltInstanceAtom,
-  bestRouteAtom,
   showPendingRouteDialogAtom,
   widgetTemplateAtom,
 } from '../../../store/stateStore';
@@ -27,7 +27,7 @@ export const usePendingOperation = ({ closeConnectWalletsModal }: Props) => {
   const [pendingRoute, setPendingRoute] = useAtom(pendingRouteAtom);
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
-  const activeRoute = useAtomValue(bestRouteAtom);
+  const allRoutes = useAtomValue(allRoutesAtom);
 
   // Wallet stuff
   const { address: evmAddress, isConnected: isEvmConnected } = useAccount();
@@ -125,21 +125,18 @@ export const usePendingOperation = ({ closeConnectWalletsModal }: Props) => {
   useEffect(() => {
     if (
       pendingRoute?.operationId &&
-      pendingRoute?.operationId !== activeRoute?.operationId
+      pendingRoute?.operationId !== allRoutes?.operationId
     ) {
       closeConnectWalletsModal();
       setShowPendingRouteDialog(true);
     }
-    if (
-      !pendingRoute ||
-      pendingRoute?.operationId === activeRoute?.operationId
-    ) {
+    if (!pendingRoute || pendingRoute?.operationId === allRoutes?.operationId) {
       setShowPendingRouteDialog(false);
     }
   }, [
     showPendingRouteDialog,
     pendingRoute,
-    activeRoute,
+    allRoutes,
     closeConnectWalletsModal,
   ]);
 

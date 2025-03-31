@@ -2,7 +2,7 @@ import { SupportedToken } from '@anyalt/sdk';
 import { useAtom, useAtomValue } from 'jotai';
 import { useMemo, useState } from 'react';
 import {
-  bestRouteAtom,
+  allRoutesAtom,
   lastMileTokenAtom,
   lastMileTokenEstimateAtom,
   selectedTokenAmountAtom,
@@ -17,7 +17,7 @@ export const useSelectSwap = () => {
   const lastMileToken = useAtomValue(lastMileTokenAtom);
   const lastMileTokenEstimate = useAtomValue(lastMileTokenEstimateAtom);
 
-  const bestRoute = useAtomValue(bestRouteAtom);
+  const allRoutes = useAtomValue(allRoutesAtom);
   const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
 
   const onTokenSelect = (token: SupportedToken) => {
@@ -26,23 +26,23 @@ export const useSelectSwap = () => {
   };
 
   const inTokenPrice = useMemo(() => {
-    if (!bestRoute || !selectedTokenAmount) return '';
+    if (!allRoutes || !selectedTokenAmount) return '';
 
-    const tokenPrice = bestRoute.swapSteps[0].sourceToken.tokenUsdPrice;
+    const tokenPrice = allRoutes.swapSteps[0].sourceToken.tokenUsdPrice;
     if (!tokenPrice) return '';
 
     return (tokenPrice * parseFloat(selectedTokenAmount)).toFixed(2);
-  }, [bestRoute, selectedTokenAmount]);
+  }, [allRoutes, selectedTokenAmount]);
 
   // This is just copy pasted code from `src/components/standalones/selectSwap/useSelectToken.ts`
   const outTokenPrice = useMemo(() => {
-    if (!bestRoute) return '';
+    if (!allRoutes) return '';
 
-    const lastStep = bestRoute.swapSteps[bestRoute.swapSteps.length - 1];
+    const lastStep = allRoutes.swapSteps[allRoutes.swapSteps.length - 1];
     const tokenPrice = lastStep.destinationToken.tokenUsdPrice || 0;
 
-    return (tokenPrice * parseFloat(bestRoute.outputAmount)).toFixed(2);
-  }, [bestRoute]);
+    return (tokenPrice * parseFloat(allRoutes.outputAmount)).toFixed(2);
+  }, [allRoutes]);
 
   return {
     depositTokenEstimate: lastMileTokenEstimate,
@@ -53,7 +53,7 @@ export const useSelectSwap = () => {
     setOpenTokenSelect,
     protocolInputToken: swapResultToken,
     protocolFinalToken: lastMileToken,
-    activeRoute: bestRoute,
+    activeRoute: allRoutes,
     inTokenAmount: selectedTokenAmount,
   };
 };

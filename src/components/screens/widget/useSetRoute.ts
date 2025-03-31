@@ -3,7 +3,7 @@ import { useSetAtom } from 'jotai';
 import { useCallback } from 'react';
 import {
   activeOperationIdAtom,
-  bestRouteAtom,
+  allRoutesAtom,
   transactionIndexAtom,
   transactionsProgressAtom,
 } from '../../../store/stateStore';
@@ -22,7 +22,7 @@ export const useSetRoute = ({
   setActiveStep,
   setListOfTransactionsFromRoute,
 }: UseSetRouteProps) => {
-  const setBestRoute = useSetAtom(bestRouteAtom);
+  const setBestRoute = useSetAtom(allRoutesAtom);
   const setTransactionIndex = useSetAtom(transactionIndexAtom);
   const setActiveOperationId = useSetAtom(activeOperationIdAtom);
   const setTransactionsProgress = useSetAtom(transactionsProgressAtom);

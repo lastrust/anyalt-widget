@@ -7,8 +7,8 @@ import {
   REFRESH_INTERVAL,
 } from '../../../constants/transaction';
 import {
+  allRoutesAtom,
   anyaltInstanceAtom,
-  bestRouteAtom,
   lastMileTokenEstimateAtom,
   selectedTokenAmountAtom,
   selectedTokenAtom,
@@ -45,14 +45,14 @@ export const useFetchRoutes = ({
   const { balance } = useTokenInputBox();
 
   const slippage = useAtomValue(slippageAtom);
-  const bestRoute = useAtomValue(bestRouteAtom);
+  const allRoutes = useAtomValue(allRoutesAtom);
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
   const selectedToken = useAtomValue(selectedTokenAtom);
   const swapResultTokenGlobal = useAtomValue(swapResultTokenAtom);
   const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
   const lastMileTokenEstimate = useAtomValue(lastMileTokenEstimateAtom);
 
-  const setBestRoute = useSetAtom(bestRouteAtom);
+  const setBestRoute = useSetAtom(allRoutesAtom);
   const setTokenFetchError = useSetAtom(tokenFetchErrorAtom);
   const setTransactionsList = useSetAtom(transactionsListAtom);
   const setLastMileTokenEstimate = useSetAtom(lastMileTokenEstimateAtom);
@@ -242,19 +242,19 @@ export const useFetchRoutes = ({
 
   //TODO: Should be triggered, once all routes has been setted. Also figure out how to handle for multiple routes.
   useEffect(() => {
-    if (bestRoute) {
+    if (allRoutes) {
       const token = {
         ...swapResultToken,
-        amount: bestRoute.outputAmount.toString(),
+        amount: allRoutes.outputAmount.toString(),
       };
       estimateCallback(token).then((res) => {
         setLastMileTokenEstimate(res);
       });
     }
-  }, [bestRoute]);
+  }, [allRoutes]);
 
   useEffect(() => {
-    if (activeStep === 1 && bestRoute) {
+    if (activeStep === 1 && allRoutes) {
       const interval = setInterval(() => {
         // Capture latest values inside the interval callback
         const currentInToken = selectedToken;
@@ -264,7 +264,7 @@ export const useFetchRoutes = ({
           currentInToken &&
           currentProtocolInputToken &&
           currentInTokenAmount &&
-          bestRoute;
+          allRoutes;
 
         if (userSelectedToken) {
           onGetRoutes(false);
@@ -273,7 +273,7 @@ export const useFetchRoutes = ({
 
       return () => clearInterval(interval);
     }
-  }, [bestRoute]);
+  }, [allRoutes]);
 
   return {
     loading,

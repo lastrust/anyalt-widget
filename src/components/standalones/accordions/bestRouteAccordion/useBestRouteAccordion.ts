@@ -1,7 +1,7 @@
 import { useAtom, useAtomValue } from 'jotai';
 import { useMemo } from 'react';
 import {
-  bestRouteAtom,
+  allRoutesAtom,
   lastMileTokenAtom,
   lastMileTokenEstimateAtom,
   selectedRouteAtom,
@@ -14,7 +14,7 @@ import { truncateToDecimals } from '../../../../utils/truncateToDecimals';
 
 export const useBestRouteAccordion = () => {
   const slippage = useAtomValue(slippageAtom);
-  const bestRoute = useAtomValue(bestRouteAtom);
+  const allRoutes = useAtomValue(allRoutesAtom);
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
 
   const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
@@ -25,9 +25,9 @@ export const useBestRouteAccordion = () => {
   const [, setSelectedRoute] = useAtom(selectedRouteAtom);
 
   const fees = useMemo(() => {
-    if (!bestRoute) return '0.00';
+    if (!allRoutes) return '0.00';
 
-    const totalFees = bestRoute?.swapSteps
+    const totalFees = allRoutes?.swapSteps
       ?.flatMap((step) => step.fees)
       ?.reduce((acc, fee) => {
         const amount = parseFloat(fee.amount);
@@ -39,18 +39,18 @@ export const useBestRouteAccordion = () => {
       totalFees + parseFloat(lastMileTokenEstimate?.estimatedFeeInUSD ?? '0');
 
     return `$${totalWithFinalFees.toFixed(2).toString() || '0.00'}`;
-  }, [bestRoute, lastMileTokenEstimate]);
+  }, [allRoutes, lastMileTokenEstimate]);
 
   const areSwapsExists = useMemo(() => {
-    return Boolean(bestRoute?.swapSteps?.length);
-  }, [bestRoute]);
+    return Boolean(allRoutes?.swapSteps?.length);
+  }, [allRoutes]);
 
   const recentSwap = useMemo(() => {
-    return bestRoute?.swapSteps?.[bestRoute?.swapSteps?.length - 1];
-  }, [bestRoute]);
+    return allRoutes?.swapSteps?.[allRoutes?.swapSteps?.length - 1];
+  }, [allRoutes]);
 
   const handleRouteSelect = () => {
-    setSelectedRoute(bestRoute);
+    setSelectedRoute(allRoutes);
   };
 
   const finalSwapToken = useMemo(() => {
@@ -76,7 +76,7 @@ export const useBestRouteAccordion = () => {
   return {
     fees,
     slippage,
-    bestRoute,
+    bestRoute: allRoutes,
     widgetTemplate,
     fromToken: areSwapsExists ? finalSwapToken : protocolDepositToken,
     handleRouteSelect,

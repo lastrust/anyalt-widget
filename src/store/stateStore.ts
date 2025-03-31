@@ -27,14 +27,13 @@ export const lastMileTokenEstimateAtom = atom<EstimateResponse | undefined>(
 
 export const allChainsAtom = atom<SupportedChain[]>([]);
 
-export const bestRouteAtom = atom<BestRouteResponse | undefined>(undefined);
+export const allRoutesAtom = atom<BestRouteResponse | undefined>(undefined);
+export const selectedRouteAtom = atom<BestRouteResponse | undefined>(undefined);
 
 export const pendingRouteAtom = atom<BestRouteResponse | undefined>(undefined);
 
 export const showStuckTransactionDialogAtom = atom<boolean>(false);
 export const showPendingRouteDialogAtom = atom<boolean>(false);
-
-export const selectedRouteAtom = atom<BestRouteResponse | undefined>(undefined);
 
 // Transaction informations:
 export const slippageAtom = atom<string>('3');
