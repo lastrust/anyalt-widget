@@ -1,7 +1,7 @@
 import { BestRouteResponse } from '@anyalt/sdk';
 import { useDisclosure, useSteps } from '@chakra-ui/react';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { useCallback, useEffect } from 'react';
+import { useAtom, useAtomValue } from 'jotai';
+import { useEffect } from 'react';
 import {
   EstimateResponse,
   Token,
@@ -9,19 +9,15 @@ import {
   WidgetTemplateType,
 } from '../../..';
 import {
-  activeOperationIdAtom,
   bestRouteAtom,
   selectedRouteAtom,
   showStuckTransactionDialogAtom,
-  transactionIndexAtom,
-  transactionsProgressAtom,
 } from '../../../store/stateStore';
-import { TransactionsProgress } from '../../../types/transaction';
-import { convertSwapTransactionToTransactionProgress } from '../../../utils';
 import { usePendingOperation } from '../../standalones/pendingOperationDialog/usePendingOperation';
 import { useConfirmRoute } from './useConfirmRoute';
 import { useControllWidget } from './useControllWidget';
 import { useFetchRoutes } from './useFetchRoutes';
+import { useSetOperation } from './useSetOperation';
 import { useSetupWidget } from './useSetupWidget';
 import { useWidgetWallets } from './useWidgetWallets';
 
@@ -74,24 +70,19 @@ export const useAnyaltWidget = ({
   onClose,
 }: Props): ReturnType => {
   const selectedRoute = useAtomValue(selectedRouteAtom);
+  const [bestRoute, setBestRoute] = useAtom(bestRouteAtom);
   const showStuckTransactionDialog = useAtomValue(
     showStuckTransactionDialogAtom,
   );
 
-  const [bestRoute, setBestRoute] = useAtom(bestRouteAtom);
-
-  const setTransactionIndex = useSetAtom(transactionIndexAtom);
-  const setActiveOperationId = useSetAtom(activeOperationIdAtom);
-  const setTransactionsProgress = useSetAtom(transactionsProgressAtom);
-
-  const { activeStep, setActiveStep, goToPrevious } = useSteps({
-    index: 0,
-  });
   const {
     isOpen: isConnectWalletsOpen,
     onClose: connectWalletsClose,
     onOpen: connectWalletsOpen,
   } = useDisclosure();
+  const { activeStep, setActiveStep, goToPrevious } = useSteps({
+    index: 0,
+  });
 
   const { showPendingOperationDialog, allNecessaryWalletsConnected } =
     usePendingOperation({ closeConnectWalletsModal: connectWalletsClose });
@@ -168,61 +159,10 @@ export const useAnyaltWidget = ({
     if (selectedRoute) setBestRoute(selectedRoute);
   }, [selectedRoute]);
 
-  const setOperationToCurrentRoute = useCallback(
-    (operation: BestRouteResponse) => {
-      setBestRoute(operation);
-      setActiveOperationId(operation.operationId);
-      setActiveStep(2);
-
-      const newTransactionProgress = {} as TransactionsProgress;
-      let lastFinishedTransactionIndex = 0;
-
-      operation.swapSteps.forEach((step, index) => {
-        step.transactions
-          .sort(
-            (a, b) =>
-              (Number(a.confirmedTimestamp) || 0) -
-              (Number(b.confirmedTimestamp) || 0),
-          )
-          .forEach((transaction) => {
-            newTransactionProgress[index] = {};
-            switch (transaction.type) {
-              case 'MAIN':
-                newTransactionProgress[index].swap =
-                  convertSwapTransactionToTransactionProgress(
-                    step,
-                    transaction,
-                  );
-
-                if (
-                  newTransactionProgress[index].swap?.status === 'confirmed'
-                ) {
-                  lastFinishedTransactionIndex = index + 1;
-                }
-
-                break;
-              case 'APPROVE':
-                newTransactionProgress[index].approve =
-                  convertSwapTransactionToTransactionProgress(
-                    step,
-                    transaction,
-                  );
-                break;
-              default:
-                break;
-            }
-          });
-      });
-
-      setTransactionsProgress(newTransactionProgress);
-      setTransactionIndex(lastFinishedTransactionIndex + 1);
-      setListOfTransactionsFromRoute(
-        operation,
-        operation.swapSteps[operation.swapSteps.length - 1].destinationToken,
-      );
-    },
-    [],
-  );
+  const { setOperationToCurrentRoute } = useSetOperation({
+    setActiveStep,
+    setListOfTransactionsFromRoute,
+  });
 
   return {
     loading,
