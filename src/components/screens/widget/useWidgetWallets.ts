@@ -85,8 +85,6 @@ export const useWidgetWallets = ({
     }
   }, [areWalletsConnected]);
 
-  
-
   return {
     evmAddress,
     solanaAddress,
