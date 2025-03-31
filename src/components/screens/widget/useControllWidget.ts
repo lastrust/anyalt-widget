@@ -1,5 +1,5 @@
-import { useAtom } from 'jotai';
-import { useCallback, useEffect, useState } from 'react';
+import { useAtom, useSetAtom } from 'jotai';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   activeOperationIdAtom,
   bestRouteAtom,
@@ -31,17 +31,19 @@ export const useControllWidget = ({
 }: ControllWidgetProps) => {
   const [openSlippageModal, setOpenSlippageModal] = useState(false);
 
-  const [, setBestRoute] = useAtom(bestRouteAtom);
+  const [bestRoute, setBestRoute] = useAtom(bestRouteAtom);
   const [, setCurrentStep] = useAtom(currentStepAtom);
   const [swapData, setSwapData] = useAtom(swapDataAtom);
-  const [, setSelectedToken] = useAtom(selectedTokenAtom);
-  const [, setTokenFetchError] = useAtom(tokenFetchErrorAtom);
-  const [, setTransactionsList] = useAtom(transactionsListAtom);
-  const [, setTransactionIndex] = useAtom(transactionIndexAtom);
-  const [, setActiveOperationId] = useAtom(activeOperationIdAtom);
-  const [, setSelectedTokenAmount] = useAtom(selectedTokenAmountAtom);
-  const [, setTransactionsProgress] = useAtom(transactionsProgressAtom);
-  const [, setLastMileTokenEstimate] = useAtom(lastMileTokenEstimateAtom);
+  const [selectedToken, setSelectedToken] = useAtom(selectedTokenAtom);
+  const setTokenFetchError = useSetAtom(tokenFetchErrorAtom);
+  const setTransactionsList = useSetAtom(transactionsListAtom);
+  const setTransactionIndex = useSetAtom(transactionIndexAtom);
+  const setActiveOperationId = useSetAtom(activeOperationIdAtom);
+  const [selectedTokenAmount, setSelectedTokenAmount] = useAtom(
+    selectedTokenAmountAtom,
+  );
+  const setTransactionsProgress = useSetAtom(transactionsProgressAtom);
+  const setLastMileTokenEstimate = useSetAtom(lastMileTokenEstimateAtom);
 
   const resetState = useCallback(() => {
     setActiveStep(0);
@@ -81,6 +83,17 @@ export const useControllWidget = ({
     setCurrentStep(activeStep);
   }, [activeStep]);
 
+  const isButtonDisabled = useMemo(() => {
+    if (activeStep === 0) {
+      return (
+        Number(selectedTokenAmount ?? 0) == 0 ||
+        selectedToken == null ||
+        !bestRoute
+      );
+    }
+    return Number(selectedTokenAmount ?? 0) == 0 || selectedToken == null;
+  }, [selectedTokenAmount, selectedToken, bestRoute, activeStep]);
+
   const onConfigClick = () => {
     setOpenSlippageModal(true);
   };
@@ -111,6 +124,7 @@ export const useControllWidget = ({
   };
 
   return {
+    isButtonDisabled,
     resetState,
     onComplete,
     onBackClick,

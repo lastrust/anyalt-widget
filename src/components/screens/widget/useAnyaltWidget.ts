@@ -1,7 +1,7 @@
 import { BestRouteResponse } from '@anyalt/sdk';
 import { useDisclosure, useSteps } from '@chakra-ui/react';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect } from 'react';
 import {
   EstimateResponse,
   Token,
@@ -12,8 +12,6 @@ import {
   activeOperationIdAtom,
   bestRouteAtom,
   selectedRouteAtom,
-  selectedTokenAmountAtom,
-  selectedTokenAtom,
   showStuckTransactionDialogAtom,
   transactionIndexAtom,
   transactionsProgressAtom,
@@ -75,9 +73,7 @@ export const useAnyaltWidget = ({
   estimateCallback,
   onClose,
 }: Props): ReturnType => {
-  const selectedToken = useAtomValue(selectedTokenAtom);
   const selectedRoute = useAtomValue(selectedRouteAtom);
-  const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
   const showStuckTransactionDialog = useAtomValue(
     showStuckTransactionDialogAtom,
   );
@@ -137,13 +133,14 @@ export const useAnyaltWidget = ({
   });
 
   const {
-    openSlippageModal,
-    setOpenSlippageModal,
+    isButtonDisabled,
     resetState,
     onConfigClick,
     onBackClick,
     onTxComplete,
     onComplete,
+    openSlippageModal,
+    setOpenSlippageModal,
   } = useControllWidget({
     activeStep,
     setActiveStep,
@@ -165,17 +162,6 @@ export const useAnyaltWidget = ({
     setLoading,
     getChain,
   });
-
-  const isButtonDisabled = useMemo(() => {
-    if (activeStep === 0) {
-      return (
-        Number(selectedTokenAmount ?? 0) == 0 ||
-        selectedToken == null ||
-        !bestRoute
-      );
-    }
-    return Number(selectedTokenAmount ?? 0) == 0 || selectedToken == null;
-  }, [selectedTokenAmount, selectedToken, bestRoute, activeStep]);
 
   //TODO: Should be refactored to handle it to handle selected route. Probably can be deleted
   useEffect(() => {
