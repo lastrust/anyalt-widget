@@ -35,7 +35,7 @@ export const useSetupWidget = ({
 }: UseSetupWidgetProps): UseSetupWidgetReturn => {
   const [allChains, setAllChains] = useAtom(allChainsAtom);
   const [anyaltInstance, setAnyaltInstance] = useAtom(anyaltInstanceAtom);
-  
+
   const setTemplate = useSetAtom(widgetTemplateAtom);
   const setLastMileToken = useSetAtom(lastMileTokenAtom);
   const setSwapResultToken = useSetAtom(swapResultTokenAtom);
