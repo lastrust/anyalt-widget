@@ -17,7 +17,7 @@ import { usePendingOperation } from '../../standalones/pendingOperationDialog/us
 import { useConfirmRoute } from './useConfirmRoute';
 import { useControllWidget } from './useControllWidget';
 import { useFetchRoutes } from './useFetchRoutes';
-import { useSetOperation } from './useSetOperation';
+import { useSetRoute } from './useSetRoute';
 import { useSetupWidget } from './useSetupWidget';
 import { useWidgetWallets } from './useWidgetWallets';
 
@@ -55,7 +55,7 @@ type ReturnType = {
   connectWalletsClose: () => void;
   setOpenSlippageModal: (value: boolean) => void;
   onChooseRouteButtonClick: () => Promise<void>;
-  setOperationToCurrentRoute: (operation: BestRouteResponse) => void;
+  setCurrentRoute: (operation: BestRouteResponse) => void;
   resetState: () => void;
 };
 
@@ -159,7 +159,7 @@ export const useAnyaltWidget = ({
     if (selectedRoute) setBestRoute(selectedRoute);
   }, [selectedRoute]);
 
-  const { setOperationToCurrentRoute } = useSetOperation({
+  const { setCurrentRoute } = useSetRoute({
     setActiveStep,
     setListOfTransactionsFromRoute,
   });
@@ -170,24 +170,24 @@ export const useAnyaltWidget = ({
     activeRoute: bestRoute,
     isValidAmountIn,
     isButtonDisabled,
+    headerCustomText,
     isConnectWalletsOpen,
     failedToFetchRoute,
     areWalletsConnected,
+    modalWrapperMaxWidth,
+    allNecessaryWalletsConnected,
     onBackClick,
     onComplete,
+    resetState,
     onTxComplete,
     onConfigClick,
+    setCurrentRoute,
     openSlippageModal,
     connectWalletsOpen,
     connectWalletsClose,
     setOpenSlippageModal,
     onChooseRouteButtonClick,
-    setOperationToCurrentRoute,
-    resetState,
     showPendingOperationDialog,
     showStuckTransactionDialog,
-    allNecessaryWalletsConnected,
-    modalWrapperMaxWidth,
-    headerCustomText,
   };
 };

@@ -6,7 +6,7 @@ import { ChainType, WalletConnector } from '../../../..';
 import {
   allChainsAtom,
   bestRouteAtom,
-  pendingOperationAtom,
+  pendingRouteAtom,
   swapResultTokenAtom,
 } from '../../../../store/stateStore';
 
@@ -50,7 +50,7 @@ export const useConnectWalletsModal = ({
   const [isBitcoinRequired, setIsBitcoinRequired] = useState(false);
 
   const bestRoute = useAtomValue(bestRouteAtom);
-  const pendingOperation = useAtomValue(pendingOperationAtom);
+  const pendingRoute = useAtomValue(pendingRouteAtom);
   const allChains = useAtomValue(allChainsAtom);
 
   const [walletStatus, setWalletStatus] = useState<
@@ -86,7 +86,7 @@ export const useConnectWalletsModal = ({
       setIsSolanaRequired(true);
     }
 
-    (pendingOperation?.swapSteps || [])
+    (pendingRoute?.swapSteps || [])
       .concat(...(bestRoute?.swapSteps || []))
       .forEach((swapStep) => {
         const fromBlockchain = swapStep.sourceToken.blockchain;

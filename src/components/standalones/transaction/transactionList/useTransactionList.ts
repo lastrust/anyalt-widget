@@ -6,7 +6,7 @@ import {
   bestRouteAtom,
   lastMileTokenAtom,
   lastMileTokenEstimateAtom,
-  pendingOperationAtom,
+  pendingRouteAtom,
   selectedTokenAmountAtom,
   selectedTokenAtom,
   swapResultTokenAtom,
@@ -22,7 +22,7 @@ type Props = {
 
 export const useTransactionList = ({ operationType }: Props) => {
   const bestRoute = useAtomValue(bestRouteAtom);
-  const pendingOperation = useAtomValue(pendingOperationAtom);
+  const pendingRoute = useAtomValue(pendingRouteAtom);
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
 
   const selectedToken = useAtomValue(selectedTokenAtom);
@@ -78,7 +78,7 @@ export const useTransactionList = ({ operationType }: Props) => {
 
   const sourceTokenDetails: TokenWithAmount = useMemo(() => {
     const sourceOfInfo =
-      operationType === 'CURRENT' ? bestRoute : pendingOperation;
+      operationType === 'CURRENT' ? bestRoute : pendingRoute;
 
     if (!sourceOfInfo || sourceOfInfo?.swapSteps.length === 0) {
       const chainType = selectedToken?.chainName
@@ -113,7 +113,7 @@ export const useTransactionList = ({ operationType }: Props) => {
         )!,
       };
     }
-  }, [operationType, bestRoute, pendingOperation, selectedToken]);
+  }, [operationType, bestRoute, pendingRoute, selectedToken]);
 
   const getStepOfPendingOperation = (
     pendingOperation: BestRouteResponse | undefined,
@@ -126,11 +126,11 @@ export const useTransactionList = ({ operationType }: Props) => {
   };
 
   return {
-    operation: operationType === 'CURRENT' ? bestRoute : pendingOperation,
+    operation: operationType === 'CURRENT' ? bestRoute : pendingRoute,
     currentStep:
       operationType === 'CURRENT'
         ? currentStep
-        : getStepOfPendingOperation(pendingOperation),
+        : getStepOfPendingOperation(pendingRoute),
     tokens: {
       from: sourceTokenDetails,
       to: destinationTokenDetails,

@@ -29,9 +29,7 @@ export const allChainsAtom = atom<SupportedChain[]>([]);
 
 export const bestRouteAtom = atom<BestRouteResponse | undefined>(undefined);
 
-export const pendingOperationAtom = atom<BestRouteResponse | undefined>(
-  undefined,
-);
+export const pendingRouteAtom = atom<BestRouteResponse | undefined>(undefined);
 
 export const showStuckTransactionDialogAtom = atom<boolean>(false);
 export const showPendingOperationDialogAtom = atom<boolean>(false);

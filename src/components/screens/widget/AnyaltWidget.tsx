@@ -45,12 +45,12 @@ export const AnyaltWidgetWrapper = ({
     resetState,
     onTxComplete,
     onConfigClick,
+    setCurrentRoute,
     openSlippageModal,
     connectWalletsOpen,
     connectWalletsClose,
     setOpenSlippageModal,
     onChooseRouteButtonClick,
-    setOperationToCurrentRoute,
     showStuckTransactionDialog,
     showPendingOperationDialog,
     allNecessaryWalletsConnected,
@@ -79,7 +79,7 @@ export const AnyaltWidgetWrapper = ({
         allNecessaryWalletsConnected={allNecessaryWalletsConnected}
         resetState={resetState}
         connectWalletsOpen={connectWalletsOpen}
-        setOperationToCurrentRoute={setOperationToCurrentRoute}
+        setCurrentRoute={setCurrentRoute}
       >
         <Stepper activeStep={activeStep}>
           <SelectTokenStep

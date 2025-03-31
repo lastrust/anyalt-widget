@@ -5,7 +5,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { ChainType, Token, WalletConnector } from '../../..';
 import {
   anyaltInstanceAtom,
-  pendingOperationAtom,
+  pendingRouteAtom,
   widgetTemplateAtom,
 } from '../../../store/stateStore';
 import { SwappingTemplate } from '../../templates/SwappingTemplate';
@@ -13,19 +13,19 @@ import { TransactionList } from '../transaction/transactionList/TransactionsList
 import { Actions } from './Actions';
 
 type Props = {
-  setOperationToCurrentRoute: (operation: BestRouteResponse) => void;
+  setCurrentRoute: (operation: BestRouteResponse) => void;
   walletConnector: WalletConnector | undefined;
   connectWalletsOpen: () => void;
   allNecessaryWalletsConnected: boolean;
 };
 
 export const PendingOperationDialog = ({
-  setOperationToCurrentRoute,
+  setCurrentRoute,
   walletConnector,
   connectWalletsOpen,
   allNecessaryWalletsConnected,
 }: Props) => {
-  const [pendingOperation, setPendingOperation] = useAtom(pendingOperationAtom);
+  const [pendingRoute, setPendingRoute] = useAtom(pendingRouteAtom);
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
 
@@ -33,7 +33,7 @@ export const PendingOperationDialog = ({
 
   const destinationToken = useMemo(() => {
     const lastStep =
-      pendingOperation?.swapSteps?.[pendingOperation?.swapSteps?.length - 1];
+      pendingRoute?.swapSteps?.[pendingRoute?.swapSteps?.length - 1];
 
     if (!lastStep) return null;
 
@@ -42,7 +42,7 @@ export const PendingOperationDialog = ({
       address: lastStep.destinationToken!.contractAddress,
       chainType: lastStep.destinationToken!.chainType as ChainType,
     } as Token;
-  }, [pendingOperation]);
+  }, [pendingRoute]);
 
   const mainButtonText = useMemo(() => {
     if (allNecessaryWalletsConnected) {
@@ -53,11 +53,11 @@ export const PendingOperationDialog = ({
   }, [allNecessaryWalletsConnected]);
 
   const onMainButtonClick = useCallback(() => {
-    if (!pendingOperation) return;
+    if (!pendingRoute) return;
 
     if (allNecessaryWalletsConnected) {
-      setOperationToCurrentRoute(pendingOperation);
-      setPendingOperation(undefined);
+      setCurrentRoute(pendingRoute);
+      setPendingRoute(undefined);
     } else {
       if (walletConnector) {
         walletConnector.connect();
@@ -68,7 +68,7 @@ export const PendingOperationDialog = ({
   }, [allNecessaryWalletsConnected, connectWalletsOpen]);
 
   const onDismissPendingOperation = useCallback(async () => {
-    if (!anyaltInstance || !pendingOperation) return;
+    if (!anyaltInstance || !pendingRoute) return;
     const localStorageKey =
       widgetTemplate === 'TOKEN_BUY' ? 'tokenBuyOperationId' : 'operationId';
 
@@ -77,14 +77,14 @@ export const PendingOperationDialog = ({
     setDisableActions(true);
 
     await anyaltInstance?.cancelOperation({
-      operationId: pendingOperation.operationId,
+      operationId: pendingRoute.operationId,
     });
 
-    setPendingOperation(undefined);
+    setPendingRoute(undefined);
     setDisableActions(false);
-  }, [anyaltInstance, pendingOperation, setPendingOperation, widgetTemplate]);
+  }, [anyaltInstance, pendingRoute, setPendingRoute, widgetTemplate]);
 
-  if (!pendingOperation || !destinationToken) return null;
+  if (!pendingRoute || !destinationToken) return null;
 
   return (
     <Grid templateColumns="1fr 1fr" gap="16px" m="24px 0px 16px">
@@ -94,7 +94,7 @@ export const PendingOperationDialog = ({
           onContinuePendingOperation={onMainButtonClick}
           onDismissPendingOperation={onDismissPendingOperation}
           mainButtonText={mainButtonText}
-          pendingOperation={pendingOperation}
+          pendingOperation={pendingRoute}
           destinationToken={destinationToken}
         />
       </SwappingTemplate>
