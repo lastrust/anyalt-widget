@@ -1,5 +1,6 @@
-import { BestRouteResponse, SupportedToken } from '@anyalt/sdk';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { SupportedToken } from '@anyalt/sdk';
+import { GetAllRoutesResponseItem } from '@anyalt/sdk/dist/adapter/api/api';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useCallback, useEffect, useState } from 'react';
 import { EstimateResponse, Token } from '../../..';
 import {
@@ -10,6 +11,7 @@ import {
   allRoutesAtom,
   anyaltInstanceAtom,
   lastMileTokenEstimateAtom,
+  selectedRouteAtom,
   selectedTokenAmountAtom,
   selectedTokenAtom,
   slippageAtom,
@@ -45,14 +47,16 @@ export const useFetchRoutes = ({
   const { balance } = useTokenInputBox();
 
   const slippage = useAtomValue(slippageAtom);
-  const allRoutes = useAtomValue(allRoutesAtom);
+
+  const [, setAllRoutes] = useAtom(allRoutesAtom); //HERE
+  const [selectedRoute, setSelectedRoute] = useAtom(selectedRouteAtom); //HERE
+
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
   const selectedToken = useAtomValue(selectedTokenAtom);
   const swapResultTokenGlobal = useAtomValue(swapResultTokenAtom);
   const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
   const lastMileTokenEstimate = useAtomValue(lastMileTokenEstimateAtom);
 
-  const setBestRoute = useSetAtom(allRoutesAtom);
   const setTokenFetchError = useSetAtom(tokenFetchErrorAtom);
   const setTransactionsList = useSetAtom(transactionsListAtom);
   const setLastMileTokenEstimate = useSetAtom(lastMileTokenEstimateAtom);
@@ -63,12 +67,12 @@ export const useFetchRoutes = ({
       return;
 
     if (selectedToken.id === swapResultTokenGlobal.id) {
-      setBestRoute({
-        outputAmount: selectedTokenAmount,
-        swapSteps: [],
-        operationId: '',
-        missingWalletForSourceBlockchain: false,
-      });
+      // setAllRoutes({
+      //   outputAmount: selectedTokenAmount,
+      //   swapSteps: [],
+      //   operationId: '',
+      //   missingWalletForSourceBlockchain: false,
+      // });
 
       setTokenFetchError({
         isError: false,
@@ -80,7 +84,7 @@ export const useFetchRoutes = ({
     try {
       setLoading(true);
 
-      const route = await anyaltInstance?.getBestRoute({
+      const res = await anyaltInstance?.getAllRoutes({
         fromToken: {
           address: selectedToken.tokenAddress ?? '',
           chainName: selectedToken.chainName,
@@ -94,16 +98,23 @@ export const useFetchRoutes = ({
         },
         amount: selectedTokenAmount,
         slippage,
+        selectedWallets: {
+          ETH: '0x0000000000000000000000000000000000000000',
+        },
+        userSessionKeyForSourceDestinationTokenPair:
+          '0x0000000000000000000000000000000000000000',
       });
 
       //TODO: Instead of setting best route. It should set all routes.
-      setBestRoute(route);
+      setAllRoutes(res?.routes);
+      setSelectedRoute(res?.routes[0]);
 
-      if (route && swapResultToken) {
-        setListOfTransactionsFromRoute(route, swapResultToken);
+      //TODO: Refactor to call this code on selected route.
+      if (selectedRoute && swapResultToken) {
+        setListOfTransactionsFromRoute(selectedRoute, swapResultToken);
       }
 
-      const tokensOut = parseFloat(route?.outputAmount || '0');
+      const tokensOut = parseFloat(selectedRoute?.outputAmount || '0');
       let isEnoughDepositTokens = tokensOut > minDepositAmount;
 
       setTokenFetchError({
@@ -111,9 +122,9 @@ export const useFetchRoutes = ({
         errorMessage: `Amount should be equal or greater than ${minDepositAmount} ${swapResultToken?.symbol}`,
       });
 
-      if (isEnoughDepositTokens && route) {
+      if (isEnoughDepositTokens && selectedRoute) {
         const { humanReadable: worstCaseOutput } = calculateWorstOutput(
-          route,
+          selectedRoute,
           slippage,
         );
 
@@ -150,7 +161,7 @@ export const useFetchRoutes = ({
   };
 
   const setListOfTransactionsFromRoute = useCallback(
-    (route: BestRouteResponse, inputToken: Partial<SupportedToken>) => {
+    (route: GetAllRoutesResponseItem, inputToken: Partial<SupportedToken>) => {
       const lastStepOfOperation = route?.swapSteps[route?.swapSteps.length - 1];
       const lastTokenOfOperation = lastStepOfOperation?.destinationToken;
 
@@ -242,19 +253,19 @@ export const useFetchRoutes = ({
 
   //TODO: Should be triggered, once all routes has been setted. Also figure out how to handle for multiple routes.
   useEffect(() => {
-    if (allRoutes) {
+    if (selectedRoute) {
       const token = {
         ...swapResultToken,
-        amount: allRoutes.outputAmount.toString(),
+        amount: selectedRoute.outputAmount.toString(),
       };
       estimateCallback(token).then((res) => {
         setLastMileTokenEstimate(res);
       });
     }
-  }, [allRoutes]);
+  }, [selectedRoute]);
 
   useEffect(() => {
-    if (activeStep === 1 && allRoutes) {
+    if (activeStep === 1 && selectedRoute) {
       const interval = setInterval(() => {
         // Capture latest values inside the interval callback
         const currentInToken = selectedToken;
@@ -264,7 +275,7 @@ export const useFetchRoutes = ({
           currentInToken &&
           currentProtocolInputToken &&
           currentInTokenAmount &&
-          allRoutes;
+          selectedRoute;
 
         if (userSelectedToken) {
           onGetRoutes(false);
@@ -273,7 +284,7 @@ export const useFetchRoutes = ({
 
       return () => clearInterval(interval);
     }
-  }, [allRoutes]);
+  }, [selectedRoute]);
 
   return {
     loading,

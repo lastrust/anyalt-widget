@@ -1,9 +1,5 @@
-import {
-  AnyAlt,
-  BestRouteResponse,
-  SupportedChain,
-  SupportedToken,
-} from '@anyalt/sdk';
+import { AnyAlt, SupportedChain, SupportedToken } from '@anyalt/sdk';
+import { GetAllRoutesResponseItem } from '@anyalt/sdk/dist/adapter/api/api';
 import { atom } from 'jotai';
 import { EstimateResponse, Token, WidgetTemplateType } from '..';
 import {
@@ -27,10 +23,16 @@ export const lastMileTokenEstimateAtom = atom<EstimateResponse | undefined>(
 
 export const allChainsAtom = atom<SupportedChain[]>([]);
 
-export const allRoutesAtom = atom<BestRouteResponse | undefined>(undefined);
-export const selectedRouteAtom = atom<BestRouteResponse | undefined>(undefined);
+export const allRoutesAtom = atom<GetAllRoutesResponseItem[] | undefined>(
+  undefined,
+);
+export const selectedRouteAtom = atom<GetAllRoutesResponseItem | undefined>(
+  undefined,
+);
 
-export const pendingRouteAtom = atom<BestRouteResponse | undefined>(undefined);
+export const pendingRouteAtom = atom<GetAllRoutesResponseItem | undefined>(
+  undefined,
+);
 
 export const showStuckTransactionDialogAtom = atom<boolean>(false);
 export const showPendingRouteDialogAtom = atom<boolean>(false);

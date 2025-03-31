@@ -9,6 +9,7 @@ import {
   allRoutesAtom,
   lastMileTokenAtom,
   lastMileTokenEstimateAtom,
+  selectedRouteAtom,
   selectedTokenAmountAtom,
   selectedTokenAtom,
   swapResultTokenAtom,
@@ -26,6 +27,7 @@ export const useSelectToken = ({
   const [openTokenSelect, setOpenTokenSelect] = useState<boolean>(false);
 
   const allRoutes = useAtomValue(allRoutesAtom);
+  const selectedRoute = useAtomValue(selectedRouteAtom);
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
   const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
 
@@ -62,22 +64,27 @@ export const useSelectToken = ({
   };
 
   const inTokenPrice = useMemo(() => {
-    if (!allRoutes || !selectedTokenAmount || allRoutes.swapSteps.length === 0)
+    if (
+      !selectedRoute ||
+      !selectedTokenAmount ||
+      selectedRoute?.swapSteps.length === 0
+    )
       return '';
-    const tokenPrice = allRoutes.swapSteps[0].sourceToken.tokenUsdPrice;
+    const tokenPrice = selectedRoute?.swapSteps[0].sourceToken.tokenUsdPrice;
 
     if (!tokenPrice) return '';
     return (tokenPrice * parseFloat(selectedTokenAmount)).toFixed(2);
-  }, [allRoutes, selectedTokenAmount]);
+  }, [selectedRoute, selectedTokenAmount]);
 
   const outTokenPrice = useMemo(() => {
-    if (!allRoutes || allRoutes.swapSteps.length === 0) return '';
-    const lastStep = allRoutes.swapSteps[allRoutes.swapSteps.length - 1];
+    if (!selectedRoute || selectedRoute.swapSteps.length === 0) return '';
+    const lastStep =
+      selectedRoute.swapSteps[selectedRoute.swapSteps.length - 1];
     const tokenPrice = lastStep.destinationToken.tokenUsdPrice;
 
     if (!tokenPrice) return '';
-    return (tokenPrice * parseFloat(allRoutes.outputAmount)).toFixed(2);
-  }, [allRoutes]);
+    return (tokenPrice * parseFloat(selectedRoute.outputAmount)).toFixed(2);
+  }, [selectedRoute]);
 
   const isEvmWalletConnected = useMemo(() => {
     return (

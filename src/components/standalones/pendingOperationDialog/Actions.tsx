@@ -1,4 +1,4 @@
-import { BestRouteResponse } from '@anyalt/sdk';
+import { GetAllRoutesResponseItem } from '@anyalt/sdk/dist/adapter/api/api';
 import { Box, BoxProps, Button, Flex, Icon, Text } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { Token } from '../../..';
@@ -12,7 +12,7 @@ type Props = {
   onContinuePendingOperation: () => void;
   onDismissPendingOperation: () => void;
   mainButtonText: string;
-  pendingOperation: BestRouteResponse;
+  pendingOperation: GetAllRoutesResponseItem;
   destinationToken: Token;
 } & BoxProps;
 

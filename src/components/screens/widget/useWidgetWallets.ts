@@ -7,6 +7,7 @@ import { ChainType, WalletConnector } from '../../..';
 import {
   allChainsAtom,
   allRoutesAtom,
+  selectedRouteAtom,
   swapResultTokenAtom,
 } from '../../../store/stateStore';
 
@@ -22,7 +23,8 @@ export const useWidgetWallets = ({
   connectWalletsClose,
 }: Props) => {
   const allChains = useAtomValue(allChainsAtom);
-  const bestRoute = useAtomValue(allRoutesAtom);
+  const allRoutes = useAtomValue(allRoutesAtom);
+  const selectedRoute = useAtomValue(selectedRouteAtom);
   const swapResultTokenGlobal = useAtomValue(swapResultTokenAtom);
 
   const { address: evmAddress, isConnected: isEvmConnected } = useAccount();
@@ -49,7 +51,7 @@ export const useWidgetWallets = ({
       isSolanaRequired = true;
     }
 
-    bestRoute?.swapSteps.forEach((swapStep) => {
+    selectedRoute?.swapSteps.forEach((swapStep) => {
       const fromBlockchain = swapStep.sourceToken.blockchain;
       const toBlockchain = swapStep.destinationToken.blockchain;
       const isSolanaFrom = fromBlockchain === 'SOLANA';
@@ -77,7 +79,7 @@ export const useWidgetWallets = ({
     if (isBitcoinRequired && !bitcoinAccount) isWalletConnected = false;
 
     return isWalletConnected;
-  }, [isSolanaConnected, isEvmConnected, bestRoute, bitcoinAccount]);
+  }, [isSolanaConnected, isEvmConnected, allRoutes, bitcoinAccount]);
 
   useEffect(() => {
     if (areWalletsConnected && isConnectWalletsOpen) {

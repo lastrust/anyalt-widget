@@ -1,7 +1,6 @@
-import { BestRouteResponse } from '@anyalt/sdk';
+import { GetAllRoutesResponseItem } from '@anyalt/sdk/dist/adapter/api/api';
 import { useDisclosure, useSteps } from '@chakra-ui/react';
 import { useAtom, useAtomValue } from 'jotai';
-import { useEffect } from 'react';
 import {
   EstimateResponse,
   Token,
@@ -10,7 +9,6 @@ import {
 } from '../../..';
 import {
   allRoutesAtom,
-  selectedRouteAtom,
   showStuckTransactionDialogAtom,
 } from '../../../store/stateStore';
 import { usePendingOperation } from '../../standalones/pendingOperationDialog/usePendingOperation';
@@ -35,7 +33,7 @@ type Props = {
 type ReturnType = {
   loading: boolean;
   activeStep: number;
-  allRoutes: BestRouteResponse | undefined;
+  allRoutes: GetAllRoutesResponseItem[] | undefined;
   isValidAmountIn: boolean;
   isButtonDisabled: boolean;
   openSlippageModal: boolean;
@@ -55,7 +53,7 @@ type ReturnType = {
   connectWalletsClose: () => void;
   setOpenSlippageModal: (value: boolean) => void;
   onChooseRouteButtonClick: () => Promise<void>;
-  setCurrentRoute: (operation: BestRouteResponse) => void;
+  setCurrentRoute: (route: GetAllRoutesResponseItem) => void;
   resetState: () => void;
 };
 
@@ -69,8 +67,7 @@ export const useAnyaltWidget = ({
   estimateCallback,
   onClose,
 }: Props): ReturnType => {
-  const [allRoutes, setAllRoutes] = useAtom(allRoutesAtom);
-  const [selectedRoute] = useAtom(selectedRouteAtom);
+  const [allRoutes] = useAtom(allRoutesAtom);
   const showStuckTransactionDialog = useAtomValue(
     showStuckTransactionDialogAtom,
   );
@@ -155,9 +152,9 @@ export const useAnyaltWidget = ({
   });
 
   //TODO: Should be refactored to handle it to handle selected route. Probably can be deleted
-  useEffect(() => {
-    if (selectedRoute) setAllRoutes(selectedRoute);
-  }, [selectedRoute]);
+  // useEffect(() => {
+  //   if (selectedRoute) setAllRoutes(selectedRoute);
+  // }, [selectedRoute]);
 
   const { setCurrentRoute } = useSetRoute({
     setActiveStep,

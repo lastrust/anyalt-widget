@@ -1,9 +1,11 @@
-import { BestRouteResponse, SupportedToken } from '@anyalt/sdk';
+import { SupportedToken } from '@anyalt/sdk';
+import { GetAllRoutesResponseItem } from '@anyalt/sdk/dist/adapter/api/api';
 import { useSetAtom } from 'jotai';
 import { useCallback } from 'react';
 import {
   activeOperationIdAtom,
   allRoutesAtom,
+  selectedRouteAtom,
   transactionIndexAtom,
   transactionsProgressAtom,
 } from '../../../store/stateStore';
@@ -13,7 +15,7 @@ import { convertSwapTransactionToTransactionProgress } from '../../../utils';
 type UseSetRouteProps = {
   setActiveStep: (step: number) => void;
   setListOfTransactionsFromRoute: (
-    route: BestRouteResponse,
+    route: GetAllRoutesResponseItem,
     inputToken: Partial<SupportedToken>,
   ) => void;
 };
@@ -23,14 +25,16 @@ export const useSetRoute = ({
   setListOfTransactionsFromRoute,
 }: UseSetRouteProps) => {
   const setBestRoute = useSetAtom(allRoutesAtom);
+  const setSelectedRoute = useSetAtom(selectedRouteAtom);
+
   const setTransactionIndex = useSetAtom(transactionIndexAtom);
   const setActiveOperationId = useSetAtom(activeOperationIdAtom);
   const setTransactionsProgress = useSetAtom(transactionsProgressAtom);
 
   const setCurrentRoute = useCallback(
-    (route: BestRouteResponse) => {
-      setBestRoute(route);
-      setActiveOperationId(route.operationId);
+    (route: GetAllRoutesResponseItem) => {
+      setSelectedRoute(route);
+      setActiveOperationId(route.routeId);
       setActiveStep(2);
 
       const newTransactionProgress = {} as TransactionsProgress;

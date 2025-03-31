@@ -1,3 +1,4 @@
+import { GetAllRoutesResponseItem } from '@anyalt/sdk/dist/adapter/api/api';
 import { useAtom, useAtomValue } from 'jotai';
 import { useMemo } from 'react';
 import {
@@ -12,7 +13,7 @@ import {
 } from '../../../../store/stateStore';
 import { truncateToDecimals } from '../../../../utils/truncateToDecimals';
 
-export const useBestRouteAccordion = () => {
+export const useAllRoutesAccordion = () => {
   const slippage = useAtomValue(slippageAtom);
   const allRoutes = useAtomValue(allRoutesAtom);
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
@@ -22,12 +23,10 @@ export const useBestRouteAccordion = () => {
   const lastMileToken = useAtomValue(lastMileTokenAtom);
   const lastMileTokenEstimate = useAtomValue(lastMileTokenEstimateAtom);
 
-  const [, setSelectedRoute] = useAtom(selectedRouteAtom);
+  const [selectedRoute, setSelectedRoute] = useAtom(selectedRouteAtom);
 
-  const fees = useMemo(() => {
-    if (!allRoutes) return '0.00';
-
-    const totalFees = allRoutes?.swapSteps
+  const calcFees = (route: GetAllRoutesResponseItem) => {
+    const totalFees = route?.swapSteps
       ?.flatMap((step) => step.fees)
       ?.reduce((acc, fee) => {
         const amount = parseFloat(fee.amount);
@@ -35,22 +34,19 @@ export const useBestRouteAccordion = () => {
         return acc + amount * price;
       }, 0);
 
-    const totalWithFinalFees =
-      totalFees + parseFloat(lastMileTokenEstimate?.estimatedFeeInUSD ?? '0');
-
-    return `$${totalWithFinalFees.toFixed(2).toString() || '0.00'}`;
-  }, [allRoutes, lastMileTokenEstimate]);
+    return `$${totalFees.toFixed(2).toString() || '0.00'}`;
+  };
 
   const areSwapsExists = useMemo(() => {
-    return Boolean(allRoutes?.swapSteps?.length);
+    return Boolean(selectedRoute?.swapSteps?.length);
   }, [allRoutes]);
 
   const recentSwap = useMemo(() => {
-    return allRoutes?.swapSteps?.[allRoutes?.swapSteps?.length - 1];
+    return selectedRoute?.swapSteps?.[selectedRoute?.swapSteps?.length - 1];
   }, [allRoutes]);
 
-  const handleRouteSelect = () => {
-    setSelectedRoute(allRoutes);
+  const handleRouteSelect = (route: GetAllRoutesResponseItem) => {
+    setSelectedRoute(route);
   };
 
   const finalSwapToken = useMemo(() => {
@@ -74,15 +70,15 @@ export const useBestRouteAccordion = () => {
   }, [swapResultToken, selectedTokenAmount]);
 
   return {
-    fees,
     slippage,
-    bestRoute: allRoutes,
+    allRoutes,
     widgetTemplate,
     fromToken: areSwapsExists ? finalSwapToken : protocolDepositToken,
     handleRouteSelect,
     protocolFinalToken: lastMileToken,
     protocolInputToken: swapResultToken,
     finalTokenEstimate: lastMileTokenEstimate,
+    calcFees,
     finalSwapToken,
   };
 };

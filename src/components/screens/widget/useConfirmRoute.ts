@@ -7,6 +7,7 @@ import {
   activeOperationIdAtom,
   allRoutesAtom,
   anyaltInstanceAtom,
+  selectedRouteAtom,
   transactionsProgressAtom,
 } from '../../../store/stateStore';
 
@@ -39,6 +40,7 @@ export const useConfirmRoute = ({
 }: UseConfirmRouteProps) => {
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
   const [allRoutes, setAllRoutes] = useAtom(allRoutesAtom);
+  const selectedRoute = useAtomValue(selectedRouteAtom);
 
   const setActiveOperationId = useSetAtom(activeOperationIdAtom);
   const setTransactionsProgress = useSetAtom(transactionsProgressAtom);
@@ -68,7 +70,7 @@ export const useConfirmRoute = ({
 
       const selectedWallets: Record<string, string> = {};
       //TODO: It shoudl read data from selected route.
-      allRoutes?.swapSteps.forEach((swapStep, index) => {
+      selectedRoute?.swapSteps.forEach((swapStep, index) => {
         const fromBlockchain = swapStep.sourceToken.blockchain;
         const toBlockchain = swapStep.destinationToken.blockchain;
 
@@ -111,7 +113,7 @@ export const useConfirmRoute = ({
         if (isEvmFrom) selectedWallets[fromBlockchain] = evmAddress!;
         if (isEvmTo) selectedWallets[toBlockchain] = evmAddress!;
 
-        if (index === allRoutes.swapSteps.length - 1) {
+        if (index === selectedRoute.swapSteps.length - 1) {
           switch (true) {
             case isEvmTo:
               destination = evmAddress!;
@@ -128,15 +130,15 @@ export const useConfirmRoute = ({
         }
       });
 
-      if (allRoutes?.swapSteps.length === 0) {
+      if (selectedRoute?.swapSteps.length === 0) {
         const res = await anyaltInstance?.createOperation();
         if (!res?.operationId) throw new Error('Failed to create operation');
 
         setActiveOperationId(res?.operationId);
       } else {
-        if (!allRoutes?.operationId) return;
+        if (!selectedRoute?.routeId) return;
         const res = await anyaltInstance?.confirmRoute({
-          operationId: allRoutes?.operationId,
+          operationId: selectedRoute?.routeId,
           selectedWallets,
           destination: destination,
         });

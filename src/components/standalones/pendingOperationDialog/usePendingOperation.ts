@@ -6,6 +6,7 @@ import { useAccount } from 'wagmi';
 import {
   allRoutesAtom,
   anyaltInstanceAtom,
+  selectedRouteAtom,
   showPendingRouteDialogAtom,
   widgetTemplateAtom,
 } from '../../../store/stateStore';
@@ -18,6 +19,7 @@ type Props = {
   closeConnectWalletsModal: () => void;
 };
 export const usePendingOperation = ({ closeConnectWalletsModal }: Props) => {
+  const [selectedRoute] = useAtom(selectedRouteAtom);
   const [showPendingRouteDialog, setShowPendingRouteDialog] = useAtom(
     showPendingRouteDialogAtom,
   );
@@ -44,17 +46,17 @@ export const usePendingOperation = ({ closeConnectWalletsModal }: Props) => {
       anyalt: AnyAlt,
       operationId: string,
     ) => {
-      const pendingOperation = await anyalt.getPendingOperation({
+      const pendingRoute = await anyalt.getPendingOperation({
         operationId: operationId,
       });
-      if (pendingOperation?.operationId) {
+      if (pendingRoute?.operationId) {
         setPendingRoute({
           missingWalletForSourceBlockchain: true,
-          operationId: pendingOperation.operationId,
-          swapSteps: pendingOperation.swapSteps!,
+          routeId: pendingRoute.operationId,
+          swapSteps: pendingRoute.swapSteps!,
           outputAmount:
-            pendingOperation.swapSteps![pendingOperation.swapSteps!.length - 1]
-              .payout,
+            pendingRoute.swapSteps![pendingRoute.swapSteps!.length - 1].payout,
+          tags: [],
         });
       }
     };
@@ -87,11 +89,12 @@ export const usePendingOperation = ({ closeConnectWalletsModal }: Props) => {
       if (pendingOperation?.operationId) {
         setPendingRoute({
           missingWalletForSourceBlockchain: true,
-          operationId: pendingOperation.operationId,
+          routeId: pendingOperation.operationId,
           swapSteps: pendingOperation.swapSteps!,
           outputAmount:
             pendingOperation.swapSteps![pendingOperation.swapSteps!.length - 1]
               .payout,
+          tags: [],
         });
       }
     };
@@ -124,13 +127,13 @@ export const usePendingOperation = ({ closeConnectWalletsModal }: Props) => {
    */
   useEffect(() => {
     if (
-      pendingRoute?.operationId &&
-      pendingRoute?.operationId !== allRoutes?.operationId
+      pendingRoute?.routeId &&
+      pendingRoute?.routeId !== selectedRoute?.routeId
     ) {
       closeConnectWalletsModal();
       setShowPendingRouteDialog(true);
     }
-    if (!pendingRoute || pendingRoute?.operationId === allRoutes?.operationId) {
+    if (!pendingRoute || pendingRoute?.routeId === selectedRoute?.routeId) {
       setShowPendingRouteDialog(false);
     }
   }, [

@@ -1,8 +1,8 @@
-import { BestRouteResponse } from '@anyalt/sdk';
+import { GetAllRoutesResponseItem } from '@anyalt/sdk/dist/adapter/api/api';
 import { Grid } from '@chakra-ui/react';
 import { WalletConnector } from '../../..';
 import { SwappingTemplate } from '../../templates/SwappingTemplate';
-import { BestRouteAccordion } from '../accordions/bestRouteAccordion/BestRouteAccordion';
+import { AllRoutesAccordion } from '../accordions/bestRouteAccordion/AllRoutesAccordion';
 import { SelectToken } from '../selectSwap/SelectToken';
 
 type Props = {
@@ -11,7 +11,7 @@ type Props = {
   failedToFetchRoute: boolean;
   areWalletsConnected: boolean;
   walletConnector?: WalletConnector;
-  activeRoute: BestRouteResponse | undefined;
+  allRoutes: GetAllRoutesResponseItem[] | undefined;
   onConfigClick: () => void;
   connectWalletsOpen: () => void;
   onChooseRouteButtonClick: () => void;
@@ -20,7 +20,7 @@ type Props = {
 
 export const ChoosingRouteStep = ({
   loading,
-  activeRoute,
+  allRoutes,
   failedToFetchRoute,
   walletConnector,
   areWalletsConnected,
@@ -30,7 +30,7 @@ export const ChoosingRouteStep = ({
   setOpenSlippageModal,
   onChooseRouteButtonClick,
 }: Props) => {
-  const buttonText = activeRoute
+  const buttonText = allRoutes
     ? areWalletsConnected
       ? 'Start Transaction'
       : 'Connect Wallet/s To Start Transaction'
@@ -60,7 +60,7 @@ export const ChoosingRouteStep = ({
             : 'Please select preferred route'
         }
       >
-        <BestRouteAccordion
+        <AllRoutesAccordion
           loading={loading}
           failedToFetchRoute={failedToFetchRoute}
         />

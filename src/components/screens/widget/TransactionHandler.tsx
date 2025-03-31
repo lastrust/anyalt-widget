@@ -1,4 +1,4 @@
-import { BestRouteResponse } from '@anyalt/sdk';
+import { GetAllRoutesResponseItem } from '@anyalt/sdk/dist/adapter/api/api';
 import { WalletConnector } from '../../..';
 import { PendingOperationDialog } from '../../standalones/pendingOperationDialog/PendingOperationDialog';
 import { StuckTransactionDialog } from '../../standalones/stuckTransactionDialog/StuckTransactionDialog';
@@ -6,7 +6,7 @@ import { StuckTransactionDialog } from '../../standalones/stuckTransactionDialog
 type Props = {
   showPendingRouteDialog: boolean;
   showStuckTransactionDialog: boolean;
-  setCurrentRoute: (operation: BestRouteResponse) => void;
+  setCurrentRoute: (route: GetAllRoutesResponseItem) => void;
   walletConnector?: WalletConnector;
   allNecessaryWalletsConnected: boolean;
   connectWalletsOpen: () => void;

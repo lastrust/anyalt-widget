@@ -94,7 +94,7 @@ export const AnyaltWidgetWrapper = ({
           />
           <ChoosingRouteStep
             loading={loading}
-            activeRoute={allRoutes}
+            allRoutes={allRoutes}
             walletConnector={walletConnector}
             failedToFetchRoute={failedToFetchRoute}
             areWalletsConnected={areWalletsConnected}

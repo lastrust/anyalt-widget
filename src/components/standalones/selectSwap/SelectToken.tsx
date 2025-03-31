@@ -1,5 +1,7 @@
 import { BoxProps, Divider, Flex, VStack } from '@chakra-ui/react';
+import { useAtomValue } from 'jotai';
 import { WalletConnector } from '../../..';
+import { selectedRouteAtom } from '../../../store/stateStore';
 import { truncateToDecimals } from '../../../utils/truncateToDecimals';
 import { CustomButton } from '../../atoms/buttons/CustomButton';
 import { TokenSelectModal } from '../modals/selectTokenModal/SelectTokenModal';
@@ -37,8 +39,8 @@ export const SelectToken = ({
   buttonText = 'Start Transaction',
   ...props
 }: Props) => {
+  const selectedRoute = useAtomValue(selectedRouteAtom);
   const {
-    bestRoute,
     isConnected,
     solanaAddress,
     evmAddress,
@@ -85,7 +87,7 @@ export const SelectToken = ({
           tokenLogo={protocolInputToken?.logoUrl ?? ''}
           chainName={protocolInputToken?.chain?.displayName ?? ''}
           chainLogo={protocolInputToken?.chain?.logoUrl ?? ''}
-          amount={truncateToDecimals(bestRoute?.outputAmount ?? '0.00', 4)}
+          amount={truncateToDecimals(selectedRoute?.outputAmount ?? '0.00', 4)}
           price={truncateToDecimals(outTokenPrice ?? '0.00', 4)}
         />
 

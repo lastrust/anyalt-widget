@@ -1,4 +1,4 @@
-import { BestRouteResponse } from '@anyalt/sdk';
+import { GetAllRoutesResponseItem } from '@anyalt/sdk/dist/adapter/api/api';
 import { Grid } from '@chakra-ui/react';
 import { useAtom, useAtomValue } from 'jotai';
 import { useCallback, useMemo, useState } from 'react';
@@ -13,7 +13,7 @@ import { TransactionList } from '../transaction/transactionList/TransactionsList
 import { Actions } from './Actions';
 
 type Props = {
-  setCurrentRoute: (operation: BestRouteResponse) => void;
+  setCurrentRoute: (route: GetAllRoutesResponseItem) => void;
   walletConnector: WalletConnector | undefined;
   connectWalletsOpen: () => void;
   allNecessaryWalletsConnected: boolean;
@@ -77,7 +77,7 @@ export const PendingOperationDialog = ({
     setDisableActions(true);
 
     await anyaltInstance?.cancelOperation({
-      operationId: pendingRoute.operationId,
+      operationId: pendingRoute.routeId,
     });
 
     setPendingRoute(undefined);
