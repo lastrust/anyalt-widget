@@ -12,7 +12,7 @@ export const useSolanaHandler = () => {
   const handleSolanaTransaction = useCallback(
     async (
       transactionDetails: SolanaTransactionDataResponse,
-    ): Promise<string | undefined> => {
+    ): Promise<string> => {
       if (!publicKey || !connection) {
         throw new TransactionError(
           'No public key or connection found. Please connect your wallet.',

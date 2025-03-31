@@ -25,6 +25,7 @@ import { mapBlockchainToChainType } from '../../../utils/chains';
 import { getTransactionData } from '../../../utils/getTransactionData';
 import { handleSignerAddress } from '../../../utils/handleSignerAddress';
 import { submitPendingTransaction } from '../../../utils/submitPendingTransaction';
+import { useStuckTransaction } from '../stuckTransactionDialog/useStuckTransaction';
 import { useHandleTransaction } from './handlers/useHandleTransaction';
 
 export const useExecuteTokensSwap = (
@@ -50,6 +51,8 @@ export const useExecuteTokensSwap = (
     externalEvmWalletConnector,
   });
 
+  const { keepPollingOnTxStuck } = useStuckTransaction();
+
   const executeTokensSwap = async (
     aaInstance: AnyAlt,
     operationId: string,
@@ -63,6 +66,7 @@ export const useExecuteTokensSwap = (
       currentStep: number;
     }>,
     estimateCallback: (token: Token) => Promise<EstimateResponse>,
+    higherGasCost?: boolean,
   ) => {
     let isCrosschainSwapError = false;
     do {
@@ -71,6 +75,7 @@ export const useExecuteTokensSwap = (
       let isApproval = false;
       let chainName: string | undefined;
       let txHash: string | undefined;
+      let nonce: number | undefined;
 
       try {
         const currentStep = bestRoute?.swapSteps?.[transactionIndex - 1];
@@ -135,14 +140,20 @@ export const useExecuteTokensSwap = (
           },
         });
 
-        txHash = await handleTransaction(transactionData);
+        const { nonce: nonceRes, txHash: txHashRes } = await handleTransaction(
+          transactionData,
+          higherGasCost,
+        );
+
+        nonce = nonceRes!;
+        txHash = txHashRes!;
 
         updateTransactionProgress({
           isApproval,
           status: TX_STATUS.broadcasting,
           message: TX_MESSAGE.broadcasting,
           chainName,
-          txHash,
+          txHash: txHash!,
           details: {
             currentStep: transactionIndex,
             totalSteps,
@@ -153,7 +164,8 @@ export const useExecuteTokensSwap = (
         await submitPendingTransaction(aaInstance, {
           operationId,
           type: transactionType,
-          txHash: txHash || '',
+          txHash: txHash,
+          nonce: nonce,
           signerAddress: signerAddress,
         });
 
@@ -162,7 +174,7 @@ export const useExecuteTokensSwap = (
           status: TX_STATUS.pending,
           message: TX_MESSAGE.pending,
           chainName,
-          txHash,
+          txHash: txHash!,
           details: {
             currentStep: transactionIndex,
             totalSteps,
@@ -172,7 +184,9 @@ export const useExecuteTokensSwap = (
 
         const waitForTxResponse = await aaInstance.waitForTx({
           operationId,
+          keepPollingOnTxStuck,
         });
+
         const swapIsFinished = waitForTxResponse.swapIsFinished;
         const crosschainSwapOutputAmount =
           waitForTxResponse?.outputAmount || '0';
@@ -199,7 +213,7 @@ export const useExecuteTokensSwap = (
             status: TX_STATUS.confirmed,
             message: TX_MESSAGE.confirmed,
             chainName,
-            txHash,
+            txHash: txHash!,
             details: {
               currentStep: transactionIndex,
               totalSteps,
@@ -232,7 +246,7 @@ export const useExecuteTokensSwap = (
           status: TX_STATUS.confirmed,
           message: TX_MESSAGE.confirmed,
           chainName,
-          txHash,
+          txHash: txHash!,
           details: {
             currentStep: transactionIndex,
             totalSteps,
@@ -273,7 +287,7 @@ export const useExecuteTokensSwap = (
           message: errorMessage,
           error: errorStatus,
           chainName,
-          txHash,
+          txHash: txHash!,
           details: {
             currentStep: transactionIndex,
             totalSteps,

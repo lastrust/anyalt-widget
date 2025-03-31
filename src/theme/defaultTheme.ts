@@ -54,6 +54,7 @@ export const defaultTheme = extendTheme({
         warning: '#f9e154',
         error: '#E53030',
         active: '#008080',
+        highlight: '#3777F7',
         secondary: {
           0: '#ffffff',
           1: 'rgba(255, 255, 255, 0.80)',
@@ -77,6 +78,11 @@ export const defaultTheme = extendTheme({
           bgFaded: '#00808033',
           hover: '#006666',
           disabled: '00808033',
+        },
+        outline: {
+          border: '#ffffff',
+          text: '#fffffff',
+          hover: 'rgba(255, 255, 255, 0.1)',
         },
         disabled: '#0B3E3E',
       },

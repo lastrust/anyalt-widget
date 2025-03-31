@@ -17,7 +17,8 @@ export type TransactionStatus =
   | 'signing'
   | 'broadcasting'
   | 'confirmed'
-  | 'failed';
+  | 'failed'
+  | 'stuck';
 
 export interface TransactionProgressDetails {
   currentStep: number;

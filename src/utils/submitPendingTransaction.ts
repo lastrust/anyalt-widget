@@ -10,6 +10,7 @@ export const submitPendingTransaction = async (
       operationId: request.operationId,
       type: request.type,
       txHash: request.txHash,
+      nonce: request.nonce,
       signerAddress: request.signerAddress,
     });
     console.log('Pending transaction submitted:', request);

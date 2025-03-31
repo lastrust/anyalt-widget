@@ -1,3 +1,5 @@
+import { BestRouteResponse } from '@anyalt/sdk';
+import { SwapOperationStep } from '@anyalt/sdk/dist/adapter/api/api';
 import {
   Accordion,
   AccordionButton,
@@ -9,18 +11,16 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { useEffect, useState } from 'react';
 import {
-  bestRouteAtom,
   lastMileTokenAtom,
   lastMileTokenEstimateAtom,
-  selectedRouteAtom,
   swapResultTokenAtom,
-  transactionIndexAtom,
   transactionsProgressAtom,
   widgetTemplateAtom,
 } from '../../../store/stateStore';
+import { convertSwapTransactionToTransactionProgress } from '../../../utils';
 import { truncateToDecimals } from '../../../utils/truncateToDecimals';
 import { CheckIcon } from '../../atoms/icons/transaction/CheckIcon';
 import { DividerIcon } from '../../atoms/icons/transaction/DividerIcon';
@@ -30,11 +30,19 @@ import { TransactionStep } from '../../molecules/steps/TransactionStep';
 import { TransactionHash } from '../../molecules/text/TransactionHash';
 import { LastMileTxAccordion } from './LastMileTxAccordion';
 
-export const TransactionAccordion = () => {
+type Props = {
+  operation: BestRouteResponse | undefined;
+  currentStep: number;
+  operationType: 'CURRENT' | 'PENDING';
+};
+
+export const TransactionAccordion = ({
+  operation,
+  currentStep,
+  operationType,
+}: Props) => {
   const [expandedIndexes, setExpandedIndexes] = useState<number[]>([]);
 
-  const bestRoute = useAtomValue(bestRouteAtom);
-  const currentStep = useAtomValue(transactionIndexAtom);
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
 
   const swapResultToken = useAtomValue(swapResultTokenAtom);
@@ -43,19 +51,45 @@ export const TransactionAccordion = () => {
 
   const transactionsProgress = useAtomValue(transactionsProgressAtom);
 
-  const [, setSelectedRoute] = useAtom(selectedRouteAtom);
-
-  const handleRouteSelect = () => {
-    setSelectedRoute(bestRoute);
-  };
-
   useEffect(() => {
-    if (currentStep > 0) {
-      setExpandedIndexes([currentStep - 1]);
+    if (operationType === 'CURRENT') {
+      if (currentStep > 0) {
+        setExpandedIndexes([currentStep - 1]);
+      }
+    } else {
+      setExpandedIndexes(
+        Array.from(
+          {
+            length: (operation?.swapSteps || []).filter(
+              (step) => step.transactions.length,
+            ).length,
+          },
+          (_, i) => i,
+        ),
+      );
     }
   }, [currentStep]);
 
-  if (!bestRoute) return <></>;
+  const isStepCurrentOne = (stepIndex: number, swapStep: SwapOperationStep) => {
+    if (currentStep - 1 !== stepIndex) return false;
+
+    if (operationType === 'PENDING') {
+      return swapStep.transactions.length;
+    } else {
+      return (
+        Boolean(
+          transactionsProgress![stepIndex]?.approve ||
+            transactionsProgress![stepIndex]?.swap,
+        ) &&
+        Boolean(
+          transactionsProgress![stepIndex]?.approve?.status !== 'failed' &&
+            transactionsProgress![stepIndex]?.swap?.status !== 'failed',
+        )
+      );
+    }
+  };
+
+  if (!operation) return <></>;
 
   return (
     <Accordion
@@ -67,13 +101,11 @@ export const TransactionAccordion = () => {
       display={'flex'}
       flexDir={'column'}
     >
-      {bestRoute?.swapSteps.map((swapStep, index) => (
+      {operation?.swapSteps.map((swapStep, index) => (
         <AccordionItem
           key={`${swapStep.executionOrder}-${index}`}
           p={'16px'}
-          cursor={'pointer'}
           bg="brand.text.secondary.3"
-          onClick={handleRouteSelect}
           borderRadius={'10px'}
           borderWidth={'3px!important'}
           borderColor={
@@ -95,21 +127,26 @@ export const TransactionAccordion = () => {
               <Text textStyle={'bold.1'} mr="8px">
                 Transaction {index + 1}
               </Text>
-              {currentStep - 1 > index && <CheckIcon />}
-              {Boolean(
-                transactionsProgress![index]?.approve ||
-                  transactionsProgress![index]?.swap,
-              ) &&
-                Boolean(
-                  currentStep - 1 === index &&
-                    transactionsProgress![index]?.approve?.status !==
-                      'failed' &&
-                    transactionsProgress![index]?.swap?.status !== 'failed',
-                ) && (
-                  <Text textStyle={'bold.2'} color="brand.text.active">
-                    In Progress
+              {currentStep - 1 > index &&
+                (operationType === 'CURRENT' ? (
+                  <CheckIcon />
+                ) : (
+                  <Text textStyle={'bold.2'} color="brand.text.highlight">
+                    Completed
                   </Text>
-                )}
+                ))}
+              {isStepCurrentOne(index, swapStep) && (
+                <Text
+                  textStyle={'bold.2'}
+                  color={
+                    operationType === 'CURRENT'
+                      ? 'brand.text.active'
+                      : 'brand.text.warning'
+                  }
+                >
+                  {operationType === 'CURRENT' ? 'In Progress' : 'Pending'}
+                </Text>
+              )}
             </HStack>
             <Box
               bg="brand.bg.active"
@@ -166,64 +203,94 @@ export const TransactionAccordion = () => {
                   exchangeName={swapStep.swapperName}
                   fromToken={{
                     name: swapStep.sourceToken.symbol,
-                    amount: truncateToDecimals(swapStep.amount, 3) || '0',
+                    amount:
+                      truncateToDecimals(
+                        !isNaN(parseInt(swapStep.amount))
+                          ? swapStep.amount
+                          : swapStep.quoteAmount,
+                        3,
+                      ) || '0',
                     tokenLogo: swapStep.sourceToken.logo,
                     chainName: swapStep.sourceToken.blockchain,
                     chainLogo: swapStep.sourceToken.blockchainLogo,
                   }}
                   toToken={{
                     name: swapStep.destinationToken.symbol,
-                    amount: truncateToDecimals(swapStep.payout, 3) || '0',
+                    amount:
+                      truncateToDecimals(
+                        !isNaN(parseInt(swapStep.payout))
+                          ? swapStep.payout
+                          : swapStep.quotePayout,
+                        3,
+                      ) || '0',
                     chainName: swapStep.destinationToken.blockchain,
                     tokenLogo: swapStep.destinationToken.logo,
                     chainLogo: swapStep.destinationToken.blockchainLogo,
                   }}
                 />
               )}
-              <HStack w={'100%'}>
-                <HStack>
-                  <TimeIcon />
-                  <Text
-                    color={'brand.text.secondary.2'}
-                    lineHeight={'120%'}
-                    textStyle={'regular.3'}
-                  >
-                    {/* // TODO: Readd this to `BestRouteResponse` */}
-                    {swapStep.estimatedTimeInSeconds}s
-                  </Text>
+              {operationType === 'CURRENT' && (
+                <HStack w={'100%'}>
+                  <HStack>
+                    <TimeIcon />
+                    <Text
+                      color={'brand.text.secondary.2'}
+                      lineHeight={'120%'}
+                      textStyle={'regular.3'}
+                    >
+                      {swapStep.estimatedTimeInSeconds}s
+                    </Text>
+                  </HStack>
+                  <DividerIcon />
+                  <HStack>
+                    <GasIcon />
+                    <Text
+                      color={'brand.text.secondary.2'}
+                      lineHeight={'120%'}
+                      textStyle={'regular.3'}
+                    >
+                      ${' '}
+                      {swapStep.fees
+                        .reduce((acc, fee) => {
+                          const amount = parseFloat(fee.amount);
+                          const price = fee.price || 0;
+                          return acc + amount * price;
+                        }, 0)
+                        .toFixed(2)
+                        .toString()}
+                    </Text>
+                  </HStack>
                 </HStack>
-                <DividerIcon />
-                <HStack>
-                  <GasIcon />
-                  <Text
-                    color={'brand.text.secondary.2'}
-                    lineHeight={'120%'}
-                    textStyle={'regular.3'}
-                  >
-                    ${' '}
-                    {swapStep.fees
-                      .reduce((acc, fee) => {
-                        const amount = parseFloat(fee.amount);
-                        const price = fee.price || 0;
-                        return acc + amount * price;
-                      }, 0)
-                      .toFixed(2)
-                      .toString()}
-                  </Text>
-                </HStack>
-              </HStack>
-
-              {transactionsProgress![index]?.approve && (
-                <TransactionHash
-                  type="Approval"
-                  progress={transactionsProgress![index]?.approve}
-                />
               )}
-              {transactionsProgress![index]?.swap && (
-                <TransactionHash
-                  type="Swap"
-                  progress={transactionsProgress![index]?.swap}
-                />
+
+              {operationType === 'CURRENT' ? (
+                <>
+                  {transactionsProgress![index]?.approve && (
+                    <TransactionHash
+                      type="Approval"
+                      progress={transactionsProgress![index]?.approve}
+                    />
+                  )}
+                  {transactionsProgress![index]?.swap && (
+                    <TransactionHash
+                      type="Swap"
+                      progress={transactionsProgress![index]?.swap}
+                    />
+                  )}
+                </>
+              ) : (
+                <>
+                  {swapStep.transactions.map((transaction, index) => (
+                    <TransactionHash
+                      key={index}
+                      type={transaction.type === 'MAIN' ? 'Swap' : 'Approval'}
+                      progress={convertSwapTransactionToTransactionProgress(
+                        swapStep,
+                        transaction,
+                      )}
+                    />
+                  ))}
+                </>
               )}
             </VStack>
           </AccordionPanel>
@@ -232,13 +299,14 @@ export const TransactionAccordion = () => {
 
       {widgetTemplate === 'DEPOSIT_TOKEN' && (
         <LastMileTxAccordion
-          bestRoute={bestRoute}
+          bestRoute={operation}
           currentStep={currentStep}
           isLastMileExpanded={expandedIndexes.includes(currentStep - 1)}
           protocolFinalToken={lastMileToken}
           swapResultToken={swapResultToken}
           finalTokenEstimate={lastMileTokenEstimate}
           transactionsProgress={transactionsProgress}
+          operationType={operationType}
         />
       )}
     </Accordion>

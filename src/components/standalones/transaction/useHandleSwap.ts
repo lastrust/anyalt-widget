@@ -42,6 +42,7 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
     stepsNo: number,
     executeCallBack: (token: Token) => Promise<ExecuteResponse>,
     estimateCallback: (token: Token) => Promise<EstimateResponse>,
+    higherGasCost?: boolean,
   ) => {
     const lastMileTxStep = 1;
     const totalSteps = stepsNo + lastMileTxStep;
@@ -62,6 +63,7 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
         totalSteps,
         swapDataRef,
         estimateCallback,
+        higherGasCost,
       );
 
       if (isCrosschainSwapError)

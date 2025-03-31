@@ -28,6 +28,7 @@ type Props = {
   protocolFinalToken: Token | undefined;
   finalTokenEstimate: EstimateResponse | undefined;
   swapResultToken: SupportedToken | undefined;
+  operationType: 'CURRENT' | 'PENDING';
 };
 
 export const LastMileTxAccordion = ({
@@ -38,6 +39,7 @@ export const LastMileTxAccordion = ({
   protocolFinalToken,
   swapResultToken,
   finalTokenEstimate,
+  operationType,
 }: Props) => {
   const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
 
@@ -67,8 +69,15 @@ export const LastMileTxAccordion = ({
             Transaction {bestRoute.swapSteps.length + 1}
           </Text>
           {currentStep === bestRoute.swapSteps.length + 1 && (
-            <Text textStyle={'bold.1'} color="brand.text.active">
-              In Progress
+            <Text
+              textStyle={'bold.1'}
+              color={
+                operationType === 'CURRENT'
+                  ? 'brand.text.active'
+                  : 'brand.text.warning'
+              }
+            >
+              {operationType === 'CURRENT' ? 'In Progress' : 'Pending'}
             </Text>
           )}
         </HStack>
