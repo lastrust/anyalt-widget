@@ -1,5 +1,5 @@
 import { useBitcoinWallet } from '@ant-design/web3-bitcoin';
-import { AnyAlt, BestRouteResponse, SupportedToken } from '@anyalt/sdk';
+import { BestRouteResponse, SupportedToken } from '@anyalt/sdk';
 import { useDisclosure, useSteps } from '@chakra-ui/react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useAtom, useAtomValue } from 'jotai';
@@ -12,7 +12,6 @@ import {
   WalletConnector,
   WidgetTemplateType,
 } from '../../..';
-import { ANYALT_PLACEHOLDER_LOGO } from '../../../constants/links';
 import {
   DEBOUNCE_TIMEOUT,
   REFRESH_INTERVAL,
@@ -23,7 +22,6 @@ import {
   anyaltInstanceAtom,
   bestRouteAtom,
   currentStepAtom,
-  lastMileTokenAtom,
   lastMileTokenEstimateAtom,
   selectedRouteAtom,
   selectedTokenAmountAtom,
@@ -36,7 +34,6 @@ import {
   transactionIndexAtom,
   transactionsListAtom,
   transactionsProgressAtom,
-  widgetTemplateAtom,
 } from '../../../store/stateStore';
 import { TransactionsProgress } from '../../../types/transaction';
 import {
@@ -46,6 +43,7 @@ import {
 import { ChainIdToChainConstant } from '../../../utils/chains';
 import { usePendingOperation } from '../../standalones/pendingOperationDialog/usePendingOperation';
 import { useTokenInputBox } from '../../standalones/selectSwap/token/input/useTokenInputBox';
+import { useSetupWidget } from './useSetupWidget';
 
 type Props = {
   estimateCallback: (token: Token) => Promise<EstimateResponse>;
@@ -87,26 +85,39 @@ export const useAnyaltWidget = ({
     onOpen: connectWalletsOpen,
   } = useDisclosure();
 
+  const { balance } = useTokenInputBox();
+
+  const { showPendingOperationDialog, allNecessaryWalletsConnected } =
+    usePendingOperation({ closeConnectWalletsModal: connectWalletsClose });
+
+  const { modalWrapperMaxWidth, headerCustomText } = useSetupWidget({
+    apiKey,
+    activeStep,
+    swapResultToken,
+    finalToken,
+    widgetTemplate,
+  });
+
   const slippage = useAtomValue(slippageAtom);
+  const allChains = useAtomValue(allChainsAtom);
   const selectedRoute = useAtomValue(selectedRouteAtom);
+  const anyaltInstance = useAtomValue(anyaltInstanceAtom);
+  const swapResultTokenGlobal = useAtomValue(swapResultTokenAtom);
+  const showStuckTransactionDialog = useAtomValue(
+    showStuckTransactionDialogAtom,
+  );
 
   const [selectedToken, setSelectedToken] = useAtom(selectedTokenAtom);
   const [selectedTokenAmount, setSelectedTokenAmount] = useAtom(
     selectedTokenAmountAtom,
   );
-  const [swapResultTokenGlobal, setSwapResultToken] =
-    useAtom(swapResultTokenAtom);
-  const [, setLastMileToken] = useAtom(lastMileTokenAtom);
   const [lastMileTokenEstimate, setLastMileTokenEstimate] = useAtom(
     lastMileTokenEstimateAtom,
   );
 
   const [, setCurrentStep] = useAtom(currentStepAtom);
 
-  const [, setTemplate] = useAtom(widgetTemplateAtom);
-
   const [swapData, setSwapData] = useAtom(swapDataAtom);
-  const [allChains, setAllChains] = useAtom(allChainsAtom);
   const [bestRoute, setBestRoute] = useAtom(bestRouteAtom);
   const [, setTokenFetchError] = useAtom(tokenFetchErrorAtom);
   const [, setTransactionsList] = useAtom(transactionsListAtom);
@@ -114,9 +125,6 @@ export const useAnyaltWidget = ({
   const [, setActiveOperationId] = useAtom(activeOperationIdAtom);
 
   const [, setTransactionsProgress] = useAtom(transactionsProgressAtom);
-  const [anyaltInstance, setAnyaltInstance] = useAtom(anyaltInstanceAtom);
-
-  const { balance } = useTokenInputBox();
 
   useEffect(() => {
     onGetQuote(false);
@@ -184,54 +192,10 @@ export const useAnyaltWidget = ({
     }
   }, [bestRoute]);
 
-  //TODO: Related to the 1st step of the widget. Intial call to setup widget.
-  useEffect(() => {
-    const anyaltInstance = new AnyAlt(apiKey);
-    setAnyaltInstance(anyaltInstance);
-
-    if (anyaltInstance)
-      try {
-        anyaltInstance.getChains().then((res) => {
-          setAllChains(res.chains);
-        });
-      } catch (error) {
-        console.error(error);
-      }
-
-    setLastMileToken(finalToken);
-    setTemplate(widgetTemplate);
-  }, []);
-
   //TODO: Should be refactored to handle it to handle selected route. Probably can be deleted
   useEffect(() => {
     if (selectedRoute) setBestRoute(selectedRoute);
   }, [selectedRoute]);
-
-  //TODO: Related to the 1st step of the widget. Can be moved to the another hook.
-  useEffect(() => {
-    const outputTokenChain = allChains.find(
-      (chain) =>
-        (swapResultToken.chainId &&
-          chain.chainId === swapResultToken.chainId &&
-          chain.chainType === swapResultToken.chainType) ||
-        (!swapResultToken.chainId &&
-          chain.chainType === swapResultToken.chainType),
-    );
-
-    if (outputTokenChain) {
-      anyaltInstance
-        ?.getToken(outputTokenChain.name, swapResultToken.address)
-        .then((res) => {
-          if (
-            res.logoUrl === ANYALT_PLACEHOLDER_LOGO &&
-            swapResultToken.logoUrl
-          ) {
-            res.logoUrl = swapResultToken.logoUrl;
-          }
-          setSwapResultToken(res);
-        });
-    }
-  }, [allChains, anyaltInstance]);
 
   const setListOfTransactionsFromRoute = useCallback(
     (route: BestRouteResponse, inputToken: Partial<SupportedToken>) => {
@@ -693,31 +657,6 @@ export const useAnyaltWidget = ({
     },
     [],
   );
-
-  const { showPendingOperationDialog, allNecessaryWalletsConnected } =
-    usePendingOperation({ closeConnectWalletsModal: connectWalletsClose });
-
-  const showStuckTransactionDialog = useAtomValue(
-    showStuckTransactionDialogAtom,
-  );
-
-  // Memoize values that determine rendering to prevent unnecessary re-renders
-  const modalWrapperMaxWidth = useMemo(() => {
-    if (showPendingOperationDialog || showStuckTransactionDialog) {
-      return '976px';
-    }
-    if (activeStep === 0 || activeStep === 3) {
-      return '512px';
-    }
-    return '976px';
-  }, [showPendingOperationDialog, showStuckTransactionDialog, activeStep]);
-
-  const headerCustomText = useMemo(() => {
-    if (showPendingOperationDialog || showStuckTransactionDialog) {
-      return 'Transaction';
-    }
-    return undefined;
-  }, [showPendingOperationDialog, showStuckTransactionDialog]);
 
   return {
     loading,

@@ -34,6 +34,7 @@ export const pendingOperationAtom = atom<BestRouteResponse | undefined>(
 );
 
 export const showStuckTransactionDialogAtom = atom<boolean>(false);
+export const showPendingOperationDialogAtom = atom<boolean>(false);
 
 export const selectedRouteAtom = atom<BestRouteResponse | undefined>(undefined);
 

@@ -6,6 +6,7 @@ import { useAccount } from 'wagmi';
 import {
   anyaltInstanceAtom,
   bestRouteAtom,
+  showPendingOperationDialogAtom,
   widgetTemplateAtom,
 } from '../../../store/stateStore';
 
@@ -17,8 +18,9 @@ type Props = {
   closeConnectWalletsModal: () => void;
 };
 export const usePendingOperation = ({ closeConnectWalletsModal }: Props) => {
-  const [showPendingOperationDialog, setShowPendingOperationDialog] =
-    useState(false);
+  const [showPendingOperationDialog, setShowPendingOperationDialog] = useAtom(
+    showPendingOperationDialogAtom,
+  );
   const [allNecessaryWalletsConnected, setAllNecessaryWalletsConnected] =
     useState(false);
 
