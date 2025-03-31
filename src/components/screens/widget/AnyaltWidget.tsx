@@ -73,24 +73,24 @@ export const AnyaltWidgetWrapper = ({
     >
       <Header activeStep={activeStep} customText={headerCustomText} />
       <HandlerTransactions
+        walletConnector={walletConnector}
         showPendingOperationDialog={showPendingOperationDialog}
         showStuckTransactionDialog={showStuckTransactionDialog}
-        setOperationToCurrentRoute={setOperationToCurrentRoute}
-        walletConnector={walletConnector}
         allNecessaryWalletsConnected={allNecessaryWalletsConnected}
-        connectWalletsOpen={connectWalletsOpen}
         resetState={resetState}
+        connectWalletsOpen={connectWalletsOpen}
+        setOperationToCurrentRoute={setOperationToCurrentRoute}
       >
         <Stepper activeStep={activeStep}>
           <SelectTokenStep
             loading={loading}
             widgetTemplate={widgetTemplate}
             isValidAmountIn={isValidAmountIn}
-            onConfigClick={onConfigClick}
+            isButtonDisabled={isButtonDisabled}
             failedToFetchRoute={failedToFetchRoute}
+            onConfigClick={onConfigClick}
             openSlippageModal={openSlippageModal}
             setOpenSlippageModal={setOpenSlippageModal}
-            isButtonDisabled={isButtonDisabled}
           />
           <ChoosingRouteStep
             loading={loading}
@@ -105,10 +105,10 @@ export const AnyaltWidgetWrapper = ({
             onChooseRouteButtonClick={onChooseRouteButtonClick}
           />
           <TransactionStep
-            onBackClick={onBackClick}
             walletConnector={walletConnector}
-            executeCallBack={executeCallBack}
+            onBackClick={onBackClick}
             onTxComplete={onTxComplete}
+            executeCallBack={executeCallBack}
             estimateCallback={estimateCallback}
           />
           <SuccessfulDepositStep
@@ -121,9 +121,9 @@ export const AnyaltWidgetWrapper = ({
       <ConnectWalletsModal
         title="Connect Wallets"
         isOpen={isConnectWalletsOpen}
+        walletConnector={walletConnector}
         onClose={connectWalletsClose}
         areWalletsConnected={areWalletsConnected}
-        walletConnector={walletConnector}
       />
     </ModalWrapper>
   );
