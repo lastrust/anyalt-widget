@@ -6,7 +6,7 @@ import { useAccount } from 'wagmi';
 import {
   anyaltInstanceAtom,
   bestRouteAtom,
-  showPendingOperationDialogAtom,
+  showPendingRouteDialogAtom,
   widgetTemplateAtom,
 } from '../../../store/stateStore';
 
@@ -18,8 +18,8 @@ type Props = {
   closeConnectWalletsModal: () => void;
 };
 export const usePendingOperation = ({ closeConnectWalletsModal }: Props) => {
-  const [showPendingOperationDialog, setShowPendingOperationDialog] = useAtom(
-    showPendingOperationDialogAtom,
+  const [showPendingRouteDialog, setShowPendingRouteDialog] = useAtom(
+    showPendingRouteDialogAtom,
   );
   const [allNecessaryWalletsConnected, setAllNecessaryWalletsConnected] =
     useState(false);
@@ -108,7 +108,7 @@ export const usePendingOperation = ({ closeConnectWalletsModal }: Props) => {
       }
     }
   }, [
-    setShowPendingOperationDialog,
+    setShowPendingRouteDialog,
     anyaltInstance,
     evmAddress,
     solanaPubKey,
@@ -128,16 +128,16 @@ export const usePendingOperation = ({ closeConnectWalletsModal }: Props) => {
       pendingRoute?.operationId !== activeRoute?.operationId
     ) {
       closeConnectWalletsModal();
-      setShowPendingOperationDialog(true);
+      setShowPendingRouteDialog(true);
     }
     if (
       !pendingRoute ||
       pendingRoute?.operationId === activeRoute?.operationId
     ) {
-      setShowPendingOperationDialog(false);
+      setShowPendingRouteDialog(false);
     }
   }, [
-    showPendingOperationDialog,
+    showPendingRouteDialog,
     pendingRoute,
     activeRoute,
     closeConnectWalletsModal,
@@ -175,7 +175,7 @@ export const usePendingOperation = ({ closeConnectWalletsModal }: Props) => {
   }, [pendingRoute, evmAddress, solanaPubKey, bitcoinAccount]);
 
   return {
-    showPendingOperationDialog,
+    showPendingRouteDialog,
     allNecessaryWalletsConnected,
   };
 };

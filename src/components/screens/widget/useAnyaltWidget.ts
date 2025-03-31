@@ -42,7 +42,7 @@ type ReturnType = {
   isConnectWalletsOpen: boolean;
   failedToFetchRoute: boolean;
   areWalletsConnected: boolean;
-  showPendingOperationDialog: boolean;
+  showPendingRouteDialog: boolean;
   showStuckTransactionDialog: boolean;
   allNecessaryWalletsConnected: boolean;
   modalWrapperMaxWidth: string | undefined;
@@ -84,7 +84,7 @@ export const useAnyaltWidget = ({
     index: 0,
   });
 
-  const { showPendingOperationDialog, allNecessaryWalletsConnected } =
+  const { showPendingRouteDialog, allNecessaryWalletsConnected } =
     usePendingOperation({ closeConnectWalletsModal: connectWalletsClose });
 
   const { modalWrapperMaxWidth, headerCustomText } = useSetupWidget({
@@ -175,6 +175,8 @@ export const useAnyaltWidget = ({
     failedToFetchRoute,
     areWalletsConnected,
     modalWrapperMaxWidth,
+    showPendingRouteDialog,
+    showStuckTransactionDialog,
     allNecessaryWalletsConnected,
     onBackClick,
     onComplete,
@@ -187,7 +189,5 @@ export const useAnyaltWidget = ({
     connectWalletsClose,
     setOpenSlippageModal,
     onChooseRouteButtonClick,
-    showPendingOperationDialog,
-    showStuckTransactionDialog,
   };
 };

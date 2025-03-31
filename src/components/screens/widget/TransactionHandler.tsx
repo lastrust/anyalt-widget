@@ -4,7 +4,7 @@ import { PendingOperationDialog } from '../../standalones/pendingOperationDialog
 import { StuckTransactionDialog } from '../../standalones/stuckTransactionDialog/StuckTransactionDialog';
 
 type Props = {
-  showPendingOperationDialog: boolean;
+  showPendingRouteDialog: boolean;
   showStuckTransactionDialog: boolean;
   setCurrentRoute: (operation: BestRouteResponse) => void;
   walletConnector?: WalletConnector;
@@ -15,7 +15,7 @@ type Props = {
 };
 
 export const HandlerTransactions = ({
-  showPendingOperationDialog,
+  showPendingRouteDialog,
   showStuckTransactionDialog,
   setCurrentRoute,
   walletConnector,
@@ -24,7 +24,7 @@ export const HandlerTransactions = ({
   resetState,
   children,
 }: Props) => {
-  if (showPendingOperationDialog) {
+  if (showPendingRouteDialog) {
     return (
       <PendingOperationDialog
         setCurrentRoute={setCurrentRoute}

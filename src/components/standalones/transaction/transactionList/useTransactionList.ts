@@ -77,8 +77,7 @@ export const useTransactionList = ({ operationType }: Props) => {
   ]);
 
   const sourceTokenDetails: TokenWithAmount = useMemo(() => {
-    const sourceOfInfo =
-      operationType === 'CURRENT' ? bestRoute : pendingRoute;
+    const sourceOfInfo = operationType === 'CURRENT' ? bestRoute : pendingRoute;
 
     if (!sourceOfInfo || sourceOfInfo?.swapSteps.length === 0) {
       const chainType = selectedToken?.chainName

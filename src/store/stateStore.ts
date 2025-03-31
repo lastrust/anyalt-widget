@@ -32,7 +32,7 @@ export const bestRouteAtom = atom<BestRouteResponse | undefined>(undefined);
 export const pendingRouteAtom = atom<BestRouteResponse | undefined>(undefined);
 
 export const showStuckTransactionDialogAtom = atom<boolean>(false);
-export const showPendingOperationDialogAtom = atom<boolean>(false);
+export const showPendingRouteDialogAtom = atom<boolean>(false);
 
 export const selectedRouteAtom = atom<BestRouteResponse | undefined>(undefined);
 

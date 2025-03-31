@@ -7,7 +7,7 @@ import {
   allChainsAtom,
   anyaltInstanceAtom,
   lastMileTokenAtom,
-  showPendingOperationDialogAtom,
+  showPendingRouteDialogAtom,
   showStuckTransactionDialogAtom,
   swapResultTokenAtom,
   widgetTemplateAtom,
@@ -39,9 +39,7 @@ export const useSetupWidget = ({
   const setTemplate = useSetAtom(widgetTemplateAtom);
   const setLastMileToken = useSetAtom(lastMileTokenAtom);
   const setSwapResultToken = useSetAtom(swapResultTokenAtom);
-  const showPendingOperationDialog = useAtomValue(
-    showPendingOperationDialogAtom,
-  );
+  const showPendingOperationDialog = useAtomValue(showPendingRouteDialogAtom);
   const showStuckTransactionDialog = useAtomValue(
     showStuckTransactionDialogAtom,
   );

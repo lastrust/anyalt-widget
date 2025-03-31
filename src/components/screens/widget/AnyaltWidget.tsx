@@ -40,6 +40,9 @@ export const AnyaltWidgetWrapper = ({
     areWalletsConnected,
     isConnectWalletsOpen,
     modalWrapperMaxWidth,
+    showPendingRouteDialog,
+    showStuckTransactionDialog,
+    allNecessaryWalletsConnected,
     onBackClick,
     onComplete,
     resetState,
@@ -51,9 +54,6 @@ export const AnyaltWidgetWrapper = ({
     connectWalletsClose,
     setOpenSlippageModal,
     onChooseRouteButtonClick,
-    showStuckTransactionDialog,
-    showPendingOperationDialog,
-    allNecessaryWalletsConnected,
   } = useAnyaltWidget({
     apiKey,
     swapResultToken,
@@ -74,7 +74,7 @@ export const AnyaltWidgetWrapper = ({
       <Header activeStep={activeStep} customText={headerCustomText} />
       <HandlerTransactions
         walletConnector={walletConnector}
-        showPendingOperationDialog={showPendingOperationDialog}
+        showPendingRouteDialog={showPendingRouteDialog}
         showStuckTransactionDialog={showStuckTransactionDialog}
         allNecessaryWalletsConnected={allNecessaryWalletsConnected}
         resetState={resetState}

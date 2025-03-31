@@ -27,50 +27,68 @@ export const useSetRoute = ({
   const setActiveOperationId = useSetAtom(activeOperationIdAtom);
   const setTransactionsProgress = useSetAtom(transactionsProgressAtom);
 
-  const setCurrentRoute = useCallback((route: BestRouteResponse) => {
-    setBestRoute(route);
-    setActiveOperationId(route.operationId);
-    setActiveStep(2);
+  const setCurrentRoute = useCallback(
+    (route: BestRouteResponse) => {
+      setBestRoute(route);
+      setActiveOperationId(route.operationId);
+      setActiveStep(2);
 
-    const newTransactionProgress = {} as TransactionsProgress;
-    let lastFinishedTransactionIndex = 0;
+      const newTransactionProgress = {} as TransactionsProgress;
+      let lastFinishedTransactionIndex = 0;
 
-    route.swapSteps.forEach((step, index) => {
-      step.transactions
-        .sort(
-          (a, b) =>
-            (Number(a.confirmedTimestamp) || 0) -
-            (Number(b.confirmedTimestamp) || 0),
-        )
-        .forEach((transaction) => {
-          newTransactionProgress[index] = {};
-          switch (transaction.type) {
-            case 'MAIN':
-              newTransactionProgress[index].swap =
-                convertSwapTransactionToTransactionProgress(step, transaction);
+      route.swapSteps.forEach((step, index) => {
+        step.transactions
+          .sort(
+            (a, b) =>
+              (Number(a.confirmedTimestamp) || 0) -
+              (Number(b.confirmedTimestamp) || 0),
+          )
+          .forEach((transaction) => {
+            newTransactionProgress[index] = {};
+            switch (transaction.type) {
+              case 'MAIN':
+                newTransactionProgress[index].swap =
+                  convertSwapTransactionToTransactionProgress(
+                    step,
+                    transaction,
+                  );
 
-              if (newTransactionProgress[index].swap?.status === 'confirmed') {
-                lastFinishedTransactionIndex = index + 1;
-              }
+                if (
+                  newTransactionProgress[index].swap?.status === 'confirmed'
+                ) {
+                  lastFinishedTransactionIndex = index + 1;
+                }
 
-              break;
-            case 'APPROVE':
-              newTransactionProgress[index].approve =
-                convertSwapTransactionToTransactionProgress(step, transaction);
-              break;
-            default:
-              break;
-          }
-        });
-    });
+                break;
+              case 'APPROVE':
+                newTransactionProgress[index].approve =
+                  convertSwapTransactionToTransactionProgress(
+                    step,
+                    transaction,
+                  );
+                break;
+              default:
+                break;
+            }
+          });
+      });
 
-    setTransactionsProgress(newTransactionProgress);
-    setTransactionIndex(lastFinishedTransactionIndex + 1);
-    setListOfTransactionsFromRoute(
-      route,
-      route.swapSteps[route.swapSteps.length - 1].destinationToken,
-    );
-  }, []);
+      setTransactionsProgress(newTransactionProgress);
+      setTransactionIndex(lastFinishedTransactionIndex + 1);
+      setListOfTransactionsFromRoute(
+        route,
+        route.swapSteps[route.swapSteps.length - 1].destinationToken,
+      );
+    },
+    [
+      setBestRoute,
+      setActiveStep,
+      setTransactionIndex,
+      setActiveOperationId,
+      setTransactionsProgress,
+      setListOfTransactionsFromRoute,
+    ],
+  );
 
   return {
     setCurrentRoute,
