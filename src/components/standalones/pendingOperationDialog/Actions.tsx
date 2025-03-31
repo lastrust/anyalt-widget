@@ -77,7 +77,7 @@ export const Actions = ({
         >
           {steps.length > 0 ? (
             steps.map((step, index) => (
-              <Box w="full" mb="6px">
+              <Box w="full" mb="6px" key={step.swapperName + index}>
                 <TransactionStep
                   justify={'center'}
                   key={index}
