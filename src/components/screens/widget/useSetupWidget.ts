@@ -1,5 +1,5 @@
 import { AnyAlt } from '@anyalt/sdk';
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useEffect, useMemo } from 'react';
 import { Token, WidgetTemplateType } from '../../..';
 import { ANYALT_PLACEHOLDER_LOGO } from '../../../constants/links';
@@ -33,11 +33,12 @@ export const useSetupWidget = ({
   swapResultToken,
   widgetTemplate,
 }: UseSetupWidgetProps): UseSetupWidgetReturn => {
-  const [, setTemplate] = useAtom(widgetTemplateAtom);
-  const [, setLastMileToken] = useAtom(lastMileTokenAtom);
   const [allChains, setAllChains] = useAtom(allChainsAtom);
   const [anyaltInstance, setAnyaltInstance] = useAtom(anyaltInstanceAtom);
-  const [, setSwapResultToken] = useAtom(swapResultTokenAtom);
+  
+  const setTemplate = useSetAtom(widgetTemplateAtom);
+  const setLastMileToken = useSetAtom(lastMileTokenAtom);
+  const setSwapResultToken = useSetAtom(swapResultTokenAtom);
   const showPendingOperationDialog = useAtomValue(
     showPendingOperationDialogAtom,
   );
