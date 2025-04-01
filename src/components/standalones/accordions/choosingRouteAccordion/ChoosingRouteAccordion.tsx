@@ -11,7 +11,6 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
 import { EstimateResponse } from '../../../..';
 import { RANGO_PLACEHOLDER_LOGO } from '../../../../constants/links';
 import { ChainIdToChainConstant } from '../../../../utils/chains';
@@ -33,43 +32,59 @@ type Props = {
   ) => Promise<EstimateResponse>;
 };
 
+const colorsMap = {
+  fastest: {
+    text: '#3777F7',
+    bg: 'rgba(55, 119, 247, 0.10)',
+  },
+  bestReturn: {
+    text: '#00A958',
+    bg: 'rgba(0, 169, 88, 0.10)',
+  },
+  lowestFee: {
+    text: '#FF2D99',
+    bg: 'rgba(255, 45, 153, 0.10)',
+  },
+  leastTransactions: {
+    text: '#FF9900',
+    bg: 'rgba(255, 153, 0, 0.10)',
+  },
+};
+
+const getTagColor = (tag: string) => {
+  switch (tag) {
+    case 'fastest':
+      return colorsMap.fastest;
+    case 'Best Return':
+      return colorsMap.bestReturn;
+    case 'Lowest Fee':
+      return colorsMap.lowestFee;
+    case 'Least Transactions':
+      return colorsMap.leastTransactions;
+    default:
+      return colorsMap.fastest;
+  }
+};
+
 export const ChoosingRouteAccordion = ({
   loading,
   failedToFetchRoute,
   estimateOutPut,
 }: Props) => {
-  const [routeEstimates, setRouteEstimates] = useState<Record<string, string>>(
-    {},
-  );
   const {
     slippage,
     allRoutes,
     calcFees,
     selectedRoute,
+    routeEstimates,
     widgetTemplate,
     handleRouteSelect,
     protocolFinalToken,
     protocolInputToken,
     finalTokenEstimate,
-  } = useChoosingRoutesAccordion();
-
-  useEffect(() => {
-    const fetchEstimates = async () => {
-      if (!allRoutes) return;
-      const estimates: Record<string, string> = {};
-      for (const route of allRoutes) {
-        try {
-          const res = await estimateOutPut(route);
-          estimates[route.routeId] = res.amountOut;
-        } catch (err) {
-          console.log(err);
-          estimates[route.routeId] = '0.00';
-        }
-      }
-      setRouteEstimates(estimates);
-    };
-    fetchEstimates();
-  }, [allRoutes, estimateOutPut]);
+  } = useChoosingRoutesAccordion({
+    estimateOutPut,
+  });
 
   if (!allRoutes) return <></>;
 
@@ -94,8 +109,8 @@ export const ChoosingRouteAccordion = ({
           return (
             <AccordionItem
               key={`${route.outputAmount}-${index}`}
-              border="3px solid"
-              borderWidth={loading ? '1px' : '3px!important'}
+              border="2px solid"
+              borderWidth={loading ? '1px' : '2px!important'}
               borderColor={
                 selectedRoute?.routeId === route.routeId
                   ? 'brand.border.bestRoute'
@@ -128,31 +143,32 @@ export const ChoosingRouteAccordion = ({
                   <Flex alignItems="center" gap="8px" w={'100%'}>
                     <RouteTag
                       loading={loading}
-                      text={route.tags[0]}
-                      textColor="brand.text.secondary.0"
-                      bgColor="brand.bg.active"
+                      text={`#${route.tags[0]}`}
+                      textColor={getTagColor(route.tags[0]).text}
+                      bgColor={getTagColor(route.tags[0]).bg}
                       withBorder={false}
+                      withPadding
                     />
                     <RouteTag
                       loading={loading}
                       text={`${route.swapSteps.reduce((acc, swap) => acc + swap.estimatedTimeInSeconds, 0 + Number(finalTokenEstimate?.estimatedTimeInSeconds ?? 0)) || finalTokenEstimate?.estimatedTimeInSeconds}s`}
                       icon={TimeIcon}
-                      textColor="brand.text.active"
-                      bgColor="brand.bg.tag"
+                      textColor="brand.text.secondary.1"
+                      bgColor="transparent"
                     />
                     <RouteTag
                       loading={loading}
                       text={calcFees(route)}
                       icon={GasIcon}
-                      textColor="brand.text.active"
-                      bgColor="brand.bg.tag"
+                      textColor="brand.text.secondary.1"
+                      bgColor="transparent"
                     />
                     <RouteTag
                       loading={loading}
                       text={`${route.swapSteps.length + Number(widgetTemplate === 'DEPOSIT_TOKEN')}`}
                       icon={StepsIcon}
-                      textColor="brand.text.active"
-                      bgColor="brand.bg.tag"
+                      textColor="brand.text.secondary.1"
+                      bgColor="transparent"
                     />
                   </Flex>
                   <Box
@@ -187,11 +203,11 @@ export const ChoosingRouteAccordion = ({
                       : protocolFinalToken?.logoUrl || ''
                   }
                   amount={truncateToDecimals(
-                    finalTokenEstimate?.amountOut ?? '0.00',
+                    routeEstimates?.[route.routeId]?.amountOut ?? '0.00',
                     4,
                   )}
                   price={truncateToDecimals(
-                    finalTokenEstimate?.priceInUSD ?? '0.00',
+                    routeEstimates?.[route.routeId]?.priceInUSD ?? '0.00',
                     4,
                   )}
                   slippage={slippage}
@@ -321,7 +337,8 @@ export const ChoosingRouteAccordion = ({
                         toToken={{
                           name: protocolFinalToken?.name || '',
                           amount: truncateToDecimals(
-                            routeEstimates[route.routeId] ?? '0.00',
+                            routeEstimates?.[route.routeId]?.amountOut ??
+                              '0.00',
                             4,
                           ),
                           chainName:

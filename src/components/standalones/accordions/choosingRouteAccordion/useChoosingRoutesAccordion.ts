@@ -1,6 +1,7 @@
 import { GetAllRoutesResponseItem } from '@anyalt/sdk/dist/adapter/api/api';
 import { useAtom, useAtomValue } from 'jotai';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { EstimateResponse } from '../../../..';
 import {
   allRoutesAtom,
   lastMileTokenAtom,
@@ -13,7 +14,15 @@ import {
 } from '../../../../store/stateStore';
 import { truncateToDecimals } from '../../../../utils/truncateToDecimals';
 
-export const useChoosingRoutesAccordion = () => {
+type Props = {
+  estimateOutPut: (
+    route: GetAllRoutesResponseItem,
+  ) => Promise<EstimateResponse>;
+};
+
+export const useChoosingRoutesAccordion = ({
+  estimateOutPut,
+}: Props) => {
   const slippage = useAtomValue(slippageAtom);
   const allRoutes = useAtomValue(allRoutesAtom);
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
@@ -36,6 +45,30 @@ export const useChoosingRoutesAccordion = () => {
 
     return `$${totalFees.toFixed(2).toString() || '0.00'}`;
   };
+
+  const [routeEstimates, setRouteEstimates] =
+    useState<Record<string, EstimateResponse>>();
+
+  useEffect(() => {
+    const fetchEstimates = async () => {
+      if (!allRoutes) return;
+      const estimates: Record<string, EstimateResponse> = {};
+      for (const route of allRoutes) {
+        try {
+          const res = await estimateOutPut(route);
+          estimates[route.routeId] = res;
+        } catch (err) {
+          console.log(err);
+          estimates[route.routeId] = {
+            amountOut: '0.00',
+            priceInUSD: '0.00',
+          };
+        }
+      }
+      setRouteEstimates(estimates);
+    };
+    fetchEstimates();
+  }, [allRoutes, estimateOutPut]);
 
   const areSwapsExists = useMemo(() => {
     return Boolean(selectedRoute?.swapSteps?.length);
@@ -74,6 +107,7 @@ export const useChoosingRoutesAccordion = () => {
     allRoutes,
     selectedRoute,
     widgetTemplate,
+    routeEstimates,
     fromToken: areSwapsExists ? finalSwapToken : protocolDepositToken,
     handleRouteSelect,
     protocolFinalToken: lastMileToken,

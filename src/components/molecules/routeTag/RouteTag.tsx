@@ -5,6 +5,7 @@ type RouteTagProps = {
   text: string;
   textColor?: string;
   bgColor?: string;
+  withPadding?: boolean;
   withBorder?: boolean;
   icon?: ElementType;
   loading: boolean;
@@ -17,6 +18,7 @@ export const RouteTag = ({
   bgColor,
   loading,
   withBorder = true,
+  withPadding = false,
 }: RouteTagProps) => {
   return (
     <>
@@ -27,7 +29,7 @@ export const RouteTag = ({
           display="flex"
           alignItems="center"
           gap="4px"
-          p="7px 12px"
+          p={withPadding ? '4px 12px' : '0'}
           borderRadius={'32px'}
           bgColor={bgColor}
           border={withBorder ? '1px solid #008080' : 'none'}
@@ -39,7 +41,7 @@ export const RouteTag = ({
             </Box>
           )}
           <Text
-            textStyle="bold.5"
+            textStyle="regular.5"
             noOfLines={1}
             fontSize={'12px'}
             color={textColor}
