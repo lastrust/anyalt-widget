@@ -13,7 +13,7 @@ import {
 } from '../../../../store/stateStore';
 import { truncateToDecimals } from '../../../../utils/truncateToDecimals';
 
-export const useAllRoutesAccordion = () => {
+export const useChoosingRoutesAccordion = () => {
   const slippage = useAtomValue(slippageAtom);
   const allRoutes = useAtomValue(allRoutesAtom);
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
@@ -72,6 +72,7 @@ export const useAllRoutesAccordion = () => {
   return {
     slippage,
     allRoutes,
+    selectedRoute,
     widgetTemplate,
     fromToken: areSwapsExists ? finalSwapToken : protocolDepositToken,
     handleRouteSelect,

@@ -20,14 +20,14 @@ import { NoRouteCard } from '../../../molecules/card/NoRouteCard';
 import { RouteTag } from '../../../molecules/routeTag/RouteTag';
 import { RouteStep } from '../../../molecules/steps/RouteStep';
 import { TokenRouteInfo } from '../../../molecules/TokenRouteInfo';
-import { useAllRoutesAccordion } from './useAllRoutesAccordion';
+import { useChoosingRoutesAccordion } from './useChoosingRoutesAccordion';
 
 type Props = {
   loading: boolean;
   failedToFetchRoute: boolean;
 };
 
-export const AllRoutesAccordion = ({
+export const ChoosingRouteAccordion = ({
   loading,
   failedToFetchRoute,
 }: Props) => {
@@ -36,12 +36,13 @@ export const AllRoutesAccordion = ({
     allRoutes,
     fromToken,
     calcFees,
+    selectedRoute,
     widgetTemplate,
     handleRouteSelect,
     protocolFinalToken,
     protocolInputToken,
     finalTokenEstimate,
-  } = useAllRoutesAccordion();
+  } = useChoosingRoutesAccordion();
 
   if (!allRoutes) return <></>;
 
@@ -66,11 +67,13 @@ export const AllRoutesAccordion = ({
           return (
             <AccordionItem
               key={`${route.outputAmount}-${index}`}
-              // border="3px solid"
+              border="3px solid"
               borderWidth={loading ? '1px' : '3px!important'}
-              // borderColor={
-              // loading ? 'rgba(145, 158, 171, 0.12)' : 'brand.border.bestRoute'
-              // }
+              borderColor={
+                selectedRoute?.routeId === route.routeId
+                  ? 'brand.border.bestRoute'
+                  : 'transparent'
+              }
               borderRadius={'10px'}
               p={'16px'}
               cursor={'pointer'}

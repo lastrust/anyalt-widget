@@ -2,7 +2,7 @@ import { GetAllRoutesResponseItem } from '@anyalt/sdk/dist/adapter/api/api';
 import { Grid } from '@chakra-ui/react';
 import { WalletConnector } from '../../..';
 import { SwappingTemplate } from '../../templates/SwappingTemplate';
-import { AllRoutesAccordion } from '../accordions/bestRouteAccordion/AllRoutesAccordion';
+import { ChoosingRouteAccordion } from '../accordions/choosingRouteAccordion/ChoosingRouteAccordion';
 import { SelectToken } from '../selectSwap/SelectToken';
 
 type Props = {
@@ -60,7 +60,7 @@ export const ChoosingRouteStep = ({
             : 'Please select preferred route'
         }
       >
-        <AllRoutesAccordion
+        <ChoosingRouteAccordion
           loading={loading}
           failedToFetchRoute={failedToFetchRoute}
         />

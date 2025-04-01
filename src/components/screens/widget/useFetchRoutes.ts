@@ -160,6 +160,12 @@ export const useFetchRoutes = ({
     }
   };
 
+  useEffect(() => {
+    if (selectedRoute && swapResultTokenGlobal) {
+      setListOfTransactionsFromRoute(selectedRoute, swapResultTokenGlobal);
+    }
+  }, [selectedRoute, swapResultTokenGlobal]);
+
   const setListOfTransactionsFromRoute = useCallback(
     (route: GetAllRoutesResponseItem, inputToken: Partial<SupportedToken>) => {
       const lastStepOfOperation = route?.swapSteps[route?.swapSteps.length - 1];
@@ -228,7 +234,7 @@ export const useFetchRoutes = ({
         ],
       });
     },
-    [lastMileTokenEstimate, finalToken, swapResultTokenGlobal],
+    [lastMileTokenEstimate, finalToken, swapResultTokenGlobal, selectedRoute],
   );
 
   useEffect(() => {
