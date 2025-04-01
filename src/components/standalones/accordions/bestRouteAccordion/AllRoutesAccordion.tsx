@@ -24,14 +24,12 @@ import { useAllRoutesAccordion } from './useAllRoutesAccordion';
 
 type Props = {
   loading: boolean;
-  isButtonHidden?: boolean;
   failedToFetchRoute: boolean;
 };
 
 export const AllRoutesAccordion = ({
   loading,
   failedToFetchRoute,
-  isButtonHidden = true,
 }: Props) => {
   const {
     slippage,
@@ -53,15 +51,26 @@ export const AllRoutesAccordion = ({
 
   return (
     <Box w={'100%'} mt="16px">
-      <Accordion defaultIndex={[0]} allowMultiple>
-        {allRoutes.map((route) => {
+      <Accordion
+        defaultIndex={[0]}
+        allowMultiple
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '16px',
+          maxHeight: '450px',
+          overflowY: 'auto',
+        }}
+      >
+        {allRoutes.map((route, index) => {
           return (
             <AccordionItem
-              border="3px solid"
+              key={`${route.outputAmount}-${index}`}
+              // border="3px solid"
               borderWidth={loading ? '1px' : '3px!important'}
-              borderColor={
-                loading ? 'rgba(145, 158, 171, 0.12)' : 'brand.border.bestRoute'
-              }
+              // borderColor={
+              // loading ? 'rgba(145, 158, 171, 0.12)' : 'brand.border.bestRoute'
+              // }
               borderRadius={'10px'}
               p={'16px'}
               cursor={'pointer'}
@@ -89,7 +98,7 @@ export const AllRoutesAccordion = ({
                   <Flex alignItems="center" gap="8px" w={'100%'}>
                     <RouteTag
                       loading={loading}
-                      text="Fastest"
+                      text={route.tags[0]}
                       textColor="brand.text.secondary.0"
                       bgColor="brand.bg.active"
                       withBorder={false}
@@ -116,17 +125,19 @@ export const AllRoutesAccordion = ({
                       bgColor="brand.bg.tag"
                     />
                   </Flex>
-                  {!isButtonHidden && (
-                    <Box
-                      h={'24px'}
+                  <Box
+                    h={'24px'}
+                    w={'24px'}
+                    borderRadius={'50%'}
+                    bgColor="brand.bg.active"
+                    cursor="pointer"
+                  >
+                    <AccordionIcon
                       w={'24px'}
-                      borderRadius={'50%'}
-                      bgColor="brand.bg.active"
-                      cursor="pointer"
-                    >
-                      <AccordionIcon w={'24px'} h={'24px'} />
-                    </Box>
-                  )}
+                      h={'24px'}
+                      color="brand.text.secondary.0"
+                    />
+                  </Box>
                 </Flex>
                 <TokenRouteInfo
                   loading={loading}
@@ -160,7 +171,6 @@ export const AllRoutesAccordion = ({
                       : route.swapSteps[0]?.swapperName
                   }
                   bg={'brand.text.secondary.3'}
-                  p="12px"
                   borderRadius={'8px'}
                 />
               </AccordionButton>
@@ -197,6 +207,7 @@ export const AllRoutesAccordion = ({
                                 internalSwap.destinationToken.logo =
                                   protocolInputToken?.logoUrl;
                               }
+
                               return (
                                 <RouteStep
                                   loading={loading}
