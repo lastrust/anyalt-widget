@@ -20,9 +20,7 @@ type Props = {
   ) => Promise<EstimateResponse>;
 };
 
-export const useChoosingRoutesAccordion = ({
-  estimateOutPut,
-}: Props) => {
+export const useChoosingRoutesAccordion = ({ estimateOutPut }: Props) => {
   const slippage = useAtomValue(slippageAtom);
   const allRoutes = useAtomValue(allRoutesAtom);
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
