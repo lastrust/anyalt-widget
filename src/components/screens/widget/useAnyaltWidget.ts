@@ -46,6 +46,7 @@ type ReturnType = {
   modalWrapperMaxWidth: string | undefined;
   headerCustomText: string | undefined;
   onBackClick: () => void;
+  resetState: () => void;
   onComplete: () => void;
   onTxComplete: () => void;
   onConfigClick: () => void;
@@ -54,7 +55,9 @@ type ReturnType = {
   setOpenSlippageModal: (value: boolean) => void;
   onChooseRouteButtonClick: () => Promise<void>;
   setCurrentRoute: (route: GetAllRoutesResponseItem) => void;
-  resetState: () => void;
+  estimateOutPut: (
+    route: GetAllRoutesResponseItem,
+  ) => Promise<EstimateResponse>;
 };
 
 export const useAnyaltWidget = ({
@@ -110,6 +113,7 @@ export const useAnyaltWidget = ({
     failedToFetchRoute,
     onGetRoutes,
     setLoading,
+    estimateOutPut,
     setListOfTransactionsFromRoute,
   } = useFetchRoutes({
     finalToken,
@@ -180,6 +184,7 @@ export const useAnyaltWidget = ({
     resetState,
     onTxComplete,
     onConfigClick,
+    estimateOutPut,
     setCurrentRoute,
     openSlippageModal,
     connectWalletsOpen,

@@ -1,3 +1,4 @@
+import { GetAllRoutesResponseItem } from '@anyalt/sdk/dist/adapter/api/api';
 import {
   Accordion,
   AccordionButton,
@@ -10,6 +11,8 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
+import { EstimateResponse } from '../../../..';
 import { RANGO_PLACEHOLDER_LOGO } from '../../../../constants/links';
 import { ChainIdToChainConstant } from '../../../../utils/chains';
 import { truncateToDecimals } from '../../../../utils/truncateToDecimals';
@@ -25,16 +28,22 @@ import { useChoosingRoutesAccordion } from './useChoosingRoutesAccordion';
 type Props = {
   loading: boolean;
   failedToFetchRoute: boolean;
+  estimateOutPut: (
+    route: GetAllRoutesResponseItem,
+  ) => Promise<EstimateResponse>;
 };
 
 export const ChoosingRouteAccordion = ({
   loading,
   failedToFetchRoute,
+  estimateOutPut,
 }: Props) => {
+  const [routeEstimates, setRouteEstimates] = useState<Record<string, string>>(
+    {},
+  );
   const {
     slippage,
     allRoutes,
-    fromToken,
     calcFees,
     selectedRoute,
     widgetTemplate,
@@ -43,6 +52,24 @@ export const ChoosingRouteAccordion = ({
     protocolInputToken,
     finalTokenEstimate,
   } = useChoosingRoutesAccordion();
+
+  useEffect(() => {
+    const fetchEstimates = async () => {
+      if (!allRoutes) return;
+      const estimates: Record<string, string> = {};
+      for (const route of allRoutes) {
+        try {
+          const res = await estimateOutPut(route);
+          estimates[route.routeId] = res.amountOut;
+        } catch (err) {
+          console.log(err);
+          estimates[route.routeId] = '0.00';
+        }
+      }
+      setRouteEstimates(estimates);
+    };
+    fetchEstimates();
+  }, [allRoutes, estimateOutPut]);
 
   if (!allRoutes) return <></>;
 
@@ -272,11 +299,29 @@ export const ChoosingRouteAccordion = ({
                         exchangeName={'Last Mile TX'}
                         exchangeType={'LAST_MILE'}
                         pb={'6px'}
-                        fromToken={fromToken}
+                        fromToken={{
+                          name:
+                            route.swapSteps[route.swapSteps.length - 1]
+                              ?.destinationToken?.symbol || '',
+                          amount: truncateToDecimals(
+                            route.swapSteps[route.swapSteps.length - 1]
+                              ?.payout || '0',
+                            4,
+                          ),
+                          chainName:
+                            route.swapSteps[route.swapSteps.length - 1]
+                              ?.destinationToken?.blockchain || '',
+                          icon:
+                            route.swapSteps[route.swapSteps.length - 1]
+                              ?.destinationToken?.logo || '',
+                          chainIcon:
+                            route.swapSteps[route.swapSteps.length - 1]
+                              ?.destinationToken?.blockchainLogo || '',
+                        }}
                         toToken={{
                           name: protocolFinalToken?.name || '',
                           amount: truncateToDecimals(
-                            finalTokenEstimate?.amountOut ?? '0.00',
+                            routeEstimates[route.routeId] ?? '0.00',
                             4,
                           ),
                           chainName:

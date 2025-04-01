@@ -39,11 +39,11 @@ export const useChoosingRoutesAccordion = () => {
 
   const areSwapsExists = useMemo(() => {
     return Boolean(selectedRoute?.swapSteps?.length);
-  }, [allRoutes]);
+  }, [selectedRoute]);
 
   const recentSwap = useMemo(() => {
     return selectedRoute?.swapSteps?.[selectedRoute?.swapSteps?.length - 1];
-  }, [allRoutes]);
+  }, [selectedRoute]);
 
   const handleRouteSelect = (route: GetAllRoutesResponseItem) => {
     setSelectedRoute(route);

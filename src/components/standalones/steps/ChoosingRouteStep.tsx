@@ -1,6 +1,6 @@
 import { GetAllRoutesResponseItem } from '@anyalt/sdk/dist/adapter/api/api';
 import { Grid } from '@chakra-ui/react';
-import { WalletConnector } from '../../..';
+import { EstimateResponse, WalletConnector } from '../../..';
 import { SwappingTemplate } from '../../templates/SwappingTemplate';
 import { ChoosingRouteAccordion } from '../accordions/choosingRouteAccordion/ChoosingRouteAccordion';
 import { SelectToken } from '../selectSwap/SelectToken';
@@ -16,6 +16,9 @@ type Props = {
   connectWalletsOpen: () => void;
   onChooseRouteButtonClick: () => void;
   setOpenSlippageModal: (open: boolean) => void;
+  estimateOutPut: (
+    route: GetAllRoutesResponseItem,
+  ) => Promise<EstimateResponse>;
 };
 
 export const ChoosingRouteStep = ({
@@ -25,6 +28,7 @@ export const ChoosingRouteStep = ({
   walletConnector,
   areWalletsConnected,
   onConfigClick,
+  estimateOutPut,
   openSlippageModal,
   connectWalletsOpen,
   setOpenSlippageModal,
@@ -62,6 +66,7 @@ export const ChoosingRouteStep = ({
       >
         <ChoosingRouteAccordion
           loading={loading}
+          estimateOutPut={estimateOutPut}
           failedToFetchRoute={failedToFetchRoute}
         />
       </SwappingTemplate>

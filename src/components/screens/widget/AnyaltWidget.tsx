@@ -46,6 +46,7 @@ export const AnyaltWidgetWrapper = ({
     onBackClick,
     onComplete,
     resetState,
+    estimateOutPut,
     onTxComplete,
     onConfigClick,
     setCurrentRoute,
@@ -99,6 +100,7 @@ export const AnyaltWidgetWrapper = ({
             failedToFetchRoute={failedToFetchRoute}
             areWalletsConnected={areWalletsConnected}
             onConfigClick={onConfigClick}
+            estimateOutPut={estimateOutPut}
             openSlippageModal={openSlippageModal}
             setOpenSlippageModal={setOpenSlippageModal}
             connectWalletsOpen={connectWalletsOpen}

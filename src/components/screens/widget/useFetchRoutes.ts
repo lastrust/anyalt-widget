@@ -74,6 +74,14 @@ export const useFetchRoutes = ({
       //   missingWalletForSourceBlockchain: false,
       // });
 
+      setSelectedRoute({
+        outputAmount: selectedTokenAmount,
+        swapSteps: [],
+        routeId: '',
+        missingWalletForSourceBlockchain: false,
+        tags: [],
+      });
+
       setTokenFetchError({
         isError: false,
         errorMessage: '',
@@ -270,6 +278,18 @@ export const useFetchRoutes = ({
     }
   }, [selectedRoute]);
 
+  const estimateOutPut = useCallback(
+    async (route: GetAllRoutesResponseItem) => {
+      const token = {
+        ...swapResultToken,
+        amount: route.outputAmount.toString(),
+      };
+
+      return await estimateCallback(token);
+    },
+    [],
+  );
+
   useEffect(() => {
     if (activeStep === 1 && selectedRoute) {
       const interval = setInterval(() => {
@@ -298,6 +318,7 @@ export const useFetchRoutes = ({
     failedToFetchRoute,
     onGetRoutes,
     setLoading,
+    estimateOutPut,
     setListOfTransactionsFromRoute,
   };
 };
