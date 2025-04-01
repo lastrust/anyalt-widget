@@ -2,9 +2,9 @@ import { SupportedToken } from '@anyalt/sdk';
 import { useAtom, useAtomValue } from 'jotai';
 import { useMemo, useState } from 'react';
 import {
-  allRoutesAtom,
   lastMileTokenAtom,
   lastMileTokenEstimateAtom,
+  selectedRouteAtom,
   selectedTokenAmountAtom,
   selectedTokenAtom,
   swapResultTokenAtom,
@@ -17,7 +17,7 @@ export const useSelectSwap = () => {
   const lastMileToken = useAtomValue(lastMileTokenAtom);
   const lastMileTokenEstimate = useAtomValue(lastMileTokenEstimateAtom);
 
-  const allRoutes = useAtomValue(allRoutesAtom);
+  const selectedRoute = useAtomValue(selectedRouteAtom);
   const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
 
   const onTokenSelect = (token: SupportedToken) => {
@@ -26,23 +26,24 @@ export const useSelectSwap = () => {
   };
 
   const inTokenPrice = useMemo(() => {
-    if (!allRoutes || !selectedTokenAmount) return '';
+    if (!selectedRoute || !selectedTokenAmount) return '';
 
-    const tokenPrice = allRoutes.swapSteps[0].sourceToken.tokenUsdPrice;
+    const tokenPrice = selectedRoute.swapSteps[0].sourceToken.tokenUsdPrice;
     if (!tokenPrice) return '';
 
     return (tokenPrice * parseFloat(selectedTokenAmount)).toFixed(2);
-  }, [allRoutes, selectedTokenAmount]);
+  }, [selectedRoute, selectedTokenAmount]);
 
   // This is just copy pasted code from `src/components/standalones/selectSwap/useSelectToken.ts`
   const outTokenPrice = useMemo(() => {
-    if (!allRoutes) return '';
+    if (!selectedRoute) return '';
 
-    const lastStep = allRoutes.swapSteps[allRoutes.swapSteps.length - 1];
+    const lastStep =
+      selectedRoute.swapSteps[selectedRoute.swapSteps.length - 1];
     const tokenPrice = lastStep.destinationToken.tokenUsdPrice || 0;
 
-    return (tokenPrice * parseFloat(allRoutes.outputAmount)).toFixed(2);
-  }, [allRoutes]);
+    return (tokenPrice * parseFloat(selectedRoute.outputAmount)).toFixed(2);
+  }, [selectedRoute]);
 
   return {
     depositTokenEstimate: lastMileTokenEstimate,
@@ -53,7 +54,7 @@ export const useSelectSwap = () => {
     setOpenTokenSelect,
     protocolInputToken: swapResultToken,
     protocolFinalToken: lastMileToken,
-    activeRoute: allRoutes,
+    activeRoute: selectedRoute,
     inTokenAmount: selectedTokenAmount,
   };
 };

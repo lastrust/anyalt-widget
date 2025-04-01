@@ -8,14 +8,14 @@ type Props = {
 };
 
 export const TransactionList = ({ operationType }: Props) => {
-  const { tokens, operation, currentStep } = useTransactionList({
+  const { tokens, route, currentStep } = useTransactionList({
     operationType,
   });
 
   return (
     <VStack w="100%" alignItems="flex-start" spacing="16px">
       <TransactionOverviewCard
-        operationId={operation?.operationId ?? ''}
+        operationId={route?.routeId ?? ''}
         from={tokens.from}
         to={tokens.to}
       />
@@ -24,7 +24,7 @@ export const TransactionList = ({ operationType }: Props) => {
       </Text>
       <TransactionAccordion
         currentStep={currentStep}
-        operation={operation}
+        route={route}
         operationType={operationType}
       />
     </VStack>

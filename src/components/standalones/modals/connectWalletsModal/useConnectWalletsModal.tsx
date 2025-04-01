@@ -87,7 +87,7 @@ export const useConnectWalletsModal = ({
     }
 
     (pendingRoute?.swapSteps || [])
-      .concat(...(allRoutes?.swapSteps || []))
+      .concat(...(allRoutes?.flatMap((route) => route.swapSteps) || []))
       .forEach((swapStep) => {
         const fromBlockchain = swapStep.sourceToken.blockchain;
         const toBlockchain = swapStep.destinationToken.blockchain;

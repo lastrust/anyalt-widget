@@ -6,8 +6,9 @@ import {
   Token,
   WalletConnector,
 } from '../../..';
-import { allRoutesAtom, widgetTemplateAtom } from '../../../store/stateStore';
+import { widgetTemplateAtom } from '../../../store/stateStore';
 import { TransactionError } from '../../../types/transaction';
+import { selectedRouteAtom } from './../../../store/stateStore';
 import { useExecuteTokensSwap } from './useExecuteTokensSwap';
 import { useLastMileTransaction } from './useLastMileTransaction';
 import { useSwapState } from './useSwapState';
@@ -15,7 +16,7 @@ import { useSwapState } from './useSwapState';
 export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
 
-  const allRoutes = useAtomValue(allRoutesAtom);
+  const selectedRoute = useAtomValue(selectedRouteAtom);
 
   const {
     setSwapData,
@@ -55,7 +56,7 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
       }
     });
 
-    if (allRoutes?.swapSteps && allRoutes?.swapSteps?.length > 0) {
+    if (selectedRoute?.swapSteps && selectedRoute?.swapSteps?.length > 0) {
       const { isCrosschainSwapError } = await executeTokensSwap(
         aaInstance,
         operationId,

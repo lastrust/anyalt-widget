@@ -9,8 +9,8 @@ import {
   TX_STATUS,
 } from '../../../constants/transaction';
 import {
-  allRoutesAtom,
   lastMileTokenAmountAtom,
+  selectedRouteAtom,
   swapResultTokenAtom,
 } from '../../../store/stateStore';
 import {
@@ -34,7 +34,7 @@ export const useLastMileTransaction = ({
   swapDataRef,
   updateTransactionProgress,
 }: UseLastMileTransactionProps) => {
-  const allRoutes = useAtomValue(allRoutesAtom);
+  const selectedRoute = useAtomValue(selectedRouteAtom);
   const swapResultToken = useAtomValue(swapResultTokenAtom);
 
   const [, setLastMileTokenAmount] = useAtom(lastMileTokenAmountAtom);
@@ -46,8 +46,8 @@ export const useLastMileTransaction = ({
     operationId: string,
   ) => {
     if (
-      allRoutes?.swapSteps &&
-      allRoutes?.swapSteps?.length > 0 &&
+      selectedRoute?.swapSteps &&
+      selectedRoute?.swapSteps?.length > 0 &&
       !swapDataRef.current.swapIsFinished
     )
       throw new TransactionError('Swap is not finished');

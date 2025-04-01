@@ -13,8 +13,8 @@ import {
   TX_STATUS,
 } from '../../../constants/transaction';
 import {
-  allRoutesAtom,
   lastMileTokenEstimateAtom,
+  selectedRouteAtom,
   swapDataAtom,
   swapResultTokenAtom,
   transactionIndexAtom,
@@ -35,7 +35,7 @@ export const useExecuteTokensSwap = (
 ) => {
   const transactionIndex = useAtomValue(transactionIndexAtom);
   const [swapData, setSwapData] = useAtom(swapDataAtom);
-  const allRoutes = useAtomValue(allRoutesAtom);
+  const selectedRoute = useAtomValue(selectedRouteAtom);
 
   const swapResultToken = useAtomValue(swapResultTokenAtom);
   const [, setDepositTokenEstimate] = useAtom(lastMileTokenEstimateAtom);
@@ -78,7 +78,7 @@ export const useExecuteTokensSwap = (
       let nonce: number | undefined;
 
       try {
-        const currentStep = allRoutes?.swapSteps?.[transactionIndex - 1];
+        const currentStep = selectedRoute?.swapSteps?.[transactionIndex - 1];
 
         if (!currentStep) {
           throw new Error('No swap step found');

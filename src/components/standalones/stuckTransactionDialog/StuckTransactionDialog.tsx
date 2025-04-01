@@ -35,7 +35,9 @@ export const StuckTransactionDialog = ({ resetState }: Props) => {
   const stuckTxTokens = useMemo(() => {
     const pendingTransactionIndex = Object.keys(transactionsProgress).length;
 
-    const step = allRoutes.swapSteps[pendingTransactionIndex];
+    const step = allRoutes.flatMap((route) => route.swapSteps)[
+      pendingTransactionIndex
+    ];
 
     return {
       from: {

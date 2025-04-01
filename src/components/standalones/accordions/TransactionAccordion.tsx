@@ -1,5 +1,7 @@
-import { BestRouteResponse } from '@anyalt/sdk';
-import { SwapOperationStep } from '@anyalt/sdk/dist/adapter/api/api';
+import {
+  GetAllRoutesResponseItem,
+  SwapOperationStep,
+} from '@anyalt/sdk/dist/adapter/api/api';
 import {
   Accordion,
   AccordionButton,
@@ -31,13 +33,13 @@ import { TransactionHash } from '../../molecules/text/TransactionHash';
 import { LastMileTxAccordion } from './LastMileTxAccordion';
 
 type Props = {
-  operation: BestRouteResponse | undefined;
+  route: GetAllRoutesResponseItem | undefined;
   currentStep: number;
   operationType: 'CURRENT' | 'PENDING';
 };
 
 export const TransactionAccordion = ({
-  operation,
+  route,
   currentStep,
   operationType,
 }: Props) => {
@@ -60,7 +62,7 @@ export const TransactionAccordion = ({
       setExpandedIndexes(
         Array.from(
           {
-            length: (operation?.swapSteps || []).filter(
+            length: (route?.swapSteps || []).filter(
               (step) => step.transactions.length,
             ).length,
           },
@@ -89,7 +91,7 @@ export const TransactionAccordion = ({
     }
   };
 
-  if (!operation) return <></>;
+  if (!route) return <></>;
 
   return (
     <Accordion
@@ -101,7 +103,7 @@ export const TransactionAccordion = ({
       display={'flex'}
       flexDir={'column'}
     >
-      {operation?.swapSteps.map((swapStep, index) => (
+      {route?.swapSteps.map((swapStep, index) => (
         <AccordionItem
           key={`${swapStep.executionOrder}-${index}`}
           p={'16px'}
@@ -299,7 +301,7 @@ export const TransactionAccordion = ({
 
       {widgetTemplate === 'DEPOSIT_TOKEN' && (
         <LastMileTxAccordion
-          bestRoute={operation}
+          route={route}
           currentStep={currentStep}
           isLastMileExpanded={expandedIndexes.includes(currentStep - 1)}
           protocolFinalToken={lastMileToken}
