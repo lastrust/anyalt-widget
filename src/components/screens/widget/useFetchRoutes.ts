@@ -41,7 +41,8 @@ export const useFetchRoutes = ({
   estimateCallback,
 }: UseFetchRoutesProps) => {
   const [loading, setLoading] = useState(false);
-  const [isValidAmountIn, setIsValidAmountIn] = useState(true);
+  const [isEnoughDepositTokens, setIsEnoughDepositTokens] = useState(true);
+  const [isValidAmountIn] = useState(true);
   const [failedToFetchRoute, setFailedToFetchRoute] = useState(false);
 
   const { balance } = useTokenInputBox();
@@ -110,42 +111,6 @@ export const useFetchRoutes = ({
       setAllRoutes(res?.routes);
       setSelectedRoute(res?.routes[0]);
 
-      //TODO: Refactor to call this code on selected route.
-      if (selectedRoute && swapResultToken) {
-        setListOfTransactionsFromRoute(selectedRoute, swapResultToken);
-      }
-
-      const tokensOut = parseFloat(selectedRoute?.outputAmount || '0');
-      let isEnoughDepositTokens = tokensOut > minDepositAmount;
-
-      setTokenFetchError({
-        isError: !isEnoughDepositTokens,
-        errorMessage: `Amount should be equal or greater than ${minDepositAmount} ${swapResultToken?.symbol}`,
-      });
-
-      if (isEnoughDepositTokens && selectedRoute) {
-        const { humanReadable: worstCaseOutput } = calculateWorstOutput(
-          selectedRoute,
-          slippage,
-        );
-
-        if (parseFloat(worstCaseOutput) < minDepositAmount) {
-          isEnoughDepositTokens = false;
-          setTokenFetchError({
-            isError: true,
-            errorMessage: `Output possibly low, the transaction might not get executed due to slippage. The protocol expects a minimum of ${minDepositAmount} ${swapResultToken?.symbol} please increase the input amount.`,
-          });
-        }
-      }
-
-      if (balance && parseFloat(balance) < parseFloat(selectedTokenAmount)) {
-        setTokenFetchError({
-          isError: true,
-          errorMessage: `You don't have enough tokens in your wallet.`,
-        });
-      }
-
-      setIsValidAmountIn(isEnoughDepositTokens);
       setFailedToFetchRoute(false);
       if (activeStep === 0) setActiveStep(1);
       if (withGoNext && isEnoughDepositTokens) setActiveStep(1);
@@ -160,6 +125,47 @@ export const useFetchRoutes = ({
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    //TODO: Refactor to call this code on selected route.
+    if (selectedRoute && swapResultToken) {
+      setListOfTransactionsFromRoute(selectedRoute, swapResultToken);
+    }
+
+    const tokensOut = parseFloat(selectedRoute?.outputAmount || '0');
+    setIsEnoughDepositTokens(tokensOut > minDepositAmount);
+
+    setTokenFetchError({
+      isError: !(tokensOut > minDepositAmount),
+      errorMessage: `Amount should be equal or greater than ${minDepositAmount} ${swapResultToken?.symbol}`,
+    });
+
+    if (isEnoughDepositTokens && selectedRoute) {
+      const { humanReadable: worstCaseOutput } = calculateWorstOutput(
+        selectedRoute,
+        slippage,
+      );
+
+      if (parseFloat(worstCaseOutput) < minDepositAmount) {
+        setIsEnoughDepositTokens(false);
+        setTokenFetchError({
+          isError: true,
+          errorMessage: `Output possibly low, the transaction might not get executed due to slippage. The protocol expects a minimum of ${minDepositAmount} ${swapResultToken?.symbol} please increase the input amount.`,
+        });
+      }
+    }
+
+    if (
+      balance &&
+      selectedTokenAmount &&
+      parseFloat(balance) < parseFloat(selectedTokenAmount)
+    ) {
+      setTokenFetchError({
+        isError: true,
+        errorMessage: `You don't have enough tokens in your wallet.`,
+      });
+    }
+  }, [selectedRoute]);
 
   useEffect(() => {
     if (selectedRoute && swapResultTokenGlobal) {
