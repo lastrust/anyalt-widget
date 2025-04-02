@@ -8,7 +8,7 @@ import { ChoosingRouteStep } from '../../standalones/steps/ChoosingRouteStep';
 import { SelectTokenStep } from '../../standalones/steps/SelectTokenStep';
 import { SuccessfulDepositStep } from '../../standalones/steps/SuccessfulDepositStep';
 import { TransactionStep } from '../../standalones/steps/TransactionStep';
-import { HandlerTransactions } from './TransactionHandler';
+import { HandleTransactions } from './HandleTransactions';
 import { useAnyaltWidget } from './useAnyaltWidget';
 export { useModal } from '../../../hooks/useModal';
 export {
@@ -73,7 +73,7 @@ export const AnyaltWidgetWrapper = ({
       maxWidthCustom={modalWrapperMaxWidth}
     >
       <Header activeStep={activeStep} customText={headerCustomText} />
-      <HandlerTransactions
+      <HandleTransactions
         walletConnector={walletConnector}
         showPendingRouteDialog={showPendingRouteDialog}
         showStuckTransactionDialog={showStuckTransactionDialog}
@@ -118,7 +118,7 @@ export const AnyaltWidgetWrapper = ({
             onComplete={onComplete}
           />
         </Stepper>
-      </HandlerTransactions>
+      </HandleTransactions>
       <Footer />
       <ConnectWalletsModal
         title="Connect Wallets"

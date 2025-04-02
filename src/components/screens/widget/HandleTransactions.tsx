@@ -14,7 +14,7 @@ type Props = {
   children: React.ReactNode;
 };
 
-export const HandlerTransactions = ({
+export const HandleTransactions = ({
   showPendingRouteDialog,
   showStuckTransactionDialog,
   setCurrentRoute,
