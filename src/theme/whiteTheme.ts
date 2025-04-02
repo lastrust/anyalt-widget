@@ -53,7 +53,7 @@ export const whiteTheme = extendTheme({
       text: {
         primary: '#000000',
         warning: '#ffcc00',
-        error: 'E53030',
+        error: '#E53030',
         active: '#333',
         highlight: '#3777F7',
         secondary: {

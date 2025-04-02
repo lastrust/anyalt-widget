@@ -6,6 +6,7 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
+  Divider,
   Flex,
   Skeleton,
   Text,
@@ -220,7 +221,8 @@ export const ChoosingRouteAccordion = ({
                   borderRadius={'8px'}
                 />
               </AccordionButton>
-              <AccordionPanel p={'0px'} mt="12px">
+              <AccordionPanel p={'0px'}>
+                <Divider my={'12px'} bg="rgba(51, 51, 51, 0.20)" />
                 <VStack
                   gap={'12px'}
                   alignItems={'flex-start'}

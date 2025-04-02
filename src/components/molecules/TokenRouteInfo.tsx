@@ -72,7 +72,7 @@ export const TokenRouteInfo: FC<Props> = ({
             <Text
               color="brand.text.primary"
               fontSize="12px"
-              fontWeight="regular"
+              fontWeight="normal"
               opacity={0.4}
             >
               ~${price}
@@ -84,7 +84,7 @@ export const TokenRouteInfo: FC<Props> = ({
             <Text
               color="brand.text.primary"
               fontSize="12px"
-              fontWeight="regular"
+              fontWeight="normal"
               opacity={0.4}
             >
               {slippage}
@@ -97,7 +97,7 @@ export const TokenRouteInfo: FC<Props> = ({
             <Text
               color="brand.text.primary"
               fontSize="12px"
-              fontWeight="regular"
+              fontWeight="normal"
               opacity={0.4}
             >
               {network}

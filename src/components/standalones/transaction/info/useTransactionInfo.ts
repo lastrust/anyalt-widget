@@ -99,8 +99,10 @@ export const useTransactionInfo = ({
         estimateCallback,
         higherGasCost,
       );
-      onTxComplete();
       setIsLoading(false);
+
+      // Small delay before moving to the next step
+      onTxComplete();
     } catch (error) {
       console.error(error);
       setIsLoading(false);
