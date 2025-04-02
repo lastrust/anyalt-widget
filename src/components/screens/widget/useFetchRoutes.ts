@@ -127,7 +127,8 @@ export const useFetchRoutes = ({
   };
 
   useEffect(() => {
-    //TODO: Refactor to call this code on selected route.
+    if (activeStep === 0) return;
+
     if (selectedRoute && swapResultToken) {
       setListOfTransactionsFromRoute(selectedRoute, swapResultToken);
     }
