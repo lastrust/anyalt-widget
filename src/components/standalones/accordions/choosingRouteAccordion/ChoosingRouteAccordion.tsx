@@ -147,7 +147,6 @@ export const ChoosingRouteAccordion = ({
                       text={`#${route.tags[0]}`}
                       textColor={getTagColor(route.tags[0]).text}
                       bgColor={getTagColor(route.tags[0]).bg}
-                      withBorder={false}
                       withPadding
                     />
                     <RouteTag
@@ -217,7 +216,6 @@ export const ChoosingRouteAccordion = ({
                       ? `${protocolFinalToken?.name} on ${protocolInputToken?.chain?.displayName}`
                       : route.swapSteps[0]?.swapperName
                   }
-                  bg={'brand.text.secondary.3'}
                   borderRadius={'8px'}
                 />
               </AccordionButton>

@@ -7,11 +7,10 @@ import { useModal } from '../src/hooks/useModal';
 import {
   AnyaltWidget,
   ChainType,
-  defaultTheme,
-  whiteTheme,
   EstimateResponse,
   ExecuteResponse,
   Token,
+  whiteTheme,
   WidgetProvider,
 } from '../src/index';
 
