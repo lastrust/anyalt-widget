@@ -22,7 +22,7 @@ type Props = {
   };
 } & BoxProps;
 
-export const Actions = ({
+export const StuckTransactionActions = ({
   onUpdateTx,
   onWaitForTx,
   onAbandon,

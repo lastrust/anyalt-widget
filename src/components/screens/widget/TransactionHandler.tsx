@@ -1,7 +1,7 @@
 import { GetAllRoutesResponseItem } from '@anyalt/sdk/dist/adapter/api/api';
 import { WalletConnector } from '../../..';
-import { PendingOperationDialog } from '../../standalones/pendingOperationDialog/PendingOperationDialog';
-import { StuckTransactionDialog } from '../../standalones/stuckTransactionDialog/StuckTransactionDialog';
+import { PendingRouteDialog } from '../pendingRouteDialog/PendingRouteDialog';
+import { StuckTransactionDialog } from '../stuckRouteDialog/StuckTransactionDialog';
 
 type Props = {
   showPendingRouteDialog: boolean;
@@ -26,7 +26,7 @@ export const HandlerTransactions = ({
 }: Props) => {
   if (showPendingRouteDialog) {
     return (
-      <PendingOperationDialog
+      <PendingRouteDialog
         setCurrentRoute={setCurrentRoute}
         walletConnector={walletConnector}
         allNecessaryWalletsConnected={allNecessaryWalletsConnected}

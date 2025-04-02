@@ -18,7 +18,7 @@ import { mapBlockchainToChainType } from '../../../utils/chains';
 type Props = {
   closeConnectWalletsModal: () => void;
 };
-export const usePendingOperation = ({ closeConnectWalletsModal }: Props) => {
+export const usePendingRoute = ({ closeConnectWalletsModal }: Props) => {
   const [selectedRoute] = useAtom(selectedRouteAtom);
   const [showPendingRouteDialog, setShowPendingRouteDialog] = useAtom(
     showPendingRouteDialogAtom,

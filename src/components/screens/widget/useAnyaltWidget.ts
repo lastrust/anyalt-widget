@@ -11,7 +11,7 @@ import {
   allRoutesAtom,
   showStuckTransactionDialogAtom,
 } from '../../../store/stateStore';
-import { usePendingOperation } from '../../standalones/pendingOperationDialog/usePendingOperation';
+import { usePendingRoute } from '../pendingRouteDialog/usePendingTransaction';
 import { useConfirmRoute } from './useConfirmRoute';
 import { useControllWidget } from './useControllWidget';
 import { useFetchRoutes } from './useFetchRoutes';
@@ -85,7 +85,7 @@ export const useAnyaltWidget = ({
   });
 
   const { showPendingRouteDialog, allNecessaryWalletsConnected } =
-    usePendingOperation({ closeConnectWalletsModal: connectWalletsClose });
+    usePendingRoute({ closeConnectWalletsModal: connectWalletsClose });
 
   const { modalWrapperMaxWidth, headerCustomText } = useSetupWidget({
     apiKey,

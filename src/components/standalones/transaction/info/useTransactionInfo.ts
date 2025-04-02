@@ -22,7 +22,7 @@ import {
   transactionsProgressAtom,
 } from '../../../../store/stateStore';
 import { TransactionProgress } from '../../../../types/transaction';
-import { useStuckTransaction } from '../../stuckTransactionDialog/useStuckTransaction';
+import { useStuckRoute } from '../../../screens/stuckRouteDialog/useStuckTransaction';
 import { useHandleSwap } from '../useHandleSwap';
 
 export const useTransactionInfo = ({
@@ -58,7 +58,7 @@ export const useTransactionInfo = ({
 
   const { executeSwap } = useHandleSwap(externalEvmWalletConnector);
 
-  const { keepPollingOnTxStuck } = useStuckTransaction();
+  const { keepPollingOnTxStuck } = useStuckRoute();
 
   const isBridgeSwap = useMemo(() => {
     return (

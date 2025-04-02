@@ -6,10 +6,10 @@ import {
   showStuckTransactionDialogAtom,
   transactionsProgressAtom,
 } from '../../../store/stateStore';
+import { StuckTransactionActions } from '../../standalones/dialogs/StuckTransactionActions';
+import { TransactionList } from '../../standalones/transaction/transactionList/TransactionsList';
 import { SwappingTemplate } from '../../templates/SwappingTemplate';
-import { TransactionList } from '../transaction/transactionList/TransactionsList';
-import { Actions } from './Actions';
-import { useStuckTransaction } from './useStuckTransaction';
+import { useStuckRoute } from './useStuckTransaction';
 
 type Props = {
   resetState: () => void;
@@ -23,7 +23,7 @@ export const StuckTransactionDialog = ({ resetState }: Props) => {
 
   const allRoutes = useAtomValue(allRoutesAtom);
 
-  const { onUpdateTx, onWaitForTx } = useStuckTransaction();
+  const { onUpdateTx, onWaitForTx } = useStuckRoute();
 
   const onAbandon = useCallback(() => {
     resetState();
@@ -60,7 +60,7 @@ export const StuckTransactionDialog = ({ resetState }: Props) => {
   return (
     <Grid templateColumns="1fr 1fr" gap="16px" m="24px 0px 16px">
       <SwappingTemplate m="0" h="100%" maxH={'520px'} overflow={'scroll'}>
-        <Actions
+        <StuckTransactionActions
           onUpdateTx={onUpdateTx}
           onWaitForTx={onWaitForTx}
           onAbandon={onAbandon}

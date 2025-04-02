@@ -8,21 +8,21 @@ import { WarningIcon } from '../../atoms/icons/transaction/WarningIcon';
 import { TransactionStep } from '../../molecules/steps/TransactionStep';
 
 type Props = {
-  disableActions: boolean;
-  onContinuePendingOperation: () => void;
-  onDismissPendingOperation: () => void;
   mainButtonText: string;
-  pendingOperation: GetAllRoutesResponseItem;
   destinationToken: Token;
+  disableActions: boolean;
+  pendingOperation: GetAllRoutesResponseItem;
+  onContinuePendingRoute: () => void;
+  onDismissPendingRoute: () => void;
 } & BoxProps;
 
-export const Actions = ({
+export const PendingRouteActions = ({
   disableActions,
-  onContinuePendingOperation,
-  onDismissPendingOperation,
   mainButtonText,
   pendingOperation,
   destinationToken,
+  onContinuePendingRoute,
+  onDismissPendingRoute,
 }: Props) => {
   const steps = useMemo(() => {
     return pendingOperation.swapSteps
@@ -114,7 +114,7 @@ export const Actions = ({
 
       <CustomButton
         disabled={disableActions}
-        onButtonClick={onContinuePendingOperation}
+        onButtonClick={onContinuePendingRoute}
       >
         {mainButtonText}
       </CustomButton>
@@ -135,7 +135,7 @@ export const Actions = ({
         background={'none'}
         backdropFilter={'blur(50px)'}
         color={'brand.secondary.1'}
-        onClick={onDismissPendingOperation}
+        onClick={onDismissPendingRoute}
       >
         Start New Transaction
       </Button>

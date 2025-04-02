@@ -8,9 +8,9 @@ import {
   pendingRouteAtom,
   widgetTemplateAtom,
 } from '../../../store/stateStore';
+import { PendingRouteActions } from '../../standalones/dialogs/PendingRouteActions';
+import { TransactionList } from '../../standalones/transaction/transactionList/TransactionsList';
 import { SwappingTemplate } from '../../templates/SwappingTemplate';
-import { TransactionList } from '../transaction/transactionList/TransactionsList';
-import { Actions } from './Actions';
 
 type Props = {
   setCurrentRoute: (route: GetAllRoutesResponseItem) => void;
@@ -19,7 +19,7 @@ type Props = {
   allNecessaryWalletsConnected: boolean;
 };
 
-export const PendingOperationDialog = ({
+export const PendingRouteDialog = ({
   setCurrentRoute,
   walletConnector,
   connectWalletsOpen,
@@ -67,7 +67,7 @@ export const PendingOperationDialog = ({
     }
   }, [allNecessaryWalletsConnected, connectWalletsOpen]);
 
-  const onDismissPendingOperation = useCallback(async () => {
+  const onDismissPendingRoute = useCallback(async () => {
     if (!anyaltInstance || !pendingRoute) return;
     const localStorageKey =
       widgetTemplate === 'TOKEN_BUY' ? 'tokenBuyOperationId' : 'operationId';
@@ -89,10 +89,10 @@ export const PendingOperationDialog = ({
   return (
     <Grid templateColumns="1fr 1fr" gap="16px" m="24px 0px 16px">
       <SwappingTemplate m="0" h="100%" maxH={'520px'} overflow={'scroll'}>
-        <Actions
+        <PendingRouteActions
           disableActions={disableActions}
-          onContinuePendingOperation={onMainButtonClick}
-          onDismissPendingOperation={onDismissPendingOperation}
+          onContinuePendingRoute={onMainButtonClick}
+          onDismissPendingRoute={onDismissPendingRoute}
           mainButtonText={mainButtonText}
           pendingOperation={pendingRoute}
           destinationToken={destinationToken}
