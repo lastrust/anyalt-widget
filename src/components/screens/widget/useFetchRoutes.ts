@@ -67,13 +67,6 @@ export const useFetchRoutes = ({
       return;
 
     if (selectedToken.id === swapResultTokenGlobal.id) {
-      // setAllRoutes({
-      //   outputAmount: selectedTokenAmount,
-      //   swapSteps: [],
-      //   operationId: '',
-      //   missingWalletForSourceBlockchain: false,
-      // });
-
       setSelectedRoute({
         outputAmount: selectedTokenAmount,
         swapSteps: [],
@@ -252,7 +245,13 @@ export const useFetchRoutes = ({
   //TODO: Can be part of getting routes hook.
   useEffect(() => {
     //Show loading state immediatly instead of waiting for a delay
-    if (selectedTokenAmount && selectedToken) setLoading(true);
+    if (
+      selectedTokenAmount &&
+      selectedToken &&
+      swapResultTokenGlobal &&
+      selectedToken.id !== swapResultTokenGlobal.id
+    )
+      setLoading(true);
 
     const debounceTimeout = setTimeout(() => {
       if (selectedTokenAmount && selectedToken) {

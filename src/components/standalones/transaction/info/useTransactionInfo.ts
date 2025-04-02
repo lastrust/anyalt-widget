@@ -22,7 +22,7 @@ import {
   transactionsProgressAtom,
 } from '../../../../store/stateStore';
 import { TransactionProgress } from '../../../../types/transaction';
-import { useStuckRoute } from '../../../screens/stuckRouteDialog/useStuckTransaction';
+import { useStuckRoute } from '../../../screens/stuckTransactionDialog/useStuckTransaction';
 import { useHandleSwap } from '../useHandleSwap';
 
 export const useTransactionInfo = ({

@@ -1,7 +1,7 @@
 import { GetAllRoutesResponseItem } from '@anyalt/sdk/dist/adapter/api/api';
 import { WalletConnector } from '../../..';
 import { PendingRouteDialog } from '../pendingRouteDialog/PendingRouteDialog';
-import { StuckTransactionDialog } from '../stuckRouteDialog/StuckTransactionDialog';
+import { StuckTransactionDialog } from '../stuckTransactionDialog/StuckTransactionDialog';
 
 type Props = {
   showPendingRouteDialog: boolean;

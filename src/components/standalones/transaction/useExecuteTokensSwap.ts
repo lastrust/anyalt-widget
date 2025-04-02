@@ -25,7 +25,7 @@ import { mapBlockchainToChainType } from '../../../utils/chains';
 import { getTransactionData } from '../../../utils/getTransactionData';
 import { handleSignerAddress } from '../../../utils/handleSignerAddress';
 import { submitPendingTransaction } from '../../../utils/submitPendingTransaction';
-import { useStuckRoute } from '../../screens/stuckRouteDialog/useStuckTransaction';
+import { useStuckRoute } from '../../screens/stuckTransactionDialog/useStuckTransaction';
 import { useHandleTransaction } from './handlers/useHandleTransaction';
 
 export const useExecuteTokensSwap = (
