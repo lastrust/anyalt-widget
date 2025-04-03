@@ -49,8 +49,8 @@ export const useFetchRoutes = ({
 
   const slippage = useAtomValue(slippageAtom);
 
-  const [, setAllRoutes] = useAtom(allRoutesAtom); //HERE
-  const [selectedRoute, setSelectedRoute] = useAtom(selectedRouteAtom); //HERE
+  const [, setAllRoutes] = useAtom(allRoutesAtom);
+  const [selectedRoute, setSelectedRoute] = useAtom(selectedRouteAtom);
 
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
   const selectedToken = useAtomValue(selectedTokenAtom);
@@ -107,7 +107,6 @@ export const useFetchRoutes = ({
           '0x0000000000000000000000000000000000000000',
       });
 
-      //TODO: Instead of setting best route. It should set all routes.
       setAllRoutes(res?.routes);
       setSelectedRoute(res?.routes[0]);
 
@@ -249,9 +248,7 @@ export const useFetchRoutes = ({
     onGetRoutes(false);
   }, [selectedToken, slippage, balance]);
 
-  //TODO: Can be part of getting routes hook.
   useEffect(() => {
-    //Show loading state immediatly instead of waiting for a delay
     if (
       selectedTokenAmount &&
       selectedToken &&
@@ -271,7 +268,6 @@ export const useFetchRoutes = ({
     };
   }, [selectedToken, swapResultTokenGlobal, selectedTokenAmount]);
 
-  //TODO: Should be triggered, once all routes has been setted. Also figure out how to handle for multiple routes.
   useEffect(() => {
     if (selectedRoute) {
       const token = {
@@ -299,7 +295,6 @@ export const useFetchRoutes = ({
   useEffect(() => {
     if (activeStep === 1 && selectedRoute) {
       const interval = setInterval(() => {
-        // Capture latest values inside the interval callback
         const currentInToken = selectedToken;
         const currentProtocolInputToken = swapResultTokenGlobal;
         const currentInTokenAmount = selectedTokenAmount;

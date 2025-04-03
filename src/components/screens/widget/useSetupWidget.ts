@@ -85,7 +85,6 @@ export const useSetupWidget = ({
     }
   }, [allChains, anyaltInstance]);
 
-  // Memoize values that determine rendering to prevent unnecessary re-renders
   const modalWrapperMaxWidth = useMemo(() => {
     if (showPendingOperationDialog || showStuckTransactionDialog) {
       return '976px';

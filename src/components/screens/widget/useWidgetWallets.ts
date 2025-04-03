@@ -44,7 +44,6 @@ export const useWidgetWallets = ({
       return walletConnector.isConnected;
     }
 
-    // Set chain flags for last mile tx
     if (swapResultTokenGlobal?.chain?.chainType === ChainType.EVM) {
       isEvmRequired = true;
     } else if (swapResultTokenGlobal?.chain?.chainType === ChainType.SOLANA) {

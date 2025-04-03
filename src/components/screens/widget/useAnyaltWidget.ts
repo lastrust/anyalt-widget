@@ -155,11 +155,6 @@ export const useAnyaltWidget = ({
     getChain,
   });
 
-  //TODO: Should be refactored to handle it to handle selected route. Probably can be deleted
-  // useEffect(() => {
-  //   if (selectedRoute) setAllRoutes(selectedRoute);
-  // }, [selectedRoute]);
-
   const { setCurrentRoute } = useSetRoute({
     setActiveStep,
     setListOfTransactionsFromRoute,

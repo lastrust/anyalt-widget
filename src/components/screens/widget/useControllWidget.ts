@@ -107,7 +107,6 @@ export const useControllWidget = ({
   };
 
   const onTxComplete = () => {
-    // Small delay before moving to the next step
     setTimeout(() => {
       setActiveStep(3);
     }, 3000);
