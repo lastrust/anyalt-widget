@@ -228,7 +228,7 @@ export const ChoosingRouteAccordion = ({
                     slippage={slippage}
                     network={
                       widgetTemplate === 'TOKEN_BUY'
-                        ? `${protocolFinalToken?.name} on ${protocolInputToken?.chain?.displayName}`
+                        ? `${protocolInputToken?.name} on ${protocolInputToken?.chain?.displayName}`
                         : route.swapSteps[0]?.swapperName
                     }
                     borderRadius={'8px'}
