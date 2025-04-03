@@ -13,7 +13,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { useAtomValue } from 'jotai';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { EstimateResponse } from '../../../..';
 import { RANGO_PLACEHOLDER_LOGO } from '../../../../constants/links';
 import {
@@ -97,9 +97,32 @@ export const ChoosingRouteAccordion = ({
   const selectedToken = useAtomValue(selectedTokenAtom);
   const swapResultTokenGlobal = useAtomValue(swapResultTokenAtom);
 
+  const selectedRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (selectedRef.current) {
+      //ts-ignore
+      selectedRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }
+  }, [selectedRoute]); // Runs when selectedRoute changes
+
   const isSameToken = useMemo(() => {
     return selectedToken?.id === swapResultTokenGlobal?.id;
   }, [selectedToken, swapResultTokenGlobal]);
+
+  const defaultAccordionOpen = useMemo(() => {
+    if (allRoutes)
+      return selectedRoute
+        ? [
+            allRoutes?.findIndex(
+              (route) => route.routeId === selectedRoute.routeId,
+            ),
+          ]
+        : [0];
+  }, [selectedRoute]);
 
   if (!allRoutes) return <></>;
 
@@ -110,7 +133,7 @@ export const ChoosingRouteAccordion = ({
   return (
     <Box w={'100%'} mt="16px">
       <Accordion
-        defaultIndex={[0]}
+        defaultIndex={defaultAccordionOpen}
         allowMultiple
         style={{
           display: 'flex',
@@ -118,12 +141,15 @@ export const ChoosingRouteAccordion = ({
           gap: '16px',
           maxHeight: widgetTemplate === 'TOKEN_BUY' ? '350px' : '450px',
           overflowY: 'auto',
+          scrollBehavior: 'smooth',
         }}
       >
         {!isSameToken &&
           allRoutes.map((route, index) => {
+            const isSelected = route.routeId === selectedRoute?.routeId;
             return (
               <AccordionItem
+                ref={isSelected ? selectedRef : null}
                 key={`${route.outputAmount}-${index}`}
                 border="2px solid"
                 borderWidth={loading ? '1px' : '2px!important'}
@@ -142,13 +168,43 @@ export const ChoosingRouteAccordion = ({
                   display={'flex'}
                   flexDir={'column'}
                   justifyContent={'space-between'}
-                  gap="12px"
+                  gap="8px"
                   p={'0px'}
                   w={'100%'}
                   _hover={{
                     bgColor: 'transparent',
                   }}
                 >
+                  <Flex w={'full'} justifyContent={'space-between'}>
+                    <Flex alignItems="center" gap="8px" w={'100%'}>
+                      {route.tags.map((tag, index) => {
+                        return (
+                          <RouteTag
+                            key={`${tag}-${index}`}
+                            loading={loading}
+                            text={`#${tag}`}
+                            textColor={getTagColor(tag).text}
+                            bgColor={getTagColor(tag).bg}
+                            withPadding
+                          />
+                        );
+                      })}
+                    </Flex>
+                    <Box
+                      h={'24px'}
+                      w={'24px'}
+                      borderRadius={'50%'}
+                      bgColor="brand.bg.active"
+                      cursor="pointer"
+                    >
+                      <AccordionIcon
+                        w={'24px'}
+                        h={'24px'}
+                        color="brand.text.secondary.0"
+                      />
+                    </Box>
+                  </Flex>
+                  <Divider bg="rgba(51, 51, 51, 0.20)" m="0px" />
                   <Flex
                     flexDirection="row"
                     justifyContent="space-between"
@@ -157,13 +213,6 @@ export const ChoosingRouteAccordion = ({
                     w={'100%'}
                   >
                     <Flex alignItems="center" gap="8px" w={'100%'}>
-                      <RouteTag
-                        loading={loading}
-                        text={`#${route.tags[0]}`}
-                        textColor={getTagColor(route.tags[0]).text}
-                        bgColor={getTagColor(route.tags[0]).bg}
-                        withPadding
-                      />
                       <RouteTag
                         loading={loading}
                         text={`${route.swapSteps.reduce((acc, swap) => acc + swap.estimatedTimeInSeconds, 0 + Number(finalTokenEstimate?.estimatedTimeInSeconds ?? 0)) || finalTokenEstimate?.estimatedTimeInSeconds}s`}
@@ -186,19 +235,6 @@ export const ChoosingRouteAccordion = ({
                         bgColor="transparent"
                       />
                     </Flex>
-                    <Box
-                      h={'24px'}
-                      w={'24px'}
-                      borderRadius={'50%'}
-                      bgColor="brand.bg.active"
-                      cursor="pointer"
-                    >
-                      <AccordionIcon
-                        w={'24px'}
-                        h={'24px'}
-                        color="brand.text.secondary.0"
-                      />
-                    </Box>
                   </Flex>
                   <TokenRouteInfo
                     loading={loading}

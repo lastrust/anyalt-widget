@@ -304,14 +304,14 @@ export const useFetchRoutes = ({
           currentInTokenAmount &&
           selectedRoute;
 
-        if (userSelectedToken) {
+        if (userSelectedToken && activeStep === 1) {
           onGetRoutes(false);
         }
       }, REFRESH_INTERVAL);
 
       return () => clearInterval(interval);
     }
-  }, [selectedRoute]);
+  }, [selectedRoute, activeStep]);
 
   return {
     loading,

@@ -62,7 +62,7 @@ export const TransactionInfo: FC<Props> = ({
           <VStack alignItems="flex-start" spacing="16px" w={'100%'}>
             <HStack justifyContent={'space-between'} w={'100%'}>
               <Text
-                textStyle={'regular.1'}
+                textStyle={'regular.2'}
                 color="brand.text.secondary.2"
                 w={'100%'}
                 whiteSpace={'nowrap'}
