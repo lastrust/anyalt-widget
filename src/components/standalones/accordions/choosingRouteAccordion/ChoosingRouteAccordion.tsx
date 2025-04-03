@@ -116,7 +116,7 @@ export const ChoosingRouteAccordion = ({
           display: 'flex',
           flexDirection: 'column',
           gap: '16px',
-          maxHeight: '450px',
+          maxHeight: widgetTemplate === 'TOKEN_BUY' ? '350px' : '450px',
           overflowY: 'auto',
         }}
       >
