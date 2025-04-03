@@ -25,7 +25,7 @@ import { mapBlockchainToChainType } from '../../../utils/chains';
 import { getTransactionData } from '../../../utils/getTransactionData';
 import { handleSignerAddress } from '../../../utils/handleSignerAddress';
 import { submitPendingTransaction } from '../../../utils/submitPendingTransaction';
-import { useStuckRoute } from '../../screens/stuckTransactionDialog/useStuckTransaction';
+import { useStuckTransaction } from '../../screens/stuckTransactionDialog/useStuckTransaction';
 import { useHandleTransaction } from './handlers/useHandleTransaction';
 
 export const useExecuteTokensSwap = (
@@ -51,7 +51,7 @@ export const useExecuteTokensSwap = (
     externalEvmWalletConnector,
   });
 
-  const { keepPollingOnTxStuck } = useStuckRoute();
+  const { keepPollingOnTxStuck } = useStuckTransaction();
 
   const executeTokensSwap = async (
     aaInstance: AnyAlt,

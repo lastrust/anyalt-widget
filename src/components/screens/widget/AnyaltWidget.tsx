@@ -85,6 +85,7 @@ export const AnyaltWidgetWrapper = ({
         <Stepper activeStep={activeStep}>
           <SelectTokenStep
             loading={loading}
+            activeStep={activeStep}
             widgetTemplate={widgetTemplate}
             isValidAmountIn={isValidAmountIn}
             isButtonDisabled={isButtonDisabled}
@@ -95,6 +96,7 @@ export const AnyaltWidgetWrapper = ({
           />
           <ChoosingRouteStep
             loading={loading}
+            activeStep={activeStep}
             allRoutes={allRoutes}
             walletConnector={walletConnector}
             failedToFetchRoute={failedToFetchRoute}

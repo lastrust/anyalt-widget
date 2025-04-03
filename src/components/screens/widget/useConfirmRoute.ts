@@ -69,7 +69,6 @@ export const useConfirmRoute = ({
       let destination = '';
 
       const selectedWallets: Record<string, string> = {};
-      //TODO: It shoudl read data from selected route.
       selectedRoute?.swapSteps.forEach((swapStep, index) => {
         const fromBlockchain = swapStep.sourceToken.blockchain;
         const toBlockchain = swapStep.destinationToken.blockchain;

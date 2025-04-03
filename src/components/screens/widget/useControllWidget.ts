@@ -1,9 +1,8 @@
 import { useAtom, useSetAtom } from 'jotai';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import {
   activeOperationIdAtom,
   allRoutesAtom,
-  currentStepAtom,
   lastMileTokenEstimateAtom,
   selectedTokenAmountAtom,
   selectedTokenAtom,
@@ -31,8 +30,7 @@ export const useControllWidget = ({
 }: ControllWidgetProps) => {
   const [openSlippageModal, setOpenSlippageModal] = useState(false);
 
-  const [bestRoute, setBestRoute] = useAtom(allRoutesAtom);
-  const [, setCurrentStep] = useAtom(currentStepAtom);
+  const [allRoutes, setAllRoutes] = useAtom(allRoutesAtom);
   const [swapData, setSwapData] = useAtom(swapDataAtom);
   const [selectedToken, setSelectedToken] = useAtom(selectedTokenAtom);
   const setTokenFetchError = useSetAtom(tokenFetchErrorAtom);
@@ -53,7 +51,7 @@ export const useControllWidget = ({
     setSelectedTokenAmount(undefined);
     setSelectedToken(undefined);
     setTokenFetchError({ isError: false, errorMessage: '' });
-    setBestRoute(undefined);
+    setAllRoutes(undefined);
     setSwapData({
       swapIsFinished: false,
       isCrosschainSwapError: false,
@@ -73,26 +71,22 @@ export const useControllWidget = ({
     setSelectedTokenAmount,
     setSelectedToken,
     setTokenFetchError,
-    setBestRoute,
+    setAllRoutes,
     setSwapData,
     setTransactionsProgress,
     setTransactionIndex,
   ]);
-
-  useEffect(() => {
-    setCurrentStep(activeStep);
-  }, [activeStep]);
 
   const isButtonDisabled = useMemo(() => {
     if (activeStep === 0) {
       return (
         Number(selectedTokenAmount ?? 0) == 0 ||
         selectedToken == null ||
-        !bestRoute
+        !allRoutes
       );
     }
     return Number(selectedTokenAmount ?? 0) == 0 || selectedToken == null;
-  }, [selectedTokenAmount, selectedToken, bestRoute, activeStep]);
+  }, [selectedTokenAmount, selectedToken, allRoutes, activeStep]);
 
   const onConfigClick = () => {
     setOpenSlippageModal(true);

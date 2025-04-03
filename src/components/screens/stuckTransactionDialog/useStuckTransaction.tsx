@@ -10,7 +10,7 @@ import {
   TransactionStatus,
 } from '../../../types/transaction';
 
-export const useStuckRoute = () => {
+export const useStuckTransaction = () => {
   const [showStuckTransactionDialog, setShowStuckTransactionDialog] = useAtom(
     showStuckTransactionDialogAtom,
   );

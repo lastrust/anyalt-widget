@@ -70,8 +70,8 @@ export const StuckTransactionActions = ({
           <Box mb="6px">
             <TransactionStep
               justify={'center'}
-              fromToken={stuckTxTokens.from}
-              toToken={stuckTxTokens.to}
+              fromToken={stuckTxTokens?.from}
+              toToken={stuckTxTokens?.to}
             />
           </Box>
         </Flex>

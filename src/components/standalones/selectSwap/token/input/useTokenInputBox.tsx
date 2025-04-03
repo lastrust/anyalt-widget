@@ -6,7 +6,6 @@ import { formatUnits } from 'viem';
 import { useAccount } from 'wagmi';
 import { useSolana } from '../../../../../providers/useSolana';
 import {
-  currentStepAtom,
   selectedTokenAmountAtom,
   selectedTokenAtom,
   tokenFetchErrorAtom,
@@ -17,7 +16,6 @@ export const useTokenInputBox = () => {
   const [balance, setBalance] = useState<string | undefined>(undefined);
 
   const selectedToken = useAtomValue(selectedTokenAtom);
-  const currentStep = useAtomValue(currentStepAtom);
   const tokenFetchError = useAtomValue(tokenFetchErrorAtom);
   const [selectedTokenAmount, setSelectedTokenAmount] = useAtom(
     selectedTokenAmountAtom,
@@ -83,7 +81,6 @@ export const useTokenInputBox = () => {
   }, [selectedTokenAmount]);
 
   return {
-    currentStep,
     inToken: selectedToken,
     inTokenAmount: selectedTokenAmount,
     setInTokenAmount: setSelectedTokenAmount,

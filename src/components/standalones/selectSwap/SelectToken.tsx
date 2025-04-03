@@ -13,20 +13,22 @@ import { useSelectToken } from './useSelectToken';
 
 type Props = {
   loading: boolean;
+  activeStep: number;
   buttonText: string;
   isValidAmountIn?: boolean;
   openSlippageModal: boolean;
+  isButtonDisabled?: boolean;
+  failedToFetchRoute?: boolean;
   showConnectedWallets?: boolean;
   walletConnector?: WalletConnector;
   onButtonClick: () => void;
-  isButtonDisabled?: boolean;
   handleWalletsOpen?: () => void;
   setOpenSlippageModal: (open: boolean) => void;
-  failedToFetchRoute?: boolean;
 } & BoxProps;
 
 export const SelectToken = ({
   loading,
+  activeStep,
   openSlippageModal,
   setOpenSlippageModal,
   showConnectedWallets = false,
@@ -68,6 +70,7 @@ export const SelectToken = ({
       <TokenInputBox
         openTokenSelectModal={() => setOpenTokenSelect(true)}
         loading={loading}
+        activeStep={activeStep}
         price={inTokenPrice}
         isValidAmountIn={isValidAmountIn}
         failedToFetchRoute={failedToFetchRoute}

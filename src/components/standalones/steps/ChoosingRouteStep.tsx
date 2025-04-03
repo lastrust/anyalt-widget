@@ -7,6 +7,7 @@ import { SelectToken } from '../selectSwap/SelectToken';
 
 type Props = {
   loading: boolean;
+  activeStep: number;
   openSlippageModal: boolean;
   failedToFetchRoute: boolean;
   areWalletsConnected: boolean;
@@ -23,6 +24,7 @@ type Props = {
 
 export const ChoosingRouteStep = ({
   loading,
+  activeStep,
   allRoutes,
   failedToFetchRoute,
   walletConnector,
@@ -45,6 +47,7 @@ export const ChoosingRouteStep = ({
       <SwappingTemplate title={'Calculation'} onConfigClick={onConfigClick}>
         <SelectToken
           loading={loading}
+          activeStep={activeStep}
           buttonText={buttonText}
           onButtonClick={onChooseRouteButtonClick}
           walletConnector={walletConnector}
