@@ -98,7 +98,7 @@ const App = () => {
               onClose={onClose}
               estimateCallback={estimateCallback}
               executeCallBack={executeCallBack}
-              minDepositAmount={1}
+              minDepositAmount={0}
             />
           </Box>
         </Center>
