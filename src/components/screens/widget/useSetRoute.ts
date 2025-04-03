@@ -4,7 +4,6 @@ import { useSetAtom } from 'jotai';
 import { useCallback } from 'react';
 import {
   activeOperationIdAtom,
-  allRoutesAtom,
   selectedRouteAtom,
   transactionIndexAtom,
   transactionsProgressAtom,
@@ -24,7 +23,6 @@ export const useSetRoute = ({
   setActiveStep,
   setListOfTransactionsFromRoute,
 }: UseSetRouteProps) => {
-  const setBestRoute = useSetAtom(allRoutesAtom);
   const setSelectedRoute = useSetAtom(selectedRouteAtom);
 
   const setTransactionIndex = useSetAtom(transactionIndexAtom);
@@ -85,7 +83,6 @@ export const useSetRoute = ({
       );
     },
     [
-      setBestRoute,
       setActiveStep,
       setTransactionIndex,
       setActiveOperationId,

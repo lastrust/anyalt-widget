@@ -5,8 +5,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { ChainType, WalletConnector } from '../../../..';
 import {
   allChainsAtom,
-  allRoutesAtom,
   pendingRouteAtom,
+  selectedRouteAtom,
   swapResultTokenAtom,
 } from '../../../../store/stateStore';
 
@@ -49,7 +49,7 @@ export const useConnectWalletsModal = ({
   const [isSolanaRequired, setIsSolanaRequired] = useState(false);
   const [isBitcoinRequired, setIsBitcoinRequired] = useState(false);
 
-  const allRoutes = useAtomValue(allRoutesAtom);
+  const selectedRoute = useAtomValue(selectedRouteAtom);
   const pendingRoute = useAtomValue(pendingRouteAtom);
   const allChains = useAtomValue(allChainsAtom);
 
@@ -87,8 +87,8 @@ export const useConnectWalletsModal = ({
     }
 
     (pendingRoute?.swapSteps || [])
-      .concat(...(allRoutes?.flatMap((route) => route.swapSteps) || []))
-      .forEach((swapStep) => {
+      .concat(...(selectedRoute?.swapSteps || []))
+      ?.forEach((swapStep) => {
         const fromBlockchain = swapStep.sourceToken.blockchain;
         const toBlockchain = swapStep.destinationToken.blockchain;
 
@@ -109,7 +109,7 @@ export const useConnectWalletsModal = ({
         const isEvmTo = toChain?.chainType === ChainType.EVM;
         if (isEvmFrom || isEvmTo) setIsEvmRequired(true);
       });
-  }, [allRoutes, allChains]);
+  }, [selectedRoute, allChains]);
 
   const handleWalletClick = (walletType: string) => {
     if (walletConnector) {

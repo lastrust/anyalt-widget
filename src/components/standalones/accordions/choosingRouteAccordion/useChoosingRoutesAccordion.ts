@@ -72,7 +72,7 @@ export const useChoosingRoutesAccordion = ({ estimateOutPut }: Props) => {
     return Boolean(selectedRoute?.swapSteps?.length);
   }, [selectedRoute]);
 
-  const recentSwap = useMemo(() => {
+  const lastSwap = useMemo(() => {
     return selectedRoute?.swapSteps?.[selectedRoute?.swapSteps?.length - 1];
   }, [selectedRoute]);
 
@@ -82,13 +82,13 @@ export const useChoosingRoutesAccordion = ({ estimateOutPut }: Props) => {
 
   const finalSwapToken = useMemo(() => {
     return {
-      name: recentSwap?.destinationToken?.symbol || '',
-      amount: truncateToDecimals(recentSwap?.payout || '0', 4),
-      chainName: recentSwap?.destinationToken?.blockchain || '',
-      icon: recentSwap?.destinationToken?.logo || '',
-      chainIcon: recentSwap?.destinationToken?.blockchainLogo || '',
+      name: lastSwap?.destinationToken?.symbol || '',
+      amount: truncateToDecimals(lastSwap?.payout || '0', 4),
+      chainName: lastSwap?.destinationToken?.blockchain || '',
+      icon: lastSwap?.destinationToken?.logo || '',
+      chainIcon: lastSwap?.destinationToken?.blockchainLogo || '',
     };
-  }, [recentSwap]);
+  }, [lastSwap]);
 
   const protocolDepositToken = useMemo(() => {
     return {
