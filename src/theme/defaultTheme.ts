@@ -64,6 +64,9 @@ export const defaultTheme = extendTheme({
           4: '#919eab',
         },
       },
+      tags: {
+        route: '#919eab'
+      },
       buttons: {
         close: {
           primary: '#919eab',

@@ -185,21 +185,21 @@ export const ChoosingRouteAccordion = ({
                         loading={loading}
                         text={`${route.swapSteps.reduce((acc, swap) => acc + swap.estimatedTimeInSeconds, 0 + Number(finalTokenEstimate?.estimatedTimeInSeconds ?? 0)) || finalTokenEstimate?.estimatedTimeInSeconds}s`}
                         icon={TimeIcon}
-                        textColor="brand.text.secondary.1"
+                        textColor="brand.tags.route"
                         bgColor="transparent"
                       />
                       <RouteTag
                         loading={loading}
                         text={calcFees(route)}
                         icon={GasIcon}
-                        textColor="brand.text.secondary.1"
+                        textColor="brand.tags.route"
                         bgColor="transparent"
                       />
                       <RouteTag
                         loading={loading}
                         text={`${route.swapSteps.length + Number(widgetTemplate === 'DEPOSIT_TOKEN')}`}
                         icon={StepsIcon}
-                        textColor="brand.text.secondary.1"
+                        textColor="brand.tags.route"
                         bgColor="transparent"
                       />
                     </Flex>

@@ -33,7 +33,7 @@ export const RouteTag = ({
         >
           {icon && (
             <Box color={textColor}>
-              <Icon as={icon} w={'14px'} h={'14px'} />
+              <Icon as={icon} w={'14px'} h={'14px'} color={textColor} />
             </Box>
           )}
           <Text

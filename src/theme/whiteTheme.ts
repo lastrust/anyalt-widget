@@ -68,6 +68,7 @@ export const whiteTheme = extendTheme({
         text: '#333',
       },
       tags: {
+        route: '#999',
         fastest: {
           text: '#3777F7',
           bg: 'rgba(55, 119, 247, 0.10)',
