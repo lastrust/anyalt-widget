@@ -99,6 +99,15 @@ export const ChoosingRouteAccordion = ({
 
   const selectedRef = useRef<HTMLDivElement>(null);
 
+  const calcTokenPrice = (route: GetAllRoutesResponseItem) => {
+    if (!route || route.swapSteps.length === 0) return '';
+    const lastStep = route.swapSteps[route.swapSteps.length - 1];
+    const tokenPrice = lastStep.destinationToken.tokenUsdPrice;
+
+    if (!tokenPrice) return '';
+    return (tokenPrice * parseFloat(route.outputAmount)).toFixed(2);
+  };
+
   useEffect(() => {
     if (selectedRef.current) {
       //ts-ignore
@@ -253,14 +262,24 @@ export const ChoosingRouteAccordion = ({
                         ? protocolInputToken?.logoUrl || ''
                         : protocolFinalToken?.logoUrl || ''
                     }
-                    amount={truncateToDecimals(
-                      routeEstimates?.[route.routeId]?.amountOut ?? '0.00',
-                      4,
-                    )}
-                    price={truncateToDecimals(
-                      routeEstimates?.[route.routeId]?.priceInUSD ?? '0.00',
-                      4,
-                    )}
+                    amount={
+                      widgetTemplate === 'TOKEN_BUY'
+                        ? route?.outputAmount || ''
+                        : truncateToDecimals(
+                            routeEstimates?.[route.routeId]?.amountOut ??
+                              '0.00',
+                            4,
+                          )
+                    }
+                    price={
+                      widgetTemplate === 'TOKEN_BUY'
+                        ? calcTokenPrice(route)
+                        : truncateToDecimals(
+                            routeEstimates?.[route.routeId]?.priceInUSD ??
+                              '0.00',
+                            4,
+                          )
+                    }
                     slippage={slippage}
                     network={
                       widgetTemplate === 'TOKEN_BUY'
