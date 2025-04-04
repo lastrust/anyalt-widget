@@ -48,6 +48,7 @@ export const defaultTheme = extendTheme({
         cardBg: '#919eab0a',
         selectToken: 'rgba(0, 0, 0, 0.5)',
         skeleton: '#919eab',
+        bestRoute: '#919eab0a',
       },
       text: {
         primary: '#fff',
@@ -62,6 +63,9 @@ export const defaultTheme = extendTheme({
           3: 'rgba(255, 255, 255, 0.08)',
           4: '#919eab',
         },
+      },
+      tags: {
+        route: '#919eab',
       },
       buttons: {
         close: {

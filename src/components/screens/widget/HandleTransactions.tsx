@@ -1,12 +1,12 @@
-import { BestRouteResponse } from '@anyalt/sdk';
+import { GetAllRoutesResponseItem } from '@anyalt/sdk/dist/adapter/api/api';
 import { WalletConnector } from '../../..';
-import { PendingOperationDialog } from '../../standalones/pendingOperationDialog/PendingOperationDialog';
-import { StuckTransactionDialog } from '../../standalones/stuckTransactionDialog/StuckTransactionDialog';
+import { PendingRouteDialog } from '../pendingRouteDialog/PendingRouteDialog';
+import { StuckTransactionDialog } from '../stuckTransactionDialog/StuckTransactionDialog';
 
 type Props = {
-  showPendingOperationDialog: boolean;
+  showPendingRouteDialog: boolean;
   showStuckTransactionDialog: boolean;
-  setOperationToCurrentRoute: (operation: BestRouteResponse) => void;
+  setCurrentRoute: (route: GetAllRoutesResponseItem) => void;
   walletConnector?: WalletConnector;
   allNecessaryWalletsConnected: boolean;
   connectWalletsOpen: () => void;
@@ -14,20 +14,20 @@ type Props = {
   children: React.ReactNode;
 };
 
-export const HandlerTransactions = ({
-  showPendingOperationDialog,
+export const HandleTransactions = ({
+  showPendingRouteDialog,
   showStuckTransactionDialog,
-  setOperationToCurrentRoute,
+  setCurrentRoute,
   walletConnector,
   allNecessaryWalletsConnected,
   connectWalletsOpen,
   resetState,
   children,
 }: Props) => {
-  if (showPendingOperationDialog) {
+  if (showPendingRouteDialog) {
     return (
-      <PendingOperationDialog
-        setOperationToCurrentRoute={setOperationToCurrentRoute}
+      <PendingRouteDialog
+        setCurrentRoute={setCurrentRoute}
         walletConnector={walletConnector}
         allNecessaryWalletsConnected={allNecessaryWalletsConnected}
         connectWalletsOpen={connectWalletsOpen}

@@ -18,11 +18,10 @@ export const CrossChainWarningCard = () => {
         cursor="pointer"
         w="100%"
         justifyContent={'end'}
+        color="brand.text.primary"
       >
-        <Icon as={InfoIcon} color="#f9e154" />
-        <Text color="brand.text.warning" textStyle={'regular.3'}>
-          Disclaimer
-        </Text>
+        <Icon as={InfoIcon} />
+        <Text textStyle={'regular.3'}>Disclaimer</Text>
       </HStack>
     </Tooltip>
   );

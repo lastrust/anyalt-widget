@@ -1,4 +1,5 @@
-import { BestRouteResponse, SupportedToken } from '@anyalt/sdk';
+import { SupportedToken } from '@anyalt/sdk';
+import { GetAllRoutesResponseItem } from '@anyalt/sdk/dist/adapter/api/api';
 import {
   AccordionButton,
   AccordionIcon,
@@ -22,7 +23,7 @@ import { TransactionHash } from '../../molecules/text/TransactionHash';
 
 type Props = {
   isLastMileExpanded: boolean;
-  bestRoute: BestRouteResponse;
+  route: GetAllRoutesResponseItem;
   currentStep: number;
   transactionsProgress: TransactionsProgress | undefined;
   protocolFinalToken: Token | undefined;
@@ -32,14 +33,14 @@ type Props = {
 };
 
 export const LastMileTxAccordion = ({
-  isLastMileExpanded,
-  bestRoute,
+  route,
   currentStep,
-  transactionsProgress,
-  protocolFinalToken,
+  operationType,
   swapResultToken,
   finalTokenEstimate,
-  operationType,
+  protocolFinalToken,
+  isLastMileExpanded,
+  transactionsProgress,
 }: Props) => {
   const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
 
@@ -66,9 +67,9 @@ export const LastMileTxAccordion = ({
       >
         <HStack justifyContent={'flex-start'}>
           <Text textStyle={'bold.1'} mr="8px">
-            Transaction {bestRoute.swapSteps.length + 1}
+            Transaction {route.swapSteps.length + 1}
           </Text>
-          {currentStep === bestRoute.swapSteps.length + 1 && (
+          {currentStep === route.swapSteps.length + 1 && (
             <Text
               textStyle={'bold.1'}
               color={
@@ -113,10 +114,9 @@ export const LastMileTxAccordion = ({
             fromToken={{
               name: swapResultToken?.symbol || '',
               amount: truncateToDecimals(
-                bestRoute.swapSteps.length === 0
+                route.swapSteps.length === 0
                   ? selectedTokenAmount || '0'
-                  : bestRoute.swapSteps[bestRoute.swapSteps.length - 1]
-                      ?.payout || '0',
+                  : route.swapSteps[route.swapSteps.length - 1]?.payout || '0',
                 3,
               ),
               tokenLogo: swapResultToken?.logoUrl || '',
@@ -163,18 +163,16 @@ export const LastMileTxAccordion = ({
         </VStack>
 
         <Box>
-          {transactionsProgress![bestRoute.swapSteps.length]?.approve && (
+          {transactionsProgress![route.swapSteps.length]?.approve && (
             <TransactionHash
               type="Approval"
-              progress={
-                transactionsProgress![bestRoute.swapSteps.length]?.approve
-              }
+              progress={transactionsProgress![route.swapSteps.length]?.approve}
             />
           )}
-          {transactionsProgress![bestRoute.swapSteps.length]?.swap && (
+          {transactionsProgress![route.swapSteps.length]?.swap && (
             <TransactionHash
               type="Swap"
-              progress={transactionsProgress![bestRoute.swapSteps.length]?.swap}
+              progress={transactionsProgress![route.swapSteps.length]?.swap}
             />
           )}
         </Box>

@@ -3,25 +3,27 @@ import { SwappingTemplate } from '../../templates/SwappingTemplate';
 import { SelectToken } from '../selectSwap/SelectToken';
 
 type Props = {
-  failedToFetchRoute: boolean;
   loading: boolean;
-  openSlippageModal: boolean;
+  activeStep: number;
   isValidAmountIn: boolean;
+  isButtonDisabled: boolean;
+  openSlippageModal: boolean;
+  failedToFetchRoute: boolean;
   widgetTemplate: WidgetTemplateType;
   onConfigClick: () => void;
   setOpenSlippageModal: (open: boolean) => void;
-  isButtonDisabled: boolean;
 };
 
 export const SelectTokenStep = ({
-  onConfigClick,
-  failedToFetchRoute,
+  activeStep,
   loading,
-  openSlippageModal,
-  setOpenSlippageModal,
-  isValidAmountIn,
   widgetTemplate,
+  isValidAmountIn,
   isButtonDisabled,
+  openSlippageModal,
+  failedToFetchRoute,
+  onConfigClick,
+  setOpenSlippageModal,
 }: Props) => {
   return (
     <SwappingTemplate
@@ -31,6 +33,7 @@ export const SelectTokenStep = ({
       onConfigClick={onConfigClick}
     >
       <SelectToken
+        activeStep={activeStep}
         buttonText={'Get Quote'}
         onButtonClick={() => {}}
         loading={loading}

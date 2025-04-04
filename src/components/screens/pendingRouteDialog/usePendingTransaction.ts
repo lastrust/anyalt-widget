@@ -4,28 +4,32 @@ import { useAtom, useAtomValue } from 'jotai';
 import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 import {
+  allRoutesAtom,
   anyaltInstanceAtom,
-  bestRouteAtom,
+  selectedRouteAtom,
+  showPendingRouteDialogAtom,
   widgetTemplateAtom,
 } from '../../../store/stateStore';
 
 import { AnyAlt } from '@anyalt/sdk';
-import { pendingOperationAtom } from '../../../store/stateStore';
+import { pendingRouteAtom } from '../../../store/stateStore';
 import { mapBlockchainToChainType } from '../../../utils/chains';
 
 type Props = {
   closeConnectWalletsModal: () => void;
 };
-export const usePendingOperation = ({ closeConnectWalletsModal }: Props) => {
-  const [showPendingOperationDialog, setShowPendingOperationDialog] =
-    useState(false);
+export const usePendingRoute = ({ closeConnectWalletsModal }: Props) => {
+  const [selectedRoute] = useAtom(selectedRouteAtom);
+  const [showPendingRouteDialog, setShowPendingRouteDialog] = useAtom(
+    showPendingRouteDialogAtom,
+  );
   const [allNecessaryWalletsConnected, setAllNecessaryWalletsConnected] =
     useState(false);
 
-  const [pendingOperation, setPendingOperation] = useAtom(pendingOperationAtom);
+  const [pendingRoute, setPendingRoute] = useAtom(pendingRouteAtom);
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
-  const activeRoute = useAtomValue(bestRouteAtom);
+  const allRoutes = useAtomValue(allRoutesAtom);
 
   // Wallet stuff
   const { address: evmAddress, isConnected: isEvmConnected } = useAccount();
@@ -42,17 +46,17 @@ export const usePendingOperation = ({ closeConnectWalletsModal }: Props) => {
       anyalt: AnyAlt,
       operationId: string,
     ) => {
-      const pendingOperation = await anyalt.getPendingOperation({
+      const pendingRoute = await anyalt.getPendingOperation({
         operationId: operationId,
       });
-      if (pendingOperation?.operationId) {
-        setPendingOperation({
+      if (pendingRoute?.operationId) {
+        setPendingRoute({
           missingWalletForSourceBlockchain: true,
-          operationId: pendingOperation.operationId,
-          swapSteps: pendingOperation.swapSteps!,
+          routeId: pendingRoute.operationId,
+          swapSteps: pendingRoute.swapSteps!,
           outputAmount:
-            pendingOperation.swapSteps![pendingOperation.swapSteps!.length - 1]
-              .payout,
+            pendingRoute.swapSteps![pendingRoute.swapSteps!.length - 1].payout,
+          tags: [],
         });
       }
     };
@@ -67,7 +71,7 @@ export const usePendingOperation = ({ closeConnectWalletsModal }: Props) => {
         getPendingOperationById(anyaltInstance, pendingOperationId);
       }
     }
-  }, [setPendingOperation, anyaltInstance, widgetTemplate]);
+  }, [setPendingRoute, anyaltInstance, widgetTemplate]);
 
   /**
    * Get pending operation from wallets and show the dialog
@@ -83,13 +87,14 @@ export const usePendingOperation = ({ closeConnectWalletsModal }: Props) => {
         walletAddresses,
       });
       if (pendingOperation?.operationId) {
-        setPendingOperation({
+        setPendingRoute({
           missingWalletForSourceBlockchain: true,
-          operationId: pendingOperation.operationId,
+          routeId: pendingOperation.operationId,
           swapSteps: pendingOperation.swapSteps!,
           outputAmount:
             pendingOperation.swapSteps![pendingOperation.swapSteps!.length - 1]
               .payout,
+          tags: [],
         });
       }
     };
@@ -106,7 +111,7 @@ export const usePendingOperation = ({ closeConnectWalletsModal }: Props) => {
       }
     }
   }, [
-    setShowPendingOperationDialog,
+    setShowPendingRouteDialog,
     anyaltInstance,
     evmAddress,
     solanaPubKey,
@@ -122,22 +127,19 @@ export const usePendingOperation = ({ closeConnectWalletsModal }: Props) => {
    */
   useEffect(() => {
     if (
-      pendingOperation?.operationId &&
-      pendingOperation?.operationId !== activeRoute?.operationId
+      pendingRoute?.routeId &&
+      pendingRoute?.routeId !== selectedRoute?.routeId
     ) {
       closeConnectWalletsModal();
-      setShowPendingOperationDialog(true);
+      setShowPendingRouteDialog(true);
     }
-    if (
-      !pendingOperation ||
-      pendingOperation?.operationId === activeRoute?.operationId
-    ) {
-      setShowPendingOperationDialog(false);
+    if (!pendingRoute || pendingRoute?.routeId === selectedRoute?.routeId) {
+      setShowPendingRouteDialog(false);
     }
   }, [
-    showPendingOperationDialog,
-    pendingOperation,
-    activeRoute,
+    showPendingRouteDialog,
+    pendingRoute,
+    allRoutes,
     closeConnectWalletsModal,
   ]);
 
@@ -145,8 +147,8 @@ export const usePendingOperation = ({ closeConnectWalletsModal }: Props) => {
    * This is a check to see if all necessary wallets are connected
    */
   useEffect(() => {
-    if (pendingOperation) {
-      const allChainTypes = pendingOperation.swapSteps.map((step) => [
+    if (pendingRoute) {
+      const allChainTypes = pendingRoute.swapSteps.map((step) => [
         mapBlockchainToChainType(step.sourceToken.blockchain),
         mapBlockchainToChainType(step.destinationToken.blockchain),
       ]);
@@ -170,10 +172,10 @@ export const usePendingOperation = ({ closeConnectWalletsModal }: Props) => {
 
       setAllNecessaryWalletsConnected(allConnectedWallets.every(Boolean));
     }
-  }, [pendingOperation, evmAddress, solanaPubKey, bitcoinAccount]);
+  }, [pendingRoute, evmAddress, solanaPubKey, bitcoinAccount]);
 
   return {
-    showPendingOperationDialog,
+    showPendingRouteDialog,
     allNecessaryWalletsConnected,
   };
 };

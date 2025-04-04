@@ -53,7 +53,7 @@ export const whiteTheme = extendTheme({
       text: {
         primary: '#000000',
         warning: '#ffcc00',
-        error: 'E53030',
+        error: '#E53030',
         active: '#333',
         highlight: '#3777F7',
         secondary: {
@@ -66,6 +66,25 @@ export const whiteTheme = extendTheme({
       },
       footer: {
         text: '#333',
+      },
+      tags: {
+        route: '#999',
+        fastest: {
+          text: '#3777F7',
+          bg: 'rgba(55, 119, 247, 0.10)',
+        },
+        bestReturn: {
+          text: '#00A958',
+          bg: 'rgba(0, 169, 88, 0.10)',
+        },
+        lowestFee: {
+          text: '#FF2D99',
+          bg: 'rgba(255, 45, 153, 0.10)',
+        },
+        leastTransactions: {
+          text: '#FF9900',
+          bg: 'background: rgba(255, 153, 0, 0.10)',
+        },
       },
       buttons: {
         close: {

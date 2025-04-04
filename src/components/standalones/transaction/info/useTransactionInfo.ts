@@ -10,9 +10,9 @@ import { TX_MESSAGE, TX_STATUS } from '../../../../constants/transaction';
 import {
   activeOperationIdAtom,
   anyaltInstanceAtom,
-  bestRouteAtom,
   lastMileTokenAtom,
   lastMileTokenEstimateAtom,
+  selectedRouteAtom,
   selectedTokenAmountAtom,
   showStuckTransactionDialogAtom,
   slippageAtom,
@@ -22,7 +22,7 @@ import {
   transactionsProgressAtom,
 } from '../../../../store/stateStore';
 import { TransactionProgress } from '../../../../types/transaction';
-import { useStuckTransaction } from '../../stuckTransactionDialog/useStuckTransaction';
+import { useStuckTransaction } from '../../../screens/stuckTransactionDialog/useStuckTransaction';
 import { useHandleSwap } from '../useHandleSwap';
 
 export const useTransactionInfo = ({
@@ -42,7 +42,7 @@ export const useTransactionInfo = ({
     showStuckTransactionDialogAtom,
   );
   const slippage = useAtomValue(slippageAtom);
-  const bestRoute = useAtomValue(bestRouteAtom);
+  const selectedRoute = useAtomValue(selectedRouteAtom);
   const currentStep = useAtomValue(transactionIndexAtom);
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
   const activeOperationId = useAtomValue(activeOperationIdAtom);
@@ -61,14 +61,17 @@ export const useTransactionInfo = ({
   const { keepPollingOnTxStuck } = useStuckTransaction();
 
   const isBridgeSwap = useMemo(() => {
-    return bestRoute?.swapSteps?.[currentStep - 1]?.swapperType === 'BRIDGE';
-  }, [bestRoute, currentStep]);
+    return (
+      selectedRoute?.swapSteps?.[currentStep - 1]?.swapperType === 'BRIDGE'
+    );
+  }, [selectedRoute, currentStep]);
 
   const headerText = useMemo(() => {
-    const isSwaps = bestRoute?.swapSteps?.length;
+    const isSwaps = selectedRoute?.swapSteps?.length;
 
     const swapperType = isBridgeSwap ? 'Bridge' : 'Swap';
-    const swapperName = bestRoute?.swapSteps[currentStep - 1]?.swapperName;
+    const swapperName =
+      selectedRoute?.swapSteps?.[currentStep - 1]?.swapperName;
     const depositToken =
       transactionsList?.steps?.[currentStep - 1]?.to?.tokenName;
 
@@ -81,7 +84,7 @@ export const useTransactionInfo = ({
     const text = isSwaps ? swappingText : lastMileText;
 
     return text;
-  }, [bestRoute, currentStep, transactionsList]);
+  }, [selectedRoute, currentStep, transactionsList]);
 
   const runTx = async (higherGasCost?: boolean) => {
     if (!anyaltInstance || !activeOperationId) return;
@@ -91,13 +94,15 @@ export const useTransactionInfo = ({
         anyaltInstance,
         activeOperationId,
         slippage,
-        (bestRoute?.swapSteps ?? []).length,
+        (selectedRoute?.swapSteps ?? []).length,
         executeCallBack,
         estimateCallback,
         higherGasCost,
       );
-      onTxComplete();
       setIsLoading(false);
+
+      // Small delay before moving to the next step
+      onTxComplete();
     } catch (error) {
       console.error(error);
       setIsLoading(false);
@@ -218,22 +223,24 @@ export const useTransactionInfo = ({
   }, [anyaltInstance, activeOperationId, transactionsProgress, isLoading]);
 
   const estimatedTime = useMemo(() => {
-    if (!bestRoute) return 0;
+    if (!selectedRoute) return 0;
 
-    if (currentStep > bestRoute.swapSteps.length)
+    if (currentStep > selectedRoute.swapSteps.length)
       return lastMileTokenEstimate?.estimatedTimeInSeconds || 0;
 
-    return bestRoute.swapSteps[currentStep - 1]?.estimatedTimeInSeconds || 0;
-  }, [bestRoute, currentStep, lastMileTokenEstimate]);
+    return (
+      selectedRoute.swapSteps[currentStep - 1]?.estimatedTimeInSeconds || 0
+    );
+  }, [selectedRoute, currentStep, lastMileTokenEstimate]);
 
   const fees = useMemo(() => {
-    if (!bestRoute) return '0';
+    if (!selectedRoute) return '0';
 
-    if (currentStep > bestRoute.swapSteps.length)
+    if (currentStep > selectedRoute.swapSteps.length)
       return lastMileTokenEstimate?.estimatedFeeInUSD || '0';
 
     return (
-      bestRoute.swapSteps[currentStep - 1]?.fees
+      selectedRoute.swapSteps[currentStep - 1]?.fees
         .reduce((acc, fee) => {
           const amount = parseFloat(fee?.amount);
           const price = fee.price || 0;
@@ -242,13 +249,13 @@ export const useTransactionInfo = ({
         .toFixed(2)
         .toString() || '0'
     );
-  }, [bestRoute, currentStep, lastMileTokenEstimate]);
+  }, [selectedRoute, currentStep, lastMileTokenEstimate]);
 
   return {
     fees,
     runTx,
     isLoading,
-    bestRoute,
+    selectedRoute,
     currentStep,
     isBridgeSwap,
     inTokenAmount: selectedTokenAmount,

@@ -1,12 +1,13 @@
-import { BestRouteResponse } from '@anyalt/sdk';
+import { GetAllRoutesResponseItem } from '@anyalt/sdk/dist/adapter/api/api';
 import { useAtomValue } from 'jotai';
 import { useMemo } from 'react';
 import { ChainType } from '../../../..';
 import {
-  bestRouteAtom,
+  allRoutesAtom,
   lastMileTokenAtom,
   lastMileTokenEstimateAtom,
-  pendingOperationAtom,
+  pendingRouteAtom,
+  selectedRouteAtom,
   selectedTokenAmountAtom,
   selectedTokenAtom,
   swapResultTokenAtom,
@@ -21,8 +22,9 @@ type Props = {
 };
 
 export const useTransactionList = ({ operationType }: Props) => {
-  const bestRoute = useAtomValue(bestRouteAtom);
-  const pendingOperation = useAtomValue(pendingOperationAtom);
+  const allRoutes = useAtomValue(allRoutesAtom);
+  const selectedRoute = useAtomValue(selectedRouteAtom);
+  const pendingRoute = useAtomValue(pendingRouteAtom);
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
 
   const selectedToken = useAtomValue(selectedTokenAtom);
@@ -44,12 +46,12 @@ export const useTransactionList = ({ operationType }: Props) => {
         symbol: swapResultToken?.symbol || '',
         logo: swapResultToken?.logoUrl || '',
         blockchain: swapResultToken?.chain?.displayName || '',
-        amount: Number(bestRoute?.outputAmount).toFixed(4) || '',
+        amount: Number(selectedRoute?.outputAmount).toFixed(4) || '',
         blockchainLogo: swapResultToken?.chain?.logoUrl || '',
         decimals: swapResultToken?.decimals || 0,
         tokenUsdPrice:
           Number(
-            bestRoute?.swapSteps[bestRoute.swapSteps.length - 1]
+            selectedRoute?.swapSteps[selectedRoute.swapSteps.length - 1]
               .destinationToken.tokenUsdPrice,
           ) || 0,
         chainType: chainType!,
@@ -69,7 +71,7 @@ export const useTransactionList = ({ operationType }: Props) => {
       tokenUsdPrice: Number(lastMileTokenEstimate?.priceInUSD) || 0,
     };
   }, [
-    bestRoute,
+    allRoutes,
     widgetTemplate,
     swapResultToken,
     lastMileToken,
@@ -78,7 +80,7 @@ export const useTransactionList = ({ operationType }: Props) => {
 
   const sourceTokenDetails: TokenWithAmount = useMemo(() => {
     const sourceOfInfo =
-      operationType === 'CURRENT' ? bestRoute : pendingOperation;
+      operationType === 'CURRENT' ? selectedRoute : pendingRoute;
 
     if (!sourceOfInfo || sourceOfInfo?.swapSteps.length === 0) {
       const chainType = selectedToken?.chainName
@@ -113,24 +115,24 @@ export const useTransactionList = ({ operationType }: Props) => {
         )!,
       };
     }
-  }, [operationType, bestRoute, pendingOperation, selectedToken]);
+  }, [operationType, allRoutes, pendingRoute, selectedToken]);
 
-  const getStepOfPendingOperation = (
-    pendingOperation: BestRouteResponse | undefined,
+  const getStepOfPendingRoute = (
+    pendingRoute: GetAllRoutesResponseItem | undefined,
   ) => {
     return (
-      (pendingOperation?.swapSteps ?? []).filter(
+      (pendingRoute?.swapSteps ?? []).filter(
         (step) => step.status === 'SUCCESS',
       ).length + 1
     );
   };
 
   return {
-    operation: operationType === 'CURRENT' ? bestRoute : pendingOperation,
+    route: operationType === 'CURRENT' ? selectedRoute : pendingRoute,
     currentStep:
       operationType === 'CURRENT'
         ? currentStep
-        : getStepOfPendingOperation(pendingOperation),
+        : getStepOfPendingRoute(pendingRoute),
     tokens: {
       from: sourceTokenDetails,
       to: destinationTokenDetails,

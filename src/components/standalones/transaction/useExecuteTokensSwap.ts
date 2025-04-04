@@ -13,8 +13,8 @@ import {
   TX_STATUS,
 } from '../../../constants/transaction';
 import {
-  bestRouteAtom,
   lastMileTokenEstimateAtom,
+  selectedRouteAtom,
   swapDataAtom,
   swapResultTokenAtom,
   transactionIndexAtom,
@@ -25,7 +25,7 @@ import { mapBlockchainToChainType } from '../../../utils/chains';
 import { getTransactionData } from '../../../utils/getTransactionData';
 import { handleSignerAddress } from '../../../utils/handleSignerAddress';
 import { submitPendingTransaction } from '../../../utils/submitPendingTransaction';
-import { useStuckTransaction } from '../stuckTransactionDialog/useStuckTransaction';
+import { useStuckTransaction } from '../../screens/stuckTransactionDialog/useStuckTransaction';
 import { useHandleTransaction } from './handlers/useHandleTransaction';
 
 export const useExecuteTokensSwap = (
@@ -35,7 +35,7 @@ export const useExecuteTokensSwap = (
 ) => {
   const transactionIndex = useAtomValue(transactionIndexAtom);
   const [swapData, setSwapData] = useAtom(swapDataAtom);
-  const bestRoute = useAtomValue(bestRouteAtom);
+  const selectedRoute = useAtomValue(selectedRouteAtom);
 
   const swapResultToken = useAtomValue(swapResultTokenAtom);
   const [, setDepositTokenEstimate] = useAtom(lastMileTokenEstimateAtom);
@@ -78,7 +78,7 @@ export const useExecuteTokensSwap = (
       let nonce: number | undefined;
 
       try {
-        const currentStep = bestRoute?.swapSteps?.[transactionIndex - 1];
+        const currentStep = selectedRoute?.swapSteps?.[transactionIndex - 1];
 
         if (!currentStep) {
           throw new Error('No swap step found');

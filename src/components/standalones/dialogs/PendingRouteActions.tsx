@@ -1,4 +1,4 @@
-import { BestRouteResponse } from '@anyalt/sdk';
+import { GetAllRoutesResponseItem } from '@anyalt/sdk/dist/adapter/api/api';
 import { Box, BoxProps, Button, Flex, Icon, Text } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { Token } from '../../..';
@@ -8,21 +8,21 @@ import { WarningIcon } from '../../atoms/icons/transaction/WarningIcon';
 import { TransactionStep } from '../../molecules/steps/TransactionStep';
 
 type Props = {
-  disableActions: boolean;
-  onContinuePendingOperation: () => void;
-  onDismissPendingOperation: () => void;
   mainButtonText: string;
-  pendingOperation: BestRouteResponse;
   destinationToken: Token;
+  disableActions: boolean;
+  pendingOperation: GetAllRoutesResponseItem;
+  onContinuePendingRoute: () => void;
+  onDismissPendingRoute: () => void;
 } & BoxProps;
 
-export const Actions = ({
+export const PendingRouteActions = ({
   disableActions,
-  onContinuePendingOperation,
-  onDismissPendingOperation,
   mainButtonText,
   pendingOperation,
   destinationToken,
+  onContinuePendingRoute,
+  onDismissPendingRoute,
 }: Props) => {
   const steps = useMemo(() => {
     return pendingOperation.swapSteps
@@ -77,7 +77,7 @@ export const Actions = ({
         >
           {steps.length > 0 ? (
             steps.map((step, index) => (
-              <Box w="full" mb="6px">
+              <Box w="full" mb="6px" key={step.swapperName + index}>
                 <TransactionStep
                   justify={'center'}
                   key={index}
@@ -114,7 +114,7 @@ export const Actions = ({
 
       <CustomButton
         disabled={disableActions}
-        onButtonClick={onContinuePendingOperation}
+        onButtonClick={onContinuePendingRoute}
       >
         {mainButtonText}
       </CustomButton>
@@ -135,7 +135,7 @@ export const Actions = ({
         background={'none'}
         backdropFilter={'blur(50px)'}
         color={'brand.secondary.1'}
-        onClick={onDismissPendingOperation}
+        onClick={onDismissPendingRoute}
       >
         Start New Transaction
       </Button>

@@ -1,20 +1,13 @@
-import {
-  Box,
-  BoxProps,
-  Button,
-  Icon,
-  Input,
-  Skeleton,
-  Text,
-} from '@chakra-ui/react';
+import { Box, BoxProps, Icon, Input, Skeleton, Text } from '@chakra-ui/react';
 import { FC } from 'react';
-import { truncateToDecimals } from '../../../../../utils/truncateToDecimals';
 import { SelectTokenIcon } from '../../../../atoms/icons/selectToken/SelectTokenIcon';
 import { TokenIconBox } from '../../../../molecules/TokenIconBox';
 import { TokenInfoBox } from '../../../../molecules/TokenInfoBox';
+import { MaxButton } from './MaxButton';
 import { useTokenInputBox } from './useTokenInputBox';
 type Props = BoxProps & {
   price: string;
+  activeStep: number;
   loading: boolean;
   readonly: boolean;
   isValidAmountIn: boolean;
@@ -30,12 +23,12 @@ export const TokenInputBox: FC<Props> = ({
   isValidAmountIn,
   openTokenSelectModal,
   failedToFetchRoute,
+  activeStep,
   ...props
 }) => {
   const {
     inToken,
     balance,
-    currentStep,
     inTokenAmount,
     tokenFetchError,
     setInTokenAmount,
@@ -54,33 +47,12 @@ export const TokenInputBox: FC<Props> = ({
         <Text color={'brand.text.secondary.2'} textStyle={'bold.2'}>
           Choose Your Deposit
         </Text>
-        <Box
-          display={currentStep === 1 && isWalletConnected ? 'flex' : 'none'}
-          flexDirection="row"
-          alignItems="center"
-          gap="4px"
-        >
-          <Text
-            color={'brand.text.secondary.2'}
-            textStyle={'bold.3'}
-            opacity={0.4}
-          >
-            Balance: {balance ? truncateToDecimals(balance, 6) : ''}
-          </Text>
-          <Button
-            bg="brand.buttons.action.bgFaded"
-            color="brand.text.active"
-            fontSize="12px"
-            fontWeight="bold"
-            borderRadius="4px"
-            padding="4px 2px"
-            maxH="16px"
-            onClick={maxButtonClick}
-            isDisabled={!isWalletConnected}
-          >
-            Max
-          </Button>
-        </Box>
+        <MaxButton
+          balance={balance}
+          activeStep={activeStep}
+          isWalletConnected={Boolean(isWalletConnected)}
+          maxButtonClick={maxButtonClick}
+        />
       </Box>
       <Box
         display="flex"

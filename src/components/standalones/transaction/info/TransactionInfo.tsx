@@ -32,7 +32,7 @@ export const TransactionInfo: FC<Props> = ({
     fees,
     runTx,
     isLoading,
-    bestRoute,
+    selectedRoute,
     headerText,
     currentStep,
     estimatedTime,
@@ -62,7 +62,7 @@ export const TransactionInfo: FC<Props> = ({
           <VStack alignItems="flex-start" spacing="16px" w={'100%'}>
             <HStack justifyContent={'space-between'} w={'100%'}>
               <Text
-                textStyle={'regular.1'}
+                textStyle={'regular.2'}
                 color="brand.text.secondary.2"
                 w={'100%'}
                 whiteSpace={'nowrap'}
@@ -85,8 +85,8 @@ export const TransactionInfo: FC<Props> = ({
           borderWidth={'1px'}
           borderColor={'brand.border.primary'}
         >
-          {bestRoute?.swapSteps &&
-            (bestRoute?.swapSteps?.length > 0 ? (
+          {selectedRoute?.swapSteps &&
+            (selectedRoute?.swapSteps?.length > 0 ? (
               <TokenQuoteBox
                 loading={false}
                 headerText=""
@@ -131,8 +131,8 @@ export const TransactionInfo: FC<Props> = ({
             </Center>
           </Box>
 
-          {bestRoute?.swapSteps &&
-            (bestRoute.swapSteps.length > 0 ? (
+          {selectedRoute?.swapSteps &&
+            (selectedRoute.swapSteps.length > 0 ? (
               <TokenQuoteBox
                 loading={false}
                 headerText=""

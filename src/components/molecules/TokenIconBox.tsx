@@ -41,7 +41,7 @@ export const TokenIconBox: FC<Props> = ({
           w="32px"
           h="32px"
           borderRadius="50%"
-          bgColor="rgba(255, 255, 255, 0.04)"
+          bgColor="rgba(145,158,171, 0.3)"
         />
       )}
       <Box position="absolute" bottom="0px" left={leftSmallImg}>

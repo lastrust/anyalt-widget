@@ -1,36 +1,42 @@
-import { BestRouteResponse } from '@anyalt/sdk';
+import { GetAllRoutesResponseItem } from '@anyalt/sdk/dist/adapter/api/api';
 import { Grid } from '@chakra-ui/react';
-import { WalletConnector } from '../../..';
+import { EstimateResponse, WalletConnector } from '../../..';
 import { SwappingTemplate } from '../../templates/SwappingTemplate';
-import { BestRouteAccordion } from '../accordions/bestRouteAccordion/BestRouteAccordion';
+import { ChoosingRouteAccordion } from '../accordions/choosingRouteAccordion/ChoosingRouteAccordion';
 import { SelectToken } from '../selectSwap/SelectToken';
 
 type Props = {
   loading: boolean;
+  activeStep: number;
   openSlippageModal: boolean;
   failedToFetchRoute: boolean;
   areWalletsConnected: boolean;
   walletConnector?: WalletConnector;
-  activeRoute: BestRouteResponse | undefined;
+  allRoutes: GetAllRoutesResponseItem[] | undefined;
   onConfigClick: () => void;
   connectWalletsOpen: () => void;
   onChooseRouteButtonClick: () => void;
   setOpenSlippageModal: (open: boolean) => void;
+  estimateOutPut: (
+    route: GetAllRoutesResponseItem,
+  ) => Promise<EstimateResponse>;
 };
 
 export const ChoosingRouteStep = ({
   loading,
-  activeRoute,
+  activeStep,
+  allRoutes,
   failedToFetchRoute,
   walletConnector,
   areWalletsConnected,
   onConfigClick,
+  estimateOutPut,
   openSlippageModal,
   connectWalletsOpen,
   setOpenSlippageModal,
   onChooseRouteButtonClick,
 }: Props) => {
-  const buttonText = activeRoute
+  const buttonText = allRoutes
     ? areWalletsConnected
       ? 'Start Transaction'
       : 'Connect Wallet/s To Start Transaction'
@@ -41,6 +47,7 @@ export const ChoosingRouteStep = ({
       <SwappingTemplate title={'Calculation'} onConfigClick={onConfigClick}>
         <SelectToken
           loading={loading}
+          activeStep={activeStep}
           buttonText={buttonText}
           onButtonClick={onChooseRouteButtonClick}
           walletConnector={walletConnector}
@@ -60,8 +67,9 @@ export const ChoosingRouteStep = ({
             : 'Please select preferred route'
         }
       >
-        <BestRouteAccordion
+        <ChoosingRouteAccordion
           loading={loading}
+          estimateOutPut={estimateOutPut}
           failedToFetchRoute={failedToFetchRoute}
         />
       </SwappingTemplate>

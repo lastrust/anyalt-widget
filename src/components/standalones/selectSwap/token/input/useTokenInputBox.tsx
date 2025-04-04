@@ -6,7 +6,6 @@ import { formatUnits } from 'viem';
 import { useAccount } from 'wagmi';
 import { useSolana } from '../../../../../providers/useSolana';
 import {
-  currentStepAtom,
   selectedTokenAmountAtom,
   selectedTokenAtom,
   tokenFetchErrorAtom,
@@ -17,9 +16,7 @@ export const useTokenInputBox = () => {
   const [balance, setBalance] = useState<string | undefined>(undefined);
 
   const selectedToken = useAtomValue(selectedTokenAtom);
-  const currentStep = useAtomValue(currentStepAtom);
   const tokenFetchError = useAtomValue(tokenFetchErrorAtom);
-  const [, setTokenFetchError] = useAtom(tokenFetchErrorAtom);
   const [selectedTokenAmount, setSelectedTokenAmount] = useAtom(
     selectedTokenAmountAtom,
   );
@@ -74,22 +71,6 @@ export const useTokenInputBox = () => {
   };
 
   useEffect(() => {
-    if (currentStep === 1 && balance && selectedTokenAmount) {
-      if (parseFloat(balance) < parseFloat(selectedTokenAmount)) {
-        setTokenFetchError({
-          isError: true,
-          errorMessage: `Not enough balance.`,
-        });
-      } else {
-        setTokenFetchError({
-          isError: false,
-          errorMessage: '',
-        });
-      }
-    }
-  }, [selectedTokenAmount, balance, currentStep]);
-
-  useEffect(() => {
     getBalance();
   }, [selectedToken, evmAddress, publicKey, bitcoinAccount, solanaConnection]);
 
@@ -100,7 +81,6 @@ export const useTokenInputBox = () => {
   }, [selectedTokenAmount]);
 
   return {
-    currentStep,
     inToken: selectedToken,
     inTokenAmount: selectedTokenAmount,
     setInTokenAmount: setSelectedTokenAmount,

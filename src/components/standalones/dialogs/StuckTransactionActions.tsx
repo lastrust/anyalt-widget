@@ -22,7 +22,7 @@ type Props = {
   };
 } & BoxProps;
 
-export const Actions = ({
+export const StuckTransactionActions = ({
   onUpdateTx,
   onWaitForTx,
   onAbandon,
@@ -70,8 +70,8 @@ export const Actions = ({
           <Box mb="6px">
             <TransactionStep
               justify={'center'}
-              fromToken={stuckTxTokens.from}
-              toToken={stuckTxTokens.to}
+              fromToken={stuckTxTokens?.from}
+              toToken={stuckTxTokens?.to}
             />
           </Box>
         </Flex>

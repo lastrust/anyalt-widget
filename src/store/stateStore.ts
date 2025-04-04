@@ -1,9 +1,5 @@
-import {
-  AnyAlt,
-  BestRouteResponse,
-  SupportedChain,
-  SupportedToken,
-} from '@anyalt/sdk';
+import { AnyAlt, SupportedChain, SupportedToken } from '@anyalt/sdk';
+import { GetAllRoutesResponseItem } from '@anyalt/sdk/dist/adapter/api/api';
 import { atom } from 'jotai';
 import { EstimateResponse, Token, WidgetTemplateType } from '..';
 import {
@@ -27,15 +23,19 @@ export const lastMileTokenEstimateAtom = atom<EstimateResponse | undefined>(
 
 export const allChainsAtom = atom<SupportedChain[]>([]);
 
-export const bestRouteAtom = atom<BestRouteResponse | undefined>(undefined);
+export const allRoutesAtom = atom<GetAllRoutesResponseItem[] | undefined>(
+  undefined,
+);
+export const selectedRouteAtom = atom<GetAllRoutesResponseItem | undefined>(
+  undefined,
+);
 
-export const pendingOperationAtom = atom<BestRouteResponse | undefined>(
+export const pendingRouteAtom = atom<GetAllRoutesResponseItem | undefined>(
   undefined,
 );
 
 export const showStuckTransactionDialogAtom = atom<boolean>(false);
-
-export const selectedRouteAtom = atom<BestRouteResponse | undefined>(undefined);
+export const showPendingRouteDialogAtom = atom<boolean>(false);
 
 // Transaction informations:
 export const slippageAtom = atom<string>('3');
@@ -54,7 +54,6 @@ export const transactionsProgressAtom = atom<TransactionsProgress>({
 // Widget configurations:
 export const widgetTemplateAtom = atom<WidgetTemplateType>('DEPOSIT_TOKEN');
 export const minDepositAmountAtom = atom<number>(0);
-export const currentStepAtom = atom<number>(0);
 
 export const swapDataAtom = atom<{
   swapIsFinished: boolean;

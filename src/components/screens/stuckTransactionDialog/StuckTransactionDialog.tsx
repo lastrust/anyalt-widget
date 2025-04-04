@@ -2,13 +2,13 @@ import { Grid } from '@chakra-ui/react';
 import { useAtom, useAtomValue } from 'jotai';
 import { useCallback, useMemo } from 'react';
 import {
-  bestRouteAtom,
+  selectedRouteAtom,
   showStuckTransactionDialogAtom,
   transactionsProgressAtom,
 } from '../../../store/stateStore';
+import { StuckTransactionActions } from '../../standalones/dialogs/StuckTransactionActions';
+import { TransactionList } from '../../standalones/transaction/transactionList/TransactionsList';
 import { SwappingTemplate } from '../../templates/SwappingTemplate';
-import { TransactionList } from '../transaction/transactionList/TransactionsList';
-import { Actions } from './Actions';
 import { useStuckTransaction } from './useStuckTransaction';
 
 type Props = {
@@ -21,7 +21,7 @@ export const StuckTransactionDialog = ({ resetState }: Props) => {
   );
   const transactionsProgress = useAtomValue(transactionsProgressAtom);
 
-  const activeRoute = useAtomValue(bestRouteAtom);
+  const selectedRoute = useAtomValue(selectedRouteAtom);
 
   const { onUpdateTx, onWaitForTx } = useStuckTransaction();
 
@@ -30,12 +30,12 @@ export const StuckTransactionDialog = ({ resetState }: Props) => {
     setShowStuckTransactionDialog(false);
   }, []);
 
-  if (!activeRoute) return null;
+  if (!selectedRoute) return null;
 
   const stuckTxTokens = useMemo(() => {
     const pendingTransactionIndex = Object.keys(transactionsProgress).length;
 
-    const step = activeRoute.swapSteps[pendingTransactionIndex];
+    const step = selectedRoute?.swapSteps[pendingTransactionIndex];
 
     return {
       from: {
@@ -58,7 +58,7 @@ export const StuckTransactionDialog = ({ resetState }: Props) => {
   return (
     <Grid templateColumns="1fr 1fr" gap="16px" m="24px 0px 16px">
       <SwappingTemplate m="0" h="100%" maxH={'520px'} overflow={'scroll'}>
-        <Actions
+        <StuckTransactionActions
           onUpdateTx={onUpdateTx}
           onWaitForTx={onWaitForTx}
           onAbandon={onAbandon}

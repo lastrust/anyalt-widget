@@ -1,31 +1,31 @@
-import { BestRouteResponse } from '@anyalt/sdk';
+import { GetAllRoutesResponseItem } from '@anyalt/sdk/dist/adapter/api/api';
 import { Grid } from '@chakra-ui/react';
 import { useAtom, useAtomValue } from 'jotai';
 import { useCallback, useMemo, useState } from 'react';
 import { ChainType, Token, WalletConnector } from '../../..';
 import {
   anyaltInstanceAtom,
-  pendingOperationAtom,
+  pendingRouteAtom,
   widgetTemplateAtom,
 } from '../../../store/stateStore';
+import { PendingRouteActions } from '../../standalones/dialogs/PendingRouteActions';
+import { TransactionList } from '../../standalones/transaction/transactionList/TransactionsList';
 import { SwappingTemplate } from '../../templates/SwappingTemplate';
-import { TransactionList } from '../transaction/transactionList/TransactionsList';
-import { Actions } from './Actions';
 
 type Props = {
-  setOperationToCurrentRoute: (operation: BestRouteResponse) => void;
+  setCurrentRoute: (route: GetAllRoutesResponseItem) => void;
   walletConnector: WalletConnector | undefined;
   connectWalletsOpen: () => void;
   allNecessaryWalletsConnected: boolean;
 };
 
-export const PendingOperationDialog = ({
-  setOperationToCurrentRoute,
+export const PendingRouteDialog = ({
+  setCurrentRoute,
   walletConnector,
   connectWalletsOpen,
   allNecessaryWalletsConnected,
 }: Props) => {
-  const [pendingOperation, setPendingOperation] = useAtom(pendingOperationAtom);
+  const [pendingRoute, setPendingRoute] = useAtom(pendingRouteAtom);
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
 
@@ -33,7 +33,7 @@ export const PendingOperationDialog = ({
 
   const destinationToken = useMemo(() => {
     const lastStep =
-      pendingOperation?.swapSteps?.[pendingOperation?.swapSteps?.length - 1];
+      pendingRoute?.swapSteps?.[pendingRoute?.swapSteps?.length - 1];
 
     if (!lastStep) return null;
 
@@ -42,7 +42,7 @@ export const PendingOperationDialog = ({
       address: lastStep.destinationToken!.contractAddress,
       chainType: lastStep.destinationToken!.chainType as ChainType,
     } as Token;
-  }, [pendingOperation]);
+  }, [pendingRoute]);
 
   const mainButtonText = useMemo(() => {
     if (allNecessaryWalletsConnected) {
@@ -53,11 +53,11 @@ export const PendingOperationDialog = ({
   }, [allNecessaryWalletsConnected]);
 
   const onMainButtonClick = useCallback(() => {
-    if (!pendingOperation) return;
+    if (!pendingRoute) return;
 
     if (allNecessaryWalletsConnected) {
-      setOperationToCurrentRoute(pendingOperation);
-      setPendingOperation(undefined);
+      setCurrentRoute(pendingRoute);
+      setPendingRoute(undefined);
     } else {
       if (walletConnector) {
         walletConnector.connect();
@@ -67,8 +67,8 @@ export const PendingOperationDialog = ({
     }
   }, [allNecessaryWalletsConnected, connectWalletsOpen]);
 
-  const onDismissPendingOperation = useCallback(async () => {
-    if (!anyaltInstance || !pendingOperation) return;
+  const onDismissPendingRoute = useCallback(async () => {
+    if (!anyaltInstance || !pendingRoute) return;
     const localStorageKey =
       widgetTemplate === 'TOKEN_BUY' ? 'tokenBuyOperationId' : 'operationId';
 
@@ -77,24 +77,24 @@ export const PendingOperationDialog = ({
     setDisableActions(true);
 
     await anyaltInstance?.cancelOperation({
-      operationId: pendingOperation.operationId,
+      operationId: pendingRoute.routeId,
     });
 
-    setPendingOperation(undefined);
+    setPendingRoute(undefined);
     setDisableActions(false);
-  }, [anyaltInstance, pendingOperation, setPendingOperation, widgetTemplate]);
+  }, [anyaltInstance, pendingRoute, setPendingRoute, widgetTemplate]);
 
-  if (!pendingOperation || !destinationToken) return null;
+  if (!pendingRoute || !destinationToken) return null;
 
   return (
     <Grid templateColumns="1fr 1fr" gap="16px" m="24px 0px 16px">
       <SwappingTemplate m="0" h="100%" maxH={'520px'} overflow={'scroll'}>
-        <Actions
+        <PendingRouteActions
           disableActions={disableActions}
-          onContinuePendingOperation={onMainButtonClick}
-          onDismissPendingOperation={onDismissPendingOperation}
+          onContinuePendingRoute={onMainButtonClick}
+          onDismissPendingRoute={onDismissPendingRoute}
           mainButtonText={mainButtonText}
-          pendingOperation={pendingOperation}
+          pendingOperation={pendingRoute}
           destinationToken={destinationToken}
         />
       </SwappingTemplate>

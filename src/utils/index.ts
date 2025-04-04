@@ -1,5 +1,5 @@
-import { BestRouteResponse } from '@anyalt/sdk';
 import {
+  GetAllRoutesResponseItem,
   SwapOperationStep,
   SwapTransaction,
 } from '@anyalt/sdk/dist/adapter/api/api';
@@ -54,7 +54,7 @@ export const getEvmTokenBalance = async (
 };
 
 export const calculateWorstOutput = (
-  route: BestRouteResponse,
+  route: GetAllRoutesResponseItem,
   slippage: string,
 ) => {
   const decimals =

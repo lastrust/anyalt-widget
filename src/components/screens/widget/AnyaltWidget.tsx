@@ -8,7 +8,7 @@ import { ChoosingRouteStep } from '../../standalones/steps/ChoosingRouteStep';
 import { SelectTokenStep } from '../../standalones/steps/SelectTokenStep';
 import { SuccessfulDepositStep } from '../../standalones/steps/SuccessfulDepositStep';
 import { TransactionStep } from '../../standalones/steps/TransactionStep';
-import { HandlerTransactions } from './TransactionHandler';
+import { HandleTransactions } from './HandleTransactions';
 import { useAnyaltWidget } from './useAnyaltWidget';
 export { useModal } from '../../../hooks/useModal';
 export {
@@ -31,29 +31,30 @@ export const AnyaltWidgetWrapper = ({
 }: AnyaltWidgetProps) => {
   const {
     loading,
+    allRoutes,
     activeStep,
-    setOperationToCurrentRoute,
-    activeRoute,
     isValidAmountIn,
+    headerCustomText,
     isButtonDisabled,
-    isConnectWalletsOpen,
     failedToFetchRoute,
     areWalletsConnected,
+    isConnectWalletsOpen,
+    modalWrapperMaxWidth,
+    showPendingRouteDialog,
+    showStuckTransactionDialog,
+    allNecessaryWalletsConnected,
     onBackClick,
     onComplete,
+    resetState,
+    estimateOutPut,
     onTxComplete,
     onConfigClick,
+    setCurrentRoute,
     openSlippageModal,
     connectWalletsOpen,
     connectWalletsClose,
     setOpenSlippageModal,
     onChooseRouteButtonClick,
-    resetState,
-    showPendingOperationDialog,
-    allNecessaryWalletsConnected,
-    showStuckTransactionDialog,
-    modalWrapperMaxWidth,
-    headerCustomText,
   } = useAnyaltWidget({
     apiKey,
     swapResultToken,
@@ -72,43 +73,46 @@ export const AnyaltWidgetWrapper = ({
       maxWidthCustom={modalWrapperMaxWidth}
     >
       <Header activeStep={activeStep} customText={headerCustomText} />
-      <HandlerTransactions
-        showPendingOperationDialog={showPendingOperationDialog}
-        showStuckTransactionDialog={showStuckTransactionDialog}
-        setOperationToCurrentRoute={setOperationToCurrentRoute}
+      <HandleTransactions
         walletConnector={walletConnector}
+        showPendingRouteDialog={showPendingRouteDialog}
+        showStuckTransactionDialog={showStuckTransactionDialog}
         allNecessaryWalletsConnected={allNecessaryWalletsConnected}
-        connectWalletsOpen={connectWalletsOpen}
         resetState={resetState}
+        connectWalletsOpen={connectWalletsOpen}
+        setCurrentRoute={setCurrentRoute}
       >
         <Stepper activeStep={activeStep}>
           <SelectTokenStep
             loading={loading}
+            activeStep={activeStep}
             widgetTemplate={widgetTemplate}
             isValidAmountIn={isValidAmountIn}
-            onConfigClick={onConfigClick}
+            isButtonDisabled={isButtonDisabled}
             failedToFetchRoute={failedToFetchRoute}
+            onConfigClick={onConfigClick}
             openSlippageModal={openSlippageModal}
             setOpenSlippageModal={setOpenSlippageModal}
-            isButtonDisabled={isButtonDisabled}
           />
           <ChoosingRouteStep
             loading={loading}
-            activeRoute={activeRoute}
+            activeStep={activeStep}
+            allRoutes={allRoutes}
             walletConnector={walletConnector}
             failedToFetchRoute={failedToFetchRoute}
             areWalletsConnected={areWalletsConnected}
             onConfigClick={onConfigClick}
+            estimateOutPut={estimateOutPut}
             openSlippageModal={openSlippageModal}
             setOpenSlippageModal={setOpenSlippageModal}
             connectWalletsOpen={connectWalletsOpen}
             onChooseRouteButtonClick={onChooseRouteButtonClick}
           />
           <TransactionStep
-            onBackClick={onBackClick}
             walletConnector={walletConnector}
-            executeCallBack={executeCallBack}
+            onBackClick={onBackClick}
             onTxComplete={onTxComplete}
+            executeCallBack={executeCallBack}
             estimateCallback={estimateCallback}
           />
           <SuccessfulDepositStep
@@ -116,14 +120,14 @@ export const AnyaltWidgetWrapper = ({
             onComplete={onComplete}
           />
         </Stepper>
-      </HandlerTransactions>
+      </HandleTransactions>
       <Footer />
       <ConnectWalletsModal
         title="Connect Wallets"
         isOpen={isConnectWalletsOpen}
+        walletConnector={walletConnector}
         onClose={connectWalletsClose}
         areWalletsConnected={areWalletsConnected}
-        walletConnector={walletConnector}
       />
     </ModalWrapper>
   );
