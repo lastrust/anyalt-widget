@@ -1,6 +1,6 @@
 import { GetAllRoutesResponseItem } from '@anyalt/sdk/dist/adapter/api/api';
 import { useAtom, useAtomValue } from 'jotai';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { EstimateResponse } from '../../../..';
 import {
   allRoutesAtom,
@@ -8,6 +8,7 @@ import {
   lastMileTokenEstimateAtom,
   selectedRouteAtom,
   selectedTokenAmountAtom,
+  selectedTokenAtom,
   slippageAtom,
   swapResultTokenAtom,
   widgetTemplateAtom,
@@ -31,6 +32,44 @@ export const useChoosingRoutesAccordion = ({ estimateOutPut }: Props) => {
   const lastMileTokenEstimate = useAtomValue(lastMileTokenEstimateAtom);
 
   const [selectedRoute, setSelectedRoute] = useAtom(selectedRouteAtom);
+
+  const selectedToken = useAtomValue(selectedTokenAtom);
+  const swapResultTokenGlobal = useAtomValue(swapResultTokenAtom);
+
+  const selectedRef = useRef<HTMLDivElement>(null);
+
+  const calcTokenPrice = (route: GetAllRoutesResponseItem) => {
+    if (!route || route.swapSteps.length === 0) return '';
+    const lastStep = route.swapSteps[route.swapSteps.length - 1];
+    const tokenPrice = lastStep.destinationToken.tokenUsdPrice;
+
+    if (!tokenPrice) return '';
+    return (tokenPrice * parseFloat(route.outputAmount)).toFixed(2);
+  };
+
+  useEffect(() => {
+    if (selectedRef.current) {
+      selectedRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }
+  }, [selectedRoute]);
+
+  const isSameToken = useMemo(() => {
+    return selectedToken?.id === swapResultTokenGlobal?.id;
+  }, [selectedToken, swapResultTokenGlobal]);
+
+  const defaultAccordionOpen = useMemo(() => {
+    if (allRoutes)
+      return selectedRoute
+        ? [
+            allRoutes?.findIndex(
+              (route) => route.routeId === selectedRoute.routeId,
+            ),
+          ]
+        : [0];
+  }, [selectedRoute]);
 
   const calcFees = (route: GetAllRoutesResponseItem) => {
     const totalFees = route?.swapSteps
@@ -103,15 +142,19 @@ export const useChoosingRoutesAccordion = ({ estimateOutPut }: Props) => {
   return {
     slippage,
     allRoutes,
+    isSameToken,
     selectedRoute,
+    selectedRef,
     widgetTemplate,
     routeEstimates,
+    defaultAccordionOpen,
     fromToken: areSwapsExists ? finalSwapToken : protocolDepositToken,
-    handleRouteSelect,
     protocolFinalToken: lastMileToken,
     protocolInputToken: swapResultToken,
     finalTokenEstimate: lastMileTokenEstimate,
     calcFees,
+    calcTokenPrice,
     finalSwapToken,
+    handleRouteSelect,
   };
 };

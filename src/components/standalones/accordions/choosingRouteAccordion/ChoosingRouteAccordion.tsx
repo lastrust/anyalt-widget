@@ -12,14 +12,8 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
-import { useAtomValue } from 'jotai';
-import { useEffect, useMemo, useRef } from 'react';
 import { EstimateResponse } from '../../../..';
 import { RANGO_PLACEHOLDER_LOGO } from '../../../../constants/links';
-import {
-  selectedTokenAtom,
-  swapResultTokenAtom,
-} from '../../../../store/stateStore';
 import { ChainIdToChainConstant } from '../../../../utils/chains';
 import { truncateToDecimals } from '../../../../utils/truncateToDecimals';
 import { GasIcon } from '../../../atoms/icons/GasIcon';
@@ -83,9 +77,13 @@ export const ChoosingRouteAccordion = ({
     allRoutes,
     calcFees,
     fromToken,
+    isSameToken,
+    selectedRef,
     selectedRoute,
     routeEstimates,
     widgetTemplate,
+    defaultAccordionOpen,
+    calcTokenPrice,
     handleRouteSelect,
     protocolFinalToken,
     protocolInputToken,
@@ -93,45 +91,6 @@ export const ChoosingRouteAccordion = ({
   } = useChoosingRoutesAccordion({
     estimateOutPut,
   });
-
-  const selectedToken = useAtomValue(selectedTokenAtom);
-  const swapResultTokenGlobal = useAtomValue(swapResultTokenAtom);
-
-  const selectedRef = useRef<HTMLDivElement>(null);
-
-  const calcTokenPrice = (route: GetAllRoutesResponseItem) => {
-    if (!route || route.swapSteps.length === 0) return '';
-    const lastStep = route.swapSteps[route.swapSteps.length - 1];
-    const tokenPrice = lastStep.destinationToken.tokenUsdPrice;
-
-    if (!tokenPrice) return '';
-    return (tokenPrice * parseFloat(route.outputAmount)).toFixed(2);
-  };
-
-  useEffect(() => {
-    if (selectedRef.current) {
-      //ts-ignore
-      selectedRef.current.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      });
-    }
-  }, [selectedRoute]); // Runs when selectedRoute changes
-
-  const isSameToken = useMemo(() => {
-    return selectedToken?.id === swapResultTokenGlobal?.id;
-  }, [selectedToken, swapResultTokenGlobal]);
-
-  const defaultAccordionOpen = useMemo(() => {
-    if (allRoutes)
-      return selectedRoute
-        ? [
-            allRoutes?.findIndex(
-              (route) => route.routeId === selectedRoute.routeId,
-            ),
-          ]
-        : [0];
-  }, [selectedRoute]);
 
   if (!allRoutes) return <></>;
 
