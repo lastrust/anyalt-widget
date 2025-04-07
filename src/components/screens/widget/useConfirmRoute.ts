@@ -1,11 +1,10 @@
 import { Account } from '@ant-design/web3';
 import { SupportedChain } from '@anyalt/sdk';
 import { PublicKey } from '@solana/web3.js';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { ChainType, WalletConnector, WidgetTemplateType } from '../../..';
 import {
   activeOperationIdAtom,
-  allRoutesAtom,
   anyaltInstanceAtom,
   selectedRouteAtom,
   transactionsProgressAtom,
@@ -39,7 +38,6 @@ export const useConfirmRoute = ({
   connectWalletsClose,
 }: UseConfirmRouteProps) => {
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
-  const [allRoutes, setAllRoutes] = useAtom(allRoutesAtom);
   const selectedRoute = useAtomValue(selectedRouteAtom);
 
   const setActiveOperationId = useSetAtom(activeOperationIdAtom);
@@ -48,7 +46,7 @@ export const useConfirmRoute = ({
   const onChooseRouteButtonClick = async () => {
     try {
       if (areWalletsConnected) {
-        await confirmSelectedRoute();
+        await goToTransactionScreen();
         setTransactionsProgress({});
       } else {
         if (walletConnector) {
@@ -62,12 +60,10 @@ export const useConfirmRoute = ({
     }
   };
 
-  const confirmSelectedRoute = async () => {
+  const confirmRoute = async (): Promise<string | undefined> => {
     try {
-      setLoading(true);
-
       let destination = '';
-
+      console.log('called');
       const selectedWallets: Record<string, string> = {};
       selectedRoute?.swapSteps.forEach((swapStep, index) => {
         const fromBlockchain = swapStep.sourceToken.blockchain;
@@ -134,6 +130,8 @@ export const useConfirmRoute = ({
         if (!res?.operationId) throw new Error('Failed to create operation');
 
         setActiveOperationId(res?.operationId);
+
+        return res?.operationId;
       } else {
         if (!selectedRoute?.routeId) return;
         const res = await anyaltInstance?.confirmRoute({
@@ -146,16 +144,13 @@ export const useConfirmRoute = ({
           throw new Error('Failed to confirm route');
 
         setActiveOperationId(res?.operationId);
-        setAllRoutes(allRoutes);
         const localStorageKey =
           widgetTemplate === 'TOKEN_BUY'
             ? 'tokenBuyOperationId'
             : 'operationId';
         localStorage.setItem(localStorageKey, res.operationId);
+        return res?.operationId;
       }
-
-      connectWalletsClose();
-      setActiveStep(2);
     } catch (error) {
       console.error(error);
     } finally {
@@ -163,7 +158,13 @@ export const useConfirmRoute = ({
     }
   };
 
+  const goToTransactionScreen = async () => {
+    connectWalletsClose();
+    setActiveStep(2);
+  };
+
   return {
+    confirmRoute,
     onChooseRouteButtonClick,
   };
 };

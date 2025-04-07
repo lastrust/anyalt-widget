@@ -46,6 +46,7 @@ export const AnyaltWidgetWrapper = ({
     onBackClick,
     onComplete,
     resetState,
+    confirmRoute,
     estimateOutPut,
     onTxComplete,
     onConfigClick,
@@ -111,6 +112,7 @@ export const AnyaltWidgetWrapper = ({
           <TransactionStep
             walletConnector={walletConnector}
             onBackClick={onBackClick}
+            confirmRoute={confirmRoute}
             onTxComplete={onTxComplete}
             executeCallBack={executeCallBack}
             estimateCallback={estimateCallback}

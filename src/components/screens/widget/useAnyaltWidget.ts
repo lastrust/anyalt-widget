@@ -52,6 +52,7 @@ type ReturnType = {
   onConfigClick: () => void;
   connectWalletsOpen: () => void;
   connectWalletsClose: () => void;
+  confirmRoute: () =>  Promise<string | undefined>
   setOpenSlippageModal: (value: boolean) => void;
   onChooseRouteButtonClick: () => Promise<void>;
   setCurrentRoute: (route: GetAllRoutesResponseItem) => void;
@@ -141,7 +142,7 @@ export const useAnyaltWidget = ({
     onClose,
   });
 
-  const { onChooseRouteButtonClick } = useConfirmRoute({
+  const { confirmRoute, onChooseRouteButtonClick } = useConfirmRoute({
     areWalletsConnected,
     evmAddress,
     solanaAddress,
@@ -177,6 +178,7 @@ export const useAnyaltWidget = ({
     onBackClick,
     onComplete,
     resetState,
+    confirmRoute,
     onTxComplete,
     onConfigClick,
     estimateOutPut,
