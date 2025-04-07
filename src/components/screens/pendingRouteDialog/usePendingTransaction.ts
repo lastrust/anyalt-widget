@@ -12,6 +12,7 @@ import {
 } from '../../../store/stateStore';
 
 import { AnyAlt } from '@anyalt/sdk';
+import { WidgetTemplateType } from '../../..';
 import { pendingRouteAtom } from '../../../store/stateStore';
 import { mapBlockchainToChainType } from '../../../utils/chains';
 
@@ -45,9 +46,11 @@ export const usePendingRoute = ({ closeConnectWalletsModal }: Props) => {
     const getPendingOperationById = async (
       anyalt: AnyAlt,
       operationId: string,
+      widgetTemplate: WidgetTemplateType,
     ) => {
       const pendingRoute = await anyalt.getPendingOperation({
         operationId: operationId,
+        operationType: widgetTemplate,
       });
       if (pendingRoute?.operationId) {
         setPendingRoute({
@@ -68,7 +71,11 @@ export const usePendingRoute = ({ closeConnectWalletsModal }: Props) => {
           : localStorage.getItem('operationId');
 
       if (pendingOperationId) {
-        getPendingOperationById(anyaltInstance, pendingOperationId);
+        getPendingOperationById(
+          anyaltInstance,
+          pendingOperationId,
+          widgetTemplate,
+        );
       }
     }
   }, [setPendingRoute, anyaltInstance, widgetTemplate]);
@@ -85,6 +92,7 @@ export const usePendingRoute = ({ closeConnectWalletsModal }: Props) => {
     ) => {
       const pendingOperation = await anyalt.getPendingOperation({
         walletAddresses,
+        operationType: widgetTemplate,
       });
       if (pendingOperation?.operationId) {
         setPendingRoute({
