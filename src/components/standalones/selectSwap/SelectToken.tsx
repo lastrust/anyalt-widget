@@ -128,6 +128,7 @@ export const SelectToken = ({
       >
         {buttonText}
       </CustomButton>
+
       <WalletsGroup
         evmAddress={evmAddress}
         isConnected={isConnected}
@@ -140,6 +141,7 @@ export const SelectToken = ({
         isSolanaWalletConnected={isSolanaWalletConnected}
         isBitcoinWalletConnected={isBitcoinWalletConnected}
       />
+      
       <TokenSelectModal
         isOpen={openTokenSelect}
         onClose={() => setOpenTokenSelect(false)}

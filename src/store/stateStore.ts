@@ -54,6 +54,7 @@ export const transactionsProgressAtom = atom<TransactionsProgress>({
 // Widget configurations:
 export const widgetTemplateAtom = atom<WidgetTemplateType>('DEPOSIT_TOKEN');
 export const minDepositAmountAtom = atom<number>(0);
+export const widgetModeAtom = atom<'crypto' | 'fiat'>('crypto');
 
 export const swapDataAtom = atom<{
   swapIsFinished: boolean;
