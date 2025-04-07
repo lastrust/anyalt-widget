@@ -10,9 +10,6 @@ import {
   Text,
 } from '@chakra-ui/react';
 
-import { useAtomValue } from 'jotai';
-import { useMemo } from 'react';
-import { widgetModeAtom } from '../../../../store/stateStore';
 import { CloseIcon } from '../../../atoms/icons/modals/CloseIcon';
 import { SearchIcon } from '../../../atoms/icons/selectToken/SearchIcon';
 import { ChainButton } from './ChainButton';
