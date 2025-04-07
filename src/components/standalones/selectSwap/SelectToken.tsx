@@ -141,7 +141,7 @@ export const SelectToken = ({
         isSolanaWalletConnected={isSolanaWalletConnected}
         isBitcoinWalletConnected={isBitcoinWalletConnected}
       />
-      
+
       <TokenSelectModal
         isOpen={openTokenSelect}
         onClose={() => setOpenTokenSelect(false)}
