@@ -117,10 +117,14 @@ export const useAnyaltWidget = ({
     estimateOutPut,
     setListOfTransactionsFromRoute,
   } = useFetchRoutes({
+    evmAddress,
+    solanaAddress,
+    bitcoinAccount,
     finalToken,
     activeStep,
     swapResultToken,
     minDepositAmount,
+    getChain,
     setActiveStep,
     estimateCallback,
   });
