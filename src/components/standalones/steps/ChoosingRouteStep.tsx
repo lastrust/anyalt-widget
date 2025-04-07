@@ -44,7 +44,11 @@ export const ChoosingRouteStep = ({
 
   return (
     <Grid gridTemplateColumns="448px 448px" gap="24px">
-      <SwappingTemplate title={'Calculation'} onConfigClick={onConfigClick}>
+      <SwappingTemplate
+        enableWidgetMode
+        title={'Calculation'}
+        onConfigClick={onConfigClick}
+      >
         <SelectToken
           loading={loading}
           activeStep={activeStep}

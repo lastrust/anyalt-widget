@@ -20,6 +20,7 @@ const ModeButton = ({
       maxH={'28px'}
       minH={'unset!important'}
       borderRadius={'32px'}
+      background="#F2F3F4"
       color={
         isActive
           ? 'brand.buttons.widgetMode.primary'
@@ -47,13 +48,13 @@ export const WidgetMode = () => {
         isActive={widgetMode === 'crypto'}
         onClickHandler={() => setWidgetMode('crypto')}
       >
-        Crypto
+        Crypto Deposit
       </ModeButton>
       <ModeButton
         isActive={widgetMode === 'fiat'}
         onClickHandler={() => setWidgetMode('fiat')}
       >
-        Fiat
+        Fiat Deposit
       </ModeButton>
     </HStack>
   );

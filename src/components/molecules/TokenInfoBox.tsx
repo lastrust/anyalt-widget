@@ -14,15 +14,21 @@ export const TokenInfoBox: FC<Props> = ({ tokenName, subText, ...props }) => {
       justifyContent="space-between"
       alignItems="flex-start"
       gap="4px"
-      maxW="100px"
+      maxW="120px"
       {...props}
     >
-      <Text color="brand.text.primary" textStyle={'extraBold.3'}>
+      <Text
+        color="brand.text.primary"
+        textStyle={'extraBold.3'}
+        whiteSpace={'nowrap'}
+      >
         {tokenName}
       </Text>
-      <Text color="brand.text.primary" textStyle={'regular.3'} opacity={0.4}>
-        {subText}
-      </Text>
+      {subText && (
+        <Text color="brand.text.primary" textStyle={'regular.3'} opacity={0.4}>
+          {subText}
+        </Text>
+      )}
     </Box>
   );
 };

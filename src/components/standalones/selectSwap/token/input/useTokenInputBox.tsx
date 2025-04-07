@@ -9,17 +9,26 @@ import {
   selectedTokenAmountAtom,
   selectedTokenAtom,
   tokenFetchErrorAtom,
+  widgetModeAtom,
 } from '../../../../../store/stateStore';
 import { getEvmTokenBalance } from '../../../../../utils';
 
 export const useTokenInputBox = () => {
   const [balance, setBalance] = useState<string | undefined>(undefined);
 
+  const widgetMode = useAtomValue(widgetModeAtom);
   const selectedToken = useAtomValue(selectedTokenAtom);
   const tokenFetchError = useAtomValue(tokenFetchErrorAtom);
+
   const [selectedTokenAmount, setSelectedTokenAmount] = useAtom(
     selectedTokenAmountAtom,
   );
+
+  const title = useMemo(() => {
+    return widgetMode === 'crypto'
+      ? 'Choose Your Deposit'
+      : 'Select Your Currency ';
+  }, [widgetMode]);
 
   const { publicKey } = useWallet();
   const { getSolanaTokenBalance, connection: solanaConnection } = useSolana();
@@ -81,6 +90,8 @@ export const useTokenInputBox = () => {
   }, [selectedTokenAmount]);
 
   return {
+    title,
+    widgetMode,
     inToken: selectedToken,
     inTokenAmount: selectedTokenAmount,
     setInTokenAmount: setSelectedTokenAmount,
