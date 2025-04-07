@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import {
   allChainsAtom,
   anyaltInstanceAtom,
+  widgetModeAtom,
 } from '../../../../store/stateStore';
 import {
   isValidEthereumAddress,
@@ -13,6 +14,7 @@ import { ChainType } from '../../../../utils/chains';
 
 export const useTokenSelectModal = () => {
   const allChains = useAtomValue(allChainsAtom);
+  const widgetMode = useAtomValue(widgetModeAtom);
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
 
   const [showAccept, setShowAccept] = useState<boolean>(false);
@@ -30,6 +32,20 @@ export const useTokenSelectModal = () => {
       setActiveChain(allChains[0]);
     }
   }, [allChains]);
+
+  const labelText = useMemo(() => {
+    if (widgetMode === 'crypto')
+      return 'Select A Token Or Paste A Contract Address';
+
+    return 'Select A Currency';
+  }, [widgetMode]);
+
+  const inputPlaceholder = useMemo(() => {
+    if (widgetMode === 'crypto')
+      return 'Type a token or enter the contract address';
+
+    return 'Type a currency';
+  }, [widgetMode]);
 
   const fetchTokens = async () => {
     try {
@@ -94,10 +110,13 @@ export const useTokenSelectModal = () => {
     chains,
     allTokens,
     isLoading,
+    widgetMode,
+    labelText,
     showAccept,
     customToken,
     setShowAccept,
     isValidAddress,
+    inputPlaceholder,
     setSearchInputValue,
     activeChain,
     setActiveChain,

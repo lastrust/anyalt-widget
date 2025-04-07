@@ -4,15 +4,18 @@ import {
   FormControl,
   FormLabel,
   Icon,
-  Image,
   Input,
   InputGroup,
   InputLeftElement,
   Text,
 } from '@chakra-ui/react';
 
+import { useAtomValue } from 'jotai';
+import { useMemo } from 'react';
+import { widgetModeAtom } from '../../../../store/stateStore';
 import { CloseIcon } from '../../../atoms/icons/modals/CloseIcon';
 import { SearchIcon } from '../../../atoms/icons/selectToken/SearchIcon';
+import { ChainButton } from './ChainButton';
 import { TokenList } from './TokenList';
 import { useTokenSelectModal } from './useTokenSelectModal';
 
@@ -30,6 +33,9 @@ export const TokenSelectModal = ({ isOpen, onClose, onTokenSelect }: Props) => {
     showAccept,
     customToken,
     activeChain,
+    widgetMode,
+    labelText,
+    inputPlaceholder,
     setShowAccept,
     setActiveChain,
     isValidAddress,
@@ -95,48 +101,26 @@ export const TokenSelectModal = ({ isOpen, onClose, onTokenSelect }: Props) => {
         >
           <Icon as={CloseIcon} color="brand.buttons.close.primary" />
         </Box>
-        <Box mb="16px">
-          <Text fontSize="20px" fontWeight="bold" mb="16px">
-            Select A Chain
-          </Text>
-          <Box display="flex" flexWrap="wrap" gap="6px" mb="12px">
-            {chains.map((chain) => (
-              <Box
-                key={chain.id}
-                display="flex"
-                flexDir="row"
-                alignItems="center"
-                gap="6px"
-                cursor="pointer!important"
-                padding="4px"
-                borderRadius="32px"
-                border="1px solid"
-                borderColor={
-                  activeChain?.id === chain.id
-                    ? 'brand.border.active'
-                    : 'brand.border.secondary'
-                }
-                bgColor="brand.primary"
-                width="fit-content"
-                onClick={() => setActiveChain(chain)}
-              >
-                <Image
-                  src={chain.logoUrl ?? ''}
-                  alt={chain.displayName ?? ''}
-                  width="24px"
-                  height="24px"
+        {widgetMode === 'crypto' && (
+          <Box mb="16px">
+            <Text fontSize="20px" fontWeight="bold" mb="16px">
+              Select A Chain
+            </Text>
+            <Box display="flex" flexWrap="wrap" gap="6px" mb="12px">
+              {chains.map((chain) => (
+                <ChainButton
+                  chain={chain}
+                  activeChain={activeChain}
+                  setActiveChain={setActiveChain}
                 />
-                <Text fontSize="16px" color="brand.text.primary" opacity="0.6">
-                  {chain.displayName}
-                </Text>
-              </Box>
-            ))}
+              ))}
+            </Box>
           </Box>
-        </Box>
+        )}
 
         <FormControl>
           <FormLabel fontSize="20px" fontWeight="bold" mb="16px">
-            Select A Token Or Paste A Contract Address
+            {labelText}
           </FormLabel>
           <InputGroup
             borderRadius="32px"
@@ -159,7 +143,7 @@ export const TokenSelectModal = ({ isOpen, onClose, onTokenSelect }: Props) => {
               color="brand.text.primary"
               focusBorderColor="transparent"
               onChange={(e) => setSearchInputValue(e.target.value)}
-              placeholder="Type a token or enter the contract address"
+              placeholder={inputPlaceholder}
               _placeholder={{
                 color: 'brand.text.primary',
               }}

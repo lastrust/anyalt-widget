@@ -60,6 +60,7 @@ export const TokenOrCurrencySelect = ({
       cursor={'pointer'}
     >
       <TokenIconBox
+        widgetMode={widgetMode}
         tokenName={inToken?.symbol ?? ''}
         tokenIcon={inToken?.logoUrl ?? ''}
         chainName={
