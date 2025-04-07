@@ -63,8 +63,8 @@ export const useConfirmRoute = ({
   const confirmRoute = async (): Promise<string | undefined> => {
     try {
       let destination = '';
-      console.log('called');
       const selectedWallets: Record<string, string> = {};
+
       selectedRoute?.swapSteps.forEach((swapStep, index) => {
         const fromBlockchain = swapStep.sourceToken.blockchain;
         const toBlockchain = swapStep.destinationToken.blockchain;

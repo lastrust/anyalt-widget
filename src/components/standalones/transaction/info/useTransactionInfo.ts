@@ -93,13 +93,13 @@ export const useTransactionInfo = ({
   const runTx = async (higherGasCost?: boolean) => {
     try {
       setIsLoading(true);
-      const activeOperation = await confirmRoute();
+      const activeRouteId = await confirmRoute();
 
-      if (!anyaltInstance || !activeOperation) return;
+      if (!anyaltInstance || !activeRouteId) return;
 
       await executeSwap(
         anyaltInstance,
-        activeOperation,
+        activeRouteId,
         slippage,
         (selectedRoute?.swapSteps ?? []).length,
         executeCallBack,
