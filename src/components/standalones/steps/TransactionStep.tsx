@@ -15,7 +15,7 @@ type Props = {
   walletConnector?: WalletConnector;
   onBackClick: () => void;
   onTxComplete: () => void;
-  confirmRoute: () => Promise<string | undefined>
+  confirmRoute: () => Promise<string | undefined>;
   executeCallBack: (amount: Token) => Promise<ExecuteResponse>;
   estimateCallback: (token: Token) => Promise<EstimateResponse>;
 };
