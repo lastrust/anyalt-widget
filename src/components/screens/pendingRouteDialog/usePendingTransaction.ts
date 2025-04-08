@@ -94,6 +94,7 @@ export const usePendingRoute = ({ closeConnectWalletsModal }: Props) => {
         walletAddresses,
         operationType: widgetTemplate,
       });
+
       if (pendingOperation?.operationId) {
         setPendingRoute({
           missingWalletForSourceBlockchain: true,

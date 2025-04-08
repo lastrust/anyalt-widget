@@ -8,7 +8,6 @@ import {
 } from '../../../..';
 import { TX_MESSAGE, TX_STATUS } from '../../../../constants/transaction';
 import {
-  activeOperationIdAtom,
   anyaltInstanceAtom,
   lastMileTokenAtom,
   lastMileTokenEstimateAtom,
@@ -24,18 +23,21 @@ import {
 import { TransactionProgress } from '../../../../types/transaction';
 import { useStuckTransaction } from '../../../screens/stuckTransactionDialog/useStuckTransaction';
 import { useHandleSwap } from '../useHandleSwap';
+import { activeOperationIdAtom } from './../../../../store/stateStore';
+
+type UseTransactionInfoProps = {
+  externalEvmWalletConnector?: WalletConnector;
+  onTxComplete: () => void;
+  executeCallBack: (amount: Token) => Promise<ExecuteResponse>;
+  estimateCallback: (token: Token) => Promise<EstimateResponse>;
+};
 
 export const useTransactionInfo = ({
   externalEvmWalletConnector,
   onTxComplete,
   executeCallBack,
   estimateCallback,
-}: {
-  externalEvmWalletConnector?: WalletConnector;
-  onTxComplete: () => void;
-  executeCallBack: (amount: Token) => Promise<ExecuteResponse>;
-  estimateCallback: (token: Token) => Promise<EstimateResponse>;
-}) => {
+}: UseTransactionInfoProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const showStuckTransactionDialog = useAtomValue(
@@ -87,9 +89,11 @@ export const useTransactionInfo = ({
   }, [selectedRoute, currentStep, transactionsList]);
 
   const runTx = async (higherGasCost?: boolean) => {
-    if (!anyaltInstance || !activeOperationId) return;
-    setIsLoading(true);
     try {
+      setIsLoading(true);
+
+      if (!anyaltInstance || !activeOperationId) return;
+
       await executeSwap(
         anyaltInstance,
         activeOperationId,
@@ -99,12 +103,11 @@ export const useTransactionInfo = ({
         estimateCallback,
         higherGasCost,
       );
-      setIsLoading(false);
 
-      // Small delay before moving to the next step
       onTxComplete();
     } catch (error) {
       console.error(error);
+    } finally {
       setIsLoading(false);
     }
   };

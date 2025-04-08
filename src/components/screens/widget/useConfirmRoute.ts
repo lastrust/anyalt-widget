@@ -5,7 +5,7 @@ import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { ChainType, WalletConnector, WidgetTemplateType } from '../../..';
 import {
   activeOperationIdAtom,
-  allRoutesAtom,
+  activeOperationsListAtom,
   anyaltInstanceAtom,
   selectedRouteAtom,
   transactionsProgressAtom,
@@ -39,16 +39,26 @@ export const useConfirmRoute = ({
   connectWalletsClose,
 }: UseConfirmRouteProps) => {
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
-  const [allRoutes, setAllRoutes] = useAtom(allRoutesAtom);
   const selectedRoute = useAtomValue(selectedRouteAtom);
 
-  const setActiveOperationId = useSetAtom(activeOperationIdAtom);
+  const [activeOperationsList, setActiveOperationsList] = useAtom(
+    activeOperationsListAtom,
+  );
+
+  const [, setActiveOperationId] = useAtom(activeOperationIdAtom);
   const setTransactionsProgress = useSetAtom(transactionsProgressAtom);
+
+  const getActiveRouteIdByOperationId = (
+    operationId: string | undefined,
+  ): string | undefined => {
+    if (!operationId) return undefined;
+    return activeOperationsList.find((str) => str === operationId);
+  };
 
   const onChooseRouteButtonClick = async () => {
     try {
       if (areWalletsConnected) {
-        await confirmSelectedRoute();
+        await goToTransactionScreen();
         setTransactionsProgress({});
       } else {
         if (walletConnector) {
@@ -62,13 +72,18 @@ export const useConfirmRoute = ({
     }
   };
 
-  const confirmSelectedRoute = async () => {
+  const addOperationId = (newString: string) => {
+    setActiveOperationsList((prev) =>
+      prev.includes(newString) ? prev : [...prev, newString],
+    );
+  };
+
+  const confirmRoute = async (): Promise<string | undefined> => {
     try {
       setLoading(true);
-
       let destination = '';
-
       const selectedWallets: Record<string, string> = {};
+
       selectedRoute?.swapSteps.forEach((swapStep, index) => {
         const fromBlockchain = swapStep.sourceToken.blockchain;
         const toBlockchain = swapStep.destinationToken.blockchain;
@@ -134,8 +149,16 @@ export const useConfirmRoute = ({
         if (!res?.operationId) throw new Error('Failed to create operation');
 
         setActiveOperationId(res?.operationId);
+
+        return res?.operationId;
       } else {
-        if (!selectedRoute?.routeId) return;
+        const isRouteConfirmed =
+          !selectedRoute?.routeId ||
+          selectedRoute?.routeId ===
+            getActiveRouteIdByOperationId(selectedRoute?.routeId);
+
+        if (isRouteConfirmed) return;
+
         const res = await anyaltInstance?.confirmRoute({
           operationId: selectedRoute?.routeId,
           selectedWallets,
@@ -146,21 +169,26 @@ export const useConfirmRoute = ({
           throw new Error('Failed to confirm route');
 
         setActiveOperationId(res?.operationId);
-        setAllRoutes(allRoutes);
+        addOperationId(res?.operationId);
+
         const localStorageKey =
           widgetTemplate === 'TOKEN_BUY'
             ? 'tokenBuyOperationId'
             : 'operationId';
         localStorage.setItem(localStorageKey, res.operationId);
+        return res?.operationId;
       }
-
-      connectWalletsClose();
-      setActiveStep(2);
     } catch (error) {
       console.error(error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const goToTransactionScreen = async () => {
+    await confirmRoute();
+    connectWalletsClose();
+    setActiveStep(2);
   };
 
   return {
