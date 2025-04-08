@@ -159,9 +159,6 @@ export const useConfirmRoute = ({
           selectedRoute?.routeId ===
             getActiveRouteIdByOperationId(activeOperationId);
 
-        console.log('selectedRoute?.routeId', selectedRoute?.routeId);
-        console.log('activeOperationId', activeOperationId);
-
         if (isRouteConfirmed) return;
 
         const res = await anyaltInstance?.confirmRoute({
@@ -191,7 +188,6 @@ export const useConfirmRoute = ({
   };
 
   const goToTransactionScreen = async () => {
-    console.log(activeOperationsList);
     await confirmRoute();
     connectWalletsClose();
     setActiveStep(2);

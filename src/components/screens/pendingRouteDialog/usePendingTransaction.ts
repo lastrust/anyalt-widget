@@ -48,7 +48,6 @@ export const usePendingRoute = ({ closeConnectWalletsModal }: Props) => {
       operationId: string,
       widgetTemplate: WidgetTemplateType,
     ) => {
-      console.log(operationId);
       const pendingRoute = await anyalt.getPendingOperation({
         operationId: operationId,
         operationType: widgetTemplate,
