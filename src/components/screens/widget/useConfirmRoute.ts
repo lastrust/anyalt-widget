@@ -45,9 +45,7 @@ export const useConfirmRoute = ({
     activeOperationsListAtom,
   );
 
-  const [, setActiveOperationId] = useAtom(
-    activeOperationIdAtom,
-  );
+  const [, setActiveOperationId] = useAtom(activeOperationIdAtom);
   const setTransactionsProgress = useSetAtom(transactionsProgressAtom);
 
   const getActiveRouteIdByOperationId = (
