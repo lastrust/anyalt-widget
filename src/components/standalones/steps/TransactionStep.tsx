@@ -15,7 +15,6 @@ type Props = {
   walletConnector?: WalletConnector;
   onBackClick: () => void;
   onTxComplete: () => void;
-  confirmRoute: () => Promise<string | undefined>;
   executeCallBack: (amount: Token) => Promise<ExecuteResponse>;
   estimateCallback: (token: Token) => Promise<EstimateResponse>;
 };
@@ -24,7 +23,6 @@ export const TransactionStep = ({
   walletConnector,
   onBackClick,
   onTxComplete,
-  confirmRoute,
   executeCallBack,
   estimateCallback,
 }: Props) => {
@@ -43,7 +41,6 @@ export const TransactionStep = ({
         <TransactionInfo
           externalEvmWalletConnector={walletConnector}
           onTxComplete={onTxComplete}
-          confirmRoute={confirmRoute}
           executeCallBack={executeCallBack}
           estimateCallback={estimateCallback}
         />

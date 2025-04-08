@@ -1,10 +1,11 @@
 import { Account } from '@ant-design/web3';
 import { SupportedChain } from '@anyalt/sdk';
 import { PublicKey } from '@solana/web3.js';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { ChainType, WalletConnector, WidgetTemplateType } from '../../..';
 import {
   activeOperationIdAtom,
+  activeOperationsListAtom,
   anyaltInstanceAtom,
   selectedRouteAtom,
   transactionsProgressAtom,
@@ -40,8 +41,21 @@ export const useConfirmRoute = ({
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
   const selectedRoute = useAtomValue(selectedRouteAtom);
 
-  const setActiveOperationId = useSetAtom(activeOperationIdAtom);
+  const [activeOperationsList, setActiveOperationsList] = useAtom(
+    activeOperationsListAtom,
+  );
+
+  const [activeOperationId, setActiveOperationId] = useAtom(
+    activeOperationIdAtom,
+  );
   const setTransactionsProgress = useSetAtom(transactionsProgressAtom);
+
+  const getActiveRouteIdByOperationId = (
+    operationId: string | undefined,
+  ): string | undefined => {
+    if (!operationId) return undefined;
+    return activeOperationsList.find((str) => str === operationId);
+  };
 
   const onChooseRouteButtonClick = async () => {
     try {
@@ -60,8 +74,15 @@ export const useConfirmRoute = ({
     }
   };
 
+  const addOperationId = (newString: string) => {
+    setActiveOperationsList((prev) =>
+      prev.includes(newString) ? prev : [...prev, newString],
+    );
+  };
+
   const confirmRoute = async (): Promise<string | undefined> => {
     try {
+      setLoading(true);
       let destination = '';
       const selectedWallets: Record<string, string> = {};
 
@@ -125,11 +146,7 @@ export const useConfirmRoute = ({
         }
       });
 
-      const isSwapsFinished = selectedRoute?.swapSteps.filter(
-        (swap) => swap.status !== 'SUCCESS',
-      );
-
-      if (isSwapsFinished) {
+      if (selectedRoute?.swapSteps.length === 0) {
         const res = await anyaltInstance?.createOperation();
         if (!res?.operationId) throw new Error('Failed to create operation');
 
@@ -137,7 +154,16 @@ export const useConfirmRoute = ({
 
         return res?.operationId;
       } else {
-        if (!selectedRoute?.routeId) return;
+        const isRouteConfirmed =
+          !selectedRoute?.routeId ||
+          selectedRoute?.routeId ===
+            getActiveRouteIdByOperationId(activeOperationId);
+
+        console.log('selectedRoute?.routeId', selectedRoute?.routeId);
+        console.log('activeOperationId', activeOperationId);
+
+        if (isRouteConfirmed) return;
+
         const res = await anyaltInstance?.confirmRoute({
           operationId: selectedRoute?.routeId,
           selectedWallets,
@@ -148,6 +174,8 @@ export const useConfirmRoute = ({
           throw new Error('Failed to confirm route');
 
         setActiveOperationId(res?.operationId);
+        addOperationId(res?.operationId);
+
         const localStorageKey =
           widgetTemplate === 'TOKEN_BUY'
             ? 'tokenBuyOperationId'
@@ -163,12 +191,13 @@ export const useConfirmRoute = ({
   };
 
   const goToTransactionScreen = async () => {
+    console.log(activeOperationsList);
+    await confirmRoute();
     connectWalletsClose();
     setActiveStep(2);
   };
 
   return {
-    confirmRoute,
     onChooseRouteButtonClick,
   };
 };

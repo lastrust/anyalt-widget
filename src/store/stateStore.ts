@@ -76,3 +76,5 @@ export const tokenFetchErrorAtom = atom<{
   isError: false,
   errorMessage: '',
 });
+
+export const activeOperationsListAtom = atom<string[]>([]);

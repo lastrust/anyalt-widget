@@ -28,14 +28,12 @@ import { activeOperationIdAtom } from './../../../../store/stateStore';
 type UseTransactionInfoProps = {
   externalEvmWalletConnector?: WalletConnector;
   onTxComplete: () => void;
-  confirmRoute: () => Promise<string | undefined>;
   executeCallBack: (amount: Token) => Promise<ExecuteResponse>;
   estimateCallback: (token: Token) => Promise<EstimateResponse>;
 };
 
 export const useTransactionInfo = ({
   externalEvmWalletConnector,
-  confirmRoute,
   onTxComplete,
   executeCallBack,
   estimateCallback,
@@ -93,13 +91,12 @@ export const useTransactionInfo = ({
   const runTx = async (higherGasCost?: boolean) => {
     try {
       setIsLoading(true);
-      const activeRouteId = await confirmRoute();
 
-      if (!anyaltInstance || !activeRouteId) return;
+      if (!anyaltInstance || !activeOperationId) return;
 
       await executeSwap(
         anyaltInstance,
-        activeRouteId,
+        activeOperationId,
         slippage,
         (selectedRoute?.swapSteps ?? []).length,
         executeCallBack,

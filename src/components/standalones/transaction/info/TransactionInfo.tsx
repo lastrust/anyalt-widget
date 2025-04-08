@@ -18,7 +18,6 @@ import { useTransactionInfo } from './useTransactionInfo';
 type Props = {
   externalEvmWalletConnector?: WalletConnector;
   onTxComplete: () => void;
-  confirmRoute: () => Promise<string | undefined>;
   executeCallBack: (amount: Token) => Promise<ExecuteResponse>;
   estimateCallback: (token: Token) => Promise<EstimateResponse>;
 };
@@ -26,7 +25,6 @@ type Props = {
 export const TransactionInfo: FC<Props> = ({
   externalEvmWalletConnector,
   onTxComplete,
-  confirmRoute,
   executeCallBack,
   estimateCallback,
 }) => {
@@ -46,7 +44,6 @@ export const TransactionInfo: FC<Props> = ({
     transactionsProgress,
   } = useTransactionInfo({
     externalEvmWalletConnector,
-    confirmRoute,
     onTxComplete,
     executeCallBack,
     estimateCallback,
