@@ -45,7 +45,7 @@ export const useConfirmRoute = ({
     activeOperationsListAtom,
   );
 
-  const [activeOperationId, setActiveOperationId] = useAtom(
+  const [, setActiveOperationId] = useAtom(
     activeOperationIdAtom,
   );
   const setTransactionsProgress = useSetAtom(transactionsProgressAtom);
@@ -157,7 +157,7 @@ export const useConfirmRoute = ({
         const isRouteConfirmed =
           !selectedRoute?.routeId ||
           selectedRoute?.routeId ===
-            getActiveRouteIdByOperationId(activeOperationId);
+            getActiveRouteIdByOperationId(selectedRoute?.routeId);
 
         if (isRouteConfirmed) return;
 
