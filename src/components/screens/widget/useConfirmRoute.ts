@@ -125,7 +125,11 @@ export const useConfirmRoute = ({
         }
       });
 
-      if (selectedRoute?.swapSteps.length === 0) {
+      const isSwapsFinished = selectedRoute?.swapSteps.filter(
+        (swap) => swap.status !== 'SUCCESS',
+      );
+
+      if (isSwapsFinished) {
         const res = await anyaltInstance?.createOperation();
         if (!res?.operationId) throw new Error('Failed to create operation');
 

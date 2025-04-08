@@ -56,7 +56,30 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
       }
     });
 
-    if (selectedRoute?.swapSteps && selectedRoute?.swapSteps?.length > 0) {
+    const isSwapRemaining = selectedRoute?.swapSteps.filter(
+      (swap) => swap.status !== 'SUCCESS',
+    ).length;
+
+    const isSwapAnySwaps = Boolean(
+      isSwapRemaining &&
+        selectedRoute?.swapSteps &&
+        selectedRoute?.swapSteps?.length > 0,
+    );
+
+    setSwapData((prev) => {
+      {
+        const newData = {
+          ...prev,
+          isCrosschainSwapError: false,
+          totalSteps,
+          swapIsFinished: !isSwapAnySwaps,
+        };
+        swapDataRef.current = newData;
+        return newData;
+      }
+    });
+
+    if (isSwapAnySwaps) {
       const { isCrosschainSwapError } = await executeTokensSwap(
         aaInstance,
         operationId,
