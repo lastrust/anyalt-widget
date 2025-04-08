@@ -48,6 +48,7 @@ export const usePendingRoute = ({ closeConnectWalletsModal }: Props) => {
       operationId: string,
       widgetTemplate: WidgetTemplateType,
     ) => {
+      console.log(operationId);
       const pendingRoute = await anyalt.getPendingOperation({
         operationId: operationId,
         operationType: widgetTemplate,
@@ -94,6 +95,7 @@ export const usePendingRoute = ({ closeConnectWalletsModal }: Props) => {
         walletAddresses,
         operationType: widgetTemplate,
       });
+
       if (pendingOperation?.operationId) {
         setPendingRoute({
           missingWalletForSourceBlockchain: true,

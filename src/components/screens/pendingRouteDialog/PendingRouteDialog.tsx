@@ -85,20 +85,24 @@ export const PendingRouteDialog = ({
   }, [allNecessaryWalletsConnected, connectWalletsOpen]);
 
   const onDismissPendingRoute = useCallback(async () => {
-    if (!anyaltInstance || !pendingRoute) return;
-    const localStorageKey =
-      widgetTemplate === 'TOKEN_BUY' ? 'tokenBuyOperationId' : 'operationId';
+    try {
+      if (!anyaltInstance || !pendingRoute) return;
+      const localStorageKey =
+        widgetTemplate === 'TOKEN_BUY' ? 'tokenBuyOperationId' : 'operationId';
 
-    localStorage.removeItem(localStorageKey);
+      localStorage.removeItem(localStorageKey);
 
-    setDisableActions(true);
+      setDisableActions(true);
 
-    await anyaltInstance?.cancelOperation({
-      operationId: pendingRoute.routeId,
-    });
+      await anyaltInstance?.cancelOperation({
+        operationId: pendingRoute.routeId,
+      });
 
-    setPendingRoute(undefined);
-    setDisableActions(false);
+      setPendingRoute(undefined);
+      setDisableActions(false);
+    } catch (e) {
+      console.log(e);
+    }
   }, [anyaltInstance, pendingRoute, setPendingRoute, widgetTemplate]);
 
   if (!pendingRoute || !destinationToken) return null;
