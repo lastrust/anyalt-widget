@@ -5,6 +5,8 @@ import { useCallback, useMemo, useState } from 'react';
 import { ChainType, Token, WalletConnector } from '../../..';
 import {
   anyaltInstanceAtom,
+  lastMileTokenAmountAtom,
+  lastMileTokenAtom,
   pendingRouteAtom,
   widgetTemplateAtom,
 } from '../../../store/stateStore';
@@ -28,20 +30,35 @@ export const PendingRouteDialog = ({
   const [pendingRoute, setPendingRoute] = useAtom(pendingRouteAtom);
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
+  const lastMileToken = useAtomValue(lastMileTokenAtom);
+  const lastMileTokenAmount = useAtomValue(lastMileTokenAmountAtom);
 
   const [disableActions, setDisableActions] = useState(false);
 
   const destinationToken = useMemo(() => {
-    const lastStep =
-      pendingRoute?.swapSteps?.[pendingRoute?.swapSteps?.length - 1];
+    switch (widgetTemplate) {
+      case 'TOKEN_BUY': {
+        const lastStep =
+          pendingRoute?.swapSteps?.[pendingRoute?.swapSteps?.length - 1];
 
-    if (!lastStep) return null;
+        if (!lastStep) return null;
 
-    return {
-      ...lastStep.destinationToken!,
-      address: lastStep.destinationToken!.contractAddress,
-      chainType: lastStep.destinationToken!.chainType as ChainType,
-    } as Token;
+        return {
+          ...lastStep.destinationToken!,
+          address: lastStep.destinationToken!.contractAddress,
+          chainType: lastStep.destinationToken!.chainType as ChainType,
+        } as Token;
+      }
+      case 'DEPOSIT_TOKEN': {
+        if (!lastMileToken || lastMileTokenAmount) return null;
+
+        return {
+          ...lastMileToken,
+          chainType: lastMileToken.chainType as ChainType,
+          amount: lastMileTokenAmount,
+        } as Token;
+      }
+    }
   }, [pendingRoute]);
 
   const mainButtonText = useMemo(() => {
@@ -68,20 +85,24 @@ export const PendingRouteDialog = ({
   }, [allNecessaryWalletsConnected, connectWalletsOpen]);
 
   const onDismissPendingRoute = useCallback(async () => {
-    if (!anyaltInstance || !pendingRoute) return;
-    const localStorageKey =
-      widgetTemplate === 'TOKEN_BUY' ? 'tokenBuyOperationId' : 'operationId';
+    try {
+      if (!anyaltInstance || !pendingRoute) return;
+      const localStorageKey =
+        widgetTemplate === 'TOKEN_BUY' ? 'tokenBuyOperationId' : 'operationId';
 
-    localStorage.removeItem(localStorageKey);
+      localStorage.removeItem(localStorageKey);
 
-    setDisableActions(true);
+      setDisableActions(true);
 
-    await anyaltInstance?.cancelOperation({
-      operationId: pendingRoute.routeId,
-    });
+      await anyaltInstance?.cancelOperation({
+        operationId: pendingRoute.routeId,
+      });
 
-    setPendingRoute(undefined);
-    setDisableActions(false);
+      setPendingRoute(undefined);
+      setDisableActions(false);
+    } catch (e) {
+      console.log(e);
+    }
   }, [anyaltInstance, pendingRoute, setPendingRoute, widgetTemplate]);
 
   if (!pendingRoute || !destinationToken) return null;

@@ -14,17 +14,17 @@ import { TransactionList } from '../transaction/transactionList/TransactionsList
 type Props = {
   walletConnector?: WalletConnector;
   onBackClick: () => void;
-  executeCallBack: (amount: Token) => Promise<ExecuteResponse>;
   onTxComplete: () => void;
+  executeCallBack: (amount: Token) => Promise<ExecuteResponse>;
   estimateCallback: (token: Token) => Promise<EstimateResponse>;
 };
 
 export const TransactionStep = ({
   walletConnector,
-  executeCallBack,
-  estimateCallback,
   onBackClick,
   onTxComplete,
+  executeCallBack,
+  estimateCallback,
 }: Props) => {
   const currentStep = useAtomValue(transactionIndexAtom);
 
@@ -40,9 +40,9 @@ export const TransactionStep = ({
       >
         <TransactionInfo
           externalEvmWalletConnector={walletConnector}
+          onTxComplete={onTxComplete}
           executeCallBack={executeCallBack}
           estimateCallback={estimateCallback}
-          onTxComplete={onTxComplete}
         />
       </SwappingTemplate>
       <SwappingTemplate m="0" maxH={'520px'} overflow={'scroll'}>

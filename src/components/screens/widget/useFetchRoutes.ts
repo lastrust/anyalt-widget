@@ -1,8 +1,13 @@
+import { Account } from '@ant-design/web3';
 import { SupportedToken } from '@anyalt/sdk';
-import { GetAllRoutesResponseItem } from '@anyalt/sdk/dist/adapter/api/api';
+import {
+  GetAllRoutesResponseItem,
+  SupportedChain,
+} from '@anyalt/sdk/dist/adapter/api/api';
+import { PublicKey } from '@solana/web3.js';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { useCallback, useEffect, useState } from 'react';
-import { EstimateResponse, Token } from '../../..';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { ChainType, EstimateResponse, Token } from '../../..';
 import {
   DEBOUNCE_TIMEOUT,
   REFRESH_INTERVAL,
@@ -24,25 +29,34 @@ import { ChainIdToChainConstant } from '../../../utils/chains';
 import { useTokenInputBox } from '../../standalones/selectSwap/token/input/useTokenInputBox';
 
 type UseFetchRoutesProps = {
+  evmAddress: `0x${string}` | undefined;
+  solanaAddress: PublicKey | null;
+  bitcoinAccount: Account | undefined;
   finalToken?: Token;
   activeStep: number;
   swapResultToken: Token;
   minDepositAmount: number;
+  getChain: (blockchain: string) => SupportedChain | undefined;
   estimateCallback: (token: Token) => Promise<EstimateResponse>;
   setActiveStep: (step: number) => void;
 };
 
 export const useFetchRoutes = ({
+  evmAddress,
+  solanaAddress,
+  bitcoinAccount,
   finalToken,
   activeStep,
   swapResultToken,
   minDepositAmount,
   setActiveStep,
+  getChain,
   estimateCallback,
 }: UseFetchRoutesProps) => {
-  const [loading, setLoading] = useState(false);
-  const [isEnoughDepositTokens, setIsEnoughDepositTokens] = useState(true);
   const [isValidAmountIn] = useState(true);
+  const [loading, setLoading] = useState(false);
+
+  const [isEnoughDepositTokens, setIsEnoughDepositTokens] = useState(true);
   const [failedToFetchRoute, setFailedToFetchRoute] = useState(false);
 
   const { balance } = useTokenInputBox();
@@ -61,6 +75,41 @@ export const useFetchRoutes = ({
   const setTokenFetchError = useSetAtom(tokenFetchErrorAtom);
   const setTransactionsList = useSetAtom(transactionsListAtom);
   const setLastMileTokenEstimate = useSetAtom(lastMileTokenEstimateAtom);
+
+  const selectedWallets = useMemo(() => {
+    return (
+      selectedRoute?.swapSteps.reduce(
+        (wallets: Record<string, string>, swapStep) => {
+          const fromBlockchain = swapStep.sourceToken.blockchain;
+          const toBlockchain = swapStep.destinationToken.blockchain;
+
+          const isSolanaFrom = fromBlockchain === 'SOLANA';
+          const isSolanaTo = toBlockchain === 'SOLANA';
+          const isBitcoinFrom = fromBlockchain === 'BTC';
+          const isBitcoinTo = toBlockchain === 'BTC';
+
+          if (isSolanaFrom || isSolanaTo) {
+            wallets['SOLANA'] = solanaAddress?.toString() || '';
+          }
+          if (isBitcoinFrom || isBitcoinTo) {
+            wallets['BTC'] = bitcoinAccount?.address || '';
+          }
+
+          const fromChain = getChain(fromBlockchain);
+          const toChain = getChain(toBlockchain);
+
+          const isEvmFrom = fromChain?.chainType === ChainType.EVM;
+          const isEvmTo = toChain?.chainType === ChainType.EVM;
+
+          if (isEvmFrom) wallets[fromBlockchain] = evmAddress!;
+          if (isEvmTo) wallets[toBlockchain] = evmAddress!;
+
+          return wallets;
+        },
+        {},
+      ) || {}
+    );
+  }, [bitcoinAccount, solanaAddress, evmAddress]);
 
   const onGetRoutes = async (withGoNext: boolean = true) => {
     if (activeStep > 1) return;
@@ -100,9 +149,7 @@ export const useFetchRoutes = ({
         },
         amount: selectedTokenAmount,
         slippage,
-        selectedWallets: {
-          ETH: '0x0000000000000000000000000000000000000000',
-        },
+        selectedWallets: selectedWallets,
         userSessionKeyForSourceDestinationTokenPair:
           '0x0000000000000000000000000000000000000000',
       });
@@ -246,7 +293,7 @@ export const useFetchRoutes = ({
 
   useEffect(() => {
     onGetRoutes(false);
-  }, [selectedToken, slippage, balance]);
+  }, [selectedToken, slippage, balance, selectedWallets]);
 
   useEffect(() => {
     if (
