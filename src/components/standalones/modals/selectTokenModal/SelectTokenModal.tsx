@@ -13,6 +13,7 @@ import {
 import { CloseIcon } from '../../../atoms/icons/modals/CloseIcon';
 import { SearchIcon } from '../../../atoms/icons/selectToken/SearchIcon';
 import { ChainButton } from './ChainButton';
+import { CurrenciesList } from './CurrencyList';
 import { TokenList } from './TokenList';
 import { useTokenSelectModal } from './useTokenSelectModal';
 
@@ -59,11 +60,9 @@ export const TokenSelectModal = ({ isOpen, onClose, onTokenSelect }: Props) => {
         backdropFilter: 'blur(11px)',
       }}
       id="token-select-box-container"
-      onMouseMove={(e) => {
+      onMouseMove={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         if ((e.target as HTMLDivElement).id === 'token-select-box-container') {
           (e.target as HTMLDivElement).style.cursor = 'pointer';
-        } else {
-          // (e.target as HTMLDivElement).style.cursor = 'default';
         }
       }}
       onClick={(e: React.MouseEvent<HTMLDivElement>) => {
@@ -147,15 +146,32 @@ export const TokenSelectModal = ({ isOpen, onClose, onTokenSelect }: Props) => {
             />
           </InputGroup>
           <Box overflow="auto" maxH="210px" scrollBehavior="smooth">
-            <TokenList
-              isValidAddress={isValidAddress}
-              customToken={customToken}
-              showAccept={showAccept}
-              allTokens={allTokens}
-              setShowAccept={setShowAccept}
-              onTokenSelect={onTokenSelect}
-              isLoading={isLoading}
-            />
+            {widgetMode === 'crypto' ? (
+              <TokenList
+                isValidAddress={isValidAddress}
+                customToken={customToken}
+                showAccept={showAccept}
+                allTokens={allTokens}
+                setShowAccept={setShowAccept}
+                onTokenSelect={onTokenSelect}
+                isLoading={isLoading}
+              />
+            ) : (
+              <CurrenciesList
+                allCurrencies={[
+                  {
+                    name: 'USD',
+                    label: 'USD',
+                    logoUrl: 'USDLOGO',
+                    id: '1',
+                  },
+                ]}
+                isLoading={false}
+                onCurrencySelect={(currency) => {
+                  console.log(currency);
+                }}
+              />
+            )}
           </Box>
         </FormControl>
       </Box>

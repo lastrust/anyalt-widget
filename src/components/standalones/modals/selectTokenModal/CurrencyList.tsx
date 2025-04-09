@@ -1,11 +1,17 @@
-import { SupportedToken } from '@anyalt/sdk';
 import { Skeleton, VStack } from '@chakra-ui/react';
-import { TokenItem } from '../../../molecules/TokenItem';
+import { CurrencyItem } from '../../../molecules/CurrencyItem';
+
+export type CurrencyType = {
+  name: string;
+  label: string;
+  logoUrl: string;
+  id: string;
+};
 
 type Props = {
   isLoading: boolean;
-  allCurrencies: SupportedToken[];
-  onCurrencySelect: (currency: SupportedToken) => void;
+  allCurrencies: CurrencyType[];
+  onCurrencySelect: (currency: CurrencyType) => void;
 };
 
 export const CurrenciesList = ({
@@ -26,11 +32,10 @@ export const CurrenciesList = ({
   return (
     <>
       {allCurrencies.map((currency) => (
-        <TokenItem
+        <CurrencyItem
           key={currency.id}
-          tokenSymbol={currency.symbol}
+          tokenSymbol={currency.label}
           tokenIcon={currency.logoUrl}
-          tokenAddress={currency.tokenAddress ?? ''}
           onClick={() => {
             onCurrencySelect(currency);
           }}

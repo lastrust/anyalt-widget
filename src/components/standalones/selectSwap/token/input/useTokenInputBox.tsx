@@ -1,7 +1,7 @@
 import { useBitcoinWallet } from '@ant-design/web3-bitcoin';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useAtom, useAtomValue } from 'jotai';
-import { useEffect, useMemo, useState } from 'react';
+import { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import { formatUnits } from 'viem';
 import { useAccount } from 'wagmi';
 import { useSolana } from '../../../../../providers/useSolana';
@@ -79,6 +79,17 @@ export const useTokenInputBox = () => {
     setSelectedTokenAmount(balance);
   };
 
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value.replace(',', '.');
+    const regex = /^\d*\.?\d*$/;
+    const isEmptyInput = inputValue === '';
+    const isOnlyNumberOrOneDot = new RegExp(regex, 'g').test(inputValue);
+
+    if (isEmptyInput || isOnlyNumberOrOneDot) {
+      setSelectedTokenAmount(inputValue);
+    }
+  };
+
   useEffect(() => {
     getBalance();
   }, [selectedToken, evmAddress, publicKey, bitcoinAccount, solanaConnection]);
@@ -95,6 +106,7 @@ export const useTokenInputBox = () => {
     inToken: selectedToken,
     inTokenAmount: selectedTokenAmount,
     setInTokenAmount: setSelectedTokenAmount,
+    handleInputChange,
     tokenFetchError,
     maxButtonClick,
     balance,

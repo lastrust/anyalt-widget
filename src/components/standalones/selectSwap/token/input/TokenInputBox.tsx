@@ -31,9 +31,9 @@ export const TokenInputBox = ({
     widgetMode,
     inTokenAmount,
     tokenFetchError,
-    setInTokenAmount,
     maxButtonClick,
     isWalletConnected,
+    handleInputChange,
   } = useTokenInputBox();
 
   return (
@@ -103,18 +103,7 @@ export const TokenInputBox = ({
                 opacity: 0.4,
               }}
               value={inTokenAmount}
-              onChange={(e) => {
-                const inputValue = e.target.value.replace(',', '.');
-                const regex = /^\d*\.?\d*$/;
-                const isEmptyInput = inputValue === '';
-                const isOnlyNumberOrOneDot = new RegExp(regex, 'g').test(
-                  inputValue,
-                );
-
-                if (isEmptyInput || isOnlyNumberOrOneDot) {
-                  setInTokenAmount(inputValue);
-                }
-              }}
+              onChange={handleInputChange}
               readOnly={readonly}
             />
           </Box>
