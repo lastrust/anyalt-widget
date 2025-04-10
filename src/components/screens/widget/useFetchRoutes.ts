@@ -123,6 +123,28 @@ export const useFetchRoutes = ({
         routeId: '',
         missingWalletForSourceBlockchain: false,
         tags: [],
+        fiatStep: {
+          fiat: {
+            id: '',
+            onramperId: '',
+            name: '',
+            code: '',
+            logo: '',
+            symbol: '',
+          },
+          middleToken: {
+            id: '',
+            name: '',
+            tokenAddress: '',
+            symbol: '',
+            chainName: '',
+            decimals: 0,
+            marketCap: 0,
+            logoUrl: '',
+            chain: null,
+          },
+          payout: '',
+        },
       });
 
       setTokenFetchError({
