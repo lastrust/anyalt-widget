@@ -139,6 +139,10 @@ export const useChoosingRoutesAccordion = ({ estimateOutPut }: Props) => {
     };
   }, [swapResultToken, selectedTokenAmount]);
 
+  const checkForTags = (route: GetAllRoutesResponseItem) => {
+    return route.tags.length > 0 || route.isExecutable;
+  };
+
   return {
     slippage,
     allRoutes,
@@ -156,5 +160,6 @@ export const useChoosingRoutesAccordion = ({ estimateOutPut }: Props) => {
     calcTokenPrice,
     finalSwapToken,
     handleRouteSelect,
+    checkForTags,
   };
 };
