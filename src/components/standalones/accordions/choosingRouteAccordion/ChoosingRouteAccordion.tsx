@@ -50,6 +50,10 @@ const colorsMap = {
     text: '#FF9900',
     bg: 'rgba(255, 153, 0, 0.10)',
   },
+  executable: {
+    text: '#006400',
+    bg: 'rgba(0, 100, 0, 0.15)',
+  },
 };
 
 const getTagColor = (tag: string) => {
@@ -62,6 +66,8 @@ const getTagColor = (tag: string) => {
       return colorsMap.lowestFee;
     case 'Least Transactions':
       return colorsMap.leastTransactions;
+    case 'Executable':
+      return colorsMap.executable;
     default:
       return colorsMap.fastest;
   }
@@ -145,6 +151,15 @@ export const ChoosingRouteAccordion = ({
                 >
                   <Flex w={'full'} justifyContent={'space-between'}>
                     <Flex alignItems="center" gap="8px" w={'100%'}>
+                      {route?.isExecutable && (
+                        <RouteTag
+                          loading={loading}
+                          text={'#Executable'}
+                          textColor={getTagColor('Executable').text}
+                          bgColor={getTagColor('Executable').bg}
+                          withPadding
+                        />
+                      )}
                       {route.tags.map((tag, index) => {
                         return (
                           <RouteTag
