@@ -16,6 +16,7 @@ import {
   allRoutesAtom,
   anyaltInstanceAtom,
   lastMileTokenEstimateAtom,
+  selectedCurrencyAtom,
   selectedRouteAtom,
   selectedTokenAtom,
   selectedTokenOrFiatAmountAtom,
@@ -23,6 +24,7 @@ import {
   swapResultTokenAtom,
   tokenFetchErrorAtom,
   transactionsListAtom,
+  widgetModeAtom,
 } from '../../../store/stateStore';
 import { calculateWorstOutput } from '../../../utils';
 import { ChainIdToChainConstant } from '../../../utils/chains';
@@ -62,6 +64,8 @@ export const useFetchRoutes = ({
   const { balance } = useTokenInputBox();
 
   const slippage = useAtomValue(slippageAtom);
+  const widgetMode = useAtomValue(widgetModeAtom);
+  const selectedCurrency = useAtomValue(selectedCurrencyAtom);
 
   const [, setAllRoutes] = useAtom(allRoutesAtom);
   const [selectedRoute, setSelectedRoute] = useAtom(selectedRouteAtom);
@@ -113,38 +117,19 @@ export const useFetchRoutes = ({
 
   const onGetRoutes = async (withGoNext: boolean = true) => {
     if (activeStep > 1) return;
-    if (!selectedToken || !swapResultTokenGlobal || !selectedTokenOrFiatAmount)
-      return;
+    if (!swapResultTokenGlobal || !selectedTokenOrFiatAmount) return;
 
-    if (selectedToken.id === swapResultTokenGlobal.id) {
+    if (widgetMode === 'crypto' && !selectedToken) return;
+    if (widgetMode === 'fiat' && !selectedCurrency) return;
+
+    const matchWithOutputToken = selectedToken?.id === swapResultTokenGlobal.id;
+    if (matchWithOutputToken) {
       setSelectedRoute({
         outputAmount: selectedTokenOrFiatAmount,
         swapSteps: [],
         routeId: '',
         missingWalletForSourceBlockchain: false,
         tags: [],
-        fiatStep: {
-          fiat: {
-            id: '',
-            onramperId: '',
-            name: '',
-            code: '',
-            logo: '',
-            symbol: '',
-          },
-          middleToken: {
-            id: '',
-            name: '',
-            tokenAddress: '',
-            symbol: '',
-            chainName: '',
-            decimals: 0,
-            marketCap: 0,
-            logoUrl: '',
-            chain: null,
-          },
-          payout: '',
-        },
       });
 
       setTokenFetchError({
@@ -154,8 +139,20 @@ export const useFetchRoutes = ({
       return;
     }
 
+    if (widgetMode === 'crypto') await fetchCryptoRoutes(withGoNext);
+    else if (widgetMode === 'fiat') await fetchFiatRoutes(withGoNext);
+  };
+
+  const fetchCryptoRoutes = async (withGoNext: boolean = true) => {
+    if (!selectedToken || !swapResultTokenGlobal || !selectedTokenOrFiatAmount)
+      return;
+
     try {
       setLoading(true);
+      const toTokenChainName =
+        ChainIdToChainConstant[
+          swapResultToken.chainId! as keyof typeof ChainIdToChainConstant
+        ];
 
       const res = await anyaltInstance?.getAllRoutes({
         fromToken: {
@@ -164,10 +161,7 @@ export const useFetchRoutes = ({
         },
         toToken: {
           address: swapResultToken.address,
-          chainName:
-            ChainIdToChainConstant[
-              swapResultToken.chainId! as keyof typeof ChainIdToChainConstant
-            ],
+          chainName: toTokenChainName,
         },
         amount: selectedTokenOrFiatAmount,
         slippage,
@@ -189,6 +183,55 @@ export const useFetchRoutes = ({
         errorMessage: 'No Available Route',
       });
       setFailedToFetchRoute(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchFiatRoutes = async (withGoNext: boolean = true) => {
+    if (
+      !selectedCurrency ||
+      !swapResultTokenGlobal ||
+      !selectedTokenOrFiatAmount
+    )
+      return;
+
+    try {
+      setLoading(true);
+      const chainName =
+        ChainIdToChainConstant[
+          swapResultToken.chainId! as keyof typeof ChainIdToChainConstant
+        ];
+      const res = await anyaltInstance?.getBestRoute({
+        fiatCountry: selectedCurrency.code,
+        fromFiatOnramperId: selectedCurrency.onramperId,
+        toToken: {
+          address: swapResultToken.address,
+          chainName,
+        },
+        amount: selectedTokenOrFiatAmount,
+        slippage,
+      });
+
+      setSelectedRoute({
+        fiatStep: res?.fiatStep,
+        outputAmount: res?.outputAmount || '',
+        swapSteps: res?.swapSteps || [],
+        routeId: res?.operationId || '',
+        missingWalletForSourceBlockchain:
+          res?.missingWalletForSourceBlockchain || false,
+        tags: [],
+      });
+
+      setFailedToFetchRoute(false);
+      if (activeStep === 0) setActiveStep(1);
+      if (withGoNext && isEnoughDepositTokens) setActiveStep(1);
+    } catch (error) {
+      console.error(error);
+      setTokenFetchError({
+        isError: true,
+        errorMessage: 'No Available Route',
+      });
     } finally {
       setLoading(false);
     }
@@ -315,7 +358,14 @@ export const useFetchRoutes = ({
 
   useEffect(() => {
     onGetRoutes(false);
-  }, [selectedToken, slippage, balance, selectedWallets]);
+  }, [
+    selectedToken,
+    selectedCurrency,
+    selectedTokenOrFiatAmount,
+    slippage,
+    balance,
+    selectedWallets,
+  ]);
 
   useEffect(() => {
     if (
@@ -335,7 +385,12 @@ export const useFetchRoutes = ({
     return () => {
       clearTimeout(debounceTimeout);
     };
-  }, [selectedToken, swapResultTokenGlobal, selectedTokenOrFiatAmount]);
+  }, [
+    selectedToken,
+    selectedCurrency,
+    swapResultTokenGlobal,
+    selectedTokenOrFiatAmount,
+  ]);
 
   useEffect(() => {
     if (selectedRoute) {
