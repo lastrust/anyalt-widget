@@ -27,7 +27,7 @@ const colorsMap = {
 
 const getTagColor = (tag: string) => {
   switch (tag) {
-    case 'fastest':
+    case 'Fastest':
       return colorsMap.fastest;
     case 'Best Return':
       return colorsMap.bestReturn;

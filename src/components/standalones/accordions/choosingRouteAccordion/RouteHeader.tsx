@@ -31,7 +31,6 @@ type Props = {
   calcFees: (route: GetAllRoutesResponseItem) => string;
   finalTokenEstimate: EstimateResponse | undefined;
   routeEstimates: Record<string, EstimateResponse> | undefined;
-  checkForTags: (route: GetAllRoutesResponseItem) => boolean | undefined;
 };
 
 type AccordionCloseButtonProps = BoxProps;
@@ -60,11 +59,10 @@ export const RouteHeader = ({
   routeEstimates,
   calcTokenPrice,
   calcFees,
-  checkForTags,
 }: Props) => {
   const isTagsPresented = useMemo(() => {
-    return checkForTags(route);
-  }, [checkForTags, route]);
+    return route.tags.length > 0 || route.isExecutable;
+  }, [route]);
 
   return (
     <AccordionButton

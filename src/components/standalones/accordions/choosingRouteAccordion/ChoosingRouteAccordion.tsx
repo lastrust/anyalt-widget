@@ -50,7 +50,6 @@ export const ChoosingRouteAccordion = ({
     routeEstimates,
     widgetTemplate,
     defaultAccordionOpen,
-    checkForTags,
     calcTokenPrice,
     handleRouteSelect,
     protocolFinalToken,
@@ -110,7 +109,6 @@ export const ChoosingRouteAccordion = ({
                   calcTokenPrice={calcTokenPrice}
                   finalTokenEstimate={finalTokenEstimate}
                   routeEstimates={routeEstimates}
-                  checkForTags={checkForTags}
                   slippage={slippage}
                 />
                 <AccordionPanel p={'0px'}>
