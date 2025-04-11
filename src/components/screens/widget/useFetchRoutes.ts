@@ -17,8 +17,8 @@ import {
   anyaltInstanceAtom,
   lastMileTokenEstimateAtom,
   selectedRouteAtom,
-  selectedTokenAmountAtom,
   selectedTokenAtom,
+  selectedTokenOrFiatAmountAtom,
   slippageAtom,
   swapResultTokenAtom,
   tokenFetchErrorAtom,
@@ -69,7 +69,7 @@ export const useFetchRoutes = ({
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
   const selectedToken = useAtomValue(selectedTokenAtom);
   const swapResultTokenGlobal = useAtomValue(swapResultTokenAtom);
-  const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
+  const selectedTokenOrFiatAmount = useAtomValue(selectedTokenOrFiatAmountAtom);
   const lastMileTokenEstimate = useAtomValue(lastMileTokenEstimateAtom);
 
   const setTokenFetchError = useSetAtom(tokenFetchErrorAtom);
@@ -113,12 +113,12 @@ export const useFetchRoutes = ({
 
   const onGetRoutes = async (withGoNext: boolean = true) => {
     if (activeStep > 1) return;
-    if (!selectedToken || !swapResultTokenGlobal || !selectedTokenAmount)
+    if (!selectedToken || !swapResultTokenGlobal || !selectedTokenOrFiatAmount)
       return;
 
     if (selectedToken.id === swapResultTokenGlobal.id) {
       setSelectedRoute({
-        outputAmount: selectedTokenAmount,
+        outputAmount: selectedTokenOrFiatAmount,
         swapSteps: [],
         routeId: '',
         missingWalletForSourceBlockchain: false,
@@ -169,7 +169,7 @@ export const useFetchRoutes = ({
               swapResultToken.chainId! as keyof typeof ChainIdToChainConstant
             ],
         },
-        amount: selectedTokenAmount,
+        amount: selectedTokenOrFiatAmount,
         slippage,
         selectedWallets: selectedWallets,
         userSessionKeyForSourceDestinationTokenPair:
@@ -226,8 +226,8 @@ export const useFetchRoutes = ({
 
     if (
       balance &&
-      selectedTokenAmount &&
-      parseFloat(balance) < parseFloat(selectedTokenAmount)
+      selectedTokenOrFiatAmount &&
+      parseFloat(balance) < parseFloat(selectedTokenOrFiatAmount)
     ) {
       setTokenFetchError({
         isError: true,
@@ -319,7 +319,7 @@ export const useFetchRoutes = ({
 
   useEffect(() => {
     if (
-      selectedTokenAmount &&
+      selectedTokenOrFiatAmount &&
       selectedToken &&
       swapResultTokenGlobal &&
       selectedToken.id !== swapResultTokenGlobal.id
@@ -327,7 +327,7 @@ export const useFetchRoutes = ({
       setLoading(true);
 
     const debounceTimeout = setTimeout(() => {
-      if (selectedTokenAmount && selectedToken) {
+      if (selectedTokenOrFiatAmount && selectedToken) {
         onGetRoutes(false);
       }
     }, DEBOUNCE_TIMEOUT);
@@ -335,7 +335,7 @@ export const useFetchRoutes = ({
     return () => {
       clearTimeout(debounceTimeout);
     };
-  }, [selectedToken, swapResultTokenGlobal, selectedTokenAmount]);
+  }, [selectedToken, swapResultTokenGlobal, selectedTokenOrFiatAmount]);
 
   useEffect(() => {
     if (selectedRoute) {
@@ -366,7 +366,7 @@ export const useFetchRoutes = ({
       const interval = setInterval(() => {
         const currentInToken = selectedToken;
         const currentProtocolInputToken = swapResultTokenGlobal;
-        const currentInTokenAmount = selectedTokenAmount;
+        const currentInTokenAmount = selectedTokenOrFiatAmount;
         const userSelectedToken =
           currentInToken &&
           currentProtocolInputToken &&

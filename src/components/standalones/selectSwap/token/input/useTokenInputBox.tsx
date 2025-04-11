@@ -6,8 +6,9 @@ import { formatUnits } from 'viem';
 import { useAccount } from 'wagmi';
 import { useSolana } from '../../../../../providers/useSolana';
 import {
-  selectedTokenAmountAtom,
+  selectedCurrencyAtom,
   selectedTokenAtom,
+  selectedTokenOrFiatAmountAtom,
   tokenFetchErrorAtom,
   widgetModeAtom,
 } from '../../../../../store/stateStore';
@@ -18,10 +19,11 @@ export const useTokenInputBox = () => {
 
   const widgetMode = useAtomValue(widgetModeAtom);
   const selectedToken = useAtomValue(selectedTokenAtom);
+  const selectedCurrency = useAtomValue(selectedCurrencyAtom);
   const tokenFetchError = useAtomValue(tokenFetchErrorAtom);
 
-  const [selectedTokenAmount, setSelectedTokenAmount] = useAtom(
-    selectedTokenAmountAtom,
+  const [selectedTokenOrFiatAmount, setSelectedTokenOrFiatAmount] = useAtom(
+    selectedTokenOrFiatAmountAtom,
   );
 
   const title = useMemo(() => {
@@ -76,7 +78,7 @@ export const useTokenInputBox = () => {
   };
 
   const maxButtonClick = async () => {
-    setSelectedTokenAmount(balance);
+    setSelectedTokenOrFiatAmount(balance);
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -86,7 +88,7 @@ export const useTokenInputBox = () => {
     const isOnlyNumberOrOneDot = new RegExp(regex, 'g').test(inputValue);
 
     if (isEmptyInput || isOnlyNumberOrOneDot) {
-      setSelectedTokenAmount(inputValue);
+      setSelectedTokenOrFiatAmount(inputValue);
     }
   };
 
@@ -95,17 +97,18 @@ export const useTokenInputBox = () => {
   }, [selectedToken, evmAddress, publicKey, bitcoinAccount, solanaConnection]);
 
   useEffect(() => {
-    if (selectedTokenAmount) {
-      setSelectedTokenAmount(selectedTokenAmount.toString());
+    if (selectedTokenOrFiatAmount) {
+      setSelectedTokenOrFiatAmount(selectedTokenOrFiatAmount.toString());
     }
-  }, [selectedTokenAmount]);
+  }, [selectedTokenOrFiatAmount]);
 
   return {
     title,
     widgetMode,
-    inToken: selectedToken,
-    inTokenAmount: selectedTokenAmount,
-    setInTokenAmount: setSelectedTokenAmount,
+    selectedToken,
+    selectedCurrency,
+    selectedTokenOrFiatAmount,
+    setSelectedTokenOrFiatAmount,
     handleInputChange,
     tokenFetchError,
     maxButtonClick,

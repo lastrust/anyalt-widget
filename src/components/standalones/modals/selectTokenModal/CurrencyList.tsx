@@ -1,3 +1,4 @@
+import { SupportedFiat } from '@anyalt/sdk/dist/adapter/api/api';
 import { Skeleton, VStack } from '@chakra-ui/react';
 import { CurrencyItem } from '../../../molecules/CurrencyItem';
 
@@ -10,12 +11,12 @@ export type CurrencyType = {
 
 type Props = {
   isLoading: boolean;
-  allCurrencies: CurrencyType[];
-  onCurrencySelect: (currency: CurrencyType) => void;
+  currencies: SupportedFiat[];
+  onCurrencySelect: (currency: SupportedFiat) => void;
 };
 
 export const CurrenciesList = ({
-  allCurrencies,
+  currencies: allCurrencies,
   isLoading,
   onCurrencySelect,
 }: Props) => {
@@ -33,9 +34,9 @@ export const CurrenciesList = ({
     <>
       {allCurrencies.map((currency) => (
         <CurrencyItem
-          key={currency.id}
-          tokenSymbol={currency.label}
-          tokenIcon={currency.logoUrl}
+          key={currency.code}
+          tokenSymbol={currency.name}
+          tokenIcon={currency.logo}
           onClick={() => {
             onCurrencySelect(currency);
           }}

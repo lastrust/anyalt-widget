@@ -51,12 +51,13 @@ export const SelectToken = ({
     onTokenSelect,
     bitcoinAccount,
     tokenFetchError,
-    openTokenSelect,
+    selectModal: openTokenSelect,
     widgetTemplate,
     finalTokenEstimate,
-    setOpenTokenSelect,
+    setSelectModal,
     protocolInputToken,
     protocolFinalToken,
+    onCurrencySelect,
     isEvmWalletConnected,
     isSolanaWalletConnected,
     isBitcoinWalletConnected,
@@ -68,7 +69,7 @@ export const SelectToken = ({
   return (
     <Flex flexDirection="column" gap="16px" {...props}>
       <TokenInputBox
-        openTokenSelectModal={() => setOpenTokenSelect(true)}
+        openTokenSelectModal={() => setSelectModal(true)}
         loading={loading}
         activeStep={activeStep}
         price={inTokenPrice}
@@ -144,10 +145,15 @@ export const SelectToken = ({
 
       <TokenSelectModal
         isOpen={openTokenSelect}
-        onClose={() => setOpenTokenSelect(false)}
+        onClose={() => setSelectModal(false)}
         onTokenSelect={(token) =>
           onTokenSelect(token, () => {
-            setOpenTokenSelect(false);
+            setSelectModal(false);
+          })
+        }
+        onCurrencySelect={(currency) =>
+          onCurrencySelect(currency, () => {
+            setSelectModal(false);
           })
         }
       />

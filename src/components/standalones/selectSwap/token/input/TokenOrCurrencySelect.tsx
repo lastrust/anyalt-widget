@@ -1,31 +1,28 @@
 import { SupportedToken } from '@anyalt/sdk';
+import { SupportedFiat } from '@anyalt/sdk/dist/adapter/api/api';
 import { Box, Icon } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { SelectTokenIcon } from '../../../../atoms/icons/selectToken/SelectTokenIcon';
 import { TokenIconBox } from '../../../../molecules/TokenIconBox';
 import { TokenInfoBox } from '../../../../molecules/TokenInfoBox';
 
-type FiatCurrency = {
-  symbol: string;
-  name: string;
-  logoUrl: string;
+const isSupportedToken = (
+  token: SupportedToken | undefined,
+): token is SupportedToken => {
+  return token !== undefined && 'chain' in token;
 };
 
 type SelectProps = {
-  inToken: SupportedToken | FiatCurrency | undefined;
+  selectedToken: SupportedToken | undefined;
+  selectedCurrency: SupportedFiat | undefined;
   widgetMode: 'fiat' | 'crypto';
   handleCryptoModal: () => void;
   handleFiatModal: () => void;
 };
 
-const isSupportedToken = (
-  token: FiatCurrency | SupportedToken | undefined,
-): token is SupportedToken => {
-  return token !== undefined && 'chain' in token;
-};
-
 export const TokenOrCurrencySelect = ({
-  inToken,
+  selectedToken,
+  selectedCurrency,
   widgetMode,
   handleCryptoModal,
   handleFiatModal,
@@ -59,27 +56,49 @@ export const TokenOrCurrencySelect = ({
       onClick={() => handleSelectModal()}
       cursor={'pointer'}
     >
-      <TokenIconBox
-        widgetMode={widgetMode}
-        tokenName={inToken?.symbol ?? ''}
-        tokenIcon={inToken?.logoUrl ?? ''}
-        chainName={
-          isSupportedToken(inToken) ? String(inToken?.chain?.displayName) : ''
-        }
-        chainIcon={
-          isSupportedToken(inToken) ? String(inToken?.chain?.logoUrl) : ''
-        }
-        mr="8px"
-      />
-      <TokenInfoBox
-        tokenName={inToken?.symbol ?? placeholders.tokenTitle}
-        subText={
-          isSupportedToken(inToken) && inToken?.chain?.displayName
-            ? `On ${inToken?.chain?.displayName}`
-            : placeholders.chainTitle
-        }
-        mr="12px"
-      />
+      {widgetMode === 'crypto' ? (
+        <TokenIconBox
+          widgetMode={widgetMode}
+          tokenName={selectedToken?.symbol ?? ''}
+          tokenIcon={selectedToken?.logoUrl ?? ''}
+          chainName={
+            isSupportedToken(selectedToken)
+              ? String(selectedToken?.chain?.displayName)
+              : ''
+          }
+          chainIcon={
+            isSupportedToken(selectedToken)
+              ? String(selectedToken?.chain?.logoUrl)
+              : ''
+          }
+          mr="8px"
+        />
+      ) : (
+        <TokenIconBox
+          tokenName={selectedCurrency?.name ?? placeholders.tokenTitle}
+          tokenIcon={selectedCurrency?.logo ?? ''}
+          chainName={''}
+          chainIcon={''}
+          mr="8px"
+        />
+      )}
+      {widgetMode === 'crypto' ? (
+        <TokenInfoBox
+          mr="12px"
+          tokenName={selectedToken?.symbol ?? placeholders.tokenTitle}
+          subText={
+            isSupportedToken(selectedToken) && selectedToken?.chain?.displayName
+              ? `On ${selectedToken?.chain?.displayName}`
+              : placeholders.chainTitle
+          }
+        />
+      ) : (
+        <TokenInfoBox
+          tokenName={selectedCurrency?.name ?? placeholders.tokenTitle}
+          subText={placeholders.chainTitle}
+          mr="12px"
+        />
+      )}
       <Box
         cursor="pointer"
         color={'brand.buttons.action.bg'}

@@ -1,7 +1,8 @@
 import { useBitcoinWallet } from '@ant-design/web3-bitcoin';
 import { SupportedToken } from '@anyalt/sdk';
+import { SupportedFiat } from '@anyalt/sdk/dist/adapter/api/api';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useMemo, useState } from 'react';
 import { useAccount } from 'wagmi';
 import { WalletConnector } from '../../..';
@@ -9,9 +10,10 @@ import {
   allRoutesAtom,
   lastMileTokenAtom,
   lastMileTokenEstimateAtom,
+  selectedCurrencyAtom,
   selectedRouteAtom,
-  selectedTokenAmountAtom,
   selectedTokenAtom,
+  selectedTokenOrFiatAmountAtom,
   swapResultTokenAtom,
   tokenFetchErrorAtom,
   widgetTemplateAtom,
@@ -24,14 +26,15 @@ export const useSelectToken = ({
   walletConnector?: WalletConnector;
   showConnectedWallets: boolean;
 }) => {
-  const [openTokenSelect, setOpenTokenSelect] = useState<boolean>(false);
+  const [selectModal, setSelectModal] = useState<boolean>(false);
 
   const allRoutes = useAtomValue(allRoutesAtom);
   const selectedRoute = useAtomValue(selectedRouteAtom);
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
-  const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
+  const selectedTokenOrFiatAmount = useAtomValue(selectedTokenOrFiatAmountAtom);
 
   const [, setSelectedToken] = useAtom(selectedTokenAtom);
+  const setSelectedCurrency = useSetAtom(selectedCurrencyAtom);
   const swapResultToken = useAtomValue(swapResultTokenAtom);
   const lastMileToken = useAtomValue(lastMileTokenAtom);
   const lastMileTokenEstimate = useAtomValue(lastMileTokenEstimateAtom);
@@ -59,22 +62,28 @@ export const useSelectToken = ({
 
   const onTokenSelect = (token: SupportedToken, callback: () => void) => {
     setSelectedToken(token);
-    setOpenTokenSelect(false);
+    setSelectModal(false);
+    callback();
+  };
+
+  const onCurrencySelect = (currency: SupportedFiat, callback: () => void) => {
+    setSelectedCurrency(currency);
+    setSelectModal(false);
     callback();
   };
 
   const inTokenPrice = useMemo(() => {
     if (
       !selectedRoute ||
-      !selectedTokenAmount ||
+      !selectedTokenOrFiatAmount ||
       selectedRoute?.swapSteps.length === 0
     )
       return '';
     const tokenPrice = selectedRoute?.swapSteps[0].sourceToken.tokenUsdPrice;
 
     if (!tokenPrice) return '';
-    return (tokenPrice * parseFloat(selectedTokenAmount)).toFixed(2);
-  }, [selectedRoute, selectedTokenAmount]);
+    return (tokenPrice * parseFloat(selectedTokenOrFiatAmount)).toFixed(2);
+  }, [selectedRoute, selectedTokenOrFiatAmount]);
 
   const outTokenPrice = useMemo(() => {
     if (!selectedRoute || selectedRoute.swapSteps.length === 0) return '';
@@ -113,13 +122,14 @@ export const useSelectToken = ({
     bitcoinAccount,
     outTokenPrice,
     onTokenSelect,
-    openTokenSelect,
+    selectModal,
     widgetTemplate,
-    setOpenTokenSelect,
+    setSelectModal,
+    onCurrencySelect,
     finalTokenEstimate: lastMileTokenEstimate,
     protocolInputToken: swapResultToken,
     protocolFinalToken: lastMileToken,
     bestRoute: allRoutes,
-    inTokenAmount: selectedTokenAmount,
+    selectedTokenOrFiatAmount,
   };
 };

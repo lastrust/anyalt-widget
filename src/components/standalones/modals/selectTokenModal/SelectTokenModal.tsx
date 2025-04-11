@@ -10,6 +10,7 @@ import {
   Text,
 } from '@chakra-ui/react';
 
+import { SupportedFiat } from '@anyalt/sdk/dist/adapter/api/api';
 import { CloseIcon } from '../../../atoms/icons/modals/CloseIcon';
 import { SearchIcon } from '../../../atoms/icons/selectToken/SearchIcon';
 import { ChainButton } from './ChainButton';
@@ -21,9 +22,15 @@ type Props = {
   isOpen: boolean;
   onClose: () => void;
   onTokenSelect: (token: SupportedToken) => void;
+  onCurrencySelect: (currency: SupportedFiat) => void;
 };
 
-export const TokenSelectModal = ({ isOpen, onClose, onTokenSelect }: Props) => {
+export const TokenSelectModal = ({
+  isOpen,
+  onClose,
+  onTokenSelect,
+  onCurrencySelect,
+}: Props) => {
   const {
     chains,
     isLoading,
@@ -31,6 +38,7 @@ export const TokenSelectModal = ({ isOpen, onClose, onTokenSelect }: Props) => {
     showAccept,
     customToken,
     activeChain,
+    currencies,
     widgetMode,
     labelText,
     inputPlaceholder,
@@ -105,6 +113,7 @@ export const TokenSelectModal = ({ isOpen, onClose, onTokenSelect }: Props) => {
             <Box display="flex" flexWrap="wrap" gap="6px" mb="12px">
               {chains.map((chain) => (
                 <ChainButton
+                  key={chain.id}
                   chain={chain}
                   activeChain={activeChain}
                   setActiveChain={setActiveChain}
@@ -158,18 +167,9 @@ export const TokenSelectModal = ({ isOpen, onClose, onTokenSelect }: Props) => {
               />
             ) : (
               <CurrenciesList
-                allCurrencies={[
-                  {
-                    name: 'USD',
-                    label: 'USD',
-                    logoUrl: 'USDLOGO',
-                    id: '1',
-                  },
-                ]}
-                isLoading={false}
-                onCurrencySelect={(currency) => {
-                  console.log(currency);
-                }}
+                currencies={currencies}
+                isLoading={isLoading}
+                onCurrencySelect={onCurrencySelect}
               />
             )}
           </Box>

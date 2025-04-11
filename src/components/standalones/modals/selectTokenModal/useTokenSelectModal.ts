@@ -1,4 +1,5 @@
 import { SupportedChain, SupportedToken } from '@anyalt/sdk';
+import { SupportedFiat } from '@anyalt/sdk/dist/adapter/api/api';
 import { useAtomValue } from 'jotai';
 import { useEffect, useMemo, useState } from 'react';
 import {
@@ -19,6 +20,8 @@ export const useTokenSelectModal = () => {
 
   const [showAccept, setShowAccept] = useState<boolean>(false);
   const [allTokens, setAllTokens] = useState<SupportedToken[]>([]);
+  const [currencies, setCurrencies] = useState<SupportedFiat[]>([]);
+
   const [searchInputValue, setSearchInputValue] = useState<string>('');
   const [customToken, setCustomToken] = useState<SupportedToken | null>(null);
   const [activeChain, setActiveChain] = useState<SupportedChain | null>(null);
@@ -46,6 +49,21 @@ export const useTokenSelectModal = () => {
 
     return 'Type a currency';
   }, [widgetMode]);
+
+  const fetchCurrencies = async () => {
+    try {
+      setIsLoading(true);
+      const res = await anyaltInstance?.getFiats({
+        page: 0,
+        pageSize: 100,
+      });
+      setCurrencies(res?.fiats ?? []);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const fetchTokens = async () => {
     try {
@@ -97,8 +115,12 @@ export const useTokenSelectModal = () => {
   };
 
   useEffect(() => {
-    fetchTokens();
-  }, [activeChain, searchInputValue]);
+    if (widgetMode === 'crypto') {
+      fetchTokens();
+    } else if (widgetMode === 'fiat') {
+      fetchCurrencies();
+    }
+  }, [activeChain, searchInputValue, widgetMode]);
 
   const isValidAddress = useMemo(() => {
     return activeChain?.chainType === ChainType.SOLANA
@@ -109,6 +131,7 @@ export const useTokenSelectModal = () => {
   return {
     chains,
     allTokens,
+    currencies,
     isLoading,
     widgetMode,
     labelText,

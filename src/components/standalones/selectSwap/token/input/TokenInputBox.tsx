@@ -26,10 +26,11 @@ export const TokenInputBox = ({
 }: Props) => {
   const {
     title,
-    inToken,
+    selectedToken,
+    selectedCurrency,
     balance,
     widgetMode,
-    inTokenAmount,
+    selectedTokenOrFiatAmount,
     tokenFetchError,
     maxButtonClick,
     isWalletConnected,
@@ -78,7 +79,8 @@ export const TokenInputBox = ({
           width="100%"
         >
           <TokenOrCurrencySelect
-            inToken={inToken}
+            selectedToken={selectedToken}
+            selectedCurrency={selectedCurrency}
             widgetMode={widgetMode}
             handleCryptoModal={openTokenSelectModal}
             handleFiatModal={openTokenSelectModal}
@@ -102,7 +104,7 @@ export const TokenInputBox = ({
                 color: 'brand.text.primary',
                 opacity: 0.4,
               }}
-              value={inTokenAmount}
+              value={selectedTokenOrFiatAmount}
               onChange={handleInputChange}
               readOnly={readonly}
             />
@@ -116,7 +118,9 @@ export const TokenInputBox = ({
           width="100%"
         >
           <Text color="brand.text.primary" fontSize="12px" opacity={0.4}>
-            {(inToken?.name ?? widgetMode === 'crypto') ? 'Token' : 'Currency'}
+            {(selectedToken?.name ?? widgetMode === 'crypto')
+              ? 'Token'
+              : 'Currency'}
           </Text>
           {loading ? (
             <Skeleton width="34px" height="14px" borderRadius="32px" />
