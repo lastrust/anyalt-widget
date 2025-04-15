@@ -49,6 +49,7 @@ export const ConnectWalletsModal: FC<Props> = ({
         bg="brand.primary"
         p="24px"
         containerProps={{ zIndex: 1000 }}
+        minW={'385px'}
       >
         <ModalHeader
           color="brand.text.primary"
