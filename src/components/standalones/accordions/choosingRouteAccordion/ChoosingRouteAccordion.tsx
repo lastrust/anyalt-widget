@@ -8,12 +8,9 @@ import {
   Box,
   Divider,
   Flex,
-  Skeleton,
-  Text,
   VStack,
 } from '@chakra-ui/react';
 import { EstimateResponse } from '../../../..';
-import { RANGO_PLACEHOLDER_LOGO } from '../../../../constants/links';
 import { ChainIdToChainConstant } from '../../../../utils/chains';
 import { truncateToDecimals } from '../../../../utils/truncateToDecimals';
 import { GasIcon } from '../../../atoms/icons/GasIcon';
@@ -23,7 +20,9 @@ import { NoRouteCard } from '../../../molecules/card/NoRouteCard';
 import { RouteTag } from '../../../molecules/routeTag/RouteTag';
 import { RouteStep } from '../../../molecules/steps/RouteStep';
 import { TokenRouteInfo } from '../../../molecules/TokenRouteInfo';
+import { FinalTransaction } from './FinalTransaction';
 import { RouteHeader } from './RouteHeader';
+import { RouteTransactions } from './RouteTransactions';
 import { useChoosingRoutesAccordion } from './useChoosingRoutesAccordion';
 
 type Props = {
@@ -118,141 +117,20 @@ export const ChoosingRouteAccordion = ({
                     alignItems={'flex-start'}
                     color="brand.text.secondary.2"
                   >
-                    {loading ? (
-                      <Skeleton w={'180px'} h={'18px'} borderRadius="12px" />
-                    ) : (
-                      route.swapSteps.map((swapStep, index) => {
-                        return (
-                          <VStack
-                            gap={'12px'}
-                            alignItems={'flex-start'}
-                            color="brand.text.secondary.2"
-                            key={`accordion-wrapper-${swapStep.executionOrder}-${index}`}
-                          >
-                            <Text textStyle={'bold.2'} lineHeight={'120%'}>
-                              Transaction {index + 1}: {swapStep.swapperName}
-                            </Text>
-                            {swapStep.internalSwapSteps.map(
-                              (internalSwap, internalIndex) => {
-                                if (
-                                  widgetTemplate === 'TOKEN_BUY' &&
-                                  internalSwap.destinationToken.contractAddress.toLowerCase() ===
-                                    protocolInputToken?.tokenAddress?.toLowerCase() &&
-                                  internalSwap.destinationToken.logo ===
-                                    RANGO_PLACEHOLDER_LOGO &&
-                                  protocolInputToken?.logoUrl
-                                ) {
-                                  internalSwap.destinationToken.logo =
-                                    protocolInputToken?.logoUrl;
-                                }
-
-                                return (
-                                  <RouteStep
-                                    loading={loading}
-                                    key={`${swapStep.executionOrder}-${index}-${internalIndex}`}
-                                    stepNumber={internalIndex + 1}
-                                    exchangeIcon={internalSwap.swapperLogoUrl}
-                                    exchangeName={internalSwap.swapperName}
-                                    exchangeType={internalSwap.swapperType}
-                                    fromToken={{
-                                      name: internalSwap.sourceToken.symbol,
-                                      amount:
-                                        truncateToDecimals(
-                                          internalSwap.amount,
-                                          4,
-                                        ) || '0',
-                                      chainName:
-                                        internalSwap.sourceToken.blockchain,
-                                      icon: internalSwap.sourceToken.logo,
-                                      chainIcon:
-                                        internalSwap.sourceToken.blockchainLogo,
-                                    }}
-                                    toToken={{
-                                      name: internalSwap.destinationToken
-                                        .symbol,
-                                      amount: truncateToDecimals(
-                                        internalSwap.payout,
-                                        4,
-                                      ),
-                                      chainName:
-                                        internalSwap.destinationToken
-                                          .blockchain,
-                                      icon: internalSwap.destinationToken.logo,
-                                      chainIcon:
-                                        internalSwap.destinationToken
-                                          .blockchainLogo,
-                                    }}
-                                  />
-                                );
-                              },
-                            )}
-                          </VStack>
-                        );
-                      })
-                    )}
-
-                    {widgetTemplate === 'DEPOSIT_TOKEN' && (
-                      <>
-                        {loading ? (
-                          <Skeleton
-                            w={'180px'}
-                            h={'18px'}
-                            borderRadius="12px"
-                          />
-                        ) : (
-                          <Text textStyle={'bold.2'} lineHeight={'120%'}>
-                            Transaction {(route.swapSteps?.length ?? 0) + 1}:
-                            Final Transaction
-                          </Text>
-                        )}
-                        <RouteStep
-                          loading={loading}
-                          key={`last-mile-transaction-${route.swapSteps.length}`}
-                          stepNumber={1}
-                          exchangeIcon={protocolFinalToken?.logoUrl || ''}
-                          exchangeName={'Last Mile TX'}
-                          exchangeType={'LAST_MILE'}
-                          pb={'6px'}
-                          fromToken={{
-                            name:
-                              route.swapSteps[route.swapSteps.length - 1]
-                                ?.destinationToken?.symbol || '',
-                            amount: truncateToDecimals(
-                              route.swapSteps[route.swapSteps.length - 1]
-                                ?.payout || '0',
-                              4,
-                            ),
-                            chainName:
-                              route.swapSteps[route.swapSteps.length - 1]
-                                ?.destinationToken?.blockchain || '',
-                            icon:
-                              route.swapSteps[route.swapSteps.length - 1]
-                                ?.destinationToken?.logo || '',
-                            chainIcon:
-                              route.swapSteps[route.swapSteps.length - 1]
-                                ?.destinationToken?.blockchainLogo || '',
-                          }}
-                          toToken={{
-                            name: protocolFinalToken?.name || '',
-                            amount: truncateToDecimals(
-                              routeEstimates?.[route.routeId]?.amountOut ??
-                                '0.00',
-                              4,
-                            ),
-                            chainName:
-                              protocolInputToken?.chain?.displayName ||
-                              protocolFinalToken?.chainId != undefined
-                                ? ChainIdToChainConstant[
-                                    protocolFinalToken!
-                                      .chainId! as keyof typeof ChainIdToChainConstant
-                                  ]
-                                : '',
-                            icon: protocolFinalToken?.logoUrl || '',
-                            chainIcon: protocolInputToken?.chain?.logoUrl || '',
-                          }}
-                        />
-                      </>
-                    )}
+                    <RouteTransactions
+                      route={route}
+                      loading={loading}
+                      widgetTemplate={widgetTemplate}
+                      protocolInputToken={protocolInputToken}
+                    />
+                    <FinalTransaction
+                      route={route}
+                      loading={loading}
+                      widgetTemplate={widgetTemplate}
+                      routeEstimates={routeEstimates}
+                      protocolFinalToken={protocolFinalToken}
+                      protocolInputToken={protocolInputToken}
+                    />
                   </VStack>
                 </AccordionPanel>
               </AccordionItem>
