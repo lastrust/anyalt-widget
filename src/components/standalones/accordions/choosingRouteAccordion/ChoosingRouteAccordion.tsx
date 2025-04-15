@@ -23,6 +23,7 @@ import { NoRouteCard } from '../../../molecules/card/NoRouteCard';
 import { RouteTag } from '../../../molecules/routeTag/RouteTag';
 import { RouteStep } from '../../../molecules/steps/RouteStep';
 import { TokenRouteInfo } from '../../../molecules/TokenRouteInfo';
+import { RouteHeader } from './RouteHeader';
 import { useChoosingRoutesAccordion } from './useChoosingRoutesAccordion';
 
 type Props = {
@@ -31,40 +32,6 @@ type Props = {
   estimateOutPut: (
     route: GetAllRoutesResponseItem,
   ) => Promise<EstimateResponse>;
-};
-
-const colorsMap = {
-  fastest: {
-    text: '#3777F7',
-    bg: 'rgba(55, 119, 247, 0.10)',
-  },
-  bestReturn: {
-    text: '#00A958',
-    bg: 'rgba(0, 169, 88, 0.10)',
-  },
-  lowestFee: {
-    text: '#FF2D99',
-    bg: 'rgba(255, 45, 153, 0.10)',
-  },
-  leastTransactions: {
-    text: '#FF9900',
-    bg: 'rgba(255, 153, 0, 0.10)',
-  },
-};
-
-const getTagColor = (tag: string) => {
-  switch (tag) {
-    case 'fastest':
-      return colorsMap.fastest;
-    case 'Best Return':
-      return colorsMap.bestReturn;
-    case 'Lowest Fee':
-      return colorsMap.lowestFee;
-    case 'Least Transactions':
-      return colorsMap.leastTransactions;
-    default:
-      return colorsMap.fastest;
-  }
 };
 
 export const ChoosingRouteAccordion = ({
@@ -132,122 +99,18 @@ export const ChoosingRouteAccordion = ({
                 bg={'brand.bg.bestRoute'}
                 onClick={() => handleRouteSelect(route)}
               >
-                <AccordionButton
-                  display={'flex'}
-                  flexDir={'column'}
-                  justifyContent={'space-between'}
-                  gap="8px"
-                  p={'0px'}
-                  w={'100%'}
-                  _hover={{
-                    bgColor: 'transparent',
-                  }}
-                >
-                  <Flex w={'full'} justifyContent={'space-between'}>
-                    <Flex alignItems="center" gap="8px" w={'100%'}>
-                      {route.tags.map((tag, index) => {
-                        return (
-                          <RouteTag
-                            key={`${tag}-${index}`}
-                            loading={loading}
-                            text={`#${tag}`}
-                            textColor={getTagColor(tag).text}
-                            bgColor={getTagColor(tag).bg}
-                            withPadding
-                          />
-                        );
-                      })}
-                    </Flex>
-                    <Box
-                      h={'24px'}
-                      w={'24px'}
-                      borderRadius={'50%'}
-                      bgColor="brand.bg.active"
-                      cursor="pointer"
-                    >
-                      <AccordionIcon
-                        w={'24px'}
-                        h={'24px'}
-                        color="brand.text.secondary.0"
-                      />
-                    </Box>
-                  </Flex>
-                  <Divider bg="rgba(51, 51, 51, 0.20)" m="0px" />
-                  <Flex
-                    flexDirection="row"
-                    justifyContent="space-between"
-                    alignItems={'center'}
-                    gap="12px"
-                    w={'100%'}
-                  >
-                    <Flex alignItems="center" gap="8px" w={'100%'}>
-                      <RouteTag
-                        loading={loading}
-                        text={`${route.swapSteps.reduce((acc, swap) => acc + swap.estimatedTimeInSeconds, 0 + Number(finalTokenEstimate?.estimatedTimeInSeconds ?? 0)) || finalTokenEstimate?.estimatedTimeInSeconds}s`}
-                        icon={TimeIcon}
-                        textColor="brand.tags.route"
-                        bgColor="transparent"
-                      />
-                      <RouteTag
-                        loading={loading}
-                        text={calcFees(route)}
-                        icon={GasIcon}
-                        textColor="brand.tags.route"
-                        bgColor="transparent"
-                      />
-                      <RouteTag
-                        loading={loading}
-                        text={`${route.swapSteps.length + Number(widgetTemplate === 'DEPOSIT_TOKEN')}`}
-                        icon={StepsIcon}
-                        textColor="brand.tags.route"
-                        bgColor="transparent"
-                      />
-                    </Flex>
-                  </Flex>
-                  <TokenRouteInfo
-                    loading={loading}
-                    chainIcon={
-                      widgetTemplate === 'TOKEN_BUY'
-                        ? protocolInputToken?.chain?.logoUrl || ''
-                        : protocolInputToken?.chain?.logoUrl || ''
-                    }
-                    tokenName={
-                      widgetTemplate === 'TOKEN_BUY'
-                        ? protocolInputToken?.name || ''
-                        : protocolFinalToken?.name || ''
-                    }
-                    tokenIcon={
-                      widgetTemplate === 'TOKEN_BUY'
-                        ? protocolInputToken?.logoUrl || ''
-                        : protocolFinalToken?.logoUrl || ''
-                    }
-                    amount={
-                      widgetTemplate === 'TOKEN_BUY'
-                        ? route?.outputAmount || ''
-                        : truncateToDecimals(
-                            routeEstimates?.[route.routeId]?.amountOut ??
-                              '0.00',
-                            4,
-                          )
-                    }
-                    price={
-                      widgetTemplate === 'TOKEN_BUY'
-                        ? calcTokenPrice(route)
-                        : truncateToDecimals(
-                            routeEstimates?.[route.routeId]?.priceInUSD ??
-                              '0.00',
-                            4,
-                          )
-                    }
-                    slippage={slippage}
-                    network={
-                      widgetTemplate === 'TOKEN_BUY'
-                        ? `${protocolInputToken?.name} on ${protocolInputToken?.chain?.displayName}`
-                        : route.swapSteps[0]?.swapperName
-                    }
-                    borderRadius={'8px'}
-                  />
-                </AccordionButton>
+                <RouteHeader
+                  loading={loading}
+                  route={route}
+                  widgetTemplate={widgetTemplate}
+                  protocolInputToken={protocolInputToken}
+                  protocolFinalToken={protocolFinalToken}
+                  calcFees={calcFees}
+                  calcTokenPrice={calcTokenPrice}
+                  finalTokenEstimate={finalTokenEstimate}
+                  routeEstimates={routeEstimates}
+                  slippage={slippage}
+                />
                 <AccordionPanel p={'0px'}>
                   <Divider my={'12px'} bg="rgba(51, 51, 51, 0.20)" />
                   <VStack
