@@ -11,12 +11,14 @@ export type CurrencyType = {
 
 type Props = {
   isLoading: boolean;
+  searchInputValue?: string;
   currencies: SupportedFiat[];
   onCurrencySelect: (currency: SupportedFiat) => void;
 };
 
 export const CurrenciesList = ({
   currencies: allCurrencies,
+  searchInputValue,
   isLoading,
   onCurrencySelect,
 }: Props) => {
@@ -27,6 +29,29 @@ export const CurrenciesList = ({
         <Skeleton height="53px" w="100%" borderRadius="8px" />
         <Skeleton height="53px" w="100%" borderRadius="8px" />
       </VStack>
+    );
+  }
+
+  if (searchInputValue) {
+    const filteredCurrencies = allCurrencies.filter(
+      (currency) =>
+        currency.name.toLowerCase().includes(searchInputValue.toLowerCase()) ||
+        currency.code.toLowerCase().includes(searchInputValue.toLowerCase()),
+    );
+
+    return (
+      <>
+        {filteredCurrencies.map((currency) => (
+          <CurrencyItem
+            key={currency.code}
+            tokenSymbol={currency.name}
+            tokenIcon={currency.logo}
+            onClick={() => {
+              onCurrencySelect(currency);
+            }}
+          />
+        ))}
+      </>
     );
   }
 

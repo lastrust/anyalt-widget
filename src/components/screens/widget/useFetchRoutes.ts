@@ -202,7 +202,7 @@ export const useFetchRoutes = ({
         ChainIdToChainConstant[
           swapResultToken.chainId! as keyof typeof ChainIdToChainConstant
         ];
-      const res = await anyaltInstance?.getBestRoute({
+      const res = await anyaltInstance?.getAllRoutes({
         fiatCountry: selectedCurrency.code,
         fromFiatOnramperId: selectedCurrency.onramperId,
         toToken: {
@@ -211,17 +211,11 @@ export const useFetchRoutes = ({
         },
         amount: selectedTokenOrFiatAmount,
         slippage,
+        userSessionKeyForSourceDestinationTokenPair:
+          '0x0000000000000000000000000000000000000000',
       });
 
-      setSelectedRoute({
-        fiatStep: res?.fiatStep,
-        outputAmount: res?.outputAmount || '',
-        swapSteps: res?.swapSteps || [],
-        routeId: res?.operationId || '',
-        missingWalletForSourceBlockchain:
-          res?.missingWalletForSourceBlockchain || false,
-        tags: [],
-      });
+      setSelectedRoute(res?.routes[0]);
 
       setFailedToFetchRoute(false);
       if (activeStep === 0) setActiveStep(1);

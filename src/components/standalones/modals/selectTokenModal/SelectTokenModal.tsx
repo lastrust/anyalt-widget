@@ -169,6 +169,7 @@ export const TokenSelectModal = ({
               <CurrenciesList
                 currencies={currencies}
                 isLoading={isLoading}
+                searchInputValue={searchInputValue}
                 onCurrencySelect={onCurrencySelect}
               />
             )}

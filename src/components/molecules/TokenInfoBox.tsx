@@ -14,7 +14,6 @@ export const TokenInfoBox: FC<Props> = ({ tokenName, subText, ...props }) => {
       justifyContent="space-between"
       alignItems="flex-start"
       gap="4px"
-      maxW="120px"
       {...props}
     >
       <Text
