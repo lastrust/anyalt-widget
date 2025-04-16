@@ -4,6 +4,7 @@ import {
 } from '@anyalt/sdk/dist/adapter/api/api';
 import { Skeleton } from '@chakra-ui/react';
 import { WidgetTemplateType } from '../../../..';
+import { FiatStepSection } from './FiatStep';
 import { RouteTransactionAccordion } from './RouteTransactionAccordion';
 
 type Props = {
@@ -20,16 +21,27 @@ export const RouteTransactions = ({
 }: Props) => {
   if (loading) return <Skeleton w={'180px'} h={'18px'} borderRadius="12px" />;
 
-  return route.swapSteps.map((swapStep, index) => {
-    return (
-      <RouteTransactionAccordion
-        index={index}
-        loading={loading}
-        swapStep={swapStep}
-        widgetTemplate={widgetTemplate}
-        key={`${swapStep.swapperName}-${index}`}
-        protocolInputToken={protocolInputToken}
-      />
-    );
-  });
+  const isIncludeFiat = Boolean(route.fiatStep);
+
+  return (
+    <>
+      {isIncludeFiat && (
+        <FiatStepSection
+          index={0}
+          loading={loading}
+          fiatStep={route.fiatStep}
+        />
+      )}
+      {route.swapSteps.map((swapStep, index) => (
+        <RouteTransactionAccordion
+          index={isIncludeFiat ? index + 1 : index}
+          loading={loading}
+          swapStep={swapStep}
+          widgetTemplate={widgetTemplate}
+          key={`${swapStep.swapperName}-${index}`}
+          protocolInputToken={protocolInputToken}
+        />
+      ))}
+    </>
+  );
 };

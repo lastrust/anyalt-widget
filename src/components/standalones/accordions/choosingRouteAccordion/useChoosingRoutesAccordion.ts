@@ -34,7 +34,6 @@ export const useChoosingRoutesAccordion = ({ estimateOutPut }: Props) => {
   const [selectedRoute, setSelectedRoute] = useAtom(selectedRouteAtom);
 
   const selectedToken = useAtomValue(selectedTokenAtom);
-  const swapResultTokenGlobal = useAtomValue(swapResultTokenAtom);
 
   const selectedRef = useRef<HTMLDivElement>(null);
 
@@ -57,8 +56,8 @@ export const useChoosingRoutesAccordion = ({ estimateOutPut }: Props) => {
   }, [selectedRoute]);
 
   const isSameToken = useMemo(() => {
-    return selectedToken?.id === swapResultTokenGlobal?.id;
-  }, [selectedToken, swapResultTokenGlobal]);
+    return selectedToken?.id === swapResultToken?.id && selectedRoute;
+  }, [selectedToken, swapResultToken, selectedRoute]);
 
   const defaultAccordionOpen = useMemo(() => {
     if (allRoutes)

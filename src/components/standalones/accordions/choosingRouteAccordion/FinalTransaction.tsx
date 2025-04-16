@@ -40,6 +40,8 @@ export const FinalTransaction = ({
     [lastMile],
   );
 
+  const isFiat = useMemo(() => Boolean(route?.fiatStep), [route]);
+
   const toTokenChainName = useMemo(
     () =>
       protocolInputToken?.chain?.displayName ||
@@ -54,7 +56,7 @@ export const FinalTransaction = ({
   return (
     <>
       <Text textStyle={'bold.2'} lineHeight={'120%'}>
-        Transaction {(route.swapSteps?.length ?? 0) + 1}: Final Transaction
+        Transaction {(route.swapSteps?.length ?? 0) + 1 + (isFiat ? 1 : 0)}: Final Transaction
       </Text>
 
       <RouteStep

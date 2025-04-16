@@ -132,6 +132,8 @@ export const useFetchRoutes = ({
         tags: [],
       });
 
+      setActiveStep(1);
+
       setTokenFetchError({
         isError: false,
         errorMessage: '',
@@ -203,7 +205,6 @@ export const useFetchRoutes = ({
           swapResultToken.chainId! as keyof typeof ChainIdToChainConstant
         ];
       const res = await anyaltInstance?.getAllRoutes({
-        fiatCountry: selectedCurrency.code,
         fromFiatOnramperId: selectedCurrency.onramperId,
         toToken: {
           address: swapResultToken.address,
@@ -214,6 +215,8 @@ export const useFetchRoutes = ({
         userSessionKeyForSourceDestinationTokenPair:
           '0x0000000000000000000000000000000000000000',
       });
+
+      setAllRoutes(res?.routes);
 
       setSelectedRoute(res?.routes[0]);
 

@@ -58,8 +58,6 @@ export const ChoosingRouteAccordion = ({
     estimateOutPut,
   });
 
-  if (!allRoutes) return <></>;
-
   if (failedToFetchRoute && !loading) {
     return <NoRouteCard />;
   }
@@ -79,7 +77,7 @@ export const ChoosingRouteAccordion = ({
         }}
       >
         {!isSameToken &&
-          allRoutes.map((route, index) => {
+          allRoutes?.map((route, index) => {
             const isSelected = route.routeId === selectedRoute?.routeId;
             return (
               <AccordionItem
@@ -136,21 +134,17 @@ export const ChoosingRouteAccordion = ({
               </AccordionItem>
             );
           })}
-        {isSameToken && selectedRoute && (
+
+        {isSameToken && (
           <AccordionItem
             key={`${selectedRoute?.outputAmount}-${selectedRoute?.routeId}`}
             border="2px solid"
             borderWidth={loading ? '1px' : '2px!important'}
-            borderColor={
-              selectedRoute?.routeId === selectedRoute?.routeId
-                ? 'brand.border.bestRoute'
-                : 'transparent'
-            }
+            borderColor={'brand.border.bestRoute'}
             borderRadius={'10px'}
             p={'16px'}
             cursor={'pointer'}
             bg={'brand.bg.bestRoute'}
-            onClick={() => handleRouteSelect(selectedRoute)}
           >
             <AccordionButton
               display={'flex'}
@@ -236,7 +230,7 @@ export const ChoosingRouteAccordion = ({
                 network={
                   widgetTemplate === 'TOKEN_BUY'
                     ? `${protocolFinalToken?.name} on ${protocolInputToken?.chain?.displayName}`
-                    : selectedRoute.swapSteps[0]?.swapperName
+                    : selectedRoute?.swapSteps[0]?.swapperName || ''
                 }
                 borderRadius={'8px'}
               />
