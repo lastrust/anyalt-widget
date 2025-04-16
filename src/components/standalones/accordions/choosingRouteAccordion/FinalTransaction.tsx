@@ -56,7 +56,8 @@ export const FinalTransaction = ({
   return (
     <>
       <Text textStyle={'bold.2'} lineHeight={'120%'}>
-        Transaction {(route.swapSteps?.length ?? 0) + 1 + (isFiat ? 1 : 0)}: Final Transaction
+        Transaction {(route.swapSteps?.length ?? 0) + 1 + (isFiat ? 1 : 0)}:
+        Final Transaction
       </Text>
 
       <RouteStep

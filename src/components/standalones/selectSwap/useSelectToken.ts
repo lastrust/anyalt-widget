@@ -79,6 +79,11 @@ export const useSelectToken = ({
       selectedRoute?.swapSteps.length === 0
     )
       return '';
+
+    if (selectedRoute?.fiatStep) {
+      return selectedTokenOrFiatAmount;
+    }
+
     const tokenPrice = selectedRoute?.swapSteps[0].sourceToken.tokenUsdPrice;
 
     if (!tokenPrice) return '';
