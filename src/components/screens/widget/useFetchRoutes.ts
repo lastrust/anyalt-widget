@@ -355,13 +355,7 @@ export const useFetchRoutes = ({
 
   useEffect(() => {
     onGetRoutes(false);
-  }, [
-    selectedToken,
-    selectedCurrency,
-    slippage,
-    balance,
-    selectedWallets,
-  ]);
+  }, [selectedToken, selectedCurrency, slippage, balance, selectedWallets]);
 
   useEffect(() => {
     const isTokenOrFiatSelected = selectedCurrency || selectedToken;
