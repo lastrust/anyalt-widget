@@ -4,8 +4,8 @@ import {
   activeOperationIdAtom,
   allRoutesAtom,
   lastMileTokenEstimateAtom,
-  selectedTokenAmountAtom,
   selectedTokenAtom,
+  selectedTokenOrFiatAmountAtom,
   swapDataAtom,
   tokenFetchErrorAtom,
   transactionIndexAtom,
@@ -37,8 +37,8 @@ export const useControllWidget = ({
   const setTransactionsList = useSetAtom(transactionsListAtom);
   const setTransactionIndex = useSetAtom(transactionIndexAtom);
   const setActiveOperationId = useSetAtom(activeOperationIdAtom);
-  const [selectedTokenAmount, setSelectedTokenAmount] = useAtom(
-    selectedTokenAmountAtom,
+  const [selectedTokenOrFiatAmount, setSelectedTokenOrFiatAmount] = useAtom(
+    selectedTokenOrFiatAmountAtom,
   );
   const setTransactionsProgress = useSetAtom(transactionsProgressAtom);
   const setLastMileTokenEstimate = useSetAtom(lastMileTokenEstimateAtom);
@@ -48,7 +48,7 @@ export const useControllWidget = ({
     setActiveOperationId(undefined);
     setLastMileTokenEstimate(undefined);
     setTransactionsList(undefined);
-    setSelectedTokenAmount(undefined);
+    setSelectedTokenOrFiatAmount(undefined);
     setSelectedToken(undefined);
     setTokenFetchError({ isError: false, errorMessage: '' });
     setAllRoutes(undefined);
@@ -68,7 +68,7 @@ export const useControllWidget = ({
     setActiveOperationId,
     setLastMileTokenEstimate,
     setTransactionsList,
-    setSelectedTokenAmount,
+    setSelectedTokenOrFiatAmount,
     setSelectedToken,
     setTokenFetchError,
     setAllRoutes,
@@ -80,13 +80,13 @@ export const useControllWidget = ({
   const isButtonDisabled = useMemo(() => {
     if (activeStep === 0) {
       return (
-        Number(selectedTokenAmount ?? 0) == 0 ||
+        Number(selectedTokenOrFiatAmount ?? 0) == 0 ||
         selectedToken == null ||
         !allRoutes
       );
     }
-    return Number(selectedTokenAmount ?? 0) == 0 || selectedToken == null;
-  }, [selectedTokenAmount, selectedToken, allRoutes, activeStep]);
+    return Number(selectedTokenOrFiatAmount ?? 0) == 0 || selectedToken == null;
+  }, [selectedTokenOrFiatAmount, selectedToken, allRoutes, activeStep]);
 
   const onConfigClick = () => {
     setOpenSlippageModal(true);

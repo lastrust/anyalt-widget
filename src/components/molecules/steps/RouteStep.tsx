@@ -15,14 +15,20 @@ type Props = {
   loading: boolean;
   exchangeIcon: string;
   exchangeName: string;
-  exchangeType: 'BRIDGE' | 'DEX' | 'AGGREGATOR' | 'OFF_CHAIN' | 'LAST_MILE';
+  exchangeType:
+    | 'BRIDGE'
+    | 'DEX'
+    | 'AGGREGATOR'
+    | 'OFF_CHAIN'
+    | 'LAST_MILE'
+    | 'ONRAMPER';
   stepNumber: number;
   fromToken: {
     name: string;
     icon: string;
-    chainIcon: string;
+    chainIcon?: string;
     amount: string;
-    chainName: string;
+    chainName?: string;
   };
   toToken: {
     name: string;
@@ -138,7 +144,7 @@ export const RouteStep = ({
                 >
                   {fromToken.amount}
                 </span>
-                {`${fromToken.name} on ${fromToken.chainName.slice(0, 1).toUpperCase() + fromToken.chainName.slice(1).toLowerCase()} `}
+                {`${fromToken.name} on ${fromToken?.chainName?.slice(0, 1)?.toUpperCase() || '' + fromToken?.chainName?.slice(1)?.toLowerCase()} `}
               </Text>
             </HStack>
             <Box>

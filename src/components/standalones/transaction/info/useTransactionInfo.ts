@@ -12,7 +12,7 @@ import {
   lastMileTokenAtom,
   lastMileTokenEstimateAtom,
   selectedRouteAtom,
-  selectedTokenAmountAtom,
+  selectedTokenOrFiatAmountAtom,
   showStuckTransactionDialogAtom,
   slippageAtom,
   swapResultTokenAtom,
@@ -49,7 +49,7 @@ export const useTransactionInfo = ({
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
   const activeOperationId = useAtomValue(activeOperationIdAtom);
   const transactionsList = useAtomValue(transactionsListAtom);
-  const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
+  const selectedTokenOrFiatAmount = useAtomValue(selectedTokenOrFiatAmountAtom);
   const swapResultToken = useAtomValue(swapResultTokenAtom);
   const lastMileToken = useAtomValue(lastMileTokenAtom);
   const lastMileTokenEstimate = useAtomValue(lastMileTokenEstimateAtom);
@@ -261,7 +261,7 @@ export const useTransactionInfo = ({
     selectedRoute,
     currentStep,
     isBridgeSwap,
-    inTokenAmount: selectedTokenAmount,
+    inTokenAmount: selectedTokenOrFiatAmount,
     estimatedTime,
     transactionsList,
     finalTokenEstimate: lastMileTokenEstimate,

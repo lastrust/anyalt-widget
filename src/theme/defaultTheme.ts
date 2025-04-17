@@ -68,6 +68,11 @@ export const defaultTheme = extendTheme({
         route: '#919eab',
       },
       buttons: {
+        widgetMode: {
+          primary: '#333',
+          border: '#333',
+          disabled: '#999',
+        },
         close: {
           primary: '#919eab',
         },

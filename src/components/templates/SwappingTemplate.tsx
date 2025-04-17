@@ -1,6 +1,7 @@
 import {
   Box,
   BoxProps,
+  Button,
   Flex,
   Grid,
   HStack,
@@ -9,15 +10,17 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { ConfigIcon } from '../atoms/icons/selectToken/ConfigIcon';
-import { SelectTokenIcon } from '../atoms/icons/selectToken/SelectTokenIcon';
+import { BackButton } from '../molecules/buttons/BackButton';
 import { CrossChainWarningCard } from '../molecules/card/CrossChainWarning';
+import { WidgetMode } from '../standalones/widgetMode/WidgetMode';
 
 type Props = {
   title?: string;
   subtitle?: string;
   secondTitle?: string;
-  withDisclaimer?: boolean;
   secondSubtitle?: string;
+  withDisclaimer?: boolean;
+  enableWidgetMode?: boolean;
   onConfigClick?: () => void;
   onBackClick?: () => void;
   children: React.ReactNode;
@@ -29,6 +32,7 @@ export const SwappingTemplate = ({
   subtitle,
   secondTitle,
   secondSubtitle,
+  enableWidgetMode,
   onConfigClick,
   onBackClick,
   withDisclaimer = false,
@@ -54,24 +58,16 @@ export const SwappingTemplate = ({
         >
           <Flex justifyContent="space-between" alignItems="center" w={'100%'}>
             <VStack alignItems="left" w={'100%'}>
-              <HStack>
-                {onBackClick && (
-                  <Box
-                    cursor="pointer"
-                    color={'brand.buttons.action.bg'}
-                    _hover={{
-                      color: 'brand.buttons.action.hover',
-                    }}
-                    onClick={onBackClick}
-                    transform={'rotate(180deg)'}
-                  >
-                    <Icon as={SelectTokenIcon} w={'24px'} h={'24px'} />
-                  </Box>
-                )}
-                <Text color="brand.text.primary" textStyle={'bold.0'}>
-                  {title}
-                </Text>
-              </HStack>
+              {enableWidgetMode ? (
+                <WidgetMode />
+              ) : (
+                <HStack>
+                  <BackButton onBackClick={onBackClick} />
+                  <Text color="brand.text.primary" textStyle={'bold.0'}>
+                    {title}
+                  </Text>
+                </HStack>
+              )}
               {subtitle && (
                 <HStack w={'100%'} justifyContent={'space-between'}>
                   <Text
@@ -87,13 +83,14 @@ export const SwappingTemplate = ({
               )}
             </VStack>
             {onConfigClick && (
-              <Box
+              <Button
+                maxH={'24px'}
                 cursor="pointer"
                 color="brand.text.active"
                 onClick={onConfigClick}
               >
                 <Icon as={ConfigIcon} />
-              </Box>
+              </Button>
             )}
           </Flex>
           {secondTitle && (

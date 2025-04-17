@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { WidgetTemplateType } from '../../..';
 import { SwappingTemplate } from '../../templates/SwappingTemplate';
 import { SelectToken } from '../selectSwap/SelectToken';
@@ -25,12 +26,17 @@ export const SelectTokenStep = ({
   onConfigClick,
   setOpenSlippageModal,
 }: Props) => {
+  const title = useMemo(() => {
+    return widgetTemplate === 'TOKEN_BUY'
+      ? 'Calculation'
+      : 'Select Deposit Token';
+  }, [widgetTemplate]);
+
   return (
     <SwappingTemplate
-      title={
-        widgetTemplate === 'TOKEN_BUY' ? 'Calculation' : 'Select Deposit Token'
-      }
+      title={title}
       onConfigClick={onConfigClick}
+      enableWidgetMode
     >
       <SelectToken
         activeStep={activeStep}

@@ -7,8 +7,8 @@ import {
   lastMileTokenAtom,
   lastMileTokenEstimateAtom,
   selectedRouteAtom,
-  selectedTokenAmountAtom,
   selectedTokenAtom,
+  selectedTokenOrFiatAmountAtom,
   slippageAtom,
   swapResultTokenAtom,
   widgetTemplateAtom,
@@ -26,7 +26,7 @@ export const useChoosingRoutesAccordion = ({ estimateOutPut }: Props) => {
   const allRoutes = useAtomValue(allRoutesAtom);
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
 
-  const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
+  const selectedTokenOrFiatAmount = useAtomValue(selectedTokenOrFiatAmountAtom);
   const swapResultToken = useAtomValue(swapResultTokenAtom);
   const lastMileToken = useAtomValue(lastMileTokenAtom);
   const lastMileTokenEstimate = useAtomValue(lastMileTokenEstimateAtom);
@@ -34,7 +34,6 @@ export const useChoosingRoutesAccordion = ({ estimateOutPut }: Props) => {
   const [selectedRoute, setSelectedRoute] = useAtom(selectedRouteAtom);
 
   const selectedToken = useAtomValue(selectedTokenAtom);
-  const swapResultTokenGlobal = useAtomValue(swapResultTokenAtom);
 
   const selectedRef = useRef<HTMLDivElement>(null);
 
@@ -57,8 +56,8 @@ export const useChoosingRoutesAccordion = ({ estimateOutPut }: Props) => {
   }, [selectedRoute]);
 
   const isSameToken = useMemo(() => {
-    return selectedToken?.id === swapResultTokenGlobal?.id;
-  }, [selectedToken, swapResultTokenGlobal]);
+    return selectedToken?.id === swapResultToken?.id && selectedRoute;
+  }, [selectedToken, swapResultToken, selectedRoute]);
 
   const defaultAccordionOpen = useMemo(() => {
     if (allRoutes)
@@ -134,10 +133,10 @@ export const useChoosingRoutesAccordion = ({ estimateOutPut }: Props) => {
       name: swapResultToken?.symbol || '',
       icon: swapResultToken?.logoUrl || '',
       chainIcon: swapResultToken?.logoUrl || '',
-      amount: truncateToDecimals(selectedTokenAmount || '0', 4),
+      amount: truncateToDecimals(selectedTokenOrFiatAmount || '0', 4),
       chainName: swapResultToken?.chain?.displayName || '',
     };
-  }, [swapResultToken, selectedTokenAmount]);
+  }, [swapResultToken, selectedTokenOrFiatAmount]);
 
   return {
     slippage,
