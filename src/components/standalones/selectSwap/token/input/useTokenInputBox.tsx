@@ -1,25 +1,36 @@
 import { useBitcoinWallet } from '@ant-design/web3-bitcoin';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useAtom, useAtomValue } from 'jotai';
-import { useEffect, useMemo, useState } from 'react';
+import { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import { formatUnits } from 'viem';
 import { useAccount } from 'wagmi';
 import { useSolana } from '../../../../../providers/useSolana';
 import {
-  selectedTokenAmountAtom,
+  selectedCurrencyAtom,
   selectedTokenAtom,
+  selectedTokenOrFiatAmountAtom,
   tokenFetchErrorAtom,
+  widgetModeAtom,
 } from '../../../../../store/stateStore';
 import { getEvmTokenBalance } from '../../../../../utils';
 
 export const useTokenInputBox = () => {
   const [balance, setBalance] = useState<string | undefined>(undefined);
 
+  const widgetMode = useAtomValue(widgetModeAtom);
   const selectedToken = useAtomValue(selectedTokenAtom);
+  const selectedCurrency = useAtomValue(selectedCurrencyAtom);
   const tokenFetchError = useAtomValue(tokenFetchErrorAtom);
-  const [selectedTokenAmount, setSelectedTokenAmount] = useAtom(
-    selectedTokenAmountAtom,
+
+  const [selectedTokenOrFiatAmount, setSelectedTokenOrFiatAmount] = useAtom(
+    selectedTokenOrFiatAmountAtom,
   );
+
+  const title = useMemo(() => {
+    return widgetMode === 'crypto'
+      ? 'Choose Your Deposit'
+      : 'Select Your Currency ';
+  }, [widgetMode]);
 
   const { publicKey } = useWallet();
   const { getSolanaTokenBalance, connection: solanaConnection } = useSolana();
@@ -67,7 +78,18 @@ export const useTokenInputBox = () => {
   };
 
   const maxButtonClick = async () => {
-    setSelectedTokenAmount(balance);
+    setSelectedTokenOrFiatAmount(balance);
+  };
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value.replace(',', '.');
+    const regex = /^\d*\.?\d*$/;
+    const isEmptyInput = inputValue === '';
+    const isOnlyNumberOrOneDot = new RegExp(regex, 'g').test(inputValue);
+
+    if (isEmptyInput || isOnlyNumberOrOneDot) {
+      setSelectedTokenOrFiatAmount(inputValue);
+    }
   };
 
   useEffect(() => {
@@ -75,15 +97,19 @@ export const useTokenInputBox = () => {
   }, [selectedToken, evmAddress, publicKey, bitcoinAccount, solanaConnection]);
 
   useEffect(() => {
-    if (selectedTokenAmount) {
-      setSelectedTokenAmount(selectedTokenAmount.toString());
+    if (selectedTokenOrFiatAmount) {
+      setSelectedTokenOrFiatAmount(selectedTokenOrFiatAmount.toString());
     }
-  }, [selectedTokenAmount]);
+  }, [selectedTokenOrFiatAmount]);
 
   return {
-    inToken: selectedToken,
-    inTokenAmount: selectedTokenAmount,
-    setInTokenAmount: setSelectedTokenAmount,
+    title,
+    widgetMode,
+    selectedToken,
+    selectedCurrency,
+    selectedTokenOrFiatAmount,
+    setSelectedTokenOrFiatAmount,
+    handleInputChange,
     tokenFetchError,
     maxButtonClick,
     balance,

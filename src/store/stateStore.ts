@@ -1,5 +1,8 @@
 import { AnyAlt, SupportedChain, SupportedToken } from '@anyalt/sdk';
-import { GetAllRoutesResponseItem } from '@anyalt/sdk/dist/adapter/api/api';
+import {
+  GetAllRoutesResponseItem,
+  SupportedFiat,
+} from '@anyalt/sdk/dist/adapter/api/api';
 import { atom } from 'jotai';
 import { EstimateResponse, Token, WidgetTemplateType } from '..';
 import {
@@ -13,7 +16,8 @@ export const anyaltInstanceAtom = atom<AnyAlt | undefined>(undefined);
  * Tokens
  */
 export const selectedTokenAtom = atom<SupportedToken | undefined>(undefined); //Token, which user selects
-export const selectedTokenAmountAtom = atom<string | undefined>('');
+export const selectedCurrencyAtom = atom<SupportedFiat | undefined>(undefined); //Currency, which user selects
+export const selectedTokenOrFiatAmountAtom = atom<string | undefined>('');
 export const swapResultTokenAtom = atom<SupportedToken | undefined>(undefined); // It's same as outputToken, which comes from props on AnyaltWidget
 export const lastMileTokenAtom = atom<Token | undefined>(undefined); //Token, which will be deposited
 export const lastMileTokenAmountAtom = atom<string>('');
@@ -54,6 +58,7 @@ export const transactionsProgressAtom = atom<TransactionsProgress>({
 // Widget configurations:
 export const widgetTemplateAtom = atom<WidgetTemplateType>('DEPOSIT_TOKEN');
 export const minDepositAmountAtom = atom<number>(0);
+export const widgetModeAtom = atom<'crypto' | 'fiat'>('crypto');
 
 export const swapDataAtom = atom<{
   swapIsFinished: boolean;

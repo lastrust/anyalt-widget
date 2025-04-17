@@ -4,15 +4,17 @@ import {
   FormControl,
   FormLabel,
   Icon,
-  Image,
   Input,
   InputGroup,
   InputLeftElement,
   Text,
 } from '@chakra-ui/react';
 
+import { SupportedFiat } from '@anyalt/sdk/dist/adapter/api/api';
 import { CloseIcon } from '../../../atoms/icons/modals/CloseIcon';
 import { SearchIcon } from '../../../atoms/icons/selectToken/SearchIcon';
+import { ChainButton } from './ChainButton';
+import { CurrenciesList } from './CurrencyList';
 import { TokenList } from './TokenList';
 import { useTokenSelectModal } from './useTokenSelectModal';
 
@@ -20,9 +22,15 @@ type Props = {
   isOpen: boolean;
   onClose: () => void;
   onTokenSelect: (token: SupportedToken) => void;
+  onCurrencySelect: (currency: SupportedFiat) => void;
 };
 
-export const TokenSelectModal = ({ isOpen, onClose, onTokenSelect }: Props) => {
+export const TokenSelectModal = ({
+  isOpen,
+  onClose,
+  onTokenSelect,
+  onCurrencySelect,
+}: Props) => {
   const {
     chains,
     isLoading,
@@ -30,6 +38,10 @@ export const TokenSelectModal = ({ isOpen, onClose, onTokenSelect }: Props) => {
     showAccept,
     customToken,
     activeChain,
+    currencies,
+    widgetMode,
+    labelText,
+    inputPlaceholder,
     setShowAccept,
     setActiveChain,
     isValidAddress,
@@ -56,11 +68,9 @@ export const TokenSelectModal = ({ isOpen, onClose, onTokenSelect }: Props) => {
         backdropFilter: 'blur(11px)',
       }}
       id="token-select-box-container"
-      onMouseMove={(e) => {
+      onMouseMove={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         if ((e.target as HTMLDivElement).id === 'token-select-box-container') {
           (e.target as HTMLDivElement).style.cursor = 'pointer';
-        } else {
-          // (e.target as HTMLDivElement).style.cursor = 'default';
         }
       }}
       onClick={(e: React.MouseEvent<HTMLDivElement>) => {
@@ -95,48 +105,27 @@ export const TokenSelectModal = ({ isOpen, onClose, onTokenSelect }: Props) => {
         >
           <Icon as={CloseIcon} color="brand.buttons.close.primary" />
         </Box>
-        <Box mb="16px">
-          <Text fontSize="20px" fontWeight="bold" mb="16px">
-            Select A Chain
-          </Text>
-          <Box display="flex" flexWrap="wrap" gap="6px" mb="12px">
-            {chains.map((chain) => (
-              <Box
-                key={chain.id}
-                display="flex"
-                flexDir="row"
-                alignItems="center"
-                gap="6px"
-                cursor="pointer!important"
-                padding="4px"
-                borderRadius="32px"
-                border="1px solid"
-                borderColor={
-                  activeChain?.id === chain.id
-                    ? 'brand.border.active'
-                    : 'brand.border.secondary'
-                }
-                bgColor="brand.primary"
-                width="fit-content"
-                onClick={() => setActiveChain(chain)}
-              >
-                <Image
-                  src={chain.logoUrl ?? ''}
-                  alt={chain.displayName ?? ''}
-                  width="24px"
-                  height="24px"
+        {widgetMode === 'crypto' && (
+          <Box mb="16px">
+            <Text fontSize="20px" fontWeight="bold" mb="16px">
+              Select A Chain
+            </Text>
+            <Box display="flex" flexWrap="wrap" gap="6px" mb="12px">
+              {chains.map((chain) => (
+                <ChainButton
+                  key={chain.id}
+                  chain={chain}
+                  activeChain={activeChain}
+                  setActiveChain={setActiveChain}
                 />
-                <Text fontSize="16px" color="brand.text.primary" opacity="0.6">
-                  {chain.displayName}
-                </Text>
-              </Box>
-            ))}
+              ))}
+            </Box>
           </Box>
-        </Box>
+        )}
 
         <FormControl>
           <FormLabel fontSize="20px" fontWeight="bold" mb="16px">
-            Select A Token Or Paste A Contract Address
+            {labelText}
           </FormLabel>
           <InputGroup
             borderRadius="32px"
@@ -159,22 +148,31 @@ export const TokenSelectModal = ({ isOpen, onClose, onTokenSelect }: Props) => {
               color="brand.text.primary"
               focusBorderColor="transparent"
               onChange={(e) => setSearchInputValue(e.target.value)}
-              placeholder="Type a token or enter the contract address"
+              placeholder={inputPlaceholder}
               _placeholder={{
                 color: 'brand.text.primary',
               }}
             />
           </InputGroup>
           <Box overflow="auto" maxH="210px" scrollBehavior="smooth">
-            <TokenList
-              isValidAddress={isValidAddress}
-              customToken={customToken}
-              showAccept={showAccept}
-              allTokens={allTokens}
-              setShowAccept={setShowAccept}
-              onTokenSelect={onTokenSelect}
-              isLoading={isLoading}
-            />
+            {widgetMode === 'crypto' ? (
+              <TokenList
+                isValidAddress={isValidAddress}
+                customToken={customToken}
+                showAccept={showAccept}
+                allTokens={allTokens}
+                setShowAccept={setShowAccept}
+                onTokenSelect={onTokenSelect}
+                isLoading={isLoading}
+              />
+            ) : (
+              <CurrenciesList
+                currencies={currencies}
+                isLoading={isLoading}
+                searchInputValue={searchInputValue}
+                onCurrencySelect={onCurrencySelect}
+              />
+            )}
           </Box>
         </FormControl>
       </Box>
