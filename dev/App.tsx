@@ -58,6 +58,16 @@ const aarnaToken: Token = {
   decimals: 18,
 };
 
+const baseETH: Token = {
+  symbol: "ETH",
+  address: "0x0000000000000000000000000000000000000000",
+  chainId: 8453,
+  chainType: ChainType.EVM,
+  logoUrl: "https://rango.vip/tokens/ALL/ETH.png",
+  name: "Ethereum",
+  decimals: 18,
+}
+
 const App = () => {
   const { isOpen, onOpen, onClose } = useModal();
   const isTokenBuyTemplate = true;

@@ -16,6 +16,7 @@ import {
   allRoutesAtom,
   anyaltInstanceAtom,
   lastMileTokenEstimateAtom,
+  pendingRouteAtom,
   selectedRouteAtom,
   selectedTokenAmountAtom,
   selectedTokenAtom,
@@ -64,6 +65,7 @@ export const useFetchRoutes = ({
   const slippage = useAtomValue(slippageAtom);
 
   const [, setAllRoutes] = useAtom(allRoutesAtom);
+  const pendingRoute = useAtomValue(pendingRouteAtom);
   const [selectedRoute, setSelectedRoute] = useAtom(selectedRouteAtom);
 
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
@@ -188,12 +190,19 @@ export const useFetchRoutes = ({
     });
 
     if (isEnoughDepositTokens && selectedRoute) {
+      // console.debug('~selected', selectedRoute, slippage, minDepositAmount);
+      console.debug('~selectedRoute', selectedRoute);
+      console.debug('~slippage', slippage);
+      console.debug('~minDepositAmount', minDepositAmount);
       const { humanReadable: worstCaseOutput } = calculateWorstOutput(
         selectedRoute,
         slippage,
       );
 
-      if (parseFloat(worstCaseOutput) < minDepositAmount) {
+      if (
+        !isNaN(parseFloat(worstCaseOutput)) &&
+        parseFloat(worstCaseOutput) < minDepositAmount
+      ) {
         setIsEnoughDepositTokens(false);
         setTokenFetchError({
           isError: true,
@@ -316,16 +325,19 @@ export const useFetchRoutes = ({
   }, [selectedToken, swapResultTokenGlobal, selectedTokenAmount]);
 
   useEffect(() => {
-    if (selectedRoute) {
+    if (selectedRoute || pendingRoute) {
       const token = {
         ...swapResultToken,
-        amount: selectedRoute.outputAmount.toString(),
+        amount: selectedRoute
+          ? selectedRoute!.outputAmount.toString()
+          : pendingRoute!.swapSteps[pendingRoute!.swapSteps.length - 1]
+              .quotePayout,
       };
       estimateCallback(token).then((res) => {
         setLastMileTokenEstimate(res);
       });
     }
-  }, [selectedRoute]);
+  }, [selectedRoute, pendingRoute]);
 
   const estimateOutPut = useCallback(
     async (route: GetAllRoutesResponseItem) => {

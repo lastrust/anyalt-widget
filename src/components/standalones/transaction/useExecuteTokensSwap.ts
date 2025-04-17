@@ -167,6 +167,7 @@ export const useExecuteTokensSwap = (
           txHash: txHash,
           nonce: nonce,
           signerAddress: signerAddress,
+          slippage: transactionType === 'MAIN' ? slippage : null,
         });
 
         updateTransactionProgress({

@@ -39,6 +39,7 @@ export interface TransactionProgress {
 export interface TransactionGroup {
   approve?: TransactionProgress;
   swap?: TransactionProgress;
+  outbound?: TransactionProgress;
 }
 
 export type TransactionStatusList = {

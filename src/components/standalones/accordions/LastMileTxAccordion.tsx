@@ -116,7 +116,8 @@ export const LastMileTxAccordion = ({
               amount: truncateToDecimals(
                 route.swapSteps.length === 0
                   ? selectedTokenAmount || '0'
-                  : route.swapSteps[route.swapSteps.length - 1]?.payout || '0',
+                  : route.swapSteps[route.swapSteps.length - 1]?.quotePayout ||
+                      '0',
                 3,
               ),
               tokenLogo: swapResultToken?.logoUrl || '',

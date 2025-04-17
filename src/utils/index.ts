@@ -61,6 +61,7 @@ export const calculateWorstOutput = (
     route.swapSteps[route.swapSteps.length - 1].destinationToken.decimals;
 
   const outputAmountFloat = parseFloat(route.outputAmount);
+  if (isNaN(outputAmountFloat)) return { humanReadable: '', raw: NaN };
   const outputAmountBigInt = ethers.parseUnits(
     outputAmountFloat.toFixed(decimals),
     decimals,

@@ -6,13 +6,7 @@ export const submitPendingTransaction = async (
   request: PendingTransactionRequestDto,
 ) => {
   try {
-    await aaInstance.submitPendingTransaction({
-      operationId: request.operationId,
-      type: request.type,
-      txHash: request.txHash,
-      nonce: request.nonce,
-      signerAddress: request.signerAddress,
-    });
+    await aaInstance.submitPendingTransaction(request);
     console.log('Pending transaction submitted:', request);
   } catch (error) {
     console.error('Error submitting pending transaction:', error);
