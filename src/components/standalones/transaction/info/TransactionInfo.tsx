@@ -134,12 +134,13 @@ export const TransactionInfo: FC<Props> = ({
               />
             )}
           </VStack>
-          <HStack
-            onClick={() => setIsPaymentMethodModalOpen(true)}
-            cursor={'pointer'}
-            w={'100%'}
-            justifyContent={'space-between'}
-            borderRadius={'8px'}
+          {isOnramperStep && (
+            <HStack
+              onClick={() => setIsPaymentMethodModalOpen(true)}
+              cursor={'pointer'}
+              w={'100%'}
+              justifyContent={'space-between'}
+              borderRadius={'8px'}
             bgColor={'brand.bg.cardBg'}
             p="8px"
           >
@@ -176,8 +177,9 @@ export const TransactionInfo: FC<Props> = ({
                 stroke-linecap="round"
                 stroke-linejoin="round"
               />
-            </svg>
-          </HStack>
+              </svg>
+            </HStack>
+          )}
         </VStack>
         <VStack w="100%" alignItems={'center'} gap={'16px'}>
           <CustomButton
