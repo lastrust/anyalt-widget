@@ -44,6 +44,7 @@ export const showPendingRouteDialogAtom = atom<boolean>(false);
 // Transaction informations:
 export const slippageAtom = atom<string>('3');
 export const activeOperationIdAtom = atom<string | undefined>(undefined);
+export const onramperOperationIdAtom = atom<string | undefined>(undefined);
 export const transactionIndexAtom = atom<number>(1); // Recent index of transactions
 export const transactionsListAtom = atom<TransactionStatusList | undefined>( // List of transactions to show on transactions screen
   undefined,

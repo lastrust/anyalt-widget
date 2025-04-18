@@ -8,8 +8,8 @@ type Props = {
   headerText: string;
   tokenName: string;
   tokenLogo: string;
-  chainName: string;
-  chainLogo: string;
+  chainName?: string;
+  chainLogo?: string;
   amount: string;
   price: string;
 } & BoxProps;
@@ -51,13 +51,15 @@ export const TokenQuoteBox: FC<Props> = ({
           <TokenIconBox
             tokenName={tokenName}
             tokenIcon={tokenLogo}
-            chainName={chainName}
-            chainIcon={chainLogo}
+            chainName={chainName || ''}
+            chainIcon={chainLogo || ''}
             mr="8px"
           />
           <TokenInfoBox
             tokenName={tokenName}
-            subText={`On ${chainName}`}
+            subText={
+              chainName ? (chainLogo ? `On ${chainName}` : chainName) : ''
+            }
             mr="12px"
           />
         </Box>
