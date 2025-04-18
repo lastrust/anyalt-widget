@@ -11,8 +11,8 @@ import { CustomButton } from '../../../atoms/buttons/CustomButton';
 import { ChevronDownIcon } from '../../../atoms/icons/transaction/ChevronDownIcon';
 import { CrossChainWarningCard } from '../../../molecules/card/CrossChainWarning';
 import { TransactionInfoCard } from '../../../molecules/card/TransactionInfoCard';
-import { TokenQuoteBox } from '../../selectSwap/token/quote/TokenQuoteBox';
 import { ProgressList } from '../ProgressList';
+import { TokenBox } from './TokenBox';
 import { useTransactionInfo } from './useTransactionInfo';
 
 type Props = {
@@ -21,6 +21,20 @@ type Props = {
   executeCallBack: (amount: Token) => Promise<ExecuteResponse>;
   estimateCallback: (token: Token) => Promise<EstimateResponse>;
 };
+
+const SepartionBlock = () => (
+  <Box position="relative" w="100%">
+    <Divider w="100%" h="1px" bgColor="brand.bg.primary" />
+    <Center
+      position="absolute"
+      top="50%"
+      left="50%"
+      transform="translate(-50%, -50%)"
+    >
+      <ChevronDownIcon />
+    </Center>
+  </Box>
+);
 
 export const TransactionInfo: FC<Props> = ({
   externalEvmWalletConnector,
@@ -85,91 +99,25 @@ export const TransactionInfo: FC<Props> = ({
           borderWidth={'1px'}
           borderColor={'brand.border.primary'}
         >
-          {selectedRoute?.swapSteps &&
-            (selectedRoute?.swapSteps?.length > 0 ? (
-              <TokenQuoteBox
-                loading={false}
-                headerText=""
-                tokenName={recentTransaction?.from.tokenName || ''}
-                tokenLogo={recentTransaction?.from.tokenLogo || ''}
-                chainName={recentTransaction?.from.blockchain || ''}
-                chainLogo={recentTransaction?.from.blockchainLogo || ''}
-                amount={Number(recentTransaction?.from.tokenAmount).toFixed(5)}
-                price={(
-                  Number(recentTransaction?.from.tokenUsdPrice) *
-                  Number(recentTransaction?.from.tokenAmount)
-                ).toFixed(2)}
-                w={'100%'}
-                p={'0'}
-                m={'0'}
-              />
-            ) : (
-              <TokenQuoteBox
-                loading={false}
-                headerText=""
-                tokenName={protocolInputToken?.symbol || ''}
-                tokenLogo={protocolInputToken?.logoUrl || ''}
-                chainName={protocolInputToken?.chain?.displayName || ''}
-                chainLogo={protocolInputToken?.chain?.logoUrl || ''}
-                amount={Number(inTokenAmount ?? 0).toFixed(4)}
-                price={'0.00'}
-                w={'100%'}
-                p={'0'}
-                m={'0'}
-              />
-            ))}
-
-          <Box position="relative" w="100%">
-            <Divider w="100%" h="1px" bgColor="brand.bg.primary" />
-            <Center
-              position="absolute"
-              top="50%"
-              left="50%"
-              transform="translate(-50%, -50%)"
-            >
-              <ChevronDownIcon />
-            </Center>
-          </Box>
-
-          {selectedRoute?.swapSteps &&
-            (selectedRoute.swapSteps.length > 0 ? (
-              <TokenQuoteBox
-                loading={false}
-                headerText=""
-                tokenName={recentTransaction?.to.tokenName || ''}
-                tokenLogo={recentTransaction?.to.tokenLogo || ''}
-                chainName={recentTransaction?.to.blockchain || ''}
-                chainLogo={recentTransaction?.to.blockchainLogo || ''}
-                amount={truncateToDecimals(
-                  recentTransaction?.to.tokenAmount || '',
-                  4,
-                )}
-                price={(
-                  Number(recentTransaction?.to.tokenUsdPrice) *
-                  Number(recentTransaction?.to.tokenAmount)
-                ).toFixed(2)}
-                w={'100%'}
-                p={'0'}
-                m={'0'}
-              />
-            ) : (
-              <TokenQuoteBox
-                loading={false}
-                headerText=""
-                tokenName={protocolFinalToken?.symbol || ''}
-                tokenLogo={protocolFinalToken?.logoUrl || ''}
-                chainName={protocolInputToken?.chain?.displayName || ''}
-                chainLogo={protocolInputToken?.chain?.logoUrl || ''}
-                amount={truncateToDecimals(
-                  finalTokenEstimate?.amountOut || '',
-                  4,
-                )}
-                price={finalTokenEstimate?.priceInUSD || '0.00'}
-                w={'100%'}
-                p={'0'}
-                m={'0'}
-              />
-            ))}
+          <TokenBox
+            selectedRoute={selectedRoute}
+            recentTransactionItem={recentTransaction?.from}
+            protocolInputToken={protocolInputToken}
+            tokenName={protocolInputToken?.symbol || ''}
+            tokenLogo={protocolInputToken?.logoUrl || ''}
+            amount={Number(inTokenAmount ?? 0).toFixed(4)}
+            price={'0.00'}
+          />
+          <SepartionBlock />
+          <TokenBox
+            selectedRoute={selectedRoute}
+            recentTransactionItem={recentTransaction?.to}
+            protocolInputToken={protocolInputToken}
+            tokenName={protocolFinalToken?.symbol || ''}
+            tokenLogo={protocolFinalToken?.logoUrl || ''}
+            amount={truncateToDecimals(finalTokenEstimate?.amountOut || '', 4)}
+            price={finalTokenEstimate?.priceInUSD || '0.00'}
+          />
         </VStack>
       </VStack>
       <VStack w="100%" alignItems={'center'} gap={'16px'}>
