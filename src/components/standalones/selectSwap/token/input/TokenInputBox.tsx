@@ -120,7 +120,7 @@ export const TokenInputBox = ({
           <Text color="brand.text.primary" fontSize="12px" opacity={0.4}>
             {(selectedToken?.name ?? widgetMode === 'crypto')
               ? 'Token'
-              : 'Currency'}
+              : `${selectedCurrency?.name}`}
           </Text>
           {loading ? (
             <Skeleton width="34px" height="14px" borderRadius="32px" />
