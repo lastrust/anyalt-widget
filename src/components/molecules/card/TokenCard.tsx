@@ -27,7 +27,7 @@ export const TokenCard = ({
       <VStack alignItems={'flex-start'} gap={'4px'}>
         <Text textStyle={'bold.1'}>{amount}</Text>
         <Text textStyle={'regular.3'} color="brand.text.secondary.2">
-          {tokenName} On {chainName}
+          {tokenName} {chainName ? `On ${chainName}` : ''}
         </Text>
       </VStack>
     </HStack>

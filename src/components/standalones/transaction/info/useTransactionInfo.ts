@@ -19,6 +19,7 @@ import {
   transactionIndexAtom,
   transactionsListAtom,
   transactionsProgressAtom,
+  widgetModeAtom,
 } from '../../../../store/stateStore';
 import { TransactionProgress } from '../../../../types/transaction';
 import { useStuckTransaction } from '../../../screens/stuckTransactionDialog/useStuckTransaction';
@@ -44,6 +45,7 @@ export const useTransactionInfo = ({
     showStuckTransactionDialogAtom,
   );
   const slippage = useAtomValue(slippageAtom);
+  const widgetMode = useAtomValue(widgetModeAtom);
   const selectedRoute = useAtomValue(selectedRouteAtom);
   const currentStep = useAtomValue(transactionIndexAtom);
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
@@ -69,6 +71,10 @@ export const useTransactionInfo = ({
   }, [selectedRoute, currentStep]);
 
   const headerText = useMemo(() => {
+    if (widgetMode === 'fiat' && currentStep === 1) {
+      return 'Converting fiat to base L1 token';
+    }
+
     const isSwaps = selectedRoute?.swapSteps?.length;
 
     const swapperType = isBridgeSwap ? 'Bridge' : 'Swap';

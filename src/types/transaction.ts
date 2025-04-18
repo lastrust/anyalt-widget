@@ -41,29 +41,24 @@ export interface TransactionGroup {
   swap?: TransactionProgress;
 }
 
+export type TransactionListToken = {
+  tokenName: string;
+  tokenLogo: string;
+  tokenAmount: string;
+  tokenPrice: string;
+  tokenUsdPrice: string;
+  tokenDecimals: number;
+  blockchain: string;
+  blockchainLogo: string;
+};
+
+export type TransactionListGroup = {
+  from: TransactionListToken;
+  to: TransactionListToken;
+};
+
 export type TransactionStatusList = {
-  steps?: {
-    from: {
-      tokenName: string;
-      tokenLogo: string;
-      tokenAmount: string;
-      tokenPrice: string;
-      tokenUsdPrice: string;
-      tokenDecimals: number;
-      blockchain: string;
-      blockchainLogo: string;
-    };
-    to: {
-      tokenName: string;
-      tokenLogo: string;
-      tokenAmount: string;
-      tokenPrice: string;
-      tokenUsdPrice: string;
-      tokenDecimals: number;
-      blockchain: string;
-      blockchainLogo: string;
-    };
-  }[];
+  steps?: TransactionListGroup[];
 };
 
 export interface TransactionsProgress {

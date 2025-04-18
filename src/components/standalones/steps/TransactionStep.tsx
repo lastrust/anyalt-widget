@@ -37,6 +37,7 @@ export const TransactionStep = ({
         maxH={'520px'}
         overflow={'scroll'}
         onBackClick={onBackClick}
+        isPaymentModalActive
       >
         <TransactionInfo
           externalEvmWalletConnector={walletConnector}

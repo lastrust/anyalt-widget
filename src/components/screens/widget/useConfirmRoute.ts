@@ -7,8 +7,11 @@ import {
   activeOperationIdAtom,
   activeOperationsListAtom,
   anyaltInstanceAtom,
+  onramperOperationIdAtom,
   selectedRouteAtom,
+  selectedTokenOrFiatAmountAtom,
   transactionsProgressAtom,
+  widgetModeAtom,
 } from '../../../store/stateStore';
 
 type UseConfirmRouteProps = {
@@ -45,8 +48,11 @@ export const useConfirmRoute = ({
     activeOperationsListAtom,
   );
 
+  const widgetMode = useAtomValue(widgetModeAtom);
   const [, setActiveOperationId] = useAtom(activeOperationIdAtom);
+  const [, setOnramperOperationId] = useAtom(onramperOperationIdAtom);
   const setTransactionsProgress = useSetAtom(transactionsProgressAtom);
+  const selectedTokenOrFiatAmount = useAtomValue(selectedTokenOrFiatAmountAtom);
 
   const getActiveRouteIdByOperationId = (
     operationId: string | undefined,
@@ -185,8 +191,29 @@ export const useConfirmRoute = ({
     }
   };
 
+  const createOnramperOperation = async () => {
+    const res = await anyaltInstance?.createOperationAndOnramperOperation({
+      fiatId: selectedRoute?.fiatStep?.fiat.id || '',
+      fiatBridgeTokenId: selectedRoute?.fiatStep?.middleToken.id || '',
+      fiatInputAmount: selectedTokenOrFiatAmount || '',
+    });
+    if (!res?.operationId)
+      throw new Error('Failed to create onramper operation');
+
+    setActiveOperationId(res?.operationId);
+    setOnramperOperationId(res?.onramperOperationId);
+    return {
+      operationId: res?.operationId,
+      onramperOperationId: res?.onramperOperationId,
+    };
+  };
+
   const goToTransactionScreen = async () => {
-    await confirmRoute();
+    if (widgetMode === 'fiat') {
+      await createOnramperOperation();
+    } else {
+      await confirmRoute();
+    }
     connectWalletsClose();
     setActiveStep(2);
   };

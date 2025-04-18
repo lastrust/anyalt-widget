@@ -12,6 +12,7 @@ import {
 import { ConfigIcon } from '../atoms/icons/selectToken/ConfigIcon';
 import { BackButton } from '../molecules/buttons/BackButton';
 import { CrossChainWarningCard } from '../molecules/card/CrossChainWarning';
+import { PaymentMethodModal } from '../standalones/modals/PaymentMethodModal';
 import { WidgetMode } from '../standalones/widgetMode/WidgetMode';
 
 type Props = {
@@ -23,6 +24,7 @@ type Props = {
   enableWidgetMode?: boolean;
   onConfigClick?: () => void;
   onBackClick?: () => void;
+  isPaymentModalActive?: boolean;
   children: React.ReactNode;
 } & BoxProps;
 
@@ -36,6 +38,7 @@ export const SwappingTemplate = ({
   onConfigClick,
   onBackClick,
   withDisclaimer = false,
+  isPaymentModalActive = false,
   ...props
 }: Props) => {
   return (
@@ -48,6 +51,7 @@ export const SwappingTemplate = ({
       margin="24px 0px 16px"
       alignItems={'flex-start'}
       borderColor="brand.border.primary"
+      pos={isPaymentModalActive ? 'relative' : 'unset'}
       {...props}
     >
       {title && (
@@ -121,6 +125,7 @@ export const SwappingTemplate = ({
       <Box w={'100%'} h={'100%'}>
         {children}
       </Box>
+      {isPaymentModalActive && <PaymentMethodModal />}
     </VStack>
   );
 };

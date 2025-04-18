@@ -94,7 +94,7 @@ export const TokenOrCurrencySelect = ({
         />
       ) : (
         <TokenInfoBox
-          tokenName={selectedCurrency?.name ?? placeholders.tokenTitle}
+          tokenName={selectedCurrency?.code ?? placeholders.tokenTitle}
           subText={placeholders.chainTitle}
           mr="12px"
         />

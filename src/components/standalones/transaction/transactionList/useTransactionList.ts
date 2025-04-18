@@ -82,6 +82,21 @@ export const useTransactionList = ({ operationType }: Props) => {
     const sourceOfInfo =
       operationType === 'CURRENT' ? selectedRoute : pendingRoute;
 
+    if (selectedRoute?.fiatStep && currentStep === 1) {
+      return {
+        name: selectedRoute.fiatStep.fiat.name || '',
+        contractAddress: '',
+        symbol: selectedRoute.fiatStep.fiat.code || '',
+        logo: selectedRoute.fiatStep.fiat.logo || '',
+        blockchain: '',
+        amount: Number(selectedTokenOrFiatAmount).toFixed(4) || '',
+        blockchainLogo: '',
+        decimals: 0,
+        tokenUsdPrice: 0,
+        chainType: ChainType.EVM,
+      };
+    }
+
     if (!sourceOfInfo || sourceOfInfo?.swapSteps.length === 0) {
       const chainType = selectedToken?.chainName
         ? mapBlockchainToChainType(selectedToken?.chainName)
