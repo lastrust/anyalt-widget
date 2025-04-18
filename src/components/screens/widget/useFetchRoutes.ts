@@ -271,7 +271,7 @@ export const useFetchRoutes = ({
       widgetMode === 'crypto'
     ) {
       setTokenFetchError({
-        isError: true,  
+        isError: true,
         errorMessage: `You don't have enough tokens in your wallet.`,
       });
     }
