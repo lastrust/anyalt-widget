@@ -102,7 +102,12 @@ export const TransactionInfo: FC<Props> = ({
                 transactionsProgress={transactionsProgress}
                 index={currentStep - 1}
               />
-              <TransactionInfoCard estimatedTime={estimatedTime} fees={fees} />
+              {!isOnramperStep && (
+                <TransactionInfoCard
+                  estimatedTime={estimatedTime}
+                  fees={fees}
+                />
+              )}
             </VStack>
           </Box>
 
