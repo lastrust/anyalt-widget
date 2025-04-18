@@ -18,7 +18,9 @@ export const PaymentMethodModal = () => {
   const [paymentMethods, setPaymentMethods] = useState<
     SupportedPaymentType[] | undefined
   >(undefined);
-  const [, setChoosenFiatPaymentMethod] = useAtom(choosenFiatPaymentAtom);
+  const [choosenFiatPayment, setChoosenFiatPayment] = useAtom(
+    choosenFiatPaymentAtom,
+  );
 
   useEffect(() => {
     const getPaymentMethods = async () => {
@@ -27,6 +29,9 @@ export const PaymentMethodModal = () => {
         tokenId: 'bnb_bsc',
       });
       setPaymentMethods(res?.paymentTypes);
+      if (!choosenFiatPayment) {
+        setChoosenFiatPayment(res?.paymentTypes[0]);
+      }
     };
     getPaymentMethods();
   }, [anyaltInstance, selectedRoute, isOpen]);
@@ -95,7 +100,7 @@ export const PaymentMethodModal = () => {
                 borderRadius="8px"
                 p="12px 8px"
                 onClick={() => {
-                  setChoosenFiatPaymentMethod(paymentMethod);
+                  setChoosenFiatPayment(paymentMethod);
                   setIsOpen(false);
                 }}
               >
