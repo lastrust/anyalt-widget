@@ -368,8 +368,6 @@ export const useFetchRoutes = ({
     )
       setLoading(true);
 
-    console.log('called');
-
     const debounceTimeout = setTimeout(() => {
       if (selectedTokenOrFiatAmount && selectedCurrency) {
         onGetRoutes(false);

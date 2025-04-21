@@ -11,6 +11,6 @@
     "declaration": true,
     "resolveJsonModule": true
   },
-  "include": ["src", "src/types", "package.json"],
+  "include": ["src", "src/types", "package.json", "src/components/standalones/modals/ChooseOnrampModal.tsx"],
   "exclude": ["node_modules", "dist", "dev"]
 }

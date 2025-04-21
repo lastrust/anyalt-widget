@@ -2,6 +2,7 @@ import { AnyAlt, SupportedChain, SupportedToken } from '@anyalt/sdk';
 import {
   GetAllRoutesResponseItem,
   SupportedFiat,
+  SupportedOnramperQuote,
   SupportedPaymentType,
 } from '@anyalt/sdk/dist/adapter/api/api';
 import { atom } from 'jotai';
@@ -49,7 +50,12 @@ export const onramperOperationIdAtom = atom<string | undefined>(undefined);
 export const choosenFiatPaymentAtom = atom<SupportedPaymentType | undefined>(
   undefined,
 );
+export const choosenOnrampPaymentAtom = atom<
+  SupportedOnramperQuote | undefined
+>(undefined);
+
 export const isPaymentMethodModalOpenAtom = atom<boolean>(false);
+export const isChooseOnrampModalOpenAtom = atom<boolean>(false);
 export const transactionIndexAtom = atom<number>(1); // Recent index of transactions
 export const transactionsListAtom = atom<TransactionStatusList | undefined>( // List of transactions to show on transactions screen
   undefined,

@@ -12,6 +12,7 @@ import {
 import { ConfigIcon } from '../atoms/icons/selectToken/ConfigIcon';
 import { BackButton } from '../molecules/buttons/BackButton';
 import { CrossChainWarningCard } from '../molecules/card/CrossChainWarning';
+import { ChooseOnrampModal } from '../standalones/modals/ChooseOnrampModal';
 import { PaymentMethodModal } from '../standalones/modals/PaymentMethodModal';
 import { WidgetMode } from '../standalones/widgetMode/WidgetMode';
 
@@ -125,7 +126,12 @@ export const SwappingTemplate = ({
       <Box w={'100%'} h={'100%'}>
         {children}
       </Box>
-      {isPaymentModalActive && <PaymentMethodModal />}
+      {isPaymentModalActive && (
+        <>
+          <ChooseOnrampModal />
+          <PaymentMethodModal />
+        </>
+      )}
     </VStack>
   );
 };
