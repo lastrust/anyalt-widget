@@ -35,7 +35,7 @@ export const TransactionInfoCard = ({
       )}
       <HStack>
         <GasIcon />
-        <Text color={'brand.text.secondary.2'} textStyle={'regular.1'}>
+        <Text color={'brand.text.secondary.2'} textStyle={'regular.2'}>
           {isOnramperStep ? 'Transaction Cost: $' : '$'} {fees}
         </Text>
       </HStack>

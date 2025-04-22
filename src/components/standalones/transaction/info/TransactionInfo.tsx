@@ -73,31 +73,17 @@ export const TransactionInfo: FC<Props> = ({
     recentTransaction,
     finalTokenEstimate,
     transactionsProgress,
+    setIsPaymentMethodModalOpen,
+    choosenFiatPaymentMethod,
+    isPaymentMethodLoading,
+    isOnramperStep,
+    onrampFees,
   } = useTransactionInfo({
     externalEvmWalletConnector,
     onTxComplete,
     executeCallBack,
     estimateCallback,
   });
-
-  const isOnramperStep = useMemo(() => {
-    return selectedRoute?.fiatStep && currentStep === 1;
-  }, [selectedRoute, currentStep]);
-
-  const [, setIsPaymentMethodModalOpen] = useAtom(isPaymentMethodModalOpenAtom);
-  const choosenFiatPaymentMethod = useAtomValue(choosenFiatPaymentAtom);
-  const isPaymentMethodLoading = useAtomValue(isPaymentMethodLoadingAtom);
-  const choosenOnrampPayment = useAtomValue(choosenOnrampPaymentAtom);
-
-  const onrampFees = useMemo(() => {
-    console.log(choosenOnrampPayment);
-    return (
-      String(
-        Number(choosenOnrampPayment?.networkFee) +
-          Number(choosenOnrampPayment?.transactionFee),
-      ) || ''
-    );
-  }, [choosenOnrampPayment]);
 
   return (
     <>
@@ -195,7 +181,9 @@ export const TransactionInfo: FC<Props> = ({
             isDisabled={isLoading}
             onButtonClick={runTx}
           >
-            Execute Transaction
+            {isOnramperStep
+              ? `Buy ${selectedRoute?.fiatStep?.middleToken.symbol}`
+              : 'Execute Transaction'}
           </CustomButton>
           <Text textDecoration={'underline'} color="#999" cursor={'pointer'}>
             Cancel Transaction

@@ -46,7 +46,7 @@ export const SwappingTemplate = ({
     <VStack
       w="100%"
       p="24px"
-      gap="16px"
+      gap="12px"
       borderWidth="1px"
       borderRadius="12px"
       margin="24px 0px 16px"
