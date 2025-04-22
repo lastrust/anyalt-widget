@@ -7,20 +7,13 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
-import { useAtom, useAtomValue } from 'jotai';
-import { FC, useMemo } from 'react';
+import { FC } from 'react';
 import {
   EstimateResponse,
   ExecuteResponse,
   Token,
   WalletConnector,
 } from '../../../..';
-import {
-  choosenFiatPaymentAtom,
-  choosenOnrampPaymentAtom,
-  isPaymentMethodLoadingAtom,
-  isPaymentMethodModalOpenAtom,
-} from '../../../../store/stateStore';
 import { CustomButton } from '../../../atoms/buttons/CustomButton';
 import { ArrowIcon } from '../../../atoms/icons/payments/ArrowIcon';
 import { CardIcon } from '../../../atoms/icons/payments/CardIcon';
