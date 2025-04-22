@@ -51,40 +51,36 @@ export const useTransactionInfo = ({
   const slippage = useAtomValue(slippageAtom);
   const widgetMode = useAtomValue(widgetModeAtom);
   const selectedRoute = useAtomValue(selectedRouteAtom);
-  const transactionIndex = useAtomValue(transactionIndexAtom);
-  const anyaltInstance = useAtomValue(anyaltInstanceAtom);
-  const activeOperationId = useAtomValue(activeOperationIdAtom);
-  const transactionsList = useAtomValue(transactionsListAtom);
-  const selectedTokenOrFiatAmount = useAtomValue(selectedTokenOrFiatAmountAtom);
-  const swapResultToken = useAtomValue(swapResultTokenAtom);
   const lastMileToken = useAtomValue(lastMileTokenAtom);
+  const anyaltInstance = useAtomValue(anyaltInstanceAtom);
+  const swapResultToken = useAtomValue(swapResultTokenAtom);
+  const transactionsList = useAtomValue(transactionsListAtom);
+  const transactionIndex = useAtomValue(transactionIndexAtom);
+  const activeOperationId = useAtomValue(activeOperationIdAtom);
+  const choosenOnrampPayment = useAtomValue(choosenOnrampPaymentAtom);
   const lastMileTokenEstimate = useAtomValue(lastMileTokenEstimateAtom);
-  const [, setIsPaymentMethodModalOpen] = useAtom(isPaymentMethodModalOpenAtom);
   const choosenFiatPaymentMethod = useAtomValue(choosenFiatPaymentAtom);
   const isPaymentMethodLoading = useAtomValue(isPaymentMethodLoadingAtom);
-  const choosenOnrampPayment = useAtomValue(choosenOnrampPaymentAtom);
-
+  const selectedTokenOrFiatAmount = useAtomValue(selectedTokenOrFiatAmountAtom);
+  const [, setIsPaymentMethodModalOpen] = useAtom(isPaymentMethodModalOpenAtom);
   const [transactionsProgress, setTransactionsProgress] = useAtom(
     transactionsProgressAtom,
   );
+
+  const { executeSwap } = useHandleSwap(externalEvmWalletConnector);
+  const { keepPollingOnTxStuck } = useStuckTransaction();
 
   const isOnramperStep = useMemo(() => {
     return selectedRoute?.fiatStep && transactionIndex === 1;
   }, [selectedRoute, transactionIndex]);
 
   const onrampFees = useMemo(() => {
-    console.log(choosenOnrampPayment);
-    return (
-      String(
-        Number(choosenOnrampPayment?.networkFee) +
-          Number(choosenOnrampPayment?.transactionFee),
-      ) || ''
-    );
+    const totalFees =
+      Number(choosenOnrampPayment?.networkFee) +
+      Number(choosenOnrampPayment?.transactionFee);
+
+    return isNaN(totalFees) ? '0' : String(totalFees);
   }, [choosenOnrampPayment]);
-
-  const { executeSwap } = useHandleSwap(externalEvmWalletConnector);
-
-  const { keepPollingOnTxStuck } = useStuckTransaction();
 
   const isBridgeSwap = useMemo(() => {
     return (

@@ -92,13 +92,10 @@ export const TransactionInfo: FC<Props> = ({
                 </Text>
                 <CrossChainWarningCard />
               </HStack>
-              {transactionsProgress?.length && (
-                <ProgressList
-                  transactionsProgress={transactionsProgress}
-                  index={currentStep - 1}
-                />
-              )}
-
+              <ProgressList
+                transactionsProgress={transactionsProgress}
+                index={currentStep - 1}
+              />
               <TransactionInfoCard
                 isOnramperStep={isOnramperStep || false}
                 estimatedTime={estimatedTime}
