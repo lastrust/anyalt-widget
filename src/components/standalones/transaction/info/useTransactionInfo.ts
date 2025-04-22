@@ -69,7 +69,7 @@ export const useTransactionInfo = ({
   );
 
   const { executeSwap } = useHandleSwap(externalEvmWalletConnector);
-  const { handleFiatTransaction } = useHadleFiatTx();
+  const { executeFiatTransaction } = useHadleFiatTx();
   const { keepPollingOnTxStuck } = useStuckTransaction();
 
   const isOnramperStep = useMemo(() => {
@@ -126,18 +126,18 @@ export const useTransactionInfo = ({
       if (!anyaltInstance || !activeOperationId) return;
 
       if (widgetMode === 'fiat' && transactionIndex === 1) {
-        await handleFiatTransaction();
-      } else {
-        await executeSwap(
-          anyaltInstance,
-          activeOperationId,
-          slippage,
-          (selectedRoute?.swapSteps ?? []).length,
-          executeCallBack,
-          estimateCallback,
-          higherGasCost,
-        );
+        await executeFiatTransaction();
       }
+
+      await executeSwap(
+        anyaltInstance,
+        activeOperationId,
+        slippage,
+        (selectedRoute?.swapSteps ?? []).length,
+        executeCallBack,
+        estimateCallback,
+        higherGasCost,
+      );
 
       onTxComplete();
     } catch (error) {

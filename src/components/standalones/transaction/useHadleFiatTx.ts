@@ -1,39 +1,48 @@
 import { useAtomValue } from 'jotai';
 import { useAccount } from 'wagmi';
 import {
-  activeOperationIdAtom,
   anyaltInstanceAtom,
   choosenFiatPaymentAtom,
   choosenOnrampPaymentAtom,
+  onramperOperationIdAtom,
   selectedTokenOrFiatAmountAtom,
 } from '../../../store/stateStore';
 
 export const useHadleFiatTx = () => {
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
-  const activeOperationId = useAtomValue(activeOperationIdAtom);
+  const onramperOperationId = useAtomValue(onramperOperationIdAtom);
   const choosenFiatPaymentMethod = useAtomValue(choosenFiatPaymentAtom);
   const selectedTokenOrFiatAmount = useAtomValue(selectedTokenOrFiatAmountAtom);
   const choosenOnrampPayment = useAtomValue(choosenOnrampPaymentAtom);
 
   const { address: evmAddress } = useAccount();
 
-  const handleFiatTransaction = async () => {
+//   const waitUntilTxIsConfirmed = async (tx: any) => {
+//     const txHash = tx.transactionHash;
+//     const txReceipt = await anyaltInstance?.getTransactionReceipt(txHash);
+//     return txReceipt?.status === 'success';
+//   };
+
+  const executeFiatTransaction = async () => {
     try {
-      if (!anyaltInstance || !evmAddress) return;
+      if (!anyaltInstance || !evmAddress || !onramperOperationId) return;
 
       const tx = await anyaltInstance.createTransaction({
-        onramperOperationId: activeOperationId || '',
+        onramperOperationId: onramperOperationId || '',
         onramp: choosenOnrampPayment?.ramp || '',
         paymentMethod: choosenFiatPaymentMethod?.paymentTypeId || '',
         amount: Number(selectedTokenOrFiatAmount),
-        quoteAmount: selectedTokenOrFiatAmount || '',
+        quoteAmount: String(choosenOnrampPayment?.payout) || '',
         walletAddress: evmAddress || '',
       });
-      console.log(tx);
+
+      window.open(tx.transactionUrl, '_blank');
+
+      
     } catch (error) {
       console.error(error);
     }
   };
 
-  return { handleFiatTransaction };
+  return { executeFiatTransaction };
 };
