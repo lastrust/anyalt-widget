@@ -2,6 +2,7 @@ import {
   GetAllRoutesResponseItem,
   SupportedToken,
 } from '@anyalt/sdk/dist/adapter/api/api';
+import { VStack } from '@chakra-ui/react';
 import { EstimateResponse, Token } from '../../../..';
 import { TransactionListGroup } from '../../../../types/transaction';
 import { truncateToDecimals } from '../../../../utils/truncateToDecimals';
@@ -26,7 +27,13 @@ export const TokenTransaction = ({
   inTokenAmount,
 }: Props) => {
   return (
-    <>
+    <VStack
+      w={'100%'}
+      p={'16px'}
+      borderRadius={'16px'}
+      borderWidth={'1px'}
+      borderColor={'brand.border.primary'}
+    >
       <TokenBox
         selectedRoute={selectedRoute}
         recentTransactionItem={recentTransaction?.from}
@@ -46,6 +53,6 @@ export const TokenTransaction = ({
         amount={truncateToDecimals(finalTokenEstimate?.amountOut || '', 4)}
         price={finalTokenEstimate?.priceInUSD || '0.00'}
       />
-    </>
+    </VStack>
   );
 };

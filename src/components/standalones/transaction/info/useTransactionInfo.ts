@@ -112,6 +112,12 @@ export const useTransactionInfo = ({
     return text;
   }, [selectedRoute, transactionIndex, transactionsList]);
 
+  const buttonText = useMemo(() => {
+    return isOnramperStep
+      ? `Buy ${selectedRoute?.fiatStep?.middleToken.symbol}`
+      : 'Execute Transaction';
+  }, [isOnramperStep, selectedRoute]);
+
   const runTx = async (higherGasCost?: boolean) => {
     try {
       setIsLoading(true);
@@ -288,6 +294,7 @@ export const useTransactionInfo = ({
     inTokenAmount: selectedTokenOrFiatAmount,
     estimatedTime,
     transactionsList,
+    buttonText,
     finalTokenEstimate: lastMileTokenEstimate,
     protocolInputToken: swapResultToken,
     protocolFinalToken: lastMileToken,

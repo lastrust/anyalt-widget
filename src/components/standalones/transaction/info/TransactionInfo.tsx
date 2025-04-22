@@ -47,9 +47,10 @@ export const TransactionInfo: FC<Props> = ({
     fees,
     runTx,
     isLoading,
-    selectedRoute,
     headerText,
     currentStep,
+    buttonText,
+    selectedRoute,
     estimatedTime,
     inTokenAmount,
     protocolInputToken,
@@ -70,85 +71,71 @@ export const TransactionInfo: FC<Props> = ({
   });
 
   return (
-    <>
-      <VStack
-        w={'100%'}
-        alignItems={'flex-start'}
-        gap={'16px'}
-        justifyContent={'space-between'}
-        h="100%"
-      >
-        <VStack w={'100%'} gap={'16px'}>
-          <Box w={'100%'}>
-            <VStack alignItems="flex-start" spacing="12px" w={'100%'}>
-              <HStack justifyContent={'space-between'} w={'100%'}>
-                <Text
-                  textStyle={'regular.2'}
-                  color="brand.text.secondary.2"
-                  w={'100%'}
-                  whiteSpace={'nowrap'}
-                >
-                  {headerText}
-                </Text>
-                <CrossChainWarningCard />
-              </HStack>
-              <ProgressList
-                transactionsProgress={transactionsProgress}
-                index={currentStep - 1}
-              />
-              <TransactionInfoCard
-                isOnramperStep={isOnramperStep || false}
-                estimatedTime={estimatedTime}
-                fees={isOnramperStep ? onrampFees : fees}
-              />
-            </VStack>
-          </Box>
-
-          <VStack
-            w={'100%'}
-            p={'16px'}
-            borderRadius={'16px'}
-            borderWidth={'1px'}
-            borderColor={'brand.border.primary'}
-          >
-            {isOnramperStep ? (
-              <OnrampTransaction
-                selectedRoute={selectedRoute}
-                inTokenAmount={inTokenAmount}
-              />
-            ) : (
-              <TokenTransaction
-                selectedRoute={selectedRoute}
-                recentTransaction={recentTransaction}
-                protocolInputToken={protocolInputToken}
-                protocolFinalToken={protocolFinalToken}
-                finalTokenEstimate={finalTokenEstimate}
-                inTokenAmount={inTokenAmount}
-              />
-            )}
-          </VStack>
-          <PaymentSelect
+    <VStack
+      w={'100%'}
+      alignItems={'flex-start'}
+      gap={'16px'}
+      justifyContent={'space-between'}
+      h="100%"
+    >
+      <VStack w={'100%'} gap={'16px'}>
+        <VStack alignItems="flex-start" spacing="12px" w={'100%'}>
+          <HStack justifyContent={'space-between'} w={'100%'}>
+            <Text
+              textStyle={'regular.2'}
+              color="brand.text.secondary.2"
+              w={'100%'}
+              whiteSpace={'nowrap'}
+            >
+              {headerText}
+            </Text>
+            <CrossChainWarningCard />
+          </HStack>
+          <ProgressList
+            transactionsProgress={transactionsProgress}
+            index={currentStep - 1}
+          />
+          <TransactionInfoCard
             isOnramperStep={isOnramperStep || false}
-            isPaymentMethodLoading={isPaymentMethodLoading}
-            choosenFiatPaymentMethod={choosenFiatPaymentMethod}
-            setIsPaymentMethodModalOpen={setIsPaymentMethodModalOpen}
+            estimatedTime={estimatedTime}
+            fees={isOnramperStep ? onrampFees : fees}
           />
         </VStack>
-        <VStack w="100%" alignItems={'center'} gap={'16px'}>
-          <CustomButton
-            isLoading={isLoading}
-            isDisabled={isLoading}
-            onButtonClick={runTx}
-          >
-            {isOnramperStep
-              ? `Buy ${selectedRoute?.fiatStep?.middleToken.symbol}`
-              : 'Execute Transaction'}
-          </CustomButton>
-          <Text textDecoration={'underline'} color="#999" cursor={'pointer'}>
-            Cancel Transaction
-          </Text>
-        </VStack>
+
+        {isOnramperStep ? (
+          <OnrampTransaction
+            selectedRoute={selectedRoute}
+            inTokenAmount={inTokenAmount}
+          />
+        ) : (
+          <TokenTransaction
+            selectedRoute={selectedRoute}
+            recentTransaction={recentTransaction}
+            protocolInputToken={protocolInputToken}
+            protocolFinalToken={protocolFinalToken}
+            finalTokenEstimate={finalTokenEstimate}
+            inTokenAmount={inTokenAmount}
+          />
+        )}
+        <PaymentSelect
+          isOnramperStep={isOnramperStep || false}
+          isPaymentMethodLoading={isPaymentMethodLoading}
+          choosenFiatPaymentMethod={choosenFiatPaymentMethod}
+          setIsPaymentMethodModalOpen={setIsPaymentMethodModalOpen}
+        />
       </VStack>
-    </>
+      <VStack w="100%" alignItems={'center'} gap={'16px'}>
+        <CustomButton
+          isLoading={isLoading}
+          isDisabled={isLoading}
+          onButtonClick={runTx}
+        >
+          {buttonText}
+        </CustomButton>
+        <Text textDecoration={'underline'} color="#999" cursor={'pointer'}>
+          Cancel Transaction
+        </Text>
+      </VStack>
+    </VStack>
   );
 };

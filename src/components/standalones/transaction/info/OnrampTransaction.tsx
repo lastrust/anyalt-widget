@@ -1,5 +1,5 @@
 import { GetAllRoutesResponseItem } from '@anyalt/sdk/dist/adapter/api/api';
-import { HStack, Image, Skeleton, Text } from '@chakra-ui/react';
+import { HStack, Image, Skeleton, Text, VStack } from '@chakra-ui/react';
 import { useAtomValue, useSetAtom } from 'jotai';
 import {
   choosenOnrampPaymentAtom,
@@ -25,7 +25,13 @@ export const OnrampTransaction = ({ selectedRoute, inTokenAmount }: Props) => {
   const onrampers = useAtomValue(onrampersAtom);
 
   return (
-    <>
+    <VStack
+      w={'100%'}
+      p={'16px'}
+      borderRadius={'16px'}
+      borderWidth={'1px'}
+      borderColor={'brand.border.primary'}
+    >
       <TokenQuoteBox
         loading={false}
         headerText=""
@@ -99,6 +105,6 @@ export const OnrampTransaction = ({ selectedRoute, inTokenAmount }: Props) => {
           )}
         </LoadingFallback>
       </HStack>
-    </>
+    </VStack>
   );
 };
