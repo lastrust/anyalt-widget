@@ -4,30 +4,39 @@ import { GasIcon } from '../../atoms/icons/transaction/GasIcon';
 import { TimeIcon } from '../../atoms/icons/transaction/TimeIcon';
 
 type Props = {
+  isOnramperStep: boolean;
   estimatedTime?: number;
   fees?: string;
 };
 
-export const TransactionInfoCard = ({ estimatedTime, fees }: Props) => {
+export const TransactionInfoCard = ({
+  isOnramperStep,
+  estimatedTime,
+  fees,
+}: Props) => {
   return (
     <HStack
       w={'100%'}
-      p={'16px 24px'}
+      p={isOnramperStep ? '8px 12px' : '16px 24px'}
       borderRadius={'16px'}
       borderWidth={'1px'}
       borderColor={'brand.border.primary'}
     >
-      <HStack>
-        <TimeIcon />
-        <Text color={'brand.text.secondary.2'} textStyle={'regular.1'}>
-          {estimatedTime} s
-        </Text>
-      </HStack>
-      <DividerIcon />
+      {!isOnramperStep && (
+        <>
+          <HStack>
+            <TimeIcon />
+            <Text color={'brand.text.secondary.2'} textStyle={'regular.1'}>
+              {estimatedTime} s
+            </Text>
+          </HStack>
+          <DividerIcon />
+        </>
+      )}
       <HStack>
         <GasIcon />
         <Text color={'brand.text.secondary.2'} textStyle={'regular.1'}>
-          $ {fees}
+          {isOnramperStep ? 'Transaction Cost: $' : '$'} {fees}
         </Text>
       </HStack>
     </HStack>

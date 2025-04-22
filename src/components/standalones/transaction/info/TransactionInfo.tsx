@@ -1,4 +1,12 @@
-import { Box, Center, Divider, HStack, Text, VStack } from '@chakra-ui/react';
+import {
+  Box,
+  Center,
+  Divider,
+  HStack,
+  Skeleton,
+  Text,
+  VStack,
+} from '@chakra-ui/react';
 import { useAtom, useAtomValue } from 'jotai';
 import { FC, useMemo } from 'react';
 import {
@@ -9,6 +17,8 @@ import {
 } from '../../../..';
 import {
   choosenFiatPaymentAtom,
+  choosenOnrampPaymentAtom,
+  isPaymentMethodLoadingAtom,
   isPaymentMethodModalOpenAtom,
 } from '../../../../store/stateStore';
 import { CustomButton } from '../../../atoms/buttons/CustomButton';
@@ -76,6 +86,18 @@ export const TransactionInfo: FC<Props> = ({
 
   const [, setIsPaymentMethodModalOpen] = useAtom(isPaymentMethodModalOpenAtom);
   const choosenFiatPaymentMethod = useAtomValue(choosenFiatPaymentAtom);
+  const isPaymentMethodLoading = useAtomValue(isPaymentMethodLoadingAtom);
+  const choosenOnrampPayment = useAtomValue(choosenOnrampPaymentAtom);
+
+  const onrampFees = useMemo(() => {
+    console.log(choosenOnrampPayment);
+    return (
+      String(
+        Number(choosenOnrampPayment?.networkFee) +
+          Number(choosenOnrampPayment?.transactionFee),
+      ) || ''
+    );
+  }, [choosenOnrampPayment]);
 
   return (
     <>
@@ -88,7 +110,7 @@ export const TransactionInfo: FC<Props> = ({
       >
         <VStack w={'100%'} gap={'16px'}>
           <Box w={'100%'}>
-            <VStack alignItems="flex-start" spacing="16px" w={'100%'}>
+            <VStack alignItems="flex-start" spacing="12px" w={'100%'}>
               <HStack justifyContent={'space-between'} w={'100%'}>
                 <Text
                   textStyle={'regular.2'}
@@ -100,16 +122,18 @@ export const TransactionInfo: FC<Props> = ({
                 </Text>
                 <CrossChainWarningCard />
               </HStack>
-              <ProgressList
-                transactionsProgress={transactionsProgress}
-                index={currentStep - 1}
-              />
-              {!isOnramperStep && (
-                <TransactionInfoCard
-                  estimatedTime={estimatedTime}
-                  fees={fees}
+              {transactionsProgress?.length && (
+                <ProgressList
+                  transactionsProgress={transactionsProgress}
+                  index={currentStep - 1}
                 />
               )}
+
+              <TransactionInfoCard
+                isOnramperStep={isOnramperStep || false}
+                estimatedTime={estimatedTime}
+                fees={isOnramperStep ? onrampFees : fees}
+              />
             </VStack>
           </Box>
 
@@ -147,10 +171,19 @@ export const TransactionInfo: FC<Props> = ({
               p="8px"
             >
               <HStack gap="8px">
-                <CardIcon />
-                <Text color={'brand.text.secondary.2'} textStyle={'regular.3'}>
-                  {choosenFiatPaymentMethod?.name}
-                </Text>
+                {isPaymentMethodLoading ? (
+                  <Skeleton width={'80px'} height={'16px'} />
+                ) : (
+                  <>
+                    <CardIcon />
+                    <Text
+                      color={'brand.text.secondary.2'}
+                      textStyle={'regular.3'}
+                    >
+                      {choosenFiatPaymentMethod?.name}
+                    </Text>
+                  </>
+                )}
               </HStack>
               <ArrowIcon />
             </HStack>

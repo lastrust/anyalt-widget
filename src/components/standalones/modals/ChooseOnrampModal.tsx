@@ -1,12 +1,13 @@
-import { SupportedOnramperQuote } from '@anyalt/sdk/dist/adapter/api/api';
 import { Box, HStack, Icon, Image, Text, VStack } from '@chakra-ui/react';
-import { useAtom, useAtomValue } from 'jotai';
-import { useEffect, useState } from 'react';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useEffect } from 'react';
 import {
   anyaltInstanceAtom,
   choosenFiatPaymentAtom,
   choosenOnrampPaymentAtom,
+  isChooseOnrampLoadingAtom,
   isChooseOnrampModalOpenAtom,
+  onrampersAtom,
   selectedRouteAtom,
   selectedTokenOrFiatAmountAtom,
 } from '../../../store/stateStore';
@@ -18,9 +19,8 @@ export const ChooseOnrampModal = () => {
   const [isOpen, setIsOpen] = useAtom(isChooseOnrampModalOpenAtom);
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
   const selectedRoute = useAtomValue(selectedRouteAtom);
-  const [onrampers, setOnrampers] = useState<
-    SupportedOnramperQuote[] | undefined
-  >(undefined);
+  const setIsChooseOnrampLoading = useSetAtom(isChooseOnrampLoadingAtom);
+  const [onrampers, setOnrampers] = useAtom(onrampersAtom);
   const choosenFiatPayment = useAtomValue(choosenFiatPaymentAtom);
   const selectedTokenOrFiatAmount = useAtomValue(selectedTokenOrFiatAmountAtom);
 
@@ -31,6 +31,7 @@ export const ChooseOnrampModal = () => {
   useEffect(() => {
     const getOnrampers = async () => {
       try {
+        setIsChooseOnrampLoading(true);
         const res = await anyaltInstance?.getFiatQuote({
           fiatId: selectedRoute?.fiatStep?.fiat.onramperId || '',
           tokenId: 'bnb_bsc',
@@ -42,8 +43,14 @@ export const ChooseOnrampModal = () => {
         if (!choosenOnrampPayment) {
           setChoosenOnrampPayment(res?.quotes?.[0]);
         }
+
+        if (res?.quotes?.length === 0) {
+          setChoosenOnrampPayment(undefined);
+        }
       } catch (error) {
         console.error(error);
+      } finally {
+        setIsChooseOnrampLoading(false);
       }
     };
 
@@ -114,6 +121,7 @@ export const ChooseOnrampModal = () => {
                 p="12px 8px"
                 justifyContent={'space-between'}
                 onClick={() => {
+                  console.log(onramp);
                   setChoosenOnrampPayment(onramp);
                   setIsOpen(false);
                 }}

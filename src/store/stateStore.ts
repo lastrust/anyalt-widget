@@ -47,6 +47,9 @@ export const showPendingRouteDialogAtom = atom<boolean>(false);
 export const slippageAtom = atom<string>('3');
 export const activeOperationIdAtom = atom<string | undefined>(undefined);
 export const onramperOperationIdAtom = atom<string | undefined>(undefined);
+export const onrampersAtom = atom<SupportedOnramperQuote[] | undefined>(
+  undefined,
+);
 export const choosenFiatPaymentAtom = atom<SupportedPaymentType | undefined>(
   undefined,
 );
@@ -55,7 +58,10 @@ export const choosenOnrampPaymentAtom = atom<
 >(undefined);
 
 export const isPaymentMethodModalOpenAtom = atom<boolean>(false);
+export const isPaymentMethodLoadingAtom = atom<boolean>(false);
 export const isChooseOnrampModalOpenAtom = atom<boolean>(false);
+export const isChooseOnrampLoadingAtom = atom<boolean>(false);
+
 export const transactionIndexAtom = atom<number>(1); // Recent index of transactions
 export const transactionsListAtom = atom<TransactionStatusList | undefined>( // List of transactions to show on transactions screen
   undefined,

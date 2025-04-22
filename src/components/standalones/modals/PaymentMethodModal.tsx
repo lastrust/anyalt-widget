@@ -1,10 +1,11 @@
 import { SupportedPaymentType } from '@anyalt/sdk/dist/adapter/api/api';
 import { Box, HStack, Icon, Image, Text, VStack } from '@chakra-ui/react';
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import {
   anyaltInstanceAtom,
   choosenFiatPaymentAtom,
+  isPaymentMethodLoadingAtom,
   isPaymentMethodModalOpenAtom,
   selectedRouteAtom,
 } from '../../../store/stateStore';
@@ -15,6 +16,7 @@ export const PaymentMethodModal = () => {
   const [isOpen, setIsOpen] = useAtom(isPaymentMethodModalOpenAtom);
   const anyaltInstance = useAtomValue(anyaltInstanceAtom);
   const selectedRoute = useAtomValue(selectedRouteAtom);
+  const setIsPaymentMethodLoading = useSetAtom(isPaymentMethodLoadingAtom);
   const [paymentMethods, setPaymentMethods] = useState<
     SupportedPaymentType[] | undefined
   >(undefined);
@@ -24,13 +26,20 @@ export const PaymentMethodModal = () => {
 
   useEffect(() => {
     const getPaymentMethods = async () => {
-      const res = await anyaltInstance?.getPaymentTypes({
-        fiatId: selectedRoute?.fiatStep?.fiat.onramperId || '',
-        tokenId: 'bnb_bsc',
-      });
-      setPaymentMethods(res?.paymentTypes);
-      if (!choosenFiatPayment) {
-        setChoosenFiatPayment(res?.paymentTypes[0]);
+      try {
+        setIsPaymentMethodLoading(true);
+        const res = await anyaltInstance?.getPaymentTypes({
+          fiatId: selectedRoute?.fiatStep?.fiat.onramperId || '',
+          tokenId: 'bnb_bsc',
+        });
+        setPaymentMethods(res?.paymentTypes);
+        if (!choosenFiatPayment) {
+          setChoosenFiatPayment(res?.paymentTypes[0]);
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsPaymentMethodLoading(false);
       }
     };
     getPaymentMethods();
