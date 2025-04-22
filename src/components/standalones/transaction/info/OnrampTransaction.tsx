@@ -9,6 +9,7 @@ import {
 } from '../../../../store/stateStore';
 import { truncateToDecimals } from '../../../../utils/truncateToDecimals';
 import { ArrowIcon } from '../../../atoms/icons/payments/ArrowIcon';
+import { LoadingFallback } from '../../../molecules/fallback/LoadingFallback';
 import { TokenQuoteBox } from '../../selectSwap/token/quote/TokenQuoteBox';
 import { SepartionBlock } from './TransactionInfo';
 
@@ -68,11 +69,9 @@ export const OnrampTransaction = ({ selectedRoute, inTokenAmount }: Props) => {
         <Text color={'brand.text.secondary.2'} textStyle={'regular.3'}>
           1 ETH ~ 1000 USD
         </Text>
-        <HStack gap="8px">
-          {isChooseOnrampLoading ? (
-            <Skeleton width={'80px'} height={'16px'} />
-          ) : choosenOnrampPayment ? (
-            <>
+        <LoadingFallback loading={isChooseOnrampLoading} w={'80px'} h={'16px'}>
+          {choosenOnrampPayment ? (
+            <HStack gap="8px">
               <Text color={'brand.text.secondary.2'} textStyle={'regular.3'}>
                 By
               </Text>
@@ -87,13 +86,13 @@ export const OnrampTransaction = ({ selectedRoute, inTokenAmount }: Props) => {
                 {choosenOnrampPayment?.ramp}
               </Text>
               <ArrowIcon />
-            </>
+            </HStack>
           ) : (
             <Text color={'brand.text.secondary.2'} textStyle={'regular.3'}>
               Please select another payment method
             </Text>
           )}
-        </HStack>
+        </LoadingFallback>
       </HStack>
     </>
   );

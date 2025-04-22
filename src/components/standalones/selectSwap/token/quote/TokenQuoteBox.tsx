@@ -1,7 +1,8 @@
-import { Box, BoxProps, Skeleton, Text, VStack } from '@chakra-ui/react';
+import { Box, BoxProps, Text, VStack } from '@chakra-ui/react';
 import { FC } from 'react';
 import { TokenIconBox } from '../../../../molecules/TokenIconBox';
 import { TokenInfoBox } from '../../../../molecules/TokenInfoBox';
+import { LoadingFallback } from '../../../../molecules/fallback/LoadingFallback';
 
 type Props = {
   loading: boolean;
@@ -69,20 +70,27 @@ export const TokenQuoteBox: FC<Props> = ({
           alignItems="flex-end"
           gap={'2px'}
         >
-          {loading ? (
-            <Skeleton width="70px" height="28px" borderRadius="12px" mb="2px" />
-          ) : (
+          <LoadingFallback
+            loading={loading}
+            w={'70px'}
+            h={'28px'}
+            borderRadius="12px"
+            mb="2px"
+          >
             <Text textStyle="bold.0" fontSize="24px">
               {amount}
             </Text>
-          )}
-          {loading ? (
-            <Skeleton width="34px" height="18px" borderRadius="10px" />
-          ) : (
+          </LoadingFallback>
+          <LoadingFallback
+            loading={loading}
+            width="34px"
+            height="18px"
+            borderRadius="10px"
+          >
             <Text fontSize="12px" fontWeight="regular" opacity={0.4}>
               ~${price || '0.00'}
             </Text>
-          )}
+          </LoadingFallback>
         </Box>
       </Box>
     </VStack>

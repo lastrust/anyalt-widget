@@ -1,12 +1,4 @@
-import {
-  Box,
-  Center,
-  Divider,
-  HStack,
-  Skeleton,
-  Text,
-  VStack,
-} from '@chakra-ui/react';
+import { Box, Center, Divider, HStack, Text, VStack } from '@chakra-ui/react';
 import { FC } from 'react';
 import {
   EstimateResponse,
@@ -20,6 +12,7 @@ import { CardIcon } from '../../../atoms/icons/payments/CardIcon';
 import { ChevronDownIcon } from '../../../atoms/icons/transaction/ChevronDownIcon';
 import { CrossChainWarningCard } from '../../../molecules/card/CrossChainWarning';
 import { TransactionInfoCard } from '../../../molecules/card/TransactionInfoCard';
+import { LoadingFallback } from '../../../molecules/fallback/LoadingFallback';
 import { ProgressList } from '../ProgressList';
 import { OnrampTransaction } from './OnrampTransaction';
 import { TokenTransaction } from './TokenTransaction';
@@ -150,9 +143,11 @@ export const TransactionInfo: FC<Props> = ({
               p="8px"
             >
               <HStack gap="8px">
-                {isPaymentMethodLoading ? (
-                  <Skeleton width={'80px'} height={'16px'} />
-                ) : (
+                <LoadingFallback
+                  loading={isPaymentMethodLoading}
+                  w={'80px'}
+                  h={'16px'}
+                >
                   <>
                     <CardIcon />
                     <Text
@@ -162,7 +157,7 @@ export const TransactionInfo: FC<Props> = ({
                       {choosenFiatPaymentMethod?.name}
                     </Text>
                   </>
-                )}
+                </LoadingFallback>
               </HStack>
               <ArrowIcon />
             </HStack>
