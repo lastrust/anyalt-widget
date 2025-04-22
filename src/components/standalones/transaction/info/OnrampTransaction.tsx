@@ -69,7 +69,12 @@ export const OnrampTransaction = ({ selectedRoute, inTokenAmount }: Props) => {
         <Text color={'brand.text.secondary.2'} textStyle={'regular.3'}>
           1 ETH ~ 1000 USD
         </Text>
-        <LoadingFallback loading={isChooseOnrampLoading} w={'80px'} h={'16px'}>
+        <LoadingFallback
+          loading={isChooseOnrampLoading}
+          w={'80px'}
+          h={'16px'}
+          borderRadius={'12px'}
+        >
           {choosenOnrampPayment ? (
             <HStack gap="8px">
               <Text color={'brand.text.secondary.2'} textStyle={'regular.3'}>

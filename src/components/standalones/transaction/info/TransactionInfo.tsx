@@ -142,24 +142,23 @@ export const TransactionInfo: FC<Props> = ({
               bgColor={'brand.bg.cardBg'}
               p="8px"
             >
-              <HStack gap="8px">
-                <LoadingFallback
-                  loading={isPaymentMethodLoading}
-                  w={'80px'}
-                  h={'16px'}
-                >
-                  <>
-                    <CardIcon />
-                    <Text
-                      color={'brand.text.secondary.2'}
-                      textStyle={'regular.3'}
-                    >
-                      {choosenFiatPaymentMethod?.name}
-                    </Text>
-                  </>
-                </LoadingFallback>
-              </HStack>
-              <ArrowIcon />
+              <LoadingFallback
+                loading={isPaymentMethodLoading}
+                w={'80px'}
+                h={'16px'}
+                borderRadius={'12px'}
+              >
+                <HStack gap="8px">
+                  <CardIcon />
+                  <Text
+                    color={'brand.text.secondary.2'}
+                    textStyle={'regular.3'}
+                  >
+                    {choosenFiatPaymentMethod?.name}
+                  </Text>
+                </HStack>
+                <ArrowIcon />
+              </LoadingFallback>
             </HStack>
           )}
         </VStack>
