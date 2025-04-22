@@ -34,7 +34,7 @@ export const ChooseOnrampModal = () => {
         setIsChooseOnrampLoading(true);
         const res = await anyaltInstance?.getFiatQuote({
           fiatId: selectedRoute?.fiatStep?.fiat.onramperId || '',
-          tokenId: 'bnb_bsc',
+          tokenId: selectedRoute?.fiatStep?.middleToken.onramperId || '',
           paymentTypeId: choosenFiatPayment?.paymentTypeId || '',
           amount: Number(selectedTokenOrFiatAmount),
         });

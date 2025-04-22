@@ -30,7 +30,7 @@ export const PaymentMethodModal = () => {
         setIsPaymentMethodLoading(true);
         const res = await anyaltInstance?.getPaymentTypes({
           fiatId: selectedRoute?.fiatStep?.fiat.onramperId || '',
-          tokenId: 'bnb_bsc',
+          tokenId: selectedRoute?.fiatStep?.middleToken.onramperId || '',
         });
         setPaymentMethods(res?.paymentTypes);
         if (!choosenFiatPayment) {

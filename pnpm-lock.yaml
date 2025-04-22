@@ -240,7 +240,7 @@ packages:
       react-dom: '>=17.0.0'
 
   '@anyalt/sdk@file:../anyalt-sdk/anyalt-sdk-1.0.18-dev.7.tgz':
-    resolution: {integrity: sha512-osmgZKzkMMj0y3r4pdBlpFUGOD217s3CNQ7e/DosEhVYsYmMRY9c3NouoLmfAM7Cc+O3tPNTsRte/mQf2fO9sQ==, tarball: file:../anyalt-sdk/anyalt-sdk-1.0.18-dev.7.tgz}
+    resolution: {integrity: sha512-W0zPCtciwE+YSwEAeOPHgLoWP6V4ZVkNphQYAvG5TVQKusxslhgwCrlbV3vtV7DH91kKlAkF4Q/ssWWIcH1OPA==, tarball: file:../anyalt-sdk/anyalt-sdk-1.0.18-dev.7.tgz}
     version: 1.0.18-dev.7
 
   '@apidevtools/json-schema-ref-parser@11.7.2':
