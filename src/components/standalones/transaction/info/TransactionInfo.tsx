@@ -129,6 +129,9 @@ export const TransactionInfo: FC<Props> = ({
           isLoading={isLoading}
           isDisabled={isLoading}
           onButtonClick={runTx}
+          loadingText={
+            isOnramperStep ? 'Your will be redirected to Onramper' : ''
+          }
         >
           {buttonText}
         </CustomButton>
