@@ -49,20 +49,21 @@ export const TransactionInfo: FC<Props> = ({
     isLoading,
     headerText,
     currentStep,
+    onrampFees,
     buttonText,
     selectedRoute,
     estimatedTime,
     inTokenAmount,
+    isOnramperStep,
     protocolInputToken,
     protocolFinalToken,
     recentTransaction,
     finalTokenEstimate,
     transactionsProgress,
+    isChooseOnrampLoading,
     setIsPaymentMethodModalOpen,
     choosenFiatPaymentMethod,
     isPaymentMethodLoading,
-    isOnramperStep,
-    onrampFees,
   } = useTransactionInfo({
     externalEvmWalletConnector,
     onTxComplete,
@@ -127,7 +128,9 @@ export const TransactionInfo: FC<Props> = ({
       <VStack w="100%" alignItems={'center'} gap={'16px'}>
         <CustomButton
           isLoading={isLoading}
-          isDisabled={isLoading}
+          isDisabled={
+            isLoading || isPaymentMethodLoading || isChooseOnrampLoading
+          }
           onButtonClick={runTx}
           loadingText={
             isOnramperStep ? 'Your will be redirected to Onramper' : ''

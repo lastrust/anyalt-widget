@@ -11,6 +11,7 @@ import {
   anyaltInstanceAtom,
   choosenFiatPaymentAtom,
   choosenOnrampPaymentAtom,
+  isChooseOnrampLoadingAtom,
   isPaymentMethodLoadingAtom,
   isPaymentMethodModalOpenAtom,
   lastMileTokenAtom,
@@ -62,6 +63,7 @@ export const useTransactionInfo = ({
   const lastMileTokenEstimate = useAtomValue(lastMileTokenEstimateAtom);
   const choosenFiatPaymentMethod = useAtomValue(choosenFiatPaymentAtom);
   const isPaymentMethodLoading = useAtomValue(isPaymentMethodLoadingAtom);
+  const isChooseOnrampLoading = useAtomValue(isChooseOnrampLoadingAtom);
   const selectedTokenOrFiatAmount = useAtomValue(selectedTokenOrFiatAmountAtom);
   const [, setIsPaymentMethodModalOpen] = useAtom(isPaymentMethodModalOpenAtom);
   const [transactionsProgress, setTransactionsProgress] = useAtom(
@@ -300,6 +302,7 @@ export const useTransactionInfo = ({
     estimatedTime,
     transactionsList,
     buttonText,
+    isChooseOnrampLoading,
     finalTokenEstimate: lastMileTokenEstimate,
     protocolInputToken: swapResultToken,
     protocolFinalToken: lastMileToken,
