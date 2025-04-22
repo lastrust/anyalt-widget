@@ -27,6 +27,7 @@ import {
 } from '../../../../store/stateStore';
 import { TransactionProgress } from '../../../../types/transaction';
 import { useStuckTransaction } from '../../../screens/stuckTransactionDialog/useStuckTransaction';
+import { useHadleFiatTx } from '../useHadleFiatTx';
 import { useHandleSwap } from '../useHandleSwap';
 import { activeOperationIdAtom } from './../../../../store/stateStore';
 
@@ -68,6 +69,7 @@ export const useTransactionInfo = ({
   );
 
   const { executeSwap } = useHandleSwap(externalEvmWalletConnector);
+  const { handleFiatTransaction } = useHadleFiatTx();
   const { keepPollingOnTxStuck } = useStuckTransaction();
 
   const isOnramperStep = useMemo(() => {
@@ -93,14 +95,13 @@ export const useTransactionInfo = ({
       return 'Converting fiat to base L1 token';
     }
 
-    const isSwaps = selectedRoute?.swapSteps?.length;
-
     const swapperType = isBridgeSwap ? 'Bridge' : 'Swap';
     const swapperName =
       selectedRoute?.swapSteps?.[transactionIndex - 1]?.swapperName;
     const depositToken =
       transactionsList?.steps?.[transactionIndex - 1]?.to?.tokenName;
 
+    const isSwaps = selectedRoute?.swapSteps?.length;
     const swappingText =
       isSwaps && isSwaps >= transactionIndex
         ? `${swapperType} tokens using ${swapperName}`
@@ -124,15 +125,19 @@ export const useTransactionInfo = ({
 
       if (!anyaltInstance || !activeOperationId) return;
 
-      await executeSwap(
-        anyaltInstance,
-        activeOperationId,
-        slippage,
-        (selectedRoute?.swapSteps ?? []).length,
-        executeCallBack,
-        estimateCallback,
-        higherGasCost,
-      );
+      if (widgetMode === 'fiat' && transactionIndex === 1) {
+        await handleFiatTransaction();
+      } else {
+        await executeSwap(
+          anyaltInstance,
+          activeOperationId,
+          slippage,
+          (selectedRoute?.swapSteps ?? []).length,
+          executeCallBack,
+          estimateCallback,
+          higherGasCost,
+        );
+      }
 
       onTxComplete();
     } catch (error) {
