@@ -7,14 +7,12 @@ import {
   WalletConnector,
 } from '../../../..';
 import { CustomButton } from '../../../atoms/buttons/CustomButton';
-import { ArrowIcon } from '../../../atoms/icons/payments/ArrowIcon';
-import { CardIcon } from '../../../atoms/icons/payments/CardIcon';
 import { ChevronDownIcon } from '../../../atoms/icons/transaction/ChevronDownIcon';
 import { CrossChainWarningCard } from '../../../molecules/card/CrossChainWarning';
 import { TransactionInfoCard } from '../../../molecules/card/TransactionInfoCard';
-import { LoadingFallback } from '../../../molecules/fallback/LoadingFallback';
 import { ProgressList } from '../ProgressList';
 import { OnrampTransaction } from './OnrampTransaction';
+import { PaymentSelect } from './PaymentSelect';
 import { TokenTransaction } from './TokenTransaction';
 import { useTransactionInfo } from './useTransactionInfo';
 
@@ -132,35 +130,12 @@ export const TransactionInfo: FC<Props> = ({
               />
             )}
           </VStack>
-          {isOnramperStep && (
-            <HStack
-              onClick={() => setIsPaymentMethodModalOpen(true)}
-              cursor={'pointer'}
-              w={'100%'}
-              justifyContent={'space-between'}
-              borderRadius={'8px'}
-              bgColor={'brand.bg.cardBg'}
-              p="8px"
-            >
-              <LoadingFallback
-                loading={isPaymentMethodLoading}
-                w={'80px'}
-                h={'16px'}
-                borderRadius={'12px'}
-              >
-                <HStack gap="8px">
-                  <CardIcon />
-                  <Text
-                    color={'brand.text.secondary.2'}
-                    textStyle={'regular.3'}
-                  >
-                    {choosenFiatPaymentMethod?.name}
-                  </Text>
-                </HStack>
-                <ArrowIcon />
-              </LoadingFallback>
-            </HStack>
-          )}
+          <PaymentSelect
+            isOnramperStep={isOnramperStep || false}
+            isPaymentMethodLoading={isPaymentMethodLoading}
+            choosenFiatPaymentMethod={choosenFiatPaymentMethod}
+            setIsPaymentMethodModalOpen={setIsPaymentMethodModalOpen}
+          />
         </VStack>
         <VStack w="100%" alignItems={'center'} gap={'16px'}>
           <CustomButton
