@@ -2,6 +2,8 @@ import { AnyAlt, SupportedChain, SupportedToken } from '@anyalt/sdk';
 import {
   GetAllRoutesResponseItem,
   SupportedFiat,
+  SupportedOnramperQuote,
+  SupportedPaymentType,
 } from '@anyalt/sdk/dist/adapter/api/api';
 import { atom } from 'jotai';
 import { EstimateResponse, Token, WidgetTemplateType } from '..';
@@ -44,6 +46,22 @@ export const showPendingRouteDialogAtom = atom<boolean>(false);
 // Transaction informations:
 export const slippageAtom = atom<string>('3');
 export const activeOperationIdAtom = atom<string | undefined>(undefined);
+export const onramperOperationIdAtom = atom<string | undefined>(undefined);
+export const onrampersAtom = atom<SupportedOnramperQuote[] | undefined>(
+  undefined,
+);
+export const choosenFiatPaymentAtom = atom<SupportedPaymentType | undefined>(
+  undefined,
+);
+export const choosenOnrampPaymentAtom = atom<
+  SupportedOnramperQuote | undefined
+>(undefined);
+
+export const isPaymentMethodModalOpenAtom = atom<boolean>(false);
+export const isPaymentMethodLoadingAtom = atom<boolean>(false);
+export const isChooseOnrampModalOpenAtom = atom<boolean>(false);
+export const isChooseOnrampLoadingAtom = atom<boolean>(false);
+
 export const transactionIndexAtom = atom<number>(1); // Recent index of transactions
 export const transactionsListAtom = atom<TransactionStatusList | undefined>( // List of transactions to show on transactions screen
   undefined,

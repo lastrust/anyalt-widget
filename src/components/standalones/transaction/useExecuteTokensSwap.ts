@@ -69,6 +69,8 @@ export const useExecuteTokensSwap = (
     higherGasCost?: boolean,
   ) => {
     let isCrosschainSwapError = false;
+    const isIncludeOnramperStep = Boolean(selectedRoute?.fiatStep);
+    const nullIndex = isIncludeOnramperStep ? 2 : 1;
     do {
       if (swapData.swapIsFinished) break;
 
@@ -78,7 +80,8 @@ export const useExecuteTokensSwap = (
       let nonce: number | undefined;
 
       try {
-        const currentStep = selectedRoute?.swapSteps?.[transactionIndex - 1];
+        const currentStep =
+          selectedRoute?.swapSteps?.[transactionIndex - nullIndex];
 
         if (!currentStep) {
           throw new Error('No swap step found');
@@ -207,7 +210,7 @@ export const useExecuteTokensSwap = (
             chainType:
               (swapResultToken?.chain?.chainType as ChainType) ?? ChainType.EVM,
           });
-          updateTransactionsList(crosschainSwapOutputAmount, res);
+          updateTransactionsList(crosschainSwapOutputAmount, res, nullIndex);
           updateTransactionProgress({
             isApproval,
             status: TX_STATUS.confirmed,
@@ -306,12 +309,13 @@ export const useExecuteTokensSwap = (
   const updateTransactionsList = (
     crosschainSwapOutputAmount: string,
     finalEstimate: EstimateResponse,
+    nullIndex: number,
   ) => {
     console.log('updateTransactionsList', transactionsList);
     if (transactionsList?.steps) {
       const newSteps = transactionsList.steps.slice(0, -1);
       const lastStep =
-        transactionsList.steps[transactionsList.steps.length - 1];
+        transactionsList.steps[transactionsList.steps.length - nullIndex];
 
       setTransactionsList({
         steps: [

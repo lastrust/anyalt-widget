@@ -267,14 +267,15 @@ export const useFetchRoutes = ({
     if (
       balance &&
       selectedTokenOrFiatAmount &&
-      parseFloat(balance) < parseFloat(selectedTokenOrFiatAmount)
+      parseFloat(balance) < parseFloat(selectedTokenOrFiatAmount) &&
+      widgetMode === 'crypto'
     ) {
       setTokenFetchError({
         isError: true,
         errorMessage: `You don't have enough tokens in your wallet.`,
       });
     }
-  }, [selectedRoute]);
+  }, [selectedRoute, widgetMode]);
 
   const setListOfTransactionsFromRoute = useCallback(
     (route: GetAllRoutesResponseItem, inputToken: Partial<SupportedToken>) => {
@@ -366,8 +367,6 @@ export const useFetchRoutes = ({
       selectedToken?.id !== swapResultTokenGlobal.id
     )
       setLoading(true);
-
-    console.log('called');
 
     const debounceTimeout = setTimeout(() => {
       if (selectedTokenOrFiatAmount && selectedCurrency) {

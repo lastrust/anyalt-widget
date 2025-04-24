@@ -67,7 +67,10 @@ export const LastMileTxAccordion = ({
       >
         <HStack justifyContent={'flex-start'}>
           <Text textStyle={'bold.1'} mr="8px">
-            Transaction {route.swapSteps.length + 1}
+            Transaction{' '}
+            {route.fiatStep
+              ? route.swapSteps.length + 2
+              : route.swapSteps.length + 1}
           </Text>
           {currentStep === route.swapSteps.length + 1 && (
             <Text

@@ -240,7 +240,7 @@ packages:
       react-dom: '>=17.0.0'
 
   '@anyalt/sdk@file:../anyalt-sdk/anyalt-sdk-1.0.18-dev.7.tgz':
-    resolution: {integrity: sha512-iXnflwPefF6d+Zf6+L5+L6Y13aSljCl57LmHsP8M02e3DdfnGNaAF60SpDwdlO/8k6vdfx86/IoakaYdJzwVEg==, tarball: file:../anyalt-sdk/anyalt-sdk-1.0.18-dev.7.tgz}
+    resolution: {integrity: sha512-W0zPCtciwE+YSwEAeOPHgLoWP6V4ZVkNphQYAvG5TVQKusxslhgwCrlbV3vtV7DH91kKlAkF4Q/ssWWIcH1OPA==, tarball: file:../anyalt-sdk/anyalt-sdk-1.0.18-dev.7.tgz}
     version: 1.0.18-dev.7
 
   '@apidevtools/json-schema-ref-parser@11.7.2':
@@ -6280,6 +6280,7 @@ packages:
   node-domexception@1.0.0:
     resolution: {integrity: sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ==}
     engines: {node: '>=10.5.0'}
+    deprecated: Use your platform's native DOMException instead
 
   node-fetch-h2@2.3.0:
     resolution: {integrity: sha512-ofRW94Ab0T4AOh5Fk8t0h8OBWrmjb0SSB20xh1H8YnPV9EJ+f5AMoYSUQ2zgJ4Iq2HAK0I2l5/Nequ8YzFS3Hg==}

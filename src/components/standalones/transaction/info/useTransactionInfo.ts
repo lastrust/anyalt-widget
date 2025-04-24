@@ -9,6 +9,11 @@ import {
 import { TX_MESSAGE, TX_STATUS } from '../../../../constants/transaction';
 import {
   anyaltInstanceAtom,
+  choosenFiatPaymentAtom,
+  choosenOnrampPaymentAtom,
+  isChooseOnrampLoadingAtom,
+  isPaymentMethodLoadingAtom,
+  isPaymentMethodModalOpenAtom,
   lastMileTokenAtom,
   lastMileTokenEstimateAtom,
   selectedRouteAtom,
@@ -19,9 +24,11 @@ import {
   transactionIndexAtom,
   transactionsListAtom,
   transactionsProgressAtom,
+  widgetModeAtom,
 } from '../../../../store/stateStore';
 import { TransactionProgress } from '../../../../types/transaction';
 import { useStuckTransaction } from '../../../screens/stuckTransactionDialog/useStuckTransaction';
+import { useHadleFiatTx } from '../useHadleFiatTx';
 import { useHandleSwap } from '../useHandleSwap';
 import { activeOperationIdAtom } from './../../../../store/stateStore';
 
@@ -44,41 +51,61 @@ export const useTransactionInfo = ({
     showStuckTransactionDialogAtom,
   );
   const slippage = useAtomValue(slippageAtom);
+  const widgetMode = useAtomValue(widgetModeAtom);
   const selectedRoute = useAtomValue(selectedRouteAtom);
-  const currentStep = useAtomValue(transactionIndexAtom);
-  const anyaltInstance = useAtomValue(anyaltInstanceAtom);
-  const activeOperationId = useAtomValue(activeOperationIdAtom);
-  const transactionsList = useAtomValue(transactionsListAtom);
-  const selectedTokenOrFiatAmount = useAtomValue(selectedTokenOrFiatAmountAtom);
-  const swapResultToken = useAtomValue(swapResultTokenAtom);
   const lastMileToken = useAtomValue(lastMileTokenAtom);
+  const anyaltInstance = useAtomValue(anyaltInstanceAtom);
+  const swapResultToken = useAtomValue(swapResultTokenAtom);
+  const transactionsList = useAtomValue(transactionsListAtom);
+  const transactionIndex = useAtomValue(transactionIndexAtom);
+  const activeOperationId = useAtomValue(activeOperationIdAtom);
+  const choosenOnrampPayment = useAtomValue(choosenOnrampPaymentAtom);
   const lastMileTokenEstimate = useAtomValue(lastMileTokenEstimateAtom);
-
+  const choosenFiatPaymentMethod = useAtomValue(choosenFiatPaymentAtom);
+  const isPaymentMethodLoading = useAtomValue(isPaymentMethodLoadingAtom);
+  const isChooseOnrampLoading = useAtomValue(isChooseOnrampLoadingAtom);
+  const selectedTokenOrFiatAmount = useAtomValue(selectedTokenOrFiatAmountAtom);
+  const [, setIsPaymentMethodModalOpen] = useAtom(isPaymentMethodModalOpenAtom);
   const [transactionsProgress, setTransactionsProgress] = useAtom(
     transactionsProgressAtom,
   );
 
   const { executeSwap } = useHandleSwap(externalEvmWalletConnector);
-
+  const { executeFiatTransaction } = useHadleFiatTx();
   const { keepPollingOnTxStuck } = useStuckTransaction();
+
+  const isOnramperStep = useMemo(() => {
+    return selectedRoute?.fiatStep && transactionIndex === 1;
+  }, [selectedRoute, transactionIndex]);
+
+  const onrampFees = useMemo(() => {
+    const totalFees =
+      Number(choosenOnrampPayment?.networkFee) +
+      Number(choosenOnrampPayment?.transactionFee);
+
+    return isNaN(totalFees) ? '0' : String(totalFees);
+  }, [choosenOnrampPayment]);
 
   const isBridgeSwap = useMemo(() => {
     return (
-      selectedRoute?.swapSteps?.[currentStep - 1]?.swapperType === 'BRIDGE'
+      selectedRoute?.swapSteps?.[transactionIndex - 1]?.swapperType === 'BRIDGE'
     );
-  }, [selectedRoute, currentStep]);
+  }, [selectedRoute, transactionIndex]);
 
   const headerText = useMemo(() => {
-    const isSwaps = selectedRoute?.swapSteps?.length;
+    if (widgetMode === 'fiat' && transactionIndex === 1) {
+      return 'Converting fiat to base L1 token';
+    }
 
     const swapperType = isBridgeSwap ? 'Bridge' : 'Swap';
     const swapperName =
-      selectedRoute?.swapSteps?.[currentStep - 1]?.swapperName;
+      selectedRoute?.swapSteps?.[transactionIndex - 1]?.swapperName;
     const depositToken =
-      transactionsList?.steps?.[currentStep - 1]?.to?.tokenName;
+      transactionsList?.steps?.[transactionIndex - 1]?.to?.tokenName;
 
+    const isSwaps = selectedRoute?.swapSteps?.length;
     const swappingText =
-      isSwaps && isSwaps >= currentStep
+      isSwaps && isSwaps >= transactionIndex
         ? `${swapperType} tokens using ${swapperName}`
         : `Depositing tokens to ${depositToken}`;
     const lastMileText = 'Last mile transaction';
@@ -86,13 +113,23 @@ export const useTransactionInfo = ({
     const text = isSwaps ? swappingText : lastMileText;
 
     return text;
-  }, [selectedRoute, currentStep, transactionsList]);
+  }, [selectedRoute, transactionIndex, transactionsList]);
+
+  const buttonText = useMemo(() => {
+    return isOnramperStep
+      ? `Buy ${selectedRoute?.fiatStep?.middleToken.symbol}`
+      : 'Execute Transaction';
+  }, [isOnramperStep, selectedRoute]);
 
   const runTx = async (higherGasCost?: boolean) => {
     try {
       setIsLoading(true);
 
       if (!anyaltInstance || !activeOperationId) return;
+
+      if (widgetMode === 'fiat' && transactionIndex === 1) {
+        await executeFiatTransaction();
+      }
 
       await executeSwap(
         anyaltInstance,
@@ -228,22 +265,22 @@ export const useTransactionInfo = ({
   const estimatedTime = useMemo(() => {
     if (!selectedRoute) return 0;
 
-    if (currentStep > selectedRoute.swapSteps.length)
+    if (transactionIndex > selectedRoute.swapSteps.length)
       return lastMileTokenEstimate?.estimatedTimeInSeconds || 0;
 
     return (
-      selectedRoute.swapSteps[currentStep - 1]?.estimatedTimeInSeconds || 0
+      selectedRoute.swapSteps[transactionIndex - 1]?.estimatedTimeInSeconds || 0
     );
-  }, [selectedRoute, currentStep, lastMileTokenEstimate]);
+  }, [selectedRoute, transactionIndex, lastMileTokenEstimate]);
 
   const fees = useMemo(() => {
     if (!selectedRoute) return '0';
 
-    if (currentStep > selectedRoute.swapSteps.length)
+    if (transactionIndex > selectedRoute.swapSteps.length)
       return lastMileTokenEstimate?.estimatedFeeInUSD || '0';
 
     return (
-      selectedRoute.swapSteps[currentStep - 1]?.fees
+      selectedRoute.swapSteps[transactionIndex - 1]?.fees
         .reduce((acc, fee) => {
           const amount = parseFloat(fee?.amount);
           const price = fee.price || 0;
@@ -252,23 +289,30 @@ export const useTransactionInfo = ({
         .toFixed(2)
         .toString() || '0'
     );
-  }, [selectedRoute, currentStep, lastMileTokenEstimate]);
+  }, [selectedRoute, transactionIndex, lastMileTokenEstimate]);
 
   return {
     fees,
     runTx,
     isLoading,
     selectedRoute,
-    currentStep,
+    currentStep: transactionIndex,
     isBridgeSwap,
     inTokenAmount: selectedTokenOrFiatAmount,
     estimatedTime,
     transactionsList,
+    buttonText,
+    isChooseOnrampLoading,
     finalTokenEstimate: lastMileTokenEstimate,
     protocolInputToken: swapResultToken,
     protocolFinalToken: lastMileToken,
     transactionsProgress,
     headerText,
-    recentTransaction: transactionsList?.steps?.[currentStep - 1],
+    recentTransaction: transactionsList?.steps?.[transactionIndex - 1],
+    setIsPaymentMethodModalOpen,
+    choosenFiatPaymentMethod,
+    isPaymentMethodLoading,
+    isOnramperStep,
+    onrampFees,
   };
 };
