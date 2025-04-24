@@ -15,7 +15,9 @@ import {
 import {
   allRoutesAtom,
   anyaltInstanceAtom,
+  fromTokenAfterFiatTxAtom,
   lastMileTokenEstimateAtom,
+  payoutAfterFiatSwapAtom,
   selectedCurrencyAtom,
   selectedRouteAtom,
   selectedTokenAtom,
@@ -37,6 +39,7 @@ type UseFetchRoutesProps = {
   finalToken?: Token;
   activeStep: number;
   swapResultToken: Token;
+  shouldFetchCryptoRoutes: boolean;
   minDepositAmount: number;
   getChain: (blockchain: string) => SupportedChain | undefined;
   estimateCallback: (token: Token) => Promise<EstimateResponse>;
@@ -51,6 +54,7 @@ export const useFetchRoutes = ({
   activeStep,
   swapResultToken,
   minDepositAmount,
+  shouldFetchCryptoRoutes,
   setActiveStep,
   getChain,
   estimateCallback,
@@ -75,6 +79,8 @@ export const useFetchRoutes = ({
   const swapResultTokenGlobal = useAtomValue(swapResultTokenAtom);
   const selectedTokenOrFiatAmount = useAtomValue(selectedTokenOrFiatAmountAtom);
   const lastMileTokenEstimate = useAtomValue(lastMileTokenEstimateAtom);
+  const fromTokenAfterFiatTx = useAtomValue(fromTokenAfterFiatTxAtom);
+  const payoutAfterFiatSwap = useAtomValue(payoutAfterFiatSwapAtom);
 
   const setTokenFetchError = useSetAtom(tokenFetchErrorAtom);
   const setTransactionsList = useSetAtom(transactionsListAtom);
@@ -116,6 +122,12 @@ export const useFetchRoutes = ({
   }, [bitcoinAccount, solanaAddress, evmAddress]);
 
   const onGetRoutes = async (withGoNext: boolean = true) => {
+    console.log('called');
+    if (shouldFetchCryptoRoutes) {
+      await fetchCryptoRoutes(false, fromTokenAfterFiatTx);
+      return;
+    }
+
     if (activeStep > 1) return;
     if (!swapResultTokenGlobal || !selectedTokenOrFiatAmount) return;
 
@@ -145,9 +157,15 @@ export const useFetchRoutes = ({
     else if (widgetMode === 'fiat') await fetchFiatRoutes(withGoNext);
   };
 
-  const fetchCryptoRoutes = async (withGoNext: boolean = true) => {
-    if (!selectedToken || !swapResultTokenGlobal || !selectedTokenOrFiatAmount)
-      return;
+  const fetchCryptoRoutes = async (
+    withGoNext: boolean = true,
+    fromToken?: { address: string; chainName: string },
+  ) => {
+    const isTokenOrFiatSelected = fromToken || selectedToken;
+    if (!isTokenOrFiatSelected || !selectedTokenOrFiatAmount) return;
+
+    const fromTokenAddress = fromToken?.address ?? selectedToken?.tokenAddress;
+    const fromTokenChainName = fromToken?.chainName ?? selectedToken?.chainName;
 
     try {
       setLoading(true);
@@ -158,14 +176,14 @@ export const useFetchRoutes = ({
 
       const res = await anyaltInstance?.getAllRoutes({
         fromToken: {
-          address: selectedToken.tokenAddress ?? '',
-          chainName: selectedToken.chainName,
+          address: fromTokenAddress || '',
+          chainName: fromTokenChainName || '',
         },
         toToken: {
           address: swapResultToken.address,
           chainName: toTokenChainName,
         },
-        amount: selectedTokenOrFiatAmount,
+        amount: payoutAfterFiatSwap || selectedTokenOrFiatAmount,
         slippage,
         selectedWallets: selectedWallets,
         userSessionKeyForSourceDestinationTokenPair:
@@ -355,8 +373,16 @@ export const useFetchRoutes = ({
   }, [selectedRoute, swapResultTokenGlobal, setListOfTransactionsFromRoute]);
 
   useEffect(() => {
+    console.log('called');
     onGetRoutes(false);
-  }, [selectedToken, selectedCurrency, slippage, balance, selectedWallets]);
+  }, [
+    selectedToken,
+    selectedCurrency,
+    slippage,
+    balance,
+    selectedWallets,
+    shouldFetchCryptoRoutes,
+  ]);
 
   useEffect(() => {
     const isTokenOrFiatSelected = selectedCurrency || selectedToken;
@@ -382,6 +408,7 @@ export const useFetchRoutes = ({
     selectedCurrency,
     swapResultTokenGlobal,
     selectedTokenOrFiatAmount,
+    shouldFetchCryptoRoutes,
   ]);
 
   useEffect(() => {

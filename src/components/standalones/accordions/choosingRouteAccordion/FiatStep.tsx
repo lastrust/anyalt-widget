@@ -1,17 +1,24 @@
 import { FiatStep } from '@anyalt/sdk/dist/adapter/api/api';
-import { Text, VStack } from '@chakra-ui/react';
+import { HStack, Icon, Text, VStack } from '@chakra-ui/react';
 import { useAtomValue } from 'jotai';
 import { selectedTokenOrFiatAmountAtom } from '../../../../store/stateStore';
 import { truncateToDecimals } from '../../../../utils/truncateToDecimals';
+import { CheckIcon } from '../../../atoms/icons/transaction/CheckIcon';
 import { TransactionFiatStep } from '../../../molecules/steps/TransactionFiatStep';
 
 type Props = {
   index: number;
   loading: boolean;
+  isAlreadyCompleted: boolean;
   fiatStep: FiatStep | undefined;
 };
 
-export const FiatStepSection = ({ index, fiatStep, loading }: Props) => {
+export const FiatStepSection = ({
+  index,
+  fiatStep,
+  isAlreadyCompleted,
+  loading,
+}: Props) => {
   const selectedTokenOrFiatAmount = useAtomValue(selectedTokenOrFiatAmountAtom);
 
   return (
@@ -21,9 +28,14 @@ export const FiatStepSection = ({ index, fiatStep, loading }: Props) => {
       color="brand.text.secondary.2"
       key={`accordion-onramper-wrapper-${index}`}
     >
-      <Text textStyle={'bold.2'} lineHeight={'120%'}>
-        Transaction {index + 1}: Onramper
-      </Text>
+      <HStack>
+        <Text textStyle={'bold.2'} lineHeight={'120%'}>
+          Transaction {index + 1}: Onramper{' '}
+        </Text>
+        {isAlreadyCompleted && (
+          <Icon as={CheckIcon} width={'10px'} height={'10px'} />
+        )}
+      </HStack>
       <TransactionFiatStep
         loading={loading}
         stepNumber={index + 1}

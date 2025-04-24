@@ -127,8 +127,10 @@ export const useTransactionInfo = ({
 
       if (!anyaltInstance || !activeOperationId) return;
 
-      if (widgetMode === 'fiat' && transactionIndex === 1) {
+      const isFiatExecution = widgetMode === 'fiat' && transactionIndex === 1;
+      if (isFiatExecution) {
         await executeFiatTransaction();
+        return;
       }
 
       await executeSwap(

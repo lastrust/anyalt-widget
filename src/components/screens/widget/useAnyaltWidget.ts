@@ -11,6 +11,7 @@ import {
   allRoutesAtom,
   showStuckTransactionDialogAtom,
 } from '../../../store/stateStore';
+import { useChooseNewRouteDialog } from '../chooseNewRouteDialog/useChooseNewRouteDialog';
 import { usePendingRoute } from '../pendingRouteDialog/usePendingTransaction';
 import { useConfirmRoute } from './useConfirmRoute';
 import { useControllWidget } from './useControllWidget';
@@ -18,7 +19,6 @@ import { useFetchRoutes } from './useFetchRoutes';
 import { useSetRoute } from './useSetRoute';
 import { useSetupWidget } from './useSetupWidget';
 import { useWidgetWallets } from './useWidgetWallets';
-
 type Props = {
   estimateCallback: (token: Token) => Promise<EstimateResponse>;
   apiKey: string;
@@ -37,10 +37,11 @@ type ReturnType = {
   isValidAmountIn: boolean;
   isButtonDisabled: boolean;
   openSlippageModal: boolean;
-  isConnectWalletsOpen: boolean;
   failedToFetchRoute: boolean;
   areWalletsConnected: boolean;
+  isConnectWalletsOpen: boolean;
   showPendingRouteDialog: boolean;
+  shouldFetchCryptoRoutes: boolean;
   showStuckTransactionDialog: boolean;
   allNecessaryWalletsConnected: boolean;
   modalWrapperMaxWidth: string | undefined;
@@ -87,6 +88,8 @@ export const useAnyaltWidget = ({
   const { showPendingRouteDialog, allNecessaryWalletsConnected } =
     usePendingRoute({ closeConnectWalletsModal: connectWalletsClose });
 
+  const { shouldFetchCryptoRoutes } = useChooseNewRouteDialog();
+
   const { modalWrapperMaxWidth, headerCustomText } = useSetupWidget({
     apiKey,
     activeStep,
@@ -126,6 +129,7 @@ export const useAnyaltWidget = ({
     getChain,
     setActiveStep,
     estimateCallback,
+    shouldFetchCryptoRoutes,
   });
 
   const {
@@ -176,6 +180,7 @@ export const useAnyaltWidget = ({
     areWalletsConnected,
     modalWrapperMaxWidth,
     showPendingRouteDialog,
+    shouldFetchCryptoRoutes,
     showStuckTransactionDialog,
     allNecessaryWalletsConnected,
     onBackClick,

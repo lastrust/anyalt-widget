@@ -3,7 +3,13 @@ import {
   SupportedToken,
 } from '@anyalt/sdk/dist/adapter/api/api';
 import { Skeleton } from '@chakra-ui/react';
+import { useAtomValue } from 'jotai';
+import { useMemo } from 'react';
 import { WidgetTemplateType } from '../../../..';
+import {
+  fiatStepCopyAtom,
+  shouldFetchCryptoRoutesAtom,
+} from '../../../../store/stateStore';
 import { FiatStepSection } from './FiatStep';
 import { RouteTransactionAccordion } from './RouteTransactionAccordion';
 
@@ -19,9 +25,14 @@ export const RouteTransactions = ({
   widgetTemplate,
   protocolInputToken,
 }: Props) => {
+  const fiatStepCopy = useAtomValue(fiatStepCopyAtom);
+  const shouldFetchCryptoRoutes = useAtomValue(shouldFetchCryptoRoutesAtom);
   if (loading) return <Skeleton w={'180px'} h={'18px'} borderRadius="12px" />;
 
-  const isIncludeFiat = Boolean(route.fiatStep);
+  const isIncludeFiat = useMemo(
+    () => Boolean(route.fiatStep) || shouldFetchCryptoRoutes,
+    [route.fiatStep, shouldFetchCryptoRoutes],
+  );
 
   return (
     <>
@@ -29,7 +40,8 @@ export const RouteTransactions = ({
         <FiatStepSection
           index={0}
           loading={loading}
-          fiatStep={route.fiatStep}
+          isAlreadyCompleted={shouldFetchCryptoRoutes}
+          fiatStep={shouldFetchCryptoRoutes ? fiatStepCopy : route.fiatStep}
         />
       )}
       {route.swapSteps.map((swapStep, index) => (

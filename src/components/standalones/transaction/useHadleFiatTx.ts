@@ -5,8 +5,13 @@ import {
   anyaltInstanceAtom,
   choosenFiatPaymentAtom,
   choosenOnrampPaymentAtom,
+  fiatStepCopyAtom,
+  fromTokenAfterFiatTxAtom,
   onramperOperationIdAtom,
+  payoutAfterFiatSwapAtom,
+  selectedRouteAtom,
   selectedTokenOrFiatAmountAtom,
+  shouldFetchCryptoRoutesAtom,
   transactionIndexAtom,
 } from '../../../store/stateStore';
 
@@ -17,7 +22,11 @@ export const useHadleFiatTx = () => {
   const selectedTokenOrFiatAmount = useAtomValue(selectedTokenOrFiatAmountAtom);
   const choosenOnrampPayment = useAtomValue(choosenOnrampPaymentAtom);
   const [transactionIndex, setTransactionIndex] = useAtom(transactionIndexAtom);
-
+  const [selectedRoute] = useAtom(selectedRouteAtom);
+  const [, setFiatStepCopy] = useAtom(fiatStepCopyAtom);
+  const [, setShouldFetchCryptoRoutes] = useAtom(shouldFetchCryptoRoutesAtom);
+  const [, setFromTokenAfterFiatTx] = useAtom(fromTokenAfterFiatTxAtom);
+  const [, setPayoutAfterFiatSwap] = useAtom(payoutAfterFiatSwapAtom);
   const { address: evmAddress } = useAccount();
 
   const waitUntilTxIsConfirmed = async (): Promise<
@@ -73,12 +82,20 @@ export const useHadleFiatTx = () => {
 
       window.open(tx.transactionUrl, '_blank');
 
-      // Properly await the polling process
       const result = await poolUntilTxIsConfirmed();
       console.log('Transaction confirmed:', result);
 
       setTransactionIndex(transactionIndex + 1);
 
+      // TODO: Add a global state variable to refetch new routes based on new data.
+      // It should get all routes without fiat data and pass middle token as fromToken.
+      setFiatStepCopy(selectedRoute?.fiatStep);
+      setPayoutAfterFiatSwap(String(choosenOnrampPayment?.payout) || '');
+      setFromTokenAfterFiatTx({
+        address: selectedRoute?.fiatStep?.middleToken.tokenAddress || '',
+        chainName: selectedRoute?.fiatStep?.middleToken.chainName || '',
+      });
+      setShouldFetchCryptoRoutes(true);
       return result;
     } catch (error) {
       console.error('Error in executeFiatTransaction:', error);

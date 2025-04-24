@@ -1,30 +1,35 @@
 import { GetAllRoutesResponseItem } from '@anyalt/sdk/dist/adapter/api/api';
 import { WalletConnector } from '../../..';
+import { ChooseNewRouteDialog } from '../chooseNewRouteDialog/ChooseNewRouteDialog';
 import { PendingRouteDialog } from '../pendingRouteDialog/PendingRouteDialog';
 import { StuckTransactionDialog } from '../stuckTransactionDialog/StuckTransactionDialog';
 
 type Props = {
   showPendingRouteDialog: boolean;
-  showStuckTransactionDialog: boolean;
-  setCurrentRoute: (route: GetAllRoutesResponseItem) => void;
+  shouldFetchCryptoRoutes: boolean;
   walletConnector?: WalletConnector;
+  showStuckTransactionDialog: boolean;
   allNecessaryWalletsConnected: boolean;
-  connectWalletsOpen: () => void;
-  resetState: () => void;
   children: React.ReactNode;
+  resetState: () => void;
+  connectWalletsOpen: () => void;
+  setCurrentRoute: (route: GetAllRoutesResponseItem) => void;
+  onChooseRouteButtonClick: () => Promise<void>;
 };
 
 export const HandleTransactions = ({
-  showPendingRouteDialog,
-  showStuckTransactionDialog,
-  setCurrentRoute,
   walletConnector,
+  showPendingRouteDialog,
+  shouldFetchCryptoRoutes,
+  showStuckTransactionDialog,
   allNecessaryWalletsConnected,
-  connectWalletsOpen,
-  resetState,
   children,
+  resetState,
+  setCurrentRoute,
+  connectWalletsOpen,
+  onChooseRouteButtonClick,
 }: Props) => {
-  if (showPendingRouteDialog) {
+  if (showPendingRouteDialog)
     return (
       <PendingRouteDialog
         setCurrentRoute={setCurrentRoute}
@@ -33,10 +38,16 @@ export const HandleTransactions = ({
         connectWalletsOpen={connectWalletsOpen}
       />
     );
-  }
 
-  if (showStuckTransactionDialog) {
+  if (showStuckTransactionDialog)
     return <StuckTransactionDialog resetState={resetState} />;
+
+  if (shouldFetchCryptoRoutes) {
+    return (
+      <ChooseNewRouteDialog
+        onChooseRouteButtonClick={onChooseRouteButtonClick}
+      />
+    );
   }
 
   return children;

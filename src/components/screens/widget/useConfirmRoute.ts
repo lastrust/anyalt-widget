@@ -10,6 +10,7 @@ import {
   onramperOperationIdAtom,
   selectedRouteAtom,
   selectedTokenOrFiatAmountAtom,
+  shouldFetchCryptoRoutesAtom,
   transactionsProgressAtom,
   widgetModeAtom,
 } from '../../../store/stateStore';
@@ -53,6 +54,9 @@ export const useConfirmRoute = ({
   const [, setOnramperOperationId] = useAtom(onramperOperationIdAtom);
   const setTransactionsProgress = useSetAtom(transactionsProgressAtom);
   const selectedTokenOrFiatAmount = useAtomValue(selectedTokenOrFiatAmountAtom);
+  const [shouldFetchCryptoRoutes, setShouldFetchCryptoRoutes] = useAtom(
+    shouldFetchCryptoRoutesAtom,
+  );
 
   const getActiveRouteIdByOperationId = (
     operationId: string | undefined,
@@ -209,11 +213,12 @@ export const useConfirmRoute = ({
   };
 
   const goToTransactionScreen = async () => {
-    if (widgetMode === 'fiat') {
+    if (widgetMode === 'fiat' && !shouldFetchCryptoRoutes) {
       await createOnramperOperation();
     } else {
       await confirmRoute();
     }
+    setShouldFetchCryptoRoutes(false);
     connectWalletsClose();
     setActiveStep(2);
   };
