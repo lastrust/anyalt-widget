@@ -1,5 +1,10 @@
 import { AnyAlt, SupportedChain, SupportedToken } from '@anyalt/sdk';
-import { GetAllRoutesResponseItem } from '@anyalt/sdk/dist/adapter/api/api';
+import {
+  GetAllRoutesResponseItem,
+  SupportedFiat,
+  SupportedOnramperQuote,
+  SupportedPaymentType,
+} from '@anyalt/sdk/dist/adapter/api/api';
 import { atom } from 'jotai';
 import { EstimateResponse, Token, WidgetTemplateType } from '..';
 import {
@@ -13,7 +18,8 @@ export const anyaltInstanceAtom = atom<AnyAlt | undefined>(undefined);
  * Tokens
  */
 export const selectedTokenAtom = atom<SupportedToken | undefined>(undefined); //Token, which user selects
-export const selectedTokenAmountAtom = atom<string | undefined>('');
+export const selectedCurrencyAtom = atom<SupportedFiat | undefined>(undefined); //Currency, which user selects
+export const selectedTokenOrFiatAmountAtom = atom<string | undefined>('');
 export const swapResultTokenAtom = atom<SupportedToken | undefined>(undefined); // It's same as outputToken, which comes from props on AnyaltWidget
 export const lastMileTokenAtom = atom<Token | undefined>(undefined); //Token, which will be deposited
 export const lastMileTokenAmountAtom = atom<string>('');
@@ -40,6 +46,22 @@ export const showPendingRouteDialogAtom = atom<boolean>(false);
 // Transaction informations:
 export const slippageAtom = atom<string>('3');
 export const activeOperationIdAtom = atom<string | undefined>(undefined);
+export const onramperOperationIdAtom = atom<string | undefined>(undefined);
+export const onrampersAtom = atom<SupportedOnramperQuote[] | undefined>(
+  undefined,
+);
+export const choosenFiatPaymentAtom = atom<SupportedPaymentType | undefined>(
+  undefined,
+);
+export const choosenOnrampPaymentAtom = atom<
+  SupportedOnramperQuote | undefined
+>(undefined);
+
+export const isPaymentMethodModalOpenAtom = atom<boolean>(false);
+export const isPaymentMethodLoadingAtom = atom<boolean>(false);
+export const isChooseOnrampModalOpenAtom = atom<boolean>(false);
+export const isChooseOnrampLoadingAtom = atom<boolean>(false);
+
 export const transactionIndexAtom = atom<number>(1); // Recent index of transactions
 export const transactionsListAtom = atom<TransactionStatusList | undefined>( // List of transactions to show on transactions screen
   undefined,
@@ -54,6 +76,7 @@ export const transactionsProgressAtom = atom<TransactionsProgress>({
 // Widget configurations:
 export const widgetTemplateAtom = atom<WidgetTemplateType>('DEPOSIT_TOKEN');
 export const minDepositAmountAtom = atom<number>(0);
+export const widgetModeAtom = atom<'crypto' | 'fiat'>('crypto');
 
 export const swapDataAtom = atom<{
   swapIsFinished: boolean;

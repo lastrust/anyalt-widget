@@ -11,6 +11,7 @@ type Props = BoxProps & {
   networkWidth?: string;
   networkHeight?: string;
   leftSmallImg?: string;
+  widgetMode?: 'crypto' | 'fiat' | undefined;
 };
 
 export const TokenIconBox: FC<Props> = ({
@@ -23,6 +24,7 @@ export const TokenIconBox: FC<Props> = ({
   networkWidth = '14px',
   networkHeight = '14px',
   leftSmallImg = '19px',
+  widgetMode,
   ...props
 }) => {
   return (
@@ -44,19 +46,21 @@ export const TokenIconBox: FC<Props> = ({
           bgColor="rgba(145,158,171, 0.3)"
         />
       )}
-      <Box position="absolute" bottom="0px" left={leftSmallImg}>
-        {chainIcon !== '' ? (
-          <Image
-            src={chainIcon}
-            alt={`${chainName} Icon`}
-            width={networkWidth}
-            height={networkHeight}
-            borderRadius="50%"
-          />
-        ) : (
-          <Box w="14px" h="14px" borderRadius="50%" bgColor="#919EAB" />
-        )}
-      </Box>
+      {widgetMode === 'crypto' && (
+        <Box position="absolute" bottom="0px" left={leftSmallImg}>
+          {chainIcon !== '' ? (
+            <Image
+              src={chainIcon}
+              alt={`${chainName} Icon`}
+              width={networkWidth}
+              height={networkHeight}
+              borderRadius="50%"
+            />
+          ) : (
+            <Box w="14px" h="14px" borderRadius="50%" bgColor="#919EAB" />
+          )}
+        </Box>
+      )}
     </Box>
   );
 };

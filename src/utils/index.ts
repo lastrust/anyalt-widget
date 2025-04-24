@@ -57,6 +57,14 @@ export const calculateWorstOutput = (
   route: GetAllRoutesResponseItem,
   slippage: string,
 ) => {
+  // If selected direct deposit of tokens
+  if (route.swapSteps.length === 0) {
+    return {
+      humanReadable: route.outputAmount,
+      raw: route.outputAmount,
+    };
+  }
+
   const decimals =
     route.swapSteps[route.swapSteps.length - 1].destinationToken.decimals;
 

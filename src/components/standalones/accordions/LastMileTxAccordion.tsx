@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/react';
 import { useAtomValue } from 'jotai';
 import { EstimateResponse, Token } from '../../..';
-import { selectedTokenAmountAtom } from '../../../store/stateStore';
+import { selectedTokenOrFiatAmountAtom } from '../../../store/stateStore';
 import { TransactionsProgress } from '../../../types/transaction';
 import { truncateToDecimals } from '../../../utils/truncateToDecimals';
 import { DividerIcon } from '../../atoms/icons/transaction/DividerIcon';
@@ -42,7 +42,7 @@ export const LastMileTxAccordion = ({
   isLastMileExpanded,
   transactionsProgress,
 }: Props) => {
-  const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
+  const selectedTokenOrFiatAmount = useAtomValue(selectedTokenOrFiatAmountAtom);
 
   return (
     <AccordionItem
@@ -67,7 +67,10 @@ export const LastMileTxAccordion = ({
       >
         <HStack justifyContent={'flex-start'}>
           <Text textStyle={'bold.1'} mr="8px">
-            Transaction {route.swapSteps.length + 1}
+            Transaction{' '}
+            {route.fiatStep
+              ? route.swapSteps.length + 2
+              : route.swapSteps.length + 1}
           </Text>
           {currentStep === route.swapSteps.length + 1 && (
             <Text
@@ -115,7 +118,7 @@ export const LastMileTxAccordion = ({
               name: swapResultToken?.symbol || '',
               amount: truncateToDecimals(
                 route.swapSteps.length === 0
-                  ? selectedTokenAmount || '0'
+                  ? selectedTokenOrFiatAmount || '0'
                   : route.swapSteps[route.swapSteps.length - 1]?.payout || '0',
                 3,
               ),

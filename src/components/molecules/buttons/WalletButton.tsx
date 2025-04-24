@@ -67,7 +67,6 @@ export const WalletButton: FC<WalletButtonProps> = ({
 
   useEffect(() => {
     if (isEvmWallet && evmAddress) {
-      console.log('called evm');
       setWalletStatus((prev) =>
         prev?.map((wallet) =>
           wallet.walletType === 'EVM'

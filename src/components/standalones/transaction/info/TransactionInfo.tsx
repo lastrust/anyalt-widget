@@ -6,13 +6,14 @@ import {
   Token,
   WalletConnector,
 } from '../../../..';
-import { truncateToDecimals } from '../../../../utils/truncateToDecimals';
 import { CustomButton } from '../../../atoms/buttons/CustomButton';
 import { ChevronDownIcon } from '../../../atoms/icons/transaction/ChevronDownIcon';
 import { CrossChainWarningCard } from '../../../molecules/card/CrossChainWarning';
 import { TransactionInfoCard } from '../../../molecules/card/TransactionInfoCard';
-import { TokenQuoteBox } from '../../selectSwap/token/quote/TokenQuoteBox';
 import { ProgressList } from '../ProgressList';
+import { OnrampTransaction } from './OnrampTransaction';
+import { PaymentSelect } from './PaymentSelect';
+import { TokenTransaction } from './TokenTransaction';
 import { useTransactionInfo } from './useTransactionInfo';
 
 type Props = {
@@ -21,6 +22,20 @@ type Props = {
   executeCallBack: (amount: Token) => Promise<ExecuteResponse>;
   estimateCallback: (token: Token) => Promise<EstimateResponse>;
 };
+
+export const SepartionBlock = () => (
+  <Box position="relative" w="100%">
+    <Divider w="100%" h="1px" bgColor="brand.bg.primary" />
+    <Center
+      position="absolute"
+      top="50%"
+      left="50%"
+      transform="translate(-50%, -50%)"
+    >
+      <ChevronDownIcon />
+    </Center>
+  </Box>
+);
 
 export const TransactionInfo: FC<Props> = ({
   externalEvmWalletConnector,
@@ -32,16 +47,23 @@ export const TransactionInfo: FC<Props> = ({
     fees,
     runTx,
     isLoading,
-    selectedRoute,
     headerText,
     currentStep,
+    onrampFees,
+    buttonText,
+    selectedRoute,
     estimatedTime,
     inTokenAmount,
+    isOnramperStep,
     protocolInputToken,
     protocolFinalToken,
     recentTransaction,
     finalTokenEstimate,
     transactionsProgress,
+    isChooseOnrampLoading,
+    setIsPaymentMethodModalOpen,
+    choosenFiatPaymentMethod,
+    isPaymentMethodLoading,
   } = useTransactionInfo({
     externalEvmWalletConnector,
     onTxComplete,
@@ -58,127 +80,63 @@ export const TransactionInfo: FC<Props> = ({
       h="100%"
     >
       <VStack w={'100%'} gap={'16px'}>
-        <Box w={'100%'}>
-          <VStack alignItems="flex-start" spacing="16px" w={'100%'}>
-            <HStack justifyContent={'space-between'} w={'100%'}>
-              <Text
-                textStyle={'regular.2'}
-                color="brand.text.secondary.2"
-                w={'100%'}
-                whiteSpace={'nowrap'}
-              >
-                {headerText}
-              </Text>
-              <CrossChainWarningCard />
-            </HStack>
-            <ProgressList
-              transactionsProgress={transactionsProgress}
-              index={currentStep - 1}
-            />
-            <TransactionInfoCard estimatedTime={estimatedTime} fees={fees} />
-          </VStack>
-        </Box>
-        <VStack
-          w={'100%'}
-          p={'16px'}
-          borderRadius={'16px'}
-          borderWidth={'1px'}
-          borderColor={'brand.border.primary'}
-        >
-          {selectedRoute?.swapSteps &&
-            (selectedRoute?.swapSteps?.length > 0 ? (
-              <TokenQuoteBox
-                loading={false}
-                headerText=""
-                tokenName={recentTransaction?.from.tokenName || ''}
-                tokenLogo={recentTransaction?.from.tokenLogo || ''}
-                chainName={recentTransaction?.from.blockchain || ''}
-                chainLogo={recentTransaction?.from.blockchainLogo || ''}
-                amount={Number(recentTransaction?.from.tokenAmount).toFixed(5)}
-                price={(
-                  Number(recentTransaction?.from.tokenUsdPrice) *
-                  Number(recentTransaction?.from.tokenAmount)
-                ).toFixed(2)}
-                w={'100%'}
-                p={'0'}
-                m={'0'}
-              />
-            ) : (
-              <TokenQuoteBox
-                loading={false}
-                headerText=""
-                tokenName={protocolInputToken?.symbol || ''}
-                tokenLogo={protocolInputToken?.logoUrl || ''}
-                chainName={protocolInputToken?.chain?.displayName || ''}
-                chainLogo={protocolInputToken?.chain?.logoUrl || ''}
-                amount={Number(inTokenAmount ?? 0).toFixed(4)}
-                price={'0.00'}
-                w={'100%'}
-                p={'0'}
-                m={'0'}
-              />
-            ))}
-
-          <Box position="relative" w="100%">
-            <Divider w="100%" h="1px" bgColor="brand.bg.primary" />
-            <Center
-              position="absolute"
-              top="50%"
-              left="50%"
-              transform="translate(-50%, -50%)"
+        <VStack alignItems="flex-start" spacing="12px" w={'100%'}>
+          <HStack justifyContent={'space-between'} w={'100%'}>
+            <Text
+              textStyle={'regular.2'}
+              color="brand.text.secondary.2"
+              w={'100%'}
+              whiteSpace={'nowrap'}
             >
-              <ChevronDownIcon />
-            </Center>
-          </Box>
-
-          {selectedRoute?.swapSteps &&
-            (selectedRoute.swapSteps.length > 0 ? (
-              <TokenQuoteBox
-                loading={false}
-                headerText=""
-                tokenName={recentTransaction?.to.tokenName || ''}
-                tokenLogo={recentTransaction?.to.tokenLogo || ''}
-                chainName={recentTransaction?.to.blockchain || ''}
-                chainLogo={recentTransaction?.to.blockchainLogo || ''}
-                amount={truncateToDecimals(
-                  recentTransaction?.to.tokenAmount || '',
-                  4,
-                )}
-                price={(
-                  Number(recentTransaction?.to.tokenUsdPrice) *
-                  Number(recentTransaction?.to.tokenAmount)
-                ).toFixed(2)}
-                w={'100%'}
-                p={'0'}
-                m={'0'}
-              />
-            ) : (
-              <TokenQuoteBox
-                loading={false}
-                headerText=""
-                tokenName={protocolFinalToken?.symbol || ''}
-                tokenLogo={protocolFinalToken?.logoUrl || ''}
-                chainName={protocolInputToken?.chain?.displayName || ''}
-                chainLogo={protocolInputToken?.chain?.logoUrl || ''}
-                amount={truncateToDecimals(
-                  finalTokenEstimate?.amountOut || '',
-                  4,
-                )}
-                price={finalTokenEstimate?.priceInUSD || '0.00'}
-                w={'100%'}
-                p={'0'}
-                m={'0'}
-              />
-            ))}
+              {headerText}
+            </Text>
+            <CrossChainWarningCard />
+          </HStack>
+          <ProgressList
+            transactionsProgress={transactionsProgress}
+            index={currentStep - 1}
+          />
+          <TransactionInfoCard
+            isOnramperStep={isOnramperStep || false}
+            estimatedTime={estimatedTime}
+            fees={isOnramperStep ? onrampFees : fees}
+          />
         </VStack>
+
+        {isOnramperStep ? (
+          <OnrampTransaction
+            selectedRoute={selectedRoute}
+            inTokenAmount={inTokenAmount}
+          />
+        ) : (
+          <TokenTransaction
+            selectedRoute={selectedRoute}
+            recentTransaction={recentTransaction}
+            protocolInputToken={protocolInputToken}
+            protocolFinalToken={protocolFinalToken}
+            finalTokenEstimate={finalTokenEstimate}
+            inTokenAmount={inTokenAmount}
+          />
+        )}
+        <PaymentSelect
+          isOnramperStep={isOnramperStep || false}
+          isPaymentMethodLoading={isPaymentMethodLoading}
+          choosenFiatPaymentMethod={choosenFiatPaymentMethod}
+          setIsPaymentMethodModalOpen={setIsPaymentMethodModalOpen}
+        />
       </VStack>
       <VStack w="100%" alignItems={'center'} gap={'16px'}>
         <CustomButton
           isLoading={isLoading}
-          isDisabled={isLoading}
+          isDisabled={
+            isLoading || isPaymentMethodLoading || isChooseOnrampLoading
+          }
           onButtonClick={runTx}
+          loadingText={
+            isOnramperStep ? 'Your will be redirected to Onramper' : ''
+          }
         >
-          Execute Transaction
+          {buttonText}
         </CustomButton>
         <Text textDecoration={'underline'} color="#999" cursor={'pointer'}>
           Cancel Transaction

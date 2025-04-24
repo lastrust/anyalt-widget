@@ -60,6 +60,29 @@ export const usePendingRoute = ({ closeConnectWalletsModal }: Props) => {
           outputAmount:
             pendingRoute.swapSteps![pendingRoute.swapSteps!.length - 1].payout,
           tags: [],
+          fiatStep: {
+            fiat: {
+              id: '',
+              onramperId: '',
+              name: '',
+              code: '',
+              logo: '',
+              symbol: '',
+            },
+            middleToken: {
+              id: '',
+              name: '',
+              tokenAddress: '',
+              symbol: '',
+              chainName: '',
+              decimals: 0,
+              marketCap: 0,
+              logoUrl: '',
+              chain: null,
+              onramperId: '',
+            },
+            payout: '',
+          },
         });
       }
     };
@@ -104,6 +127,29 @@ export const usePendingRoute = ({ closeConnectWalletsModal }: Props) => {
             pendingOperation.swapSteps![pendingOperation.swapSteps!.length - 1]
               .payout,
           tags: [],
+          fiatStep: {
+            fiat: {
+              id: '',
+              onramperId: '',
+              name: '',
+              code: '',
+              logo: '',
+              symbol: '',
+            },
+            middleToken: {
+              id: '',
+              name: '',
+              tokenAddress: '',
+              symbol: '',
+              chainName: '',
+              decimals: 0,
+              marketCap: 0,
+              logoUrl: '',
+              chain: null,
+              onramperId: '',
+            },
+            payout: '',
+          },
         });
       }
     };

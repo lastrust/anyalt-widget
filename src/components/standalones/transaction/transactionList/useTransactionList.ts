@@ -8,8 +8,8 @@ import {
   lastMileTokenEstimateAtom,
   pendingRouteAtom,
   selectedRouteAtom,
-  selectedTokenAmountAtom,
   selectedTokenAtom,
+  selectedTokenOrFiatAmountAtom,
   swapResultTokenAtom,
   transactionIndexAtom,
   widgetTemplateAtom,
@@ -28,7 +28,7 @@ export const useTransactionList = ({ operationType }: Props) => {
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
 
   const selectedToken = useAtomValue(selectedTokenAtom);
-  const selectedTokenAmount = useAtomValue(selectedTokenAmountAtom);
+  const selectedTokenOrFiatAmount = useAtomValue(selectedTokenOrFiatAmountAtom);
   const swapResultToken = useAtomValue(swapResultTokenAtom);
   const lastMileToken = useAtomValue(lastMileTokenAtom);
   const lastMileTokenEstimate = useAtomValue(lastMileTokenEstimateAtom);
@@ -82,6 +82,21 @@ export const useTransactionList = ({ operationType }: Props) => {
     const sourceOfInfo =
       operationType === 'CURRENT' ? selectedRoute : pendingRoute;
 
+    if (selectedRoute?.fiatStep && currentStep === 1) {
+      return {
+        name: selectedRoute.fiatStep.fiat.name || '',
+        contractAddress: '',
+        symbol: selectedRoute.fiatStep.fiat.code || '',
+        logo: selectedRoute.fiatStep.fiat.logo || '',
+        blockchain: '',
+        amount: Number(selectedTokenOrFiatAmount).toFixed(4) || '',
+        blockchainLogo: '',
+        decimals: 0,
+        tokenUsdPrice: 0,
+        chainType: ChainType.EVM,
+      };
+    }
+
     if (!sourceOfInfo || sourceOfInfo?.swapSteps.length === 0) {
       const chainType = selectedToken?.chainName
         ? mapBlockchainToChainType(selectedToken?.chainName)
@@ -93,7 +108,7 @@ export const useTransactionList = ({ operationType }: Props) => {
         symbol: selectedToken?.symbol || '',
         logo: selectedToken?.logoUrl || '',
         blockchain: selectedToken?.chain?.displayName || '',
-        amount: Number(selectedTokenAmount).toFixed(4) || '',
+        amount: Number(selectedTokenOrFiatAmount).toFixed(4) || '',
         blockchainLogo: selectedToken?.chain?.logoUrl || '',
         decimals: selectedToken?.decimals || 0,
         tokenUsdPrice: 0,

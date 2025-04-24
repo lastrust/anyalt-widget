@@ -1,6 +1,7 @@
 import {
   Box,
   BoxProps,
+  Button,
   Flex,
   Grid,
   HStack,
@@ -9,17 +10,22 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { ConfigIcon } from '../atoms/icons/selectToken/ConfigIcon';
-import { SelectTokenIcon } from '../atoms/icons/selectToken/SelectTokenIcon';
+import { BackButton } from '../molecules/buttons/BackButton';
 import { CrossChainWarningCard } from '../molecules/card/CrossChainWarning';
+import { ChooseOnrampModal } from '../standalones/modals/ChooseOnrampModal';
+import { PaymentMethodModal } from '../standalones/modals/PaymentMethodModal';
+import { WidgetMode } from '../standalones/widgetMode/WidgetMode';
 
 type Props = {
   title?: string;
   subtitle?: string;
   secondTitle?: string;
-  withDisclaimer?: boolean;
   secondSubtitle?: string;
+  withDisclaimer?: boolean;
+  enableWidgetMode?: boolean;
   onConfigClick?: () => void;
   onBackClick?: () => void;
+  isPaymentModalActive?: boolean;
   children: React.ReactNode;
 } & BoxProps;
 
@@ -29,21 +35,24 @@ export const SwappingTemplate = ({
   subtitle,
   secondTitle,
   secondSubtitle,
+  enableWidgetMode,
   onConfigClick,
   onBackClick,
   withDisclaimer = false,
+  isPaymentModalActive = false,
   ...props
 }: Props) => {
   return (
     <VStack
       w="100%"
       p="24px"
-      gap="16px"
+      gap="12px"
       borderWidth="1px"
       borderRadius="12px"
       margin="24px 0px 16px"
       alignItems={'flex-start'}
       borderColor="brand.border.primary"
+      pos={isPaymentModalActive ? 'relative' : 'unset'}
       {...props}
     >
       {title && (
@@ -54,24 +63,16 @@ export const SwappingTemplate = ({
         >
           <Flex justifyContent="space-between" alignItems="center" w={'100%'}>
             <VStack alignItems="left" w={'100%'}>
-              <HStack>
-                {onBackClick && (
-                  <Box
-                    cursor="pointer"
-                    color={'brand.buttons.action.bg'}
-                    _hover={{
-                      color: 'brand.buttons.action.hover',
-                    }}
-                    onClick={onBackClick}
-                    transform={'rotate(180deg)'}
-                  >
-                    <Icon as={SelectTokenIcon} w={'24px'} h={'24px'} />
-                  </Box>
-                )}
-                <Text color="brand.text.primary" textStyle={'bold.0'}>
-                  {title}
-                </Text>
-              </HStack>
+              {enableWidgetMode ? (
+                <WidgetMode />
+              ) : (
+                <HStack>
+                  <BackButton onBackClick={onBackClick} />
+                  <Text color="brand.text.primary" textStyle={'bold.0'}>
+                    {title}
+                  </Text>
+                </HStack>
+              )}
               {subtitle && (
                 <HStack w={'100%'} justifyContent={'space-between'}>
                   <Text
@@ -87,13 +88,14 @@ export const SwappingTemplate = ({
               )}
             </VStack>
             {onConfigClick && (
-              <Box
+              <Button
+                maxH={'24px'}
                 cursor="pointer"
                 color="brand.text.active"
                 onClick={onConfigClick}
               >
                 <Icon as={ConfigIcon} />
-              </Box>
+              </Button>
             )}
           </Flex>
           {secondTitle && (
@@ -124,6 +126,12 @@ export const SwappingTemplate = ({
       <Box w={'100%'} h={'100%'}>
         {children}
       </Box>
+      {isPaymentModalActive && (
+        <>
+          <ChooseOnrampModal />
+          <PaymentMethodModal />
+        </>
+      )}
     </VStack>
   );
 };
