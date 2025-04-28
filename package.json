@@ -1,6 +1,6 @@
 {
   "name": "@anyalt/widget",
-  "version": "1.0.21",
+  "version": "1.0.21-dev.1",
   "description": "Anyalt Widget",
   "private": false,
   "files": [
@@ -40,7 +40,7 @@
   "dependencies": {
     "@ant-design/web3": "^1.22.0",
     "@ant-design/web3-bitcoin": "^1.5.2",
-    "@anyalt/sdk": "^1.0.18",
+    "@anyalt/sdk": "1.0.18-dev.8",
     "@chakra-ui/react": "2.10.4",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
