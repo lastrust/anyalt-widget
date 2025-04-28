@@ -5,6 +5,7 @@ import { PendingRouteDialog } from '../pendingRouteDialog/PendingRouteDialog';
 import { StuckTransactionDialog } from '../stuckTransactionDialog/StuckTransactionDialog';
 
 type Props = {
+  loading: boolean;
   showPendingRouteDialog: boolean;
   shouldFetchCryptoRoutes: boolean;
   walletConnector?: WalletConnector;
@@ -18,6 +19,7 @@ type Props = {
 };
 
 export const HandleTransactions = ({
+  loading,
   walletConnector,
   showPendingRouteDialog,
   shouldFetchCryptoRoutes,
@@ -45,6 +47,7 @@ export const HandleTransactions = ({
   if (shouldFetchCryptoRoutes) {
     return (
       <ChooseNewRouteDialog
+        loading={loading}
         onChooseRouteButtonClick={onChooseRouteButtonClick}
       />
     );

@@ -5,6 +5,7 @@ import { ChoosingRouteAccordion } from '../../standalones/accordions/choosingRou
 import { SwappingTemplate } from '../../templates/SwappingTemplate';
 
 type Props = {
+  loading: boolean;
   onChooseRouteButtonClick: () => Promise<void>;
 };
 

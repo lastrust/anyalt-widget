@@ -27,12 +27,13 @@ export const RouteTransactions = ({
 }: Props) => {
   const fiatStepCopy = useAtomValue(fiatStepCopyAtom);
   const shouldFetchCryptoRoutes = useAtomValue(shouldFetchCryptoRoutesAtom);
-  if (loading) return <Skeleton w={'180px'} h={'18px'} borderRadius="12px" />;
 
   const isIncludeFiat = useMemo(
     () => Boolean(route.fiatStep) || shouldFetchCryptoRoutes,
     [route.fiatStep, shouldFetchCryptoRoutes],
   );
+
+  if (loading) return <Skeleton w={'180px'} h={'18px'} borderRadius="12px" />;
 
   return (
     <>

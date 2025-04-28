@@ -32,6 +32,11 @@ export const ChooseOnrampModal = () => {
     const getOnrampers = async () => {
       try {
         setIsChooseOnrampLoading(true);
+        if (!choosenFiatPayment?.paymentTypeId) {
+          setIsChooseOnrampLoading(false);
+          return;
+        }
+
         const res = await anyaltInstance?.getFiatQuote({
           fiatId: selectedRoute?.fiatStep?.fiat.onramperId || '',
           tokenId: selectedRoute?.fiatStep?.middleToken.onramperId || '',

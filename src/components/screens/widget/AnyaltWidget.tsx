@@ -75,6 +75,7 @@ export const AnyaltWidgetWrapper = ({
     >
       <Header activeStep={activeStep} customText={headerCustomText} />
       <HandleTransactions
+        loading={loading}
         walletConnector={walletConnector}
         showPendingRouteDialog={showPendingRouteDialog}
         shouldFetchCryptoRoutes={shouldFetchCryptoRoutes}

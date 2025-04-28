@@ -34,24 +34,24 @@ export const SwapStep = ({
   operationType,
   transactionsProgress,
 }: Props) => {
-  const isStepCurrentOne = (stepIndex: number, swapStep: SwapOperationStep) => {
-    if (currentStep - 1 !== stepIndex) return false;
+  // const isStepCurrentOne = (stepIndex: number, swapStep: SwapOperationStep) => {
+  //   if (currentStep - 1 !== stepIndex) return false;
 
-    if (operationType === 'PENDING') {
-      return swapStep.transactions.length;
-    } else {
-      return (
-        Boolean(
-          transactionsProgress![stepIndex]?.approve ||
-            transactionsProgress![stepIndex]?.swap,
-        ) &&
-        Boolean(
-          transactionsProgress![stepIndex]?.approve?.status !== 'failed' &&
-            transactionsProgress![stepIndex]?.swap?.status !== 'failed',
-        )
-      );
-    }
-  };
+  //   if (operationType === 'PENDING') {
+  //     return swapStep.transactions.length;
+  //   } else {
+  //     return (
+  //       Boolean(
+  //         transactionsProgress![stepIndex]?.approve ||
+  //           transactionsProgress![stepIndex]?.swap,
+  //       ) &&
+  //       Boolean(
+  //         transactionsProgress![stepIndex]?.approve?.status !== 'failed' &&
+  //           transactionsProgress![stepIndex]?.swap?.status !== 'failed',
+  //       )
+  //     );
+  //   }
+  // };
 
   return (
     <AccordionItem
@@ -84,7 +84,8 @@ export const SwapStep = ({
                 Completed
               </Text>
             ))}
-          {isStepCurrentOne(index, swapStep) && (
+
+          {currentStep - 1 === index && (
             <Text
               textStyle={'bold.2'}
               color={

@@ -310,7 +310,10 @@ export const useTransactionInfo = ({
     protocolFinalToken: lastMileToken,
     transactionsProgress,
     headerText,
-    recentTransaction: transactionsList?.steps?.[transactionIndex - 1],
+    recentTransaction:
+      transactionsList?.steps?.[
+        transactionIndex - (selectedRoute?.fiatStep ? 2 : 1)
+      ],
     setIsPaymentMethodModalOpen,
     choosenFiatPaymentMethod,
     isPaymentMethodLoading,

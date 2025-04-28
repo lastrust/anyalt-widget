@@ -122,7 +122,6 @@ export const useFetchRoutes = ({
   }, [bitcoinAccount, solanaAddress, evmAddress]);
 
   const onGetRoutes = async (withGoNext: boolean = true) => {
-    console.log('called');
     if (shouldFetchCryptoRoutes) {
       await fetchCryptoRoutes(false, fromTokenAfterFiatTx);
       return;
@@ -161,11 +160,15 @@ export const useFetchRoutes = ({
     withGoNext: boolean = true,
     fromToken?: { address: string; chainName: string },
   ) => {
-    const isTokenOrFiatSelected = fromToken || selectedToken;
-    if (!isTokenOrFiatSelected || !selectedTokenOrFiatAmount) return;
+    console.log('called to crypto');
+    if (!selectedToken || !selectedTokenOrFiatAmount) return;
 
-    const fromTokenAddress = fromToken?.address ?? selectedToken?.tokenAddress;
-    const fromTokenChainName = fromToken?.chainName ?? selectedToken?.chainName;
+    const fromTokenAddress = fromToken
+      ? fromToken?.address
+      : selectedToken?.tokenAddress;
+    const fromTokenChainName = fromToken
+      ? fromToken?.chainName
+      : selectedToken?.chainName;
 
     try {
       setLoading(true);
@@ -375,14 +378,7 @@ export const useFetchRoutes = ({
   useEffect(() => {
     console.log('called');
     onGetRoutes(false);
-  }, [
-    selectedToken,
-    selectedCurrency,
-    slippage,
-    balance,
-    selectedWallets,
-    shouldFetchCryptoRoutes,
-  ]);
+  }, [selectedToken, selectedCurrency, slippage, shouldFetchCryptoRoutes]);
 
   useEffect(() => {
     const isTokenOrFiatSelected = selectedCurrency || selectedToken;
@@ -395,7 +391,8 @@ export const useFetchRoutes = ({
       setLoading(true);
 
     const debounceTimeout = setTimeout(() => {
-      if (selectedTokenOrFiatAmount && selectedCurrency) {
+      const isTokenOrFiatSelected = selectedCurrency || selectedToken;
+      if (selectedTokenOrFiatAmount && isTokenOrFiatSelected) {
         onGetRoutes(false);
       }
     }, DEBOUNCE_TIMEOUT);
@@ -406,6 +403,8 @@ export const useFetchRoutes = ({
   }, [
     selectedToken,
     selectedCurrency,
+    balance,
+    selectedWallets,
     swapResultTokenGlobal,
     selectedTokenOrFiatAmount,
     shouldFetchCryptoRoutes,

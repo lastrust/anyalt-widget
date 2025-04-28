@@ -72,7 +72,8 @@ export const LastMileTxAccordion = ({
               ? route.swapSteps.length + 2
               : route.swapSteps.length + 1}
           </Text>
-          {currentStep === route.swapSteps.length + 1 && (
+          {currentStep ===
+            route.swapSteps.length + (route.fiatStep ? 2 : 1) && (
             <Text
               textStyle={'bold.1'}
               color={
