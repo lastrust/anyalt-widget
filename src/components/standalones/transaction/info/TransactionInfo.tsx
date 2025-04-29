@@ -55,6 +55,7 @@ export const TransactionInfo: FC<Props> = ({
     estimatedTime,
     inTokenAmount,
     isOnramperStep,
+    isContainFiatStep,
     protocolInputToken,
     protocolFinalToken,
     recentTransaction,
@@ -94,7 +95,7 @@ export const TransactionInfo: FC<Props> = ({
           </HStack>
           <ProgressList
             transactionsProgress={transactionsProgress}
-            index={currentStep - 1}
+            index={currentStep - (isContainFiatStep ? 2 : 1)}
           />
           <TransactionInfoCard
             isOnramperStep={isOnramperStep || false}
