@@ -31,7 +31,6 @@ export const ChooseOnrampModal = () => {
   useEffect(() => {
     const getOnrampers = async () => {
       try {
-        
         setIsChooseOnrampLoading(true);
         if (!choosenFiatPayment?.paymentTypeId) {
           setIsChooseOnrampLoading(false);
