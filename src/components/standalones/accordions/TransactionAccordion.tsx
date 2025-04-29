@@ -1,8 +1,10 @@
 import { GetAllRoutesResponseItem } from '@anyalt/sdk/dist/adapter/api/api';
 import { Accordion } from '@chakra-ui/react';
 import { useAtomValue } from 'jotai';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
+  fiatStepCopyAtom,
+  isFiatPurchaseCompletedAtom,
   lastMileTokenAtom,
   lastMileTokenEstimateAtom,
   swapResultTokenAtom,
@@ -30,8 +32,9 @@ export const TransactionAccordion = ({
 
   const swapResultToken = useAtomValue(swapResultTokenAtom);
   const lastMileToken = useAtomValue(lastMileTokenAtom);
+  const fiatStepCopy = useAtomValue(fiatStepCopyAtom);
   const lastMileTokenEstimate = useAtomValue(lastMileTokenEstimateAtom);
-
+  const isFiatPurchaseCompleted = useAtomValue(isFiatPurchaseCompletedAtom);
   const transactionsProgress = useAtomValue(transactionsProgressAtom);
 
   useEffect(() => {
@@ -53,6 +56,22 @@ export const TransactionAccordion = ({
     }
   }, [currentStep]);
 
+  const isIncludeFiat = useMemo(
+    () => Boolean(route?.fiatStep) || isFiatPurchaseCompleted,
+    [route?.fiatStep, isFiatPurchaseCompleted],
+  );
+
+  const fiatStep = useMemo(() => {
+    if (isFiatPurchaseCompleted) {
+      return fiatStepCopy;
+    }
+    if (route?.fiatStep) {
+      return route.fiatStep;
+    }
+
+    return undefined;
+  }, [isFiatPurchaseCompleted, fiatStepCopy, route?.fiatStep]);
+
   if (!route) return <></>;
 
   return (
@@ -65,9 +84,9 @@ export const TransactionAccordion = ({
       display={'flex'}
       flexDir={'column'}
     >
-      {route.fiatStep && (
+      {isIncludeFiat && (
         <FiatSwap
-          fiatStep={route.fiatStep}
+          fiatStep={fiatStep}
           index={0}
           currentStep={currentStep}
           operationType={operationType}
@@ -77,7 +96,7 @@ export const TransactionAccordion = ({
       {route?.swapSteps?.map((swapStep, index) => (
         <SwapStep
           swapStep={swapStep}
-          index={route.fiatStep ? index + 1 : index}
+          index={isIncludeFiat ? index + 1 : index}
           currentStep={currentStep}
           operationType={operationType}
           key={`${swapStep.executionOrder}-${index}`}
@@ -88,6 +107,7 @@ export const TransactionAccordion = ({
       {widgetTemplate === 'DEPOSIT_TOKEN' && (
         <LastMileTxAccordion
           route={route}
+          isIncludeFiat={isIncludeFiat}
           currentStep={currentStep}
           isLastMileExpanded={expandedIndexes.includes(currentStep - 1)}
           protocolFinalToken={lastMileToken}

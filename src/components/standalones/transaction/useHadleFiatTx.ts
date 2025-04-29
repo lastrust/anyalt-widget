@@ -7,6 +7,7 @@ import {
   choosenOnrampPaymentAtom,
   fiatStepCopyAtom,
   fromTokenAfterFiatTxAtom,
+  isFiatPurchaseCompletedAtom,
   onramperOperationIdAtom,
   payoutAfterFiatSwapAtom,
   selectedRouteAtom,
@@ -25,6 +26,7 @@ export const useHadleFiatTx = () => {
   const [selectedRoute] = useAtom(selectedRouteAtom);
   const [, setFiatStepCopy] = useAtom(fiatStepCopyAtom);
   const [, setShouldFetchCryptoRoutes] = useAtom(shouldFetchCryptoRoutesAtom);
+  const [, setIsFiatPurchaseCompleted] = useAtom(isFiatPurchaseCompletedAtom);
   const [, setFromTokenAfterFiatTx] = useAtom(fromTokenAfterFiatTxAtom);
   const [, setPayoutAfterFiatSwap] = useAtom(payoutAfterFiatSwapAtom);
   const { address: evmAddress } = useAccount();
@@ -95,6 +97,7 @@ export const useHadleFiatTx = () => {
         address: selectedRoute?.fiatStep?.middleToken.tokenAddress || '',
         chainName: selectedRoute?.fiatStep?.middleToken.chainName || '',
       });
+      setIsFiatPurchaseCompleted(true);
       setShouldFetchCryptoRoutes(true);
       return result;
     } catch (error) {

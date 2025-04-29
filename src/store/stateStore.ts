@@ -48,8 +48,11 @@ export const showPendingRouteDialogAtom = atom<boolean>(false);
 export const slippageAtom = atom<string>('3');
 export const activeOperationIdAtom = atom<string | undefined>(undefined);
 export const shouldFetchCryptoRoutesAtom = atom<boolean>(false);
+export const isFiatPurchaseCompletedAtom = atom<boolean>(false);
 export const payoutAfterFiatSwapAtom = atom<string>('');
 export const fiatStepCopyAtom = atom<FiatStep | undefined>(undefined);
+//Make a global variable to store inforamtion about prev transaction data.
+
 export const fromTokenAfterFiatTxAtom = atom<
   | {
       address: string;

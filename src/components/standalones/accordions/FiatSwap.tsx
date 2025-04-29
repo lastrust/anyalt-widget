@@ -17,7 +17,7 @@ import { ArrowRightIcon } from '../../atoms/icons/transaction/ArrowRightIcon';
 import { CheckIcon } from '../../atoms/icons/transaction/CheckIcon';
 
 type Props = {
-  fiatStep: FiatStep;
+  fiatStep: FiatStep | undefined;
   index: number;
   currentStep: number;
   operationType: 'CURRENT' | 'PENDING';
@@ -30,6 +30,8 @@ export const FiatSwap = ({
   operationType,
 }: Props) => {
   const inputTokenAmount = useAtomValue(selectedTokenOrFiatAmountAtom);
+  if (!fiatStep) return null;
+
   return (
     <AccordionItem
       key={`${fiatStep.payout}-${index}`}

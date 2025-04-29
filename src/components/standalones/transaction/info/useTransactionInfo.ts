@@ -12,6 +12,7 @@ import {
   choosenFiatPaymentAtom,
   choosenOnrampPaymentAtom,
   isChooseOnrampLoadingAtom,
+  isFiatPurchaseCompletedAtom,
   isPaymentMethodLoadingAtom,
   isPaymentMethodModalOpenAtom,
   lastMileTokenAtom,
@@ -69,7 +70,7 @@ export const useTransactionInfo = ({
   const [transactionsProgress, setTransactionsProgress] = useAtom(
     transactionsProgressAtom,
   );
-
+  const isFiatPurchaseCompleted = useAtomValue(isFiatPurchaseCompletedAtom);
   const { executeSwap } = useHandleSwap(externalEvmWalletConnector);
   const { executeFiatTransaction } = useHadleFiatTx();
   const { keepPollingOnTxStuck } = useStuckTransaction();
@@ -275,6 +276,10 @@ export const useTransactionInfo = ({
     );
   }, [selectedRoute, transactionIndex, lastMileTokenEstimate]);
 
+  const isContainFiatStep = useMemo(() => {
+    return Boolean(selectedRoute?.fiatStep) || isFiatPurchaseCompleted;
+  }, [selectedRoute, isFiatPurchaseCompleted]);
+
   const fees = useMemo(() => {
     if (!selectedRoute) return '0';
 
@@ -282,7 +287,9 @@ export const useTransactionInfo = ({
       return lastMileTokenEstimate?.estimatedFeeInUSD || '0';
 
     return (
-      selectedRoute.swapSteps[transactionIndex - 1]?.fees
+      selectedRoute.swapSteps[
+        transactionIndex - (isContainFiatStep ? 2 : 1)
+      ]?.fees
         .reduce((acc, fee) => {
           const amount = parseFloat(fee?.amount);
           const price = fee.price || 0;
@@ -311,9 +318,7 @@ export const useTransactionInfo = ({
     transactionsProgress,
     headerText,
     recentTransaction:
-      transactionsList?.steps?.[
-        transactionIndex - (selectedRoute?.fiatStep ? 2 : 1)
-      ],
+      transactionsList?.steps?.[transactionIndex - (isContainFiatStep ? 2 : 1)],
     setIsPaymentMethodModalOpen,
     choosenFiatPaymentMethod,
     isPaymentMethodLoading,

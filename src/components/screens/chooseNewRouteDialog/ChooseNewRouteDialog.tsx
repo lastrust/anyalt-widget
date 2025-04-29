@@ -9,7 +9,10 @@ type Props = {
   onChooseRouteButtonClick: () => Promise<void>;
 };
 
-export const ChooseNewRouteDialog = ({ onChooseRouteButtonClick }: Props) => {
+export const ChooseNewRouteDialog = ({
+  loading,
+  onChooseRouteButtonClick,
+}: Props) => {
   return (
     <Grid templateColumns="1fr 1fr" gap="16px" m="24px 0px 16px">
       <SwappingTemplate>
@@ -23,14 +26,17 @@ export const ChooseNewRouteDialog = ({ onChooseRouteButtonClick }: Props) => {
             Please select preferred route on the right <br />
             to continue your transaction
           </Text>
-          <CustomButton onButtonClick={() => onChooseRouteButtonClick()}>
+          <CustomButton
+            isLoading={loading}
+            onButtonClick={() => onChooseRouteButtonClick()}
+          >
             Confirm Route
           </CustomButton>
         </Center>
       </SwappingTemplate>
       <SwappingTemplate withDisclaimer title={'Routes'}>
         <ChoosingRouteAccordion
-          loading={false}
+          loading={loading}
           estimateOutPut={() => Promise.resolve({} as EstimateResponse)}
           failedToFetchRoute={false}
         />

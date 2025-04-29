@@ -160,8 +160,8 @@ export const useFetchRoutes = ({
     withGoNext: boolean = true,
     fromToken?: { address: string; chainName: string },
   ) => {
-    console.log('called to crypto');
-    if (!selectedToken || !selectedTokenOrFiatAmount) return;
+    const isFromTokenOrSelectedToken = fromToken || selectedToken;
+    if (!isFromTokenOrSelectedToken || !selectedTokenOrFiatAmount) return;
 
     const fromTokenAddress = fromToken
       ? fromToken?.address
@@ -376,12 +376,12 @@ export const useFetchRoutes = ({
   }, [selectedRoute, swapResultTokenGlobal, setListOfTransactionsFromRoute]);
 
   useEffect(() => {
-    console.log('called');
     onGetRoutes(false);
   }, [selectedToken, selectedCurrency, slippage, shouldFetchCryptoRoutes]);
 
   useEffect(() => {
     const isTokenOrFiatSelected = selectedCurrency || selectedToken;
+    console.log(selectedToken?.id !== swapResultTokenGlobal?.id);
     if (
       selectedTokenOrFiatAmount &&
       isTokenOrFiatSelected &&
