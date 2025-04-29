@@ -381,7 +381,6 @@ export const useFetchRoutes = ({
 
   useEffect(() => {
     const isTokenOrFiatSelected = selectedCurrency || selectedToken;
-    console.log(selectedToken?.id !== swapResultTokenGlobal?.id);
     if (
       selectedTokenOrFiatAmount &&
       isTokenOrFiatSelected &&
@@ -391,7 +390,6 @@ export const useFetchRoutes = ({
       setLoading(true);
 
     const debounceTimeout = setTimeout(() => {
-      const isTokenOrFiatSelected = selectedCurrency || selectedToken;
       if (selectedTokenOrFiatAmount && isTokenOrFiatSelected) {
         onGetRoutes(false);
       }

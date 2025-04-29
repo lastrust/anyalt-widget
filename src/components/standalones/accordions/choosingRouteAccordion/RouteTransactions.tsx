@@ -4,7 +4,7 @@ import {
 } from '@anyalt/sdk/dist/adapter/api/api';
 import { Skeleton } from '@chakra-ui/react';
 import { useAtomValue } from 'jotai';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { WidgetTemplateType } from '../../../..';
 import {
   fiatStepCopyAtom,
@@ -32,11 +32,6 @@ export const RouteTransactions = ({
     () => Boolean(route.fiatStep) || isFiatPurchaseCompleted,
     [route.fiatStep, isFiatPurchaseCompleted],
   );
-
-  useEffect(() => {
-    console.log('fiatStepCopy', fiatStepCopy);
-    console.log('isFiatPurchaseCompleted', isFiatPurchaseCompleted);
-  }, [fiatStepCopy, isFiatPurchaseCompleted]);
 
   if (loading) return <Skeleton w={'180px'} h={'18px'} borderRadius="12px" />;
 

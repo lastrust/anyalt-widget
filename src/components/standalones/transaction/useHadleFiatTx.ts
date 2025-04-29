@@ -92,7 +92,7 @@ export const useHadleFiatTx = () => {
       // TODO: Add a global state variable to refetch new routes based on new data.
       // It should get all routes without fiat data and pass middle token as fromToken.
       setFiatStepCopy(selectedRoute?.fiatStep);
-      setPayoutAfterFiatSwap(String(choosenOnrampPayment?.payout) || '');
+      setPayoutAfterFiatSwap(String(result?.payout) || '');
       setFromTokenAfterFiatTx({
         address: selectedRoute?.fiatStep?.middleToken.tokenAddress || '',
         chainName: selectedRoute?.fiatStep?.middleToken.chainName || '',
