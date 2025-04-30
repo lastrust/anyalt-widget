@@ -1,36 +1,26 @@
+import { GetAllRoutesResponseItem } from '@anyalt/sdk/dist/adapter/api/api';
 import { Center, Grid, Icon, Text } from '@chakra-ui/react';
 import { EstimateResponse } from '../../..';
 import { CustomButton } from '../../atoms/buttons/CustomButton';
+import { ArrowIcon } from '../../atoms/icons/ArrowIcon';
 import { NewRouteIcon } from '../../atoms/icons/NewRouteIcon';
 import { ChoosingRouteAccordion } from '../../standalones/accordions/choosingRouteAccordion/ChoosingRouteAccordion';
 import { SwappingTemplate } from '../../templates/SwappingTemplate';
 
 type Props = {
   loading: boolean;
+  failedToFetchRoute: boolean;
   onChooseRouteButtonClick: () => Promise<void>;
+  estimateOutPut: (
+    route: GetAllRoutesResponseItem,
+  ) => Promise<EstimateResponse>;
 };
-
-const ArrowIcon = () => (
-  <svg
-    width="12"
-    height="10"
-    viewBox="0 0 12 10"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M7 1L11 5M11 5L7 9M11 5L1 5"
-      stroke="#999999"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
 
 export const ChooseNewRouteDialog = ({
   loading,
+  failedToFetchRoute,
   onChooseRouteButtonClick,
+  estimateOutPut,
 }: Props) => {
   return (
     <Grid templateColumns="1fr 1fr" gap="16px" m="24px 0px 16px">
@@ -68,8 +58,8 @@ export const ChooseNewRouteDialog = ({
       <SwappingTemplate withDisclaimer title={'Routes'}>
         <ChoosingRouteAccordion
           loading={loading}
-          estimateOutPut={() => Promise.resolve({} as EstimateResponse)}
-          failedToFetchRoute={false}
+          estimateOutPut={estimateOutPut}
+          failedToFetchRoute={failedToFetchRoute}
         />
       </SwappingTemplate>
     </Grid>

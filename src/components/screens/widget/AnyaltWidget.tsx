@@ -77,11 +77,13 @@ export const AnyaltWidgetWrapper = ({
       <HandleTransactions
         loading={loading}
         walletConnector={walletConnector}
+        failedToFetchRoute={failedToFetchRoute}
         showPendingRouteDialog={showPendingRouteDialog}
         shouldFetchCryptoRoutes={shouldFetchCryptoRoutes}
         showStuckTransactionDialog={showStuckTransactionDialog}
         allNecessaryWalletsConnected={allNecessaryWalletsConnected}
         resetState={resetState}
+        estimateOutPut={estimateOutPut}
         setCurrentRoute={setCurrentRoute}
         connectWalletsOpen={connectWalletsOpen}
         onChooseRouteButtonClick={onChooseRouteButtonClick}

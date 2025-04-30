@@ -1,11 +1,12 @@
 import { GetAllRoutesResponseItem } from '@anyalt/sdk/dist/adapter/api/api';
-import { WalletConnector } from '../../..';
+import { EstimateResponse, WalletConnector } from '../../..';
 import { ChooseNewRouteDialog } from '../chooseNewRouteDialog/ChooseNewRouteDialog';
 import { PendingRouteDialog } from '../pendingRouteDialog/PendingRouteDialog';
 import { StuckTransactionDialog } from '../stuckTransactionDialog/StuckTransactionDialog';
 
 type Props = {
   loading: boolean;
+  failedToFetchRoute: boolean;
   showPendingRouteDialog: boolean;
   shouldFetchCryptoRoutes: boolean;
   walletConnector?: WalletConnector;
@@ -16,17 +17,22 @@ type Props = {
   connectWalletsOpen: () => void;
   setCurrentRoute: (route: GetAllRoutesResponseItem) => void;
   onChooseRouteButtonClick: () => Promise<void>;
+  estimateOutPut: (
+    route: GetAllRoutesResponseItem,
+  ) => Promise<EstimateResponse>;
 };
 
 export const HandleTransactions = ({
   loading,
   walletConnector,
+  failedToFetchRoute,
   showPendingRouteDialog,
   shouldFetchCryptoRoutes,
   showStuckTransactionDialog,
   allNecessaryWalletsConnected,
   children,
   resetState,
+  estimateOutPut,
   setCurrentRoute,
   connectWalletsOpen,
   onChooseRouteButtonClick,
@@ -48,6 +54,8 @@ export const HandleTransactions = ({
     return (
       <ChooseNewRouteDialog
         loading={loading}
+        estimateOutPut={estimateOutPut}
+        failedToFetchRoute={failedToFetchRoute}
         onChooseRouteButtonClick={onChooseRouteButtonClick}
       />
     );

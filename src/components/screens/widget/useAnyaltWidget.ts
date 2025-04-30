@@ -9,9 +9,9 @@ import {
 } from '../../..';
 import {
   allRoutesAtom,
+  shouldFetchCryptoRoutesAtom,
   showStuckTransactionDialogAtom,
 } from '../../../store/stateStore';
-import { useChooseNewRouteDialog } from '../chooseNewRouteDialog/useChooseNewRouteDialog';
 import { usePendingRoute } from '../pendingRouteDialog/usePendingTransaction';
 import { useConfirmRoute } from './useConfirmRoute';
 import { useControllWidget } from './useControllWidget';
@@ -72,6 +72,7 @@ export const useAnyaltWidget = ({
   onClose,
 }: Props): ReturnType => {
   const [allRoutes] = useAtom(allRoutesAtom);
+  const shouldFetchCryptoRoutes = useAtomValue(shouldFetchCryptoRoutesAtom);
   const showStuckTransactionDialog = useAtomValue(
     showStuckTransactionDialogAtom,
   );
@@ -87,8 +88,6 @@ export const useAnyaltWidget = ({
 
   const { showPendingRouteDialog, allNecessaryWalletsConnected } =
     usePendingRoute({ closeConnectWalletsModal: connectWalletsClose });
-
-  const { shouldFetchCryptoRoutes } = useChooseNewRouteDialog();
 
   const { modalWrapperMaxWidth, headerCustomText } = useSetupWidget({
     apiKey,
