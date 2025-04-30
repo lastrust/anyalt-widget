@@ -73,7 +73,8 @@ export const OnrampTransaction = ({ selectedRoute, inTokenAmount }: Props) => {
         }}
       >
         <Text color={'brand.text.secondary.2'} textStyle={'regular.3'}>
-          1 ETH ~ 1000 USD
+          1 {selectedRoute?.swapSteps[0].sourceToken.symbol} ~{' '}
+          {selectedRoute?.swapSteps[0].sourceToken.tokenUsdPrice} USD
         </Text>
         <LoadingFallback
           loading={isChooseOnrampLoading}
