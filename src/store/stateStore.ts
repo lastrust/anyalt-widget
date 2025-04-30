@@ -51,14 +51,14 @@ export const shouldFetchCryptoRoutesAtom = atom<boolean>(false);
 export const isFiatPurchaseCompletedAtom = atom<boolean>(false);
 export const payoutAfterFiatSwapAtom = atom<string>('');
 export const fiatStepCopyAtom = atom<FiatStep | undefined>(undefined);
-//Make a global variable to store inforamtion about prev transaction data.
+
+type FromTokenAfterFiatTxType = {
+  address: string;
+  chainName: string;
+};
 
 export const fromTokenAfterFiatTxAtom = atom<
-  | {
-      address: string;
-      chainName: string;
-    }
-  | undefined
+  FromTokenAfterFiatTxType | undefined
 >(undefined);
 export const onramperOperationIdAtom = atom<string | undefined>(undefined);
 export const onrampersAtom = atom<SupportedOnramperQuote[] | undefined>(

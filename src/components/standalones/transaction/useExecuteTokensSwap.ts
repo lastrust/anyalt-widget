@@ -89,8 +89,6 @@ export const useExecuteTokensSwap = (
         const currentStep =
           selectedRoute?.swapSteps?.[transactionIndex - nullIndex];
 
-        console.log('currentStep', currentStep);
-
         if (!currentStep) {
           throw new Error('No swap step found');
         }

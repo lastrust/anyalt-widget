@@ -34,25 +34,6 @@ export const SwapStep = ({
   operationType,
   transactionsProgress,
 }: Props) => {
-  // const isStepCurrentOne = (stepIndex: number, swapStep: SwapOperationStep) => {
-  //   if (currentStep - 1 !== stepIndex) return false;
-
-  //   if (operationType === 'PENDING') {
-  //     return swapStep.transactions.length;
-  //   } else {
-  //     return (
-  //       Boolean(
-  //         transactionsProgress![stepIndex]?.approve ||
-  //           transactionsProgress![stepIndex]?.swap,
-  //       ) &&
-  //       Boolean(
-  //         transactionsProgress![stepIndex]?.approve?.status !== 'failed' &&
-  //           transactionsProgress![stepIndex]?.swap?.status !== 'failed',
-  //       )
-  //     );
-  //   }
-  // };
-
   return (
     <AccordionItem
       key={`${swapStep.executionOrder}-${index}`}
