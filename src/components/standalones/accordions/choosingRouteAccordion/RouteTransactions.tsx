@@ -6,7 +6,10 @@ import { Skeleton } from '@chakra-ui/react';
 import { useAtomValue } from 'jotai';
 import { useMemo } from 'react';
 import { WidgetTemplateType } from '../../../..';
-import { fiatStepCopyAtom, shouldFetchCryptoRoutesAtom } from '../../../../store/stateStore';
+import {
+  fiatStepCopyAtom,
+  shouldFetchCryptoRoutesAtom,
+} from '../../../../store/stateStore';
 import { FiatStepSection } from './FiatStep';
 import { RouteTransactionAccordion } from './RouteTransactionAccordion';
 
