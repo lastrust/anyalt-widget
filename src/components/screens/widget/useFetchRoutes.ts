@@ -435,7 +435,7 @@ export const useFetchRoutes = ({
   useEffect(() => {
     if (activeStep === 1 && selectedRoute) {
       const interval = setInterval(() => {
-        const currentInToken = selectedToken;
+        const currentInToken = selectedToken || selectedCurrency;
         const currentProtocolInputToken = swapResultTokenGlobal;
         const currentInTokenAmount = selectedTokenOrFiatAmount;
         const userSelectedToken =

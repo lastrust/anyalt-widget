@@ -1,4 +1,5 @@
 import { VStack } from '@chakra-ui/react';
+import { useEffect } from 'react';
 import { TransactionsProgress } from '../../../types/transaction';
 import { ProgressItem } from '../../molecules/ProgressItem';
 
@@ -8,7 +9,15 @@ type Props = {
 };
 
 export const ProgressList = ({ transactionsProgress, index }: Props) => {
-  if (!transactionsProgress?.length) return null;
+  useEffect(() => {
+    console.log(transactionsProgress, index);
+  }, [transactionsProgress, index]);
+
+  if (
+    !transactionsProgress?.[index]?.approve &&
+    !transactionsProgress?.[index]?.swap
+  )
+    return null;
 
   return (
     <VStack w={'100%'}>

@@ -6,10 +6,7 @@ import { Skeleton } from '@chakra-ui/react';
 import { useAtomValue } from 'jotai';
 import { useMemo } from 'react';
 import { WidgetTemplateType } from '../../../..';
-import {
-  fiatStepCopyAtom,
-  isFiatPurchaseCompletedAtom,
-} from '../../../../store/stateStore';
+import { fiatStepCopyAtom, shouldFetchCryptoRoutesAtom } from '../../../../store/stateStore';
 import { FiatStepSection } from './FiatStep';
 import { RouteTransactionAccordion } from './RouteTransactionAccordion';
 
@@ -26,11 +23,11 @@ export const RouteTransactions = ({
   protocolInputToken,
 }: Props) => {
   const fiatStepCopy = useAtomValue(fiatStepCopyAtom);
-  const isFiatPurchaseCompleted = useAtomValue(isFiatPurchaseCompletedAtom);
+  const shouldFetchCryptoRoutes = useAtomValue(shouldFetchCryptoRoutesAtom);
 
   const isIncludeFiat = useMemo(
-    () => Boolean(route.fiatStep) || isFiatPurchaseCompleted,
-    [route.fiatStep, isFiatPurchaseCompleted],
+    () => Boolean(route.fiatStep) || shouldFetchCryptoRoutes,
+    [route.fiatStep, shouldFetchCryptoRoutes],
   );
 
   if (loading) return <Skeleton w={'180px'} h={'18px'} borderRadius="12px" />;
@@ -41,8 +38,8 @@ export const RouteTransactions = ({
         <FiatStepSection
           index={0}
           loading={loading}
-          isAlreadyCompleted={isFiatPurchaseCompleted}
-          fiatStep={isFiatPurchaseCompleted ? fiatStepCopy : route.fiatStep}
+          isAlreadyCompleted={shouldFetchCryptoRoutes}
+          fiatStep={shouldFetchCryptoRoutes ? fiatStepCopy : route.fiatStep}
         />
       )}
 
