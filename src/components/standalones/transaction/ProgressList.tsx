@@ -8,7 +8,11 @@ type Props = {
 };
 
 export const ProgressList = ({ transactionsProgress, index }: Props) => {
-  if (!transactionsProgress?.length) return null;
+  if (
+    !transactionsProgress?.[index]?.approve &&
+    !transactionsProgress?.[index]?.swap
+  )
+    return null;
 
   return (
     <VStack w={'100%'}>

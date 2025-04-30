@@ -5,8 +5,14 @@ import {
   anyaltInstanceAtom,
   choosenFiatPaymentAtom,
   choosenOnrampPaymentAtom,
+  fiatStepCopyAtom,
+  fromTokenAfterFiatTxAtom,
+  isFiatPurchaseCompletedAtom,
   onramperOperationIdAtom,
+  payoutAfterFiatSwapAtom,
+  selectedRouteAtom,
   selectedTokenOrFiatAmountAtom,
+  shouldFetchCryptoRoutesAtom,
   transactionIndexAtom,
 } from '../../../store/stateStore';
 
@@ -17,7 +23,12 @@ export const useHadleFiatTx = () => {
   const selectedTokenOrFiatAmount = useAtomValue(selectedTokenOrFiatAmountAtom);
   const choosenOnrampPayment = useAtomValue(choosenOnrampPaymentAtom);
   const [transactionIndex, setTransactionIndex] = useAtom(transactionIndexAtom);
-
+  const [selectedRoute] = useAtom(selectedRouteAtom);
+  const [, setFiatStepCopy] = useAtom(fiatStepCopyAtom);
+  const [, setShouldFetchCryptoRoutes] = useAtom(shouldFetchCryptoRoutesAtom);
+  const [, setIsFiatPurchaseCompleted] = useAtom(isFiatPurchaseCompletedAtom);
+  const [, setFromTokenAfterFiatTx] = useAtom(fromTokenAfterFiatTxAtom);
+  const [, setPayoutAfterFiatSwap] = useAtom(payoutAfterFiatSwapAtom);
   const { address: evmAddress } = useAccount();
 
   const waitUntilTxIsConfirmed = async (): Promise<
@@ -73,12 +84,19 @@ export const useHadleFiatTx = () => {
 
       window.open(tx.transactionUrl, '_blank');
 
-      // Properly await the polling process
       const result = await poolUntilTxIsConfirmed();
       console.log('Transaction confirmed:', result);
 
       setTransactionIndex(transactionIndex + 1);
 
+      setFiatStepCopy(selectedRoute?.fiatStep);
+      setPayoutAfterFiatSwap(String(result?.payout) || '');
+      setFromTokenAfterFiatTx({
+        address: selectedRoute?.fiatStep?.middleToken.tokenAddress || '',
+        chainName: selectedRoute?.fiatStep?.middleToken.chainName || '',
+      });
+      setIsFiatPurchaseCompleted(true);
+      setShouldFetchCryptoRoutes(true);
       return result;
     } catch (error) {
       console.error('Error in executeFiatTransaction:', error);

@@ -6,6 +6,7 @@ import { AnyAlt, EVMTransactionDataResponse } from '@anyalt/sdk';
 import { TransactionError } from '@anyalt/sdk/dist/types/types';
 import { useWallet } from '@solana/wallet-adapter-react';
 
+import { useMemo } from 'react';
 import { ChainType, EstimateResponse, Token, WalletConnector } from '../../..';
 import {
   STEP_DESCR,
@@ -13,6 +14,7 @@ import {
   TX_STATUS,
 } from '../../../constants/transaction';
 import {
+  isFiatPurchaseCompletedAtom,
   lastMileTokenEstimateAtom,
   selectedRouteAtom,
   swapDataAtom,
@@ -41,6 +43,7 @@ export const useExecuteTokensSwap = (
   const [, setDepositTokenEstimate] = useAtom(lastMileTokenEstimateAtom);
 
   const [transactionsList, setTransactionsList] = useAtom(transactionsListAtom);
+  const isFiatPurchaseCompleted = useAtomValue(isFiatPurchaseCompletedAtom);
 
   const { address: evmAddress, isConnected: isEvmConnected } = useAccount();
   const { publicKey: solanaAddress, connected: isSolanaConnected } =
@@ -52,6 +55,10 @@ export const useExecuteTokensSwap = (
   });
 
   const { keepPollingOnTxStuck } = useStuckTransaction();
+
+  const isIncludeFiatStep = useMemo(() => {
+    return Boolean(selectedRoute?.fiatStep) || isFiatPurchaseCompleted;
+  }, [selectedRoute, isFiatPurchaseCompleted]);
 
   const executeTokensSwap = async (
     aaInstance: AnyAlt,
@@ -69,8 +76,7 @@ export const useExecuteTokensSwap = (
     higherGasCost?: boolean,
   ) => {
     let isCrosschainSwapError = false;
-    const isIncludeOnramperStep = Boolean(selectedRoute?.fiatStep);
-    const nullIndex = isIncludeOnramperStep ? 2 : 1;
+    const nullIndex = isIncludeFiatStep ? 2 : 1;
     do {
       if (swapData.swapIsFinished) break;
 

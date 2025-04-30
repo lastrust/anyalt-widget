@@ -12,6 +12,7 @@ import {
   choosenFiatPaymentAtom,
   choosenOnrampPaymentAtom,
   isChooseOnrampLoadingAtom,
+  isFiatPurchaseCompletedAtom,
   isPaymentMethodLoadingAtom,
   isPaymentMethodModalOpenAtom,
   lastMileTokenAtom,
@@ -69,7 +70,7 @@ export const useTransactionInfo = ({
   const [transactionsProgress, setTransactionsProgress] = useAtom(
     transactionsProgressAtom,
   );
-
+  const isFiatPurchaseCompleted = useAtomValue(isFiatPurchaseCompletedAtom);
   const { executeSwap } = useHandleSwap(externalEvmWalletConnector);
   const { executeFiatTransaction } = useHadleFiatTx();
   const { keepPollingOnTxStuck } = useStuckTransaction();
@@ -77,6 +78,14 @@ export const useTransactionInfo = ({
   const isOnramperStep = useMemo(() => {
     return selectedRoute?.fiatStep && transactionIndex === 1;
   }, [selectedRoute, transactionIndex]);
+
+  const isContainFiatStep = useMemo(() => {
+    return Boolean(selectedRoute?.fiatStep) || isFiatPurchaseCompleted;
+  }, [selectedRoute, isFiatPurchaseCompleted]);
+
+  const txIndex = useMemo(() => {
+    return transactionIndex - (isContainFiatStep ? 2 : 1);
+  }, [transactionIndex, isContainFiatStep]);
 
   const onrampFees = useMemo(() => {
     const totalFees =
@@ -87,10 +96,8 @@ export const useTransactionInfo = ({
   }, [choosenOnrampPayment]);
 
   const isBridgeSwap = useMemo(() => {
-    return (
-      selectedRoute?.swapSteps?.[transactionIndex - 1]?.swapperType === 'BRIDGE'
-    );
-  }, [selectedRoute, transactionIndex]);
+    return selectedRoute?.swapSteps?.[txIndex]?.swapperType === 'BRIDGE';
+  }, [selectedRoute, txIndex]);
 
   const headerText = useMemo(() => {
     if (widgetMode === 'fiat' && transactionIndex === 1) {
@@ -98,10 +105,8 @@ export const useTransactionInfo = ({
     }
 
     const swapperType = isBridgeSwap ? 'Bridge' : 'Swap';
-    const swapperName =
-      selectedRoute?.swapSteps?.[transactionIndex - 1]?.swapperName;
-    const depositToken =
-      transactionsList?.steps?.[transactionIndex - 1]?.to?.tokenName;
+    const swapperName = selectedRoute?.swapSteps?.[txIndex]?.swapperName;
+    const depositToken = transactionsList?.steps?.[txIndex]?.to?.tokenName;
 
     const isSwaps = selectedRoute?.swapSteps?.length;
     const swappingText =
@@ -127,8 +132,10 @@ export const useTransactionInfo = ({
 
       if (!anyaltInstance || !activeOperationId) return;
 
-      if (widgetMode === 'fiat' && transactionIndex === 1) {
+      const isFiatExecution = widgetMode === 'fiat' && transactionIndex === 1;
+      if (isFiatExecution) {
         await executeFiatTransaction();
+        return;
       }
 
       await executeSwap(
@@ -265,22 +272,20 @@ export const useTransactionInfo = ({
   const estimatedTime = useMemo(() => {
     if (!selectedRoute) return 0;
 
-    if (transactionIndex > selectedRoute.swapSteps.length)
+    if (txIndex > selectedRoute.swapSteps.length)
       return lastMileTokenEstimate?.estimatedTimeInSeconds || 0;
 
-    return (
-      selectedRoute.swapSteps[transactionIndex - 1]?.estimatedTimeInSeconds || 0
-    );
-  }, [selectedRoute, transactionIndex, lastMileTokenEstimate]);
+    return selectedRoute.swapSteps[txIndex]?.estimatedTimeInSeconds || 0;
+  }, [selectedRoute, txIndex, lastMileTokenEstimate]);
 
   const fees = useMemo(() => {
     if (!selectedRoute) return '0';
 
-    if (transactionIndex > selectedRoute.swapSteps.length)
+    if (txIndex > selectedRoute.swapSteps.length)
       return lastMileTokenEstimate?.estimatedFeeInUSD || '0';
 
     return (
-      selectedRoute.swapSteps[transactionIndex - 1]?.fees
+      selectedRoute.swapSteps[txIndex]?.fees
         .reduce((acc, fee) => {
           const amount = parseFloat(fee?.amount);
           const price = fee.price || 0;
@@ -289,7 +294,12 @@ export const useTransactionInfo = ({
         .toFixed(2)
         .toString() || '0'
     );
-  }, [selectedRoute, transactionIndex, lastMileTokenEstimate]);
+  }, [
+    selectedRoute,
+    transactionIndex,
+    lastMileTokenEstimate,
+    isContainFiatStep,
+  ]);
 
   return {
     fees,
@@ -308,7 +318,9 @@ export const useTransactionInfo = ({
     protocolFinalToken: lastMileToken,
     transactionsProgress,
     headerText,
-    recentTransaction: transactionsList?.steps?.[transactionIndex - 1],
+    isContainFiatStep,
+    recentTransaction:
+      transactionsList?.steps?.[transactionIndex - (isContainFiatStep ? 2 : 1)],
     setIsPaymentMethodModalOpen,
     choosenFiatPaymentMethod,
     isPaymentMethodLoading,

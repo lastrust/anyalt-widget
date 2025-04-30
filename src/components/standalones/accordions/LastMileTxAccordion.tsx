@@ -29,6 +29,7 @@ type Props = {
   protocolFinalToken: Token | undefined;
   finalTokenEstimate: EstimateResponse | undefined;
   swapResultToken: SupportedToken | undefined;
+  isIncludeFiat: boolean;
   operationType: 'CURRENT' | 'PENDING';
 };
 
@@ -41,6 +42,7 @@ export const LastMileTxAccordion = ({
   protocolFinalToken,
   isLastMileExpanded,
   transactionsProgress,
+  isIncludeFiat,
 }: Props) => {
   const selectedTokenOrFiatAmount = useAtomValue(selectedTokenOrFiatAmountAtom);
 
@@ -68,11 +70,11 @@ export const LastMileTxAccordion = ({
         <HStack justifyContent={'flex-start'}>
           <Text textStyle={'bold.1'} mr="8px">
             Transaction{' '}
-            {route.fiatStep
+            {isIncludeFiat
               ? route.swapSteps.length + 2
               : route.swapSteps.length + 1}
           </Text>
-          {currentStep === route.swapSteps.length + 1 && (
+          {currentStep === route.swapSteps.length + (isIncludeFiat ? 2 : 1) && (
             <Text
               textStyle={'bold.1'}
               color={

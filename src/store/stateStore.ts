@@ -1,5 +1,6 @@
 import { AnyAlt, SupportedChain, SupportedToken } from '@anyalt/sdk';
 import {
+  FiatStep,
   GetAllRoutesResponseItem,
   SupportedFiat,
   SupportedOnramperQuote,
@@ -46,6 +47,19 @@ export const showPendingRouteDialogAtom = atom<boolean>(false);
 // Transaction informations:
 export const slippageAtom = atom<string>('3');
 export const activeOperationIdAtom = atom<string | undefined>(undefined);
+export const shouldFetchCryptoRoutesAtom = atom<boolean>(false);
+export const isFiatPurchaseCompletedAtom = atom<boolean>(false);
+export const payoutAfterFiatSwapAtom = atom<string>('');
+export const fiatStepCopyAtom = atom<FiatStep | undefined>(undefined);
+
+type FromTokenAfterFiatTxType = {
+  address: string;
+  chainName: string;
+};
+
+export const fromTokenAfterFiatTxAtom = atom<
+  FromTokenAfterFiatTxType | undefined
+>(undefined);
 export const onramperOperationIdAtom = atom<string | undefined>(undefined);
 export const onrampersAtom = atom<SupportedOnramperQuote[] | undefined>(
   undefined,

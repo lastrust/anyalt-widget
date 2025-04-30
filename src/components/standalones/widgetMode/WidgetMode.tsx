@@ -1,7 +1,10 @@
 import { Button, HStack, Text } from '@chakra-ui/react';
 import { useAtom } from 'jotai';
 import { ReactNode } from 'react';
-import { widgetModeAtom } from '../../../store/stateStore';
+import {
+  selectedTokenOrFiatAmountAtom,
+  widgetModeAtom,
+} from '../../../store/stateStore';
 
 type ModeButtonProps = {
   isActive: boolean;
@@ -41,18 +44,28 @@ const ModeButton = ({
 
 export const WidgetMode = () => {
   const [widgetMode, setWidgetMode] = useAtom(widgetModeAtom);
+  const [selectedTokenOrFiatAmount, setSelectedTokenOrFiatAmount] = useAtom(
+    selectedTokenOrFiatAmountAtom,
+  );
+
+  const handleClick = (mode: 'crypto' | 'fiat') => {
+    setWidgetMode(mode);
+    if (selectedTokenOrFiatAmount) {
+      setSelectedTokenOrFiatAmount('');
+    }
+  };
 
   return (
     <HStack>
       <ModeButton
         isActive={widgetMode === 'crypto'}
-        onClickHandler={() => setWidgetMode('crypto')}
+        onClickHandler={() => handleClick('crypto')}
       >
         Crypto Deposit
       </ModeButton>
       <ModeButton
         isActive={widgetMode === 'fiat'}
-        onClickHandler={() => setWidgetMode('fiat')}
+        onClickHandler={() => handleClick('fiat')}
       >
         Fiat Deposit
       </ModeButton>

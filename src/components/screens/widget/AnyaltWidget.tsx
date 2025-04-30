@@ -41,6 +41,7 @@ export const AnyaltWidgetWrapper = ({
     isConnectWalletsOpen,
     modalWrapperMaxWidth,
     showPendingRouteDialog,
+    shouldFetchCryptoRoutes,
     showStuckTransactionDialog,
     allNecessaryWalletsConnected,
     onBackClick,
@@ -74,13 +75,18 @@ export const AnyaltWidgetWrapper = ({
     >
       <Header activeStep={activeStep} customText={headerCustomText} />
       <HandleTransactions
+        loading={loading}
         walletConnector={walletConnector}
+        failedToFetchRoute={failedToFetchRoute}
         showPendingRouteDialog={showPendingRouteDialog}
+        shouldFetchCryptoRoutes={shouldFetchCryptoRoutes}
         showStuckTransactionDialog={showStuckTransactionDialog}
         allNecessaryWalletsConnected={allNecessaryWalletsConnected}
         resetState={resetState}
-        connectWalletsOpen={connectWalletsOpen}
+        estimateOutPut={estimateOutPut}
         setCurrentRoute={setCurrentRoute}
+        connectWalletsOpen={connectWalletsOpen}
+        onChooseRouteButtonClick={onChooseRouteButtonClick}
       >
         <Stepper activeStep={activeStep}>
           <SelectTokenStep
