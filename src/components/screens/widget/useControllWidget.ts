@@ -101,6 +101,8 @@ export const useControllWidget = ({
         swapIsFinished: false,
         isCrosschainSwapError: false,
       });
+      // I noticed a bug, this needs to also reset the other states, but I don't have time to fix it now
+      // TODO: Fix this
     } else {
       goToPrevious();
     }

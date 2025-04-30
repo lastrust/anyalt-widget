@@ -13,12 +13,14 @@ import {
   TX_STATUS,
 } from '../../../constants/transaction';
 import {
+  ActionType,
   lastMileTokenEstimateAtom,
   selectedRouteAtom,
   swapDataAtom,
   swapResultTokenAtom,
   transactionIndexAtom,
   transactionsListAtom,
+  useDispatch,
 } from '../../../store/stateStore';
 import { TransactionProgress } from '../../../types/transaction';
 import { mapBlockchainToChainType } from '../../../utils/chains';
@@ -33,6 +35,8 @@ export const useExecuteTokensSwap = (
   updateTransactionProgress: (progress: TransactionProgress) => void,
   externalEvmWalletConnector?: WalletConnector,
 ) => {
+  const dispatch = useDispatch();
+
   const transactionIndex = useAtomValue(transactionIndexAtom);
   const [swapData, setSwapData] = useAtom(swapDataAtom);
   const selectedRoute = useAtomValue(selectedRouteAtom);
@@ -76,6 +80,7 @@ export const useExecuteTokensSwap = (
       let chainName: string | undefined;
       let txHash: string | undefined;
       let nonce: number | undefined;
+      let outboundTransactionHash: string | undefined;
 
       try {
         const currentStep = selectedRoute?.swapSteps?.[transactionIndex - 1];
@@ -188,6 +193,8 @@ export const useExecuteTokensSwap = (
           keepPollingOnTxStuck,
         });
 
+        outboundTransactionHash = waitForTxResponse.outboundTxHash ?? undefined;
+
         const swapIsFinished = waitForTxResponse.swapIsFinished;
         const crosschainSwapOutputAmount =
           waitForTxResponse?.outputAmount || '0';
@@ -215,6 +222,7 @@ export const useExecuteTokensSwap = (
             message: TX_MESSAGE.confirmed,
             chainName,
             txHash: txHash!,
+            outboundTxHash: outboundTransactionHash,
             details: {
               currentStep: transactionIndex,
               totalSteps,
@@ -238,6 +246,12 @@ export const useExecuteTokensSwap = (
 
         const isTxFailed = waitForTxResponse.status === 'FAILED';
         if (isTxFailed) {
+          dispatch({
+            type: ActionType.SWAP_FAILED,
+            payload: {
+              error: waitForTxResponse.message || 'Transaction failed',
+            },
+          });
           const errMsg = 'Transaction failed: ' + waitForTxResponse.message;
           throw new TransactionError(errMsg);
         }
@@ -248,6 +262,7 @@ export const useExecuteTokensSwap = (
           message: TX_MESSAGE.confirmed,
           chainName,
           txHash: txHash!,
+          outboundTxHash: outboundTransactionHash,
           details: {
             currentStep: transactionIndex,
             totalSteps,
@@ -268,7 +283,7 @@ export const useExecuteTokensSwap = (
         setSwapData((prev) => {
           const newData = {
             ...prev,
-            isCrosschainSwapError: true,
+            isCrosschainSwapError,
           };
           swapDataRef.current = newData;
           return newData;
@@ -289,6 +304,7 @@ export const useExecuteTokensSwap = (
           error: errorStatus,
           chainName,
           txHash: txHash!,
+          outboundTxHash: outboundTransactionHash,
           details: {
             currentStep: transactionIndex,
             totalSteps,

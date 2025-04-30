@@ -1,10 +1,12 @@
 import { SupportedToken } from '@anyalt/sdk';
 import { GetAllRoutesResponseItem } from '@anyalt/sdk/dist/adapter/api/api';
-import { useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useCallback } from 'react';
 import {
   activeOperationIdAtom,
+  anyaltInstanceAtom,
   selectedRouteAtom,
+  showPartialFailDialogAtom,
   transactionIndexAtom,
   transactionsProgressAtom,
 } from '../../../store/stateStore';
@@ -23,11 +25,14 @@ export const useSetRoute = ({
   setActiveStep,
   setListOfTransactionsFromRoute,
 }: UseSetRouteProps) => {
-  const setSelectedRoute = useSetAtom(selectedRouteAtom);
+  const [selectedRoute, setSelectedRoute] = useAtom(selectedRouteAtom);
+
+  const anyaltInstance = useAtomValue(anyaltInstanceAtom);
 
   const setTransactionIndex = useSetAtom(transactionIndexAtom);
   const setActiveOperationId = useSetAtom(activeOperationIdAtom);
   const setTransactionsProgress = useSetAtom(transactionsProgressAtom);
+  const setShowPartialFailDialog = useSetAtom(showPartialFailDialogAtom);
 
   const setCurrentRoute = useCallback(
     (route: GetAllRoutesResponseItem) => {
@@ -38,6 +43,8 @@ export const useSetRoute = ({
       const newTransactionProgress = {} as TransactionsProgress;
       let lastFinishedTransactionIndex = 0;
 
+      console.debug('~route swap steps', route.swapSteps);
+
       route.swapSteps.forEach((step, index) => {
         step.transactions
           .sort(
@@ -46,6 +53,7 @@ export const useSetRoute = ({
               (Number(b.confirmedTimestamp) || 0),
           )
           .forEach((transaction) => {
+            console.debug('~tx', transaction);
             newTransactionProgress[index] = {};
             switch (transaction.type) {
               case 'MAIN':
@@ -55,6 +63,10 @@ export const useSetRoute = ({
                     transaction,
                   );
 
+                console.debug(
+                  '~newStransactionProgress',
+                  newTransactionProgress[index],
+                );
                 if (
                   newTransactionProgress[index].swap?.status === 'confirmed'
                 ) {
@@ -76,6 +88,7 @@ export const useSetRoute = ({
       });
 
       setTransactionsProgress(newTransactionProgress);
+      console.debug('~in useSetRoute', newTransactionProgress);
       setTransactionIndex(lastFinishedTransactionIndex + 1);
       setListOfTransactionsFromRoute(
         route,
@@ -91,7 +104,50 @@ export const useSetRoute = ({
     ],
   );
 
+  const updateStepsOfCurrentRoute = useCallback(async () => {
+    if (!selectedRoute || !anyaltInstance) return;
+
+    const { swapSteps } = await anyaltInstance.getAllSwapSteps(
+      selectedRoute.routeId,
+    );
+
+    if (!swapSteps.length) return;
+
+    // Loop over each step and the previous steps and if they are similar, don't do anything
+    // We will check sameness by checking the status, source and destination tokens
+    if (swapSteps.length === selectedRoute.swapSteps.length) {
+      const isSame = swapSteps.every((step, index) => {
+        const prevStep = selectedRoute.swapSteps[index];
+        return (
+          // Status
+          step.status === prevStep.status &&
+          // Source token
+          step.sourceToken.contractAddress ===
+            prevStep.sourceToken.contractAddress &&
+          step.sourceToken.blockchain === prevStep.sourceToken.blockchain &&
+          // Destination token
+          step.destinationToken.contractAddress ===
+            prevStep.destinationToken.contractAddress &&
+          step.destinationToken.blockchain ===
+            prevStep.destinationToken.blockchain
+        );
+      });
+
+      if (isSame) return;
+    }
+
+    if (swapSteps.some((step) => step.status === 'PARTIAL_SUCCESS')) {
+      setShowPartialFailDialog(true);
+    }
+
+    return setCurrentRoute({
+      ...selectedRoute,
+      swapSteps,
+    });
+  }, [setCurrentRoute, selectedRoute]);
+
   return {
     setCurrentRoute,
+    updateStepsOfCurrentRoute,
   };
 };

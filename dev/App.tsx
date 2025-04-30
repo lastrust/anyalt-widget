@@ -59,14 +59,25 @@ const aarnaToken: Token = {
 };
 
 const baseETH: Token = {
-  symbol: "ETH",
-  address: "0x0000000000000000000000000000000000000000",
+  symbol: 'ETH',
+  address: '0x0000000000000000000000000000000000000000',
   chainId: 8453,
   chainType: ChainType.EVM,
-  logoUrl: "https://rango.vip/tokens/ALL/ETH.png",
-  name: "Ethereum",
+  logoUrl: 'https://rango.vip/tokens/ALL/ETH.png',
+  name: 'Ethereum',
   decimals: 18,
-}
+};
+
+const brettToken: Token = {
+  symbol: 'BRETT',
+  address: '0x532f27101965dd16442e59d40670faf5ebb142e4',
+  chainId: 8453,
+  chainType: ChainType.EVM,
+  logoUrl:
+    'https://tokens.debridge.finance/Logo/8453/0x532f27101965dd16442e59d40670faf5ebb142e4/small/token-logo.png',
+  name: 'Brett',
+  decimals: 18,
+};
 
 const App = () => {
   const { isOpen, onOpen, onClose } = useModal();
@@ -102,6 +113,7 @@ const App = () => {
             <AnyaltWidget
               widgetTemplate={'DEPOSIT_TOKEN'}
               swapResultToken={usdtToken}
+              // swapResultToken={brettToken}
               finalToken={aarnaToken}
               apiKey={'pk_0xCYxjM8dFF0Vii7syrgpR6U4'}
               isOpen={isOpen}

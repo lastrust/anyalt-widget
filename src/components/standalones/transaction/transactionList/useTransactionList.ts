@@ -122,7 +122,8 @@ export const useTransactionList = ({ operationType }: Props) => {
   ) => {
     return (
       (pendingRoute?.swapSteps ?? []).filter(
-        (step) => step.status === 'SUCCESS',
+        (step) =>
+          step.status === 'SUCCESS' || step.status === 'PARTIAL_SUCCESS',
       ).length + 1
     );
   };

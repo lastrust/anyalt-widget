@@ -1,13 +1,50 @@
 import { AnyAlt, SupportedChain, SupportedToken } from '@anyalt/sdk';
 import { GetAllRoutesResponseItem } from '@anyalt/sdk/dist/adapter/api/api';
-import { atom } from 'jotai';
+import { atom, useAtom, useSetAtom } from 'jotai';
 import { EstimateResponse, Token, WidgetTemplateType } from '..';
 import {
   TransactionsProgress,
   TransactionStatusList,
 } from '../types/transaction';
 
+export enum ActionType {
+  SWAP_FAILED = 'SWAP_FAILED',
+}
+
+export interface Action<T = any> {
+  type: ActionType;
+  payload?: T;
+}
+
+export interface SwapFailedAction extends Action {
+  type: ActionType.SWAP_FAILED;
+  payload: {
+    error: string;
+  };
+}
+
+export type AppAction = SwapFailedAction; // Add other action types as needed like SwapFailedAction | SwapSuccessAction
+
 export const anyaltInstanceAtom = atom<AnyAlt | undefined>(undefined);
+
+export const dispatchAtom = atom(null, (_get, set, action: AppAction) => {
+  set(actionsQueueAtom, (prev) => [...prev, action]);
+});
+
+export const actionsQueueAtom = atom<AppAction[]>([]);
+
+export function useDispatch() {
+  const dispatch = useSetAtom(dispatchAtom);
+  return dispatch;
+}
+
+export function useActionQueue() {
+  const [actionQueue, setActionQueue] = useAtom(actionsQueueAtom);
+  return {
+    actions: actionQueue,
+    clearQueue: () => setActionQueue([]),
+  };
+}
 
 /*
  * Tokens
@@ -36,6 +73,7 @@ export const pendingRouteAtom = atom<GetAllRoutesResponseItem | undefined>(
 
 export const showStuckTransactionDialogAtom = atom<boolean>(false);
 export const showPendingRouteDialogAtom = atom<boolean>(false);
+export const showPartialFailDialogAtom = atom<boolean>(false);
 
 // Transaction informations:
 export const slippageAtom = atom<string>('3');

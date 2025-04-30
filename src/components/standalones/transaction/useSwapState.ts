@@ -18,6 +18,7 @@ export const useSwapState = () => {
 
   const updateTransactionIndex = () => {
     swapDataRef.current.currentStep = swapDataRef.current.currentStep + 1;
+    console.debug('~in useSwapState');
     setTransactionIndex((prev) => prev + 1);
   };
 

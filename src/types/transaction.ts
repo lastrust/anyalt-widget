@@ -32,6 +32,7 @@ export interface TransactionProgress {
   isApproval: boolean;
   chainName?: string;
   txHash?: string;
+  outboundTxHash?: string;
   error?: string;
   details: TransactionProgressDetails;
 }
@@ -39,7 +40,6 @@ export interface TransactionProgress {
 export interface TransactionGroup {
   approve?: TransactionProgress;
   swap?: TransactionProgress;
-  outbound?: TransactionProgress;
 }
 
 export type TransactionStatusList = {

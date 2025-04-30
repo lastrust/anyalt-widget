@@ -80,6 +80,10 @@ export const useHandleSwap = (externalEvmWalletConnector?: WalletConnector) => {
     });
 
     if (isSwapAnySwaps) {
+      // This is the only place this variable is used
+      // And it doesn't seem to actually care that the swap was cross chain
+      // So it's just an indicator of whether the swap was successful or not
+      // We should rename it.
       const { isCrosschainSwapError } = await executeTokensSwap(
         aaInstance,
         operationId,

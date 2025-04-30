@@ -12,6 +12,7 @@ import {
   showStuckTransactionDialogAtom,
 } from '../../../store/stateStore';
 import { usePendingRoute } from '../pendingRouteDialog/usePendingTransaction';
+import useActionListener from './useActionListener';
 import { useConfirmRoute } from './useConfirmRoute';
 import { useControllWidget } from './useControllWidget';
 import { useFetchRoutes } from './useFetchRoutes';
@@ -159,9 +160,13 @@ export const useAnyaltWidget = ({
     getChain,
   });
 
-  const { setCurrentRoute } = useSetRoute({
+  const { setCurrentRoute, updateStepsOfCurrentRoute } = useSetRoute({
     setActiveStep,
     setListOfTransactionsFromRoute,
+  });
+
+  useActionListener({
+    updateStepsOfCurrentRoute,
   });
 
   return {

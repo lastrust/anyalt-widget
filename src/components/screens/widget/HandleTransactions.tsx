@@ -24,6 +24,8 @@ export const HandleTransactions = ({
   resetState,
   children,
 }: Props) => {
+  // return children;
+
   if (showPendingRouteDialog) {
     return (
       <PendingRouteDialog

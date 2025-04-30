@@ -105,10 +105,14 @@ export const convertSwapTransactionToTransactionProgress = (
     isApproval: swapTransaction.type === 'APPROVE',
     chainName: swapStep.sourceToken.blockchain,
     txHash: swapTransaction.transactionHash,
+    outboundTxHash: swapTransaction.outboundTransactionHash,
     error: swapTransaction.failureMessage,
   } as Partial<TransactionProgress>;
 
   switch (true) {
+    case Boolean(swapStep.status === 'PARTIAL_SUCCESS'):
+      (progress as TransactionProgress).status = 'confirmed';
+      break;
     case swapTransaction.confirmedTimestamp && !swapTransaction.failureMessage:
       (progress as TransactionProgress).status = 'confirmed';
       break;

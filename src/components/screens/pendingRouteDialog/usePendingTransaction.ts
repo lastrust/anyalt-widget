@@ -91,19 +91,18 @@ export const usePendingRoute = ({ closeConnectWalletsModal }: Props) => {
       anyalt: AnyAlt,
       walletAddresses: string[],
     ) => {
-      const pendingOperation = await anyalt.getPendingOperation({
+      const pendingRoute = await anyalt.getPendingOperation({
         walletAddresses,
         operationType: widgetTemplate,
       });
 
-      if (pendingOperation?.operationId) {
+      if (pendingRoute?.operationId) {
         setPendingRoute({
           missingWalletForSourceBlockchain: true,
-          routeId: pendingOperation.operationId,
-          swapSteps: pendingOperation.swapSteps!,
+          routeId: pendingRoute.operationId,
+          swapSteps: pendingRoute.swapSteps!,
           outputAmount:
-            pendingOperation.swapSteps![pendingOperation.swapSteps!.length - 1]
-              .payout,
+            pendingRoute.swapSteps![pendingRoute.swapSteps!.length - 1].payout,
           tags: [],
         });
       }

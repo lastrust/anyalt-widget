@@ -11,6 +11,7 @@ import {
   Box,
   HStack,
   Text,
+  useToken,
   VStack,
 } from '@chakra-ui/react';
 import { useAtomValue } from 'jotai';
@@ -43,6 +44,10 @@ export const TransactionAccordion = ({
   currentStep,
   operationType,
 }: Props) => {
+  const [highlightBg, warningBg] = useToken('colors', [
+    'brand.text.highlight',
+    'brand.text.warning',
+  ]);
   const [expandedIndexes, setExpandedIndexes] = useState<number[]>([]);
 
   const widgetTemplate = useAtomValue(widgetTemplateAtom);
@@ -52,6 +57,8 @@ export const TransactionAccordion = ({
   const lastMileTokenEstimate = useAtomValue(lastMileTokenEstimateAtom);
 
   const transactionsProgress = useAtomValue(transactionsProgressAtom);
+
+  console.debug('~transactionsProgress', transactionsProgress);
 
   useEffect(() => {
     if (operationType === 'CURRENT') {
@@ -76,7 +83,12 @@ export const TransactionAccordion = ({
     if (currentStep - 1 !== stepIndex) return false;
 
     if (operationType === 'PENDING') {
-      return swapStep.transactions.length;
+      const isActiveAndStarted =
+        swapStep.status === 'ACTIVE' && swapStep.transactions.length > 0;
+      const isStepAfterPartialSuccess =
+        stepIndex > 0 &&
+        route?.swapSteps[stepIndex - 1].status === 'PARTIAL_SUCCESS';
+      return isActiveAndStarted || isStepAfterPartialSuccess;
     } else {
       return (
         Boolean(
@@ -131,10 +143,23 @@ export const TransactionAccordion = ({
               </Text>
               {currentStep - 1 > index &&
                 (operationType === 'CURRENT' ? (
-                  <CheckIcon />
+                  <CheckIcon
+                    fill={
+                      swapStep.status === 'SUCCESS' ? highlightBg : warningBg
+                    }
+                  />
                 ) : (
-                  <Text textStyle={'bold.2'} color="brand.text.highlight">
-                    Completed
+                  <Text
+                    textStyle={'bold.2'}
+                    color={
+                      swapStep.status === 'SUCCESS'
+                        ? 'brand.text.highlight'
+                        : 'brand.text.warning'
+                    }
+                  >
+                    {swapStep.status === 'PARTIAL_SUCCESS'
+                      ? 'Partial Success'
+                      : 'Completed'}
                   </Text>
                 ))}
               {isStepCurrentOne(index, swapStep) && (

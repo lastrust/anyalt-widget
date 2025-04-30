@@ -190,10 +190,6 @@ export const useFetchRoutes = ({
     });
 
     if (isEnoughDepositTokens && selectedRoute) {
-      // console.debug('~selected', selectedRoute, slippage, minDepositAmount);
-      console.debug('~selectedRoute', selectedRoute);
-      console.debug('~slippage', slippage);
-      console.debug('~minDepositAmount', minDepositAmount);
       const { humanReadable: worstCaseOutput } = calculateWorstOutput(
         selectedRoute,
         slippage,
